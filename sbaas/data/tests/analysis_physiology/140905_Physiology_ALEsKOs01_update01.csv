@@ -1,0 +1,997 @@
+id,experiment_id,sample_id,met_id,data_raw,data_corrected,data_units,data_reference,used_,comment_
+1436,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,10.854,10.854,min,HPLC,FALSE,
+1437,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,10.854,10.854,min,HPLC,TRUE,
+1438,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,10.853,10.853,min,HPLC,TRUE,
+1439,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,10.85,10.85,min,HPLC,TRUE,
+1440,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,10.86,10.86,min,HPLC,TRUE,
+1441,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,10.868,10.868,min,HPLC,TRUE,
+1442,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,10.866,10.866,min,HPLC,TRUE,
+1443,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,10.867,10.867,min,HPLC,TRUE,
+1444,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,10.868,10.868,min,HPLC,TRUE,
+1445,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,10.867,10.867,min,HPLC,TRUE,
+1446,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,10.878,10.878,min,HPLC,TRUE,
+1447,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,10.867,10.867,min,HPLC,TRUE,
+1448,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,10.865,10.865,min,HPLC,TRUE,
+1449,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,10.865,10.865,min,HPLC,TRUE,
+1450,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,10.866,10.866,min,HPLC,TRUE,
+1517,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,14.391,14.391,min,HPLC,FALSE,
+1518,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,14.385,14.385,min,HPLC,FALSE,
+1519,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,14.378,14.378,min,HPLC,FALSE,
+1520,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,14.372,14.372,min,HPLC,FALSE,
+1521,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,14.397,14.397,min,HPLC,FALSE,
+1522,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,14.401,14.401,min,HPLC,FALSE,
+1523,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,14.397,14.397,min,HPLC,FALSE,
+1524,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,14.399,14.399,min,HPLC,FALSE,
+1525,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,14.39,14.39,min,HPLC,FALSE,
+1526,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,14.396,14.396,min,HPLC,FALSE,
+1527,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,14.408,14.408,min,HPLC,FALSE,
+1528,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,14.398,14.398,min,HPLC,FALSE,
+1529,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,14.393,14.393,min,HPLC,FALSE,
+1530,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,14.405,14.405,min,HPLC,FALSE,
+1531,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,14.386,14.386,min,HPLC,FALSE,
+1534,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,for,17.065,17.065,min,HPLC,FALSE,
+1535,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,for,17.076,17.076,min,HPLC,FALSE,
+1536,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,for,17.077,17.077,min,HPLC,FALSE,
+1541,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,18.613,18.613,min,HPLC,TRUE,
+1542,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,18.617,18.617,min,HPLC,TRUE,
+1543,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,18.62,18.62,min,HPLC,TRUE,
+1544,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,18.613,18.613,min,HPLC,TRUE,
+1545,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,18.627,18.627,min,HPLC,TRUE,
+1546,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,18.616,18.616,min,HPLC,TRUE,
+1547,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,18.614,18.614,min,HPLC,TRUE,
+1548,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,18.614,18.614,min,HPLC,TRUE,
+1549,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,18.616,18.616,min,HPLC,TRUE,
+1631,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,10.867,10.867,min,HPLC,TRUE,
+1632,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,10.868,10.868,min,HPLC,FALSE,
+1633,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,10.869,10.869,min,HPLC,TRUE,
+1634,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,10.869,10.869,min,HPLC,FALSE,
+1635,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,10.869,10.869,min,HPLC,TRUE,
+1636,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,10.869,10.869,min,HPLC,TRUE,
+1637,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,10.869,10.869,min,HPLC,TRUE,
+1638,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,10.869,10.869,min,HPLC,TRUE,
+1639,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,10.869,10.869,min,HPLC,TRUE,
+1640,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,10.869,10.869,min,HPLC,TRUE,
+1641,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,10.87,10.87,min,HPLC,TRUE,
+1642,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,10.868,10.868,min,HPLC,TRUE,
+1643,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,10.869,10.869,min,HPLC,TRUE,
+1644,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,10.869,10.869,min,HPLC,TRUE,
+1645,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,10.87,10.87,min,HPLC,TRUE,
+1646,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,10.87,10.87,min,HPLC,FALSE,
+1647,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,10.869,10.869,min,HPLC,TRUE,
+1648,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,10.869,10.869,min,HPLC,TRUE,
+1649,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,10.871,10.871,min,HPLC,TRUE,
+1650,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,10.871,10.871,min,HPLC,TRUE,
+1651,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,10.871,10.871,min,HPLC,TRUE,
+1652,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,10.873,10.873,min,HPLC,FALSE,
+1653,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,10.872,10.872,min,HPLC,TRUE,
+1654,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,10.871,10.871,min,HPLC,TRUE,
+1655,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,10.871,10.871,min,HPLC,TRUE,
+1656,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,10.871,10.871,min,HPLC,TRUE,
+1657,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,10.871,10.871,min,HPLC,TRUE,
+1658,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,10.87,10.87,min,HPLC,TRUE,
+1659,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,10.87,10.87,min,HPLC,TRUE,
+1660,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,10.87,10.87,min,HPLC,TRUE,
+1661,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,10.87,10.87,min,HPLC,TRUE,
+1662,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,10.87,10.87,min,HPLC,TRUE,
+1663,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,10.869,10.869,min,HPLC,TRUE,
+1664,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,10.87,10.87,min,HPLC,TRUE,
+1665,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,10.869,10.869,min,HPLC,FALSE,
+1666,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,10.87,10.87,min,HPLC,TRUE,
+1667,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,10.869,10.869,min,HPLC,FALSE,
+1668,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,10.87,10.87,min,HPLC,TRUE,
+1669,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,10.869,10.869,min,HPLC,TRUE,
+1670,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,10.869,10.869,min,HPLC,TRUE,
+1671,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,10.867,10.867,min,HPLC,TRUE,
+1672,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,10.868,10.868,min,HPLC,TRUE,
+1673,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,10.867,10.867,min,HPLC,TRUE,
+1674,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,10.866,10.866,min,HPLC,TRUE,
+1675,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,10.867,10.867,min,HPLC,TRUE,
+1676,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,10.869,10.869,min,HPLC,TRUE,
+1677,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,10.868,10.868,min,HPLC,TRUE,
+1678,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,10.868,10.868,min,HPLC,TRUE,
+1679,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,10.868,10.868,min,HPLC,TRUE,
+1680,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,10.868,10.868,min,HPLC,TRUE,
+1681,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,10.869,10.869,min,HPLC,TRUE,
+1682,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,10.867,10.867,min,HPLC,TRUE,
+1683,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,10.867,10.867,min,HPLC,TRUE,
+1684,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,10.868,10.868,min,HPLC,TRUE,
+1685,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,14.395,14.395,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1686,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,14.402,14.402,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1687,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,14.403,14.403,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1688,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1689,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,14.396,14.396,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1690,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1691,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1692,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1693,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,14.398,14.398,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1694,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,14.401,14.401,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1695,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,14.398,14.398,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1696,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,14.397,14.397,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1697,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,14.401,14.401,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1698,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,14.401,14.401,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1699,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,14.403,14.403,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1700,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,14.397,14.397,min,HPLC,FALSE,Outlier; poor sample acquisition
+1701,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1702,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1703,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,14.408,14.408,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1704,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,14.404,14.404,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1705,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,14.416,14.416,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1706,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,14.407,14.407,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1707,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1708,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1709,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,14.404,14.404,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1710,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,14.402,14.402,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1711,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,14.401,14.401,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1712,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1713,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1714,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1715,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,14.401,14.401,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1716,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,14.402,14.402,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1717,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,14.401,14.401,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1718,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1719,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,14.403,14.403,min,HPLC,FALSE,Outlier; poor sample acquisition
+1720,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1721,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,14.398,14.398,min,HPLC,FALSE,Outlier; poor sample acquisition
+1722,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,14.394,14.394,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1723,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,14.401,14.401,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1724,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1725,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,14.395,14.395,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1726,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,14.397,14.397,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1727,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,14.397,14.397,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1728,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,14.394,14.394,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1729,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,14.394,14.394,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1730,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1731,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1732,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1733,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1734,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1735,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,14.404,14.404,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1736,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1737,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,14.4,14.4,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1738,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,14.399,14.399,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1739,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,15.458,15.458,min,HPLC,TRUE,
+1740,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,15.453,15.453,min,HPLC,TRUE,
+1741,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,15.456,15.456,min,HPLC,TRUE,
+1742,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,15.456,15.456,min,HPLC,TRUE,
+1743,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,15.458,15.458,min,HPLC,TRUE,
+1744,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,15.455,15.455,min,HPLC,TRUE,
+1745,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,15.457,15.457,min,HPLC,TRUE,
+1746,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,15.457,15.457,min,HPLC,TRUE,
+1747,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,15.459,15.459,min,HPLC,TRUE,
+1748,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,15.459,15.459,min,HPLC,FALSE,
+1749,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,15.458,15.458,min,HPLC,TRUE,
+1750,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,15.458,15.458,min,HPLC,TRUE,
+1751,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,15.459,15.459,min,HPLC,TRUE,
+1752,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,15.463,15.463,min,HPLC,TRUE,
+1753,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,15.462,15.462,min,HPLC,TRUE,
+1754,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,15.459,15.459,min,HPLC,TRUE,
+1755,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,15.459,15.459,min,HPLC,TRUE,
+1756,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,15.458,15.458,min,HPLC,TRUE,
+1757,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,15.459,15.459,min,HPLC,TRUE,
+1758,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,15.459,15.459,min,HPLC,TRUE,
+1759,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,15.457,15.457,min,HPLC,TRUE,
+1760,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,15.458,15.458,min,HPLC,TRUE,
+1761,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,15.456,15.456,min,HPLC,FALSE,
+1762,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,15.457,15.457,min,HPLC,TRUE,
+1763,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,15.454,15.454,min,HPLC,TRUE,
+1764,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,15.452,15.452,min,HPLC,TRUE,
+1765,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,15.454,15.454,min,HPLC,TRUE,
+1766,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,15.455,15.455,min,HPLC,TRUE,
+1767,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,15.453,15.453,min,HPLC,TRUE,
+1768,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,15.455,15.455,min,HPLC,TRUE,
+1769,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,15.454,15.454,min,HPLC,TRUE,
+1770,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,15.455,15.455,min,HPLC,TRUE,
+1771,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,15.456,15.456,min,HPLC,TRUE,
+1772,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,15.454,15.454,min,HPLC,TRUE,
+1773,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,15.454,15.454,min,HPLC,TRUE,
+1774,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,15.455,15.455,min,HPLC,TRUE,
+1775,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,16.182,16.182,min,HPLC,FALSE,
+1776,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,16.194,16.194,min,HPLC,FALSE,
+1777,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,16.182,16.182,min,HPLC,FALSE,
+1778,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,16.178,16.178,min,HPLC,FALSE,
+1779,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,16.183,16.183,min,HPLC,FALSE,
+1780,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,16.188,16.188,min,HPLC,FALSE,
+1781,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,16.188,16.188,min,HPLC,FALSE,
+1782,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,16.194,16.194,min,HPLC,FALSE,
+1783,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,16.184,16.184,min,HPLC,FALSE,
+1784,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,16.182,16.182,min,HPLC,FALSE,
+1785,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,16.187,16.187,min,HPLC,FALSE,
+1786,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,16.181,16.181,min,HPLC,FALSE,
+1787,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,16.19,16.19,min,HPLC,FALSE,
+1788,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,16.183,16.183,min,HPLC,FALSE,
+1789,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,16.176,16.176,min,HPLC,FALSE,
+1790,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,16.187,16.187,min,HPLC,FALSE,
+1791,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,16.183,16.183,min,HPLC,FALSE,
+1792,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,16.183,16.183,min,HPLC,FALSE,
+1793,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,16.176,16.176,min,HPLC,FALSE,
+1794,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,16.184,16.184,min,HPLC,FALSE,
+1795,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,16.193,16.193,min,HPLC,FALSE,
+1796,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,16.177,16.177,min,HPLC,FALSE,
+1797,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,16.19,16.19,min,HPLC,FALSE,
+1798,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,16.195,16.195,min,HPLC,FALSE,
+1799,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,16.182,16.182,min,HPLC,FALSE,
+1800,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,16.184,16.184,min,HPLC,FALSE,
+1801,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,16.188,16.188,min,HPLC,FALSE,
+1802,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,16.19,16.19,min,HPLC,FALSE,
+1803,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,16.188,16.188,min,HPLC,FALSE,
+1804,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,16.182,16.182,min,HPLC,FALSE,
+1805,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,16.184,16.184,min,HPLC,FALSE,
+1806,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,16.181,16.181,min,HPLC,FALSE,
+1807,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,18.629,18.629,min,HPLC,FALSE,
+1808,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,18.613,18.613,min,HPLC,TRUE,
+1809,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,18.628,18.628,min,HPLC,TRUE,
+1810,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,18.626,18.626,min,HPLC,TRUE,
+1811,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,18.628,18.628,min,HPLC,TRUE,
+1812,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,18.626,18.626,min,HPLC,TRUE,
+1813,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,18.625,18.625,min,HPLC,TRUE,
+1814,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,18.624,18.624,min,HPLC,TRUE,
+1815,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,18.621,18.621,min,HPLC,TRUE,
+1816,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,18.623,18.623,min,HPLC,TRUE,
+1817,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,18.622,18.622,min,HPLC,TRUE,
+1818,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,18.626,18.626,min,HPLC,TRUE,
+1819,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,18.626,18.626,min,HPLC,FALSE,
+1820,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,18.623,18.623,min,HPLC,TRUE,
+1821,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,18.625,18.625,min,HPLC,TRUE,
+1822,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,18.622,18.622,min,HPLC,TRUE,
+1823,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,18.638,18.638,min,HPLC,TRUE,
+1824,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,18.632,18.632,min,HPLC,TRUE,
+1825,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,18.628,18.628,min,HPLC,TRUE,
+1826,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,18.63,18.63,min,HPLC,TRUE,
+1827,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,18.628,18.628,min,HPLC,TRUE,
+1828,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,18.629,18.629,min,HPLC,TRUE,
+1829,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,18.626,18.626,min,HPLC,TRUE,
+1830,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,18.623,18.623,min,HPLC,TRUE,
+1831,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,18.623,18.623,min,HPLC,FALSE,
+1832,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,18.625,18.625,min,HPLC,FALSE,
+1833,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,18.625,18.625,min,HPLC,FALSE,
+1834,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,18.609,18.609,min,HPLC,TRUE,
+1835,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,18.622,18.622,min,HPLC,TRUE,
+1836,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,18.625,18.625,min,HPLC,TRUE,
+1837,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,18.621,18.621,min,HPLC,TRUE,
+1838,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,18.617,18.617,min,HPLC,TRUE,
+1839,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,18.626,18.626,min,HPLC,TRUE,
+1840,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,18.618,18.618,min,HPLC,TRUE,
+1841,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,18.62,18.62,min,HPLC,TRUE,
+1842,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,18.62,18.62,min,HPLC,TRUE,
+1843,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,18.62,18.62,min,HPLC,TRUE,
+1844,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,18.62,18.62,min,HPLC,TRUE,
+1845,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,18.62,18.62,min,HPLC,TRUE,
+1846,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,18.62,18.62,min,HPLC,TRUE,
+1847,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,18.62,18.62,min,HPLC,TRUE,
+1848,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,18.622,18.622,min,HPLC,TRUE,
+1849,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,10.867,10.867,min,HPLC,TRUE,
+1850,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,10.866,10.866,min,HPLC,FALSE,
+1851,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,10.866,10.866,min,HPLC,TRUE,
+1852,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,10.865,10.865,min,HPLC,TRUE,
+1853,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,10.865,10.865,min,HPLC,TRUE,
+1854,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,10.866,10.866,min,HPLC,TRUE,
+1855,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,10.864,10.864,min,HPLC,TRUE,
+1856,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,10.864,10.864,min,HPLC,FALSE,
+1857,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,10.864,10.864,min,HPLC,TRUE,
+1858,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,10.865,10.865,min,HPLC,TRUE,
+1859,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,10.863,10.863,min,HPLC,TRUE,
+1860,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,10.863,10.863,min,HPLC,TRUE,
+1861,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,10.863,10.863,min,HPLC,TRUE,
+1862,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,10.863,10.863,min,HPLC,TRUE,
+1863,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,10.863,10.863,min,HPLC,TRUE,
+1864,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,10.863,10.863,min,HPLC,TRUE,
+1865,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,10.863,10.863,min,HPLC,TRUE,
+1866,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,10.863,10.863,min,HPLC,FALSE,
+1939,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,14.394,14.394,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1940,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,14.396,14.396,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1941,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,14.385,14.385,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1942,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,14.397,14.397,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1943,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,14.392,14.392,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1944,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,14.395,14.395,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1945,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,14.393,14.393,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1946,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,14.396,14.396,min,HPLC,FALSE,Outlier; poor sample acquisition
+1947,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,14.392,14.392,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1948,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,14.393,14.393,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1949,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,14.391,14.391,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1950,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,14.392,14.392,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1951,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,14.392,14.392,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1952,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,14.391,14.391,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1953,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,14.392,14.392,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1954,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,14.391,14.391,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1955,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,14.391,14.391,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1956,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,14.393,14.393,min,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+1962,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,15.426,15.426,min,HPLC,TRUE,
+1963,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,15.437,15.437,min,HPLC,TRUE,
+1964,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,15.426,15.426,min,HPLC,TRUE,
+1965,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,15.426,15.426,min,HPLC,TRUE,
+1966,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,15.427,15.427,min,HPLC,FALSE,
+1967,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,15.425,15.425,min,HPLC,TRUE,
+1968,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,15.428,15.428,min,HPLC,TRUE,
+1969,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,15.428,15.428,min,HPLC,TRUE,
+1970,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,15.427,15.427,min,HPLC,TRUE,
+1971,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,15.428,15.428,min,HPLC,TRUE,
+1972,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,15.428,15.428,min,HPLC,TRUE,
+1973,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,15.427,15.427,min,HPLC,TRUE,
+1974,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,15.428,15.428,min,HPLC,TRUE,
+1975,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,15.43,15.43,min,HPLC,TRUE,
+1976,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,15.429,15.429,min,HPLC,TRUE,
+1977,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glyc,16.18,16.18,min,HPLC,FALSE,
+1978,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,16.183,16.183,min,HPLC,FALSE,
+1979,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,16.187,16.187,min,HPLC,FALSE,
+1980,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glyc,16.175,16.175,min,HPLC,FALSE,
+1981,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glyc,16.165,16.165,min,HPLC,FALSE,
+1982,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,16.184,16.184,min,HPLC,FALSE,
+1983,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,18.59,18.59,min,HPLC,TRUE,
+1984,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,18.607,18.607,min,HPLC,TRUE,
+1985,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,18.605,18.605,min,HPLC,TRUE,
+1986,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,18.606,18.606,min,HPLC,TRUE,
+1987,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,18.62,18.62,min,HPLC,FALSE,
+1988,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,18.614,18.614,min,HPLC,TRUE,
+1989,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,18.609,18.609,min,HPLC,TRUE,
+1990,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,18.609,18.609,min,HPLC,TRUE,
+1991,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,18.607,18.607,min,HPLC,TRUE,
+1992,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,18.607,18.607,min,HPLC,TRUE,
+1993,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,18.61,18.61,min,HPLC,TRUE,
+1994,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,18.61,18.61,min,HPLC,TRUE,
+1995,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,18.608,18.608,min,HPLC,TRUE,
+1996,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,18.614,18.614,min,HPLC,TRUE,
+1997,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,18.612,18.612,min,HPLC,TRUE,
+2700,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,16.45147,16.45147,mM,HPLC,FALSE,
+2701,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,16.42012,16.42012,mM,HPLC,TRUE,
+2702,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,16.55215,16.55215,mM,HPLC,TRUE,
+2703,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,15.7509,15.7509,mM,HPLC,TRUE,
+2704,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,15.80731,15.80731,mM,HPLC,TRUE,
+2705,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,15.85057,15.85057,mM,HPLC,TRUE,
+2706,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,14.35112,14.35112,mM,HPLC,TRUE,
+2707,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,14.31597,14.31597,mM,HPLC,TRUE,
+2708,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,14.49779,14.49779,mM,HPLC,TRUE,
+2709,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,12.14771,12.14771,mM,HPLC,TRUE,
+2710,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,12.06165,12.06165,mM,HPLC,TRUE,
+2711,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,12.24594,12.24594,mM,HPLC,TRUE,
+2712,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,9.88415,9.88415,mM,HPLC,TRUE,
+2713,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,9.76319,9.76319,mM,HPLC,TRUE,
+2714,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,9.88051,9.88051,mM,HPLC,TRUE,
+2781,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,0.08801,0.08801,mM,HPLC,FALSE,Possible biphasic growth
+2782,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,0.07839,0.07839,mM,HPLC,FALSE,Possible biphasic growth
+2783,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,0.07788,0.07788,mM,HPLC,FALSE,Possible biphasic growth
+2784,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,0.07911,0.07911,mM,HPLC,FALSE,Possible biphasic growth
+2785,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,0.07699,0.07699,mM,HPLC,FALSE,Possible biphasic growth
+2786,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,0.0805,0.0805,mM,HPLC,FALSE,Possible biphasic growth
+2787,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,0.08197,0.08197,mM,HPLC,FALSE,Possible biphasic growth
+2788,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,0.0782,0.0782,mM,HPLC,FALSE,Possible biphasic growth
+2789,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,0.07945,0.07945,mM,HPLC,FALSE,Possible biphasic growth
+2790,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,0.07156,0.07156,mM,HPLC,FALSE,Possible biphasic growth
+2791,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,0.07743,0.07743,mM,HPLC,FALSE,Possible biphasic growth
+2792,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,0.07192,0.07192,mM,HPLC,FALSE,Possible biphasic growth
+2793,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,0.06978,0.06978,mM,HPLC,FALSE,Possible biphasic growth
+2794,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,0.0807,0.0807,mM,HPLC,FALSE,Possible biphasic growth
+2795,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,0.07415,0.07415,mM,HPLC,FALSE,Possible biphasic growth
+2798,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,for,0.58582,0.58582,mM,HPLC,FALSE,Possible biphasic growth
+2799,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,for,0.49682,0.49682,mM,HPLC,FALSE,Possible biphasic growth
+2800,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,for,0.39704,0.39704,mM,HPLC,FALSE,Possible biphasic growth
+2805,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,0.37124,0.37124,mM,HPLC,TRUE,
+2806,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,0.3887,0.3887,mM,HPLC,TRUE,
+2807,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,0.43382,0.43382,mM,HPLC,TRUE,
+2808,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,0.636,0.636,mM,HPLC,TRUE,
+2809,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,0.59687,0.59687,mM,HPLC,TRUE,
+2810,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,0.72218,0.72218,mM,HPLC,TRUE,
+2811,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,1.64729,1.64729,mM,HPLC,TRUE,
+2812,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,1.70427,1.70427,mM,HPLC,TRUE,
+2813,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,1.68683,1.68683,mM,HPLC,TRUE,
+2895,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,22.01664,22.01664,mM,HPLC,TRUE,
+2896,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,21.94576,21.94576,mM,HPLC,FALSE,
+2897,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,22.00942,22.00942,mM,HPLC,TRUE,
+2898,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,19.55546,19.55546,mM,HPLC,FALSE,
+2899,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,21.34242,21.34242,mM,HPLC,TRUE,
+2900,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,21.63364,21.63364,mM,HPLC,TRUE,
+2901,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,20.44424,20.44424,mM,HPLC,TRUE,
+2902,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,20.42353,20.42353,mM,HPLC,TRUE,
+2903,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,20.57094,20.57094,mM,HPLC,TRUE,
+2904,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,18.37871,18.37871,mM,HPLC,TRUE,
+2905,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,18.07306,18.07306,mM,HPLC,TRUE,
+2906,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,18.41381,18.41381,mM,HPLC,TRUE,
+2907,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,16.97955,16.97955,mM,HPLC,TRUE,
+2908,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,16.63521,16.63521,mM,HPLC,TRUE,
+2909,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,16.97718,16.97718,mM,HPLC,TRUE,
+2910,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,8.55385,8.55385,mM,HPLC,FALSE,
+2911,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,14.52451,14.52451,mM,HPLC,TRUE,
+2912,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,15.04804,15.04804,mM,HPLC,TRUE,
+2913,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,22.09916,22.09916,mM,HPLC,TRUE,
+2914,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,22.07081,22.07081,mM,HPLC,TRUE,
+2915,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,22.1001,22.1001,mM,HPLC,TRUE,
+2916,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,20.55363,20.55363,mM,HPLC,FALSE,
+2917,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,21.75571,21.75571,mM,HPLC,TRUE,
+2918,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,21.77994,21.77994,mM,HPLC,TRUE,
+2919,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,20.85299,20.85299,mM,HPLC,TRUE,
+2920,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,20.72132,20.72132,mM,HPLC,TRUE,
+2921,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,20.80815,20.80815,mM,HPLC,TRUE,
+2922,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,18.78228,18.78228,mM,HPLC,TRUE,
+2923,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,19.05879,19.05879,mM,HPLC,TRUE,
+2924,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,18.74352,18.74352,mM,HPLC,TRUE,
+2925,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,17.54422,17.54422,mM,HPLC,TRUE,
+2926,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,17.71058,17.71058,mM,HPLC,TRUE,
+2927,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,17.39072,17.39072,mM,HPLC,TRUE,
+2928,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,15.02685,15.02685,mM,HPLC,TRUE,
+2929,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,9.01495,9.01495,mM,HPLC,FALSE,
+2930,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,14.44745,14.44745,mM,HPLC,TRUE,
+2931,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,15.38147,15.38147,mM,HPLC,FALSE,
+2932,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,21.99341,21.99341,mM,HPLC,TRUE,
+2933,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,22.055,22.055,mM,HPLC,TRUE,
+2934,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,21.63073,21.63073,mM,HPLC,TRUE,
+2935,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,21.52488,21.52488,mM,HPLC,TRUE,
+2936,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,21.64284,21.64284,mM,HPLC,TRUE,
+2937,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,20.69284,20.69284,mM,HPLC,TRUE,
+2938,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,20.56975,20.56975,mM,HPLC,TRUE,
+2939,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,20.78733,20.78733,mM,HPLC,TRUE,
+2940,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,18.77195,18.77195,mM,HPLC,TRUE,
+2941,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,18.5631,18.5631,mM,HPLC,TRUE,
+2942,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,19.04849,19.04849,mM,HPLC,TRUE,
+2943,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,17.20252,17.20252,mM,HPLC,TRUE,
+2944,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,16.91506,16.91506,mM,HPLC,TRUE,
+2945,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,17.65398,17.65398,mM,HPLC,TRUE,
+2946,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,14.11173,14.11173,mM,HPLC,TRUE,
+2947,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,13.61594,13.61594,mM,HPLC,TRUE,
+2948,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,14.94323,14.94323,mM,HPLC,TRUE,
+2949,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,0.10889,0.10889,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2950,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,0.11858,0.11858,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2951,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,0.1151,0.1151,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2952,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,0.25134,0.25134,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2953,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,0.27216,0.27216,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2954,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,0.26406,0.26406,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2955,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,0.3658,0.3658,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2956,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,0.36908,0.36908,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2957,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,0.36578,0.36578,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2958,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,0.33785,0.33785,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2959,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,0.34277,0.34277,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2960,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,0.34366,0.34366,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2961,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,0.3208,0.3208,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2962,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,0.32121,0.32121,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2963,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,0.32689,0.32689,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2964,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,0.17431,0.17431,mM,HPLC,FALSE,Outlier; poor sample acquisition
+2965,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,0.29863,0.29863,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2966,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,0.30005,0.30005,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2967,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,0.10625,0.10625,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2968,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,0.10266,0.10266,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2969,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,0.10512,0.10512,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2970,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,0.23037,0.23037,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2971,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,0.23854,0.23854,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2972,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,0.24231,0.24231,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2973,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,0.32047,0.32047,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2974,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,0.31748,0.31748,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2975,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,0.32117,0.32117,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2976,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,0.27811,0.27811,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2977,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,0.28207,0.28207,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2978,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,0.27651,0.27651,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2979,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,0.25611,0.25611,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2980,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,0.25286,0.25286,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2981,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,0.2514,0.2514,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2982,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,0.21454,0.21454,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2983,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,0.13586,0.13586,mM,HPLC,FALSE,Outlier; poor sample acquisition
+2984,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,0.2103,0.2103,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2985,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,0.07568,0.07568,mM,HPLC,FALSE,Outlier; poor sample acquisition
+2986,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,0.11032,0.11032,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2987,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,0.10237,0.10237,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2988,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,0.24525,0.24525,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2989,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,0.25616,0.25616,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2990,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,0.2573,0.2573,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2991,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,0.32599,0.32599,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2992,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,0.3294,0.3294,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2993,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,0.35563,0.35563,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2994,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,0.30301,0.30301,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2995,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,0.29737,0.29737,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2996,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,0.32127,0.32127,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2997,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,0.27194,0.27194,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2998,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,0.27716,0.27716,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+2999,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,0.29557,0.29557,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3000,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,0.22708,0.22708,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3001,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,0.23123,0.23123,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3002,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,0.2528,0.2528,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3003,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,0.24447,0.24447,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3004,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,0.2819,0.2819,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3005,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,0.2698,0.2698,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3006,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,0.85733,0.85733,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3007,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,0.93947,0.93947,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3008,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,0.91389,0.91389,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3009,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,1.28558,1.28558,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3010,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,1.39233,1.39233,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3011,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,1.34071,1.34071,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3012,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,1.02409,1.02409,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3013,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,2.10984,2.10984,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3014,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,2.02598,2.02598,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3015,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,0.18147,0.18147,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3016,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,0.16683,0.16683,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3017,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,0.18514,0.18514,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3018,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,0.58594,0.58594,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3019,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,0.5561,0.5561,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3020,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,0.56821,0.56821,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3021,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,0.89921,0.89921,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3022,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,0.83824,0.83824,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3023,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,0.87851,0.87851,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3024,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,1.59615,1.59615,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3025,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,0.87659,0.87659,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3026,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,1.5475,1.5475,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3027,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,0.21078,0.21078,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3028,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,0.2552,0.2552,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3029,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,0.28834,0.28834,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3030,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,0.76212,0.76212,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3031,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,0.85013,0.85013,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3032,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,0.97761,0.97761,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3033,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,1.16902,1.16902,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3034,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,1.35669,1.35669,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3035,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,1.51379,1.51379,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3036,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,2.09764,2.09764,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3037,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,2.57795,2.57795,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3038,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,2.65947,2.65947,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3039,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,0.01901,0.01901,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3040,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,0.01587,0.01587,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3041,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,0.01626,0.01626,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3042,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,0.00654,0.00654,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3043,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,0.00841,0.00841,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3044,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,0,0,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3045,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,0.0155,0.0155,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3046,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,0.01592,0.01592,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3047,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,0.0203,0.0203,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3048,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,0.01618,0.01618,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3049,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,0.0189,0.0189,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3050,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,0.01847,0.01847,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3051,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,0.0203,0.0203,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3052,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,0.0296,0.0296,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3053,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,0.0343,0.0343,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3054,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,0.03096,0.03096,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3055,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,0.02554,0.02554,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3056,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,0.01573,0.01573,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3057,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,0.01889,0.01889,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3058,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,0.02675,0.02675,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3059,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,0.02241,0.02241,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3060,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,0.03252,0.03252,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3061,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,0.03444,0.03444,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3062,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,0.03189,0.03189,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3063,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,0.03392,0.03392,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3064,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,0.03233,0.03233,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3065,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,0.03994,0.03994,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3066,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,0.04451,0.04451,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3067,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,0.04076,0.04076,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3068,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,0.05125,0.05125,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3069,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,0.06386,0.06386,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3070,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,0.05795,0.05795,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3071,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,0.28805,0.28805,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3072,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,0.3903,0.3903,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3073,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,0.33669,0.33669,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3074,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,0.90314,0.90314,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3075,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,0.98628,0.98628,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3076,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,0.88505,0.88505,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3077,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,1.70671,1.70671,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3078,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,1.83526,1.83526,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3079,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,1.68726,1.68726,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3080,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,2.1275,2.1275,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3081,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,2.21968,2.21968,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3082,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,2.05802,2.05802,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3083,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,1.53355,1.53355,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3084,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,2.62379,2.62379,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3085,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,2.50341,2.50341,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3086,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,0.65361,0.65361,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3087,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,0.64285,0.64285,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3088,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,0.63921,0.63921,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3089,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,1.32566,1.32566,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3090,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,1.30109,1.30109,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3091,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,1.35756,1.35756,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3092,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,1.65686,1.65686,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3093,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,1.6303,1.6303,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3094,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,1.64945,1.64945,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3095,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,1.83572,1.83572,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3096,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,1.15863,1.15863,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3097,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,1.78988,1.78988,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3098,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,0.35194,0.35194,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3099,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,0.34533,0.34533,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3100,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,0.31819,0.31819,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3101,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,0.84891,0.84891,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3102,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,0.85765,0.85765,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3103,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,0.80476,0.80476,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3104,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,1.61064,1.61064,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3105,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,1.62172,1.62172,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3106,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,1.48096,1.48096,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3107,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,2.06563,2.06563,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3108,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,2.02984,2.02984,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3109,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,1.81954,1.81954,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3110,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,2.63329,2.63329,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3111,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,2.42786,2.42786,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3112,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,2.35004,2.35004,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3113,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,22.123,22.123,mM,HPLC,TRUE,
+3114,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,21.46829,21.46829,mM,HPLC,FALSE,
+3115,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,22.06544,22.06544,mM,HPLC,TRUE,
+3116,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,21.65857,21.65857,mM,HPLC,TRUE,
+3117,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,21.64081,21.64081,mM,HPLC,TRUE,
+3118,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,21.16404,21.16404,mM,HPLC,TRUE,
+3119,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,20.67476,20.67476,mM,HPLC,TRUE,
+3120,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,10.91605,10.91605,mM,HPLC,FALSE,
+3121,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,19.91888,19.91888,mM,HPLC,TRUE,
+3122,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,18.5211,18.5211,mM,HPLC,TRUE,
+3123,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,18.32006,18.32006,mM,HPLC,TRUE,
+3124,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,18.46937,18.46937,mM,HPLC,TRUE,
+3125,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,16.85101,16.85101,mM,HPLC,TRUE,
+3126,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,16.14388,16.14388,mM,HPLC,TRUE,
+3127,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,16.23433,16.23433,mM,HPLC,TRUE,
+3128,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,14.69957,14.69957,mM,HPLC,TRUE,
+3129,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,14.53934,14.53934,mM,HPLC,TRUE,
+3130,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,14.504,14.504,mM,HPLC,FALSE,
+3203,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,0.11178,0.11178,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3204,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,0.11047,0.11047,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3205,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,0.12171,0.12171,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3206,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,0.2946,0.2946,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3207,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,0.29329,0.29329,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3208,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,0.2886,0.2886,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3209,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,0.44118,0.44118,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3210,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,0.2435,0.2435,mM,HPLC,FALSE,Outlier; poor sample acquisition
+3211,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,0.42411,0.42411,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3212,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,0.42735,0.42735,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3213,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,0.42981,0.42981,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3214,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,0.43841,0.43841,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3215,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,0.39449,0.39449,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3216,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,0.39001,0.39001,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3217,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,0.38174,0.38174,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3218,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,0.35968,0.35968,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3219,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,0.36709,0.36709,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3220,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,0.35324,0.35324,mM,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+3226,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,0.06438,0.06438,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3227,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,0.07108,0.07108,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3228,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,0.07026,0.07026,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3229,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,0.3242,0.3242,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3230,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,0.17351,0.17351,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3231,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,0.33299,0.33299,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3232,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,1.0543,1.0543,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3233,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,1.08745,1.08745,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3234,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,1.10265,1.10265,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3235,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,1.67269,1.67269,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3236,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,1.60592,1.60592,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3237,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,1.62792,1.62792,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3238,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,2.60626,2.60626,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3239,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,2.60033,2.60033,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3240,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,2.56151,2.56151,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3241,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glyc,0,0,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3242,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,0.0113,0.0113,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3243,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,0.00551,0.00551,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3244,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glyc,0.02176,0.02176,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3245,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glyc,0.04587,0.04587,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3246,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,0.03839,0.03839,mM,HPLC,FALSE,"Detection of glycerol is not sensitive enough to determine an accurate rate; However, glycerol is present and is most likely being excreted in minute amounts"
+3247,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,0.2676,0.2676,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3248,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,0.29285,0.29285,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3249,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,0.26465,0.26465,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3250,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,0.72643,0.72643,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3251,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,0.40246,0.40246,mM,HPLC,FALSE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3252,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,0.74056,0.74056,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3253,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,1.45589,1.45589,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3254,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,1.48601,1.48601,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3255,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,1.51478,1.51478,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3256,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,1.84367,1.84367,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3257,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,1.88711,1.88711,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3258,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,1.80215,1.80215,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3259,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,2.18772,2.18772,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3260,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,2.31105,2.31105,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3261,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,2.22982,2.22982,mM,HPLC,TRUE,"Biphasic growth: acetate appears to be the dominant excretion product early in exponential growth, but begins to switch to lactate during mid- to late- exponential growth"
+3964,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,579689.3125,579689.3125,Area,HPLC,FALSE,
+3965,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,578589.4375,578589.4375,Area,HPLC,TRUE,
+3966,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,583221.6875,583221.6875,Area,HPLC,TRUE,
+3967,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,555108.75,555108.75,Area,HPLC,TRUE,
+3968,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,557088,557088,Area,HPLC,TRUE,
+3969,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,558605.6875,558605.6875,Area,HPLC,TRUE,
+3970,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,505995.3438,505995.3438,Area,HPLC,TRUE,
+3971,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,504762.0625,504762.0625,Area,HPLC,TRUE,
+3972,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,511141.5625,511141.5625,Area,HPLC,TRUE,
+3973,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,428685.8438,428685.8438,Area,HPLC,TRUE,
+3974,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,425666.25,425666.25,Area,HPLC,TRUE,
+3975,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,432132.375,432132.375,Area,HPLC,TRUE,
+3976,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,glc-D,349265.4688,349265.4688,Area,HPLC,TRUE,
+3977,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,glc-D,345021.5938,345021.5938,Area,HPLC,TRUE,
+3978,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,glc-D,349137.6875,349137.6875,Area,HPLC,TRUE,
+4045,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,1619.40381,1619.40381,Area,HPLC,FALSE,
+4046,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,1440.6604,1440.6604,Area,HPLC,FALSE,
+4047,ALEsKOs01,140721_1_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,1431.21069,1431.21069,Area,HPLC,FALSE,
+4048,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,1454.02551,1454.02551,Area,HPLC,FALSE,
+4049,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,1414.66248,1414.66248,Area,HPLC,FALSE,
+4050,ALEsKOs01,140721_2_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,1479.87561,1479.87561,Area,HPLC,FALSE,
+4051,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,1507.25513,1507.25513,Area,HPLC,FALSE,
+4052,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,1437.14001,1437.14001,Area,HPLC,FALSE,
+4053,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,1460.33411,1460.33411,Area,HPLC,FALSE,
+4054,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,1313.93628,1313.93628,Area,HPLC,FALSE,
+4055,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,1422.84351,1422.84351,Area,HPLC,FALSE,
+4056,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,1320.6134,1320.6134,Area,HPLC,FALSE,
+4057,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,succ,1280.90735,1280.90735,Area,HPLC,FALSE,
+4058,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,succ,1483.59045,1483.59045,Area,HPLC,FALSE,
+4059,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,succ,1361.94836,1361.94836,Area,HPLC,FALSE,
+4062,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,for,1756.90063,1756.90063,Area,HPLC,FALSE,
+4063,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,for,1528.07825,1528.07825,Area,HPLC,FALSE,
+4064,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,for,1271.56934,1271.56934,Area,HPLC,FALSE,
+4069,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,2268.50903,2268.50903,Area,HPLC,TRUE,
+4070,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,2361.39917,2361.39917,Area,HPLC,TRUE,
+4071,ALEsKOs01,140721_3_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,2601.52539,2601.52539,Area,HPLC,TRUE,
+4072,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,3677.45703,3677.45703,Area,HPLC,TRUE,
+4073,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,3469.18188,3469.18188,Area,HPLC,TRUE,
+4074,ALEsKOs01,140721_4_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,4136.03906,4136.03906,Area,HPLC,TRUE,
+4075,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-1,ac,9059.1543,9059.1543,Area,HPLC,TRUE,
+4076,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-2,ac,9362.33984,9362.33984,Area,HPLC,TRUE,
+4077,ALEsKOs01,140721_5_OxicEvo04tpiAEcoliGlcM9_Broth-3,ac,9269.5625,9269.5625,Area,HPLC,TRUE,
+4159,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,774951.25,774951.25,Area,HPLC,TRUE,
+4160,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,772464.1875,772464.1875,Area,HPLC,FALSE,
+4161,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,774697.9375,774697.9375,Area,HPLC,TRUE,
+4162,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,688597.25,688597.25,Area,HPLC,FALSE,
+4163,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,751295.3125,751295.3125,Area,HPLC,TRUE,
+4164,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,761513.0625,761513.0625,Area,HPLC,TRUE,
+4165,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,719781.3125,719781.3125,Area,HPLC,TRUE,
+4166,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,719054.5,719054.5,Area,HPLC,TRUE,
+4167,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,724226.6875,724226.6875,Area,HPLC,TRUE,
+4168,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,647309.25,647309.25,Area,HPLC,TRUE,
+4169,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,636585.0625,636585.0625,Area,HPLC,TRUE,
+4170,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,648540.8125,648540.8125,Area,HPLC,TRUE,
+4171,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,598217.6875,598217.6875,Area,HPLC,TRUE,
+4172,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,586136,586136,Area,HPLC,TRUE,
+4173,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,598134.4375,598134.4375,Area,HPLC,TRUE,
+4174,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glc-D,302590.0938,302590.0938,Area,HPLC,FALSE,
+4175,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glc-D,512079.25,512079.25,Area,HPLC,TRUE,
+4176,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glc-D,530447.9375,530447.9375,Area,HPLC,TRUE,
+4177,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,777846.4375,777846.4375,Area,HPLC,TRUE,
+4178,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,776851.625,776851.625,Area,HPLC,TRUE,
+4179,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,777879.625,777879.625,Area,HPLC,TRUE,
+4180,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,723619.25,723619.25,Area,HPLC,FALSE,
+4181,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,765796.0625,765796.0625,Area,HPLC,TRUE,
+4182,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,766646.0625,766646.0625,Area,HPLC,TRUE,
+4183,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,734122.9375,734122.9375,Area,HPLC,TRUE,
+4184,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,729502.9375,729502.9375,Area,HPLC,TRUE,
+4185,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,732549.6875,732549.6875,Area,HPLC,TRUE,
+4186,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,661469.1875,661469.1875,Area,HPLC,TRUE,
+4187,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,671170.625,671170.625,Area,HPLC,TRUE,
+4188,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,660109.25,660109.25,Area,HPLC,TRUE,
+4189,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,618030.0625,618030.0625,Area,HPLC,TRUE,
+4190,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,623867,623867,Area,HPLC,TRUE,
+4191,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,612644.1875,612644.1875,Area,HPLC,TRUE,
+4192,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,glc-D,529704.5,529704.5,Area,HPLC,TRUE,
+4193,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,glc-D,318768.25,318768.25,Area,HPLC,FALSE,
+4194,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,glc-D,509375.2188,509375.2188,Area,HPLC,TRUE,
+4195,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,542146.625,542146.625,Area,HPLC,FALSE,
+4196,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,774136.0625,774136.0625,Area,HPLC,TRUE,
+4197,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,776297,776297,Area,HPLC,TRUE,
+4198,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,761411.125,761411.125,Area,HPLC,TRUE,
+4199,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,757697.125,757697.125,Area,HPLC,TRUE,
+4200,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,761835.9375,761835.9375,Area,HPLC,TRUE,
+4201,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,728503.875,728503.875,Area,HPLC,TRUE,
+4202,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,724184.875,724184.875,Area,HPLC,TRUE,
+4203,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,731819,731819,Area,HPLC,TRUE,
+4204,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,661106.5,661106.5,Area,HPLC,TRUE,
+4205,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,653778.75,653778.75,Area,HPLC,TRUE,
+4206,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,670809.25,670809.25,Area,HPLC,TRUE,
+4207,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,606040.8125,606040.8125,Area,HPLC,TRUE,
+4208,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,595955.0625,595955.0625,Area,HPLC,TRUE,
+4209,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,621880.9375,621880.9375,Area,HPLC,TRUE,
+4210,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glc-D,497596.25,497596.25,Area,HPLC,TRUE,
+4211,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glc-D,480200.7813,480200.7813,Area,HPLC,TRUE,
+4212,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glc-D,526770.5,526770.5,Area,HPLC,TRUE,
+4213,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,2007.20789,2007.20789,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4214,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,2187.11963,2187.11963,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4215,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,2122.51514,2122.51514,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4216,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,4652.52832,4652.52832,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4217,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,5039.08594,5039.08594,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4218,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,4888.80518,4888.80518,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4219,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,6778.17236,6778.17236,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4220,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,6838.98486,6838.98486,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4221,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,6777.75098,6777.75098,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4222,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,6259,6259,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4223,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,6350.38818,6350.38818,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4224,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,6366.91553,6366.91553,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4225,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,5942.40479,5942.40479,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4226,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,5950.03223,5950.03223,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4227,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,6055.4209,6055.4209,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4228,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,succ,3221.9812,3221.9812,Area,HPLC,FALSE,Outlier; poor sample acquisition
+4229,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,succ,5530.75537,5530.75537,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4230,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,succ,5557.10352,5557.10352,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4231,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,1958.09534,1958.09534,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4232,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,1891.42993,1891.42993,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4233,ALEsKOs01,140807_1_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,1937.20276,1937.20276,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4234,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,4263.01416,4263.01416,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4235,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,4414.8125,4414.8125,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4236,ALEsKOs01,140807_2_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,4484.73535,4484.73535,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4237,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,5936.29639,5936.29639,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4238,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,5880.74512,5880.74512,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4239,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,5949.28809,5949.28809,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4240,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,5149.5874,5149.5874,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4241,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,5223.12354,5223.12354,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4242,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,5119.93799,5119.93799,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4243,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,4741.1416,4741.1416,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4244,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,4680.66309,4680.66309,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4245,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,4653.52783,4653.52783,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4246,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,succ,3969.12598,3969.12598,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4247,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,succ,2508.0354,2508.0354,Area,HPLC,FALSE,Outlier; poor sample acquisition
+4248,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,succ,3890.40283,3890.40283,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4249,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,1390.46436,1390.46436,Area,HPLC,FALSE,Outlier; poor sample acquisition
+4250,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,2033.76477,2033.76477,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4251,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,1886.02197,1886.02197,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4252,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,4539.35889,4539.35889,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4253,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,4741.93945,4741.93945,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4254,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,4763.16455,4763.16455,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4255,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,6038.74902,6038.74902,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4256,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,6102.20166,6102.20166,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4257,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,6589.22314,6589.22314,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4258,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,5612.09131,5612.09131,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4259,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,5507.34814,5507.34814,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4260,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,5951.12842,5951.12842,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4261,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,5034.9751,5034.9751,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4262,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,5132.05957,5132.05957,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4263,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,5473.95801,5473.95801,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4264,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,succ,4201.94824,4201.94824,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4265,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,succ,4279.00684,4279.00684,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4266,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,succ,4679.64893,4679.64893,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4267,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,4207.31055,4207.31055,Area,HPLC,TRUE,
+4268,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,4813.27148,4813.27148,Area,HPLC,TRUE,
+4269,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,4617.35791,4617.35791,Area,HPLC,TRUE,
+4270,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,14129.38379,14129.38379,Area,HPLC,TRUE,
+4271,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,15459.27539,15459.27539,Area,HPLC,TRUE,
+4272,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,15045.12305,15045.12305,Area,HPLC,TRUE,
+4273,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,21062.76758,21062.76758,Area,HPLC,TRUE,
+4274,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,22790.97461,22790.97461,Area,HPLC,TRUE,
+4275,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,21955.23047,21955.23047,Area,HPLC,TRUE,
+4276,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,lac-L,16829.18555,16829.18555,Area,HPLC,FALSE,
+4277,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,lac-L,34407.41797,34407.41797,Area,HPLC,TRUE,
+4278,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,lac-L,33049.60938,33049.60938,Area,HPLC,TRUE,
+4279,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,3187.38354,3187.38354,Area,HPLC,TRUE,
+4280,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,2950.34766,2950.34766,Area,HPLC,TRUE,
+4281,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,3246.81543,3246.81543,Area,HPLC,TRUE,
+4282,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,9735.68945,9735.68945,Area,HPLC,TRUE,
+4283,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,9252.62402,9252.62402,Area,HPLC,TRUE,
+4284,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,9448.66895,9448.66895,Area,HPLC,TRUE,
+4285,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,14807.46875,14807.46875,Area,HPLC,TRUE,
+4286,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,13820.3252,13820.3252,Area,HPLC,TRUE,
+4287,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,14472.29883,14472.29883,Area,HPLC,TRUE,
+4288,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,lac-L,26090.81836,26090.81836,Area,HPLC,TRUE,
+4289,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,lac-L,14441.15625,14441.15625,Area,HPLC,FALSE,
+4290,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,lac-L,25303.22461,25303.22461,Area,HPLC,TRUE,
+4291,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,3661.89844,3661.89844,Area,HPLC,TRUE,
+4292,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,4380.97754,4380.97754,Area,HPLC,TRUE,
+4293,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,4917.60156,4917.60156,Area,HPLC,TRUE,
+4294,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,12587.95313,12587.95313,Area,HPLC,TRUE,
+4295,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,14012.9043,14012.9043,Area,HPLC,TRUE,
+4296,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,16076.65332,16076.65332,Area,HPLC,TRUE,
+4297,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,19175.64258,19175.64258,Area,HPLC,TRUE,
+4298,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,22213.9375,22213.9375,Area,HPLC,TRUE,
+4299,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,24757.39258,24757.39258,Area,HPLC,TRUE,
+4300,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,lac-L,34209.91406,34209.91406,Area,HPLC,TRUE,
+4301,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,lac-L,41986.00781,41986.00781,Area,HPLC,TRUE,
+4302,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,lac-L,43305.75781,43305.75781,Area,HPLC,TRUE,
+4303,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,1385.32568,1385.32568,Area,HPLC,FALSE,
+4304,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,1337.49329,1337.49329,Area,HPLC,FALSE,
+4305,ALEsKOs01,140807_1_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,1343.44507,1343.44507,Area,HPLC,FALSE,
+4306,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,1195.52759,1195.52759,Area,HPLC,FALSE,
+4307,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,1223.9845,1223.9845,Area,HPLC,FALSE,
+4308,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,1044.2146,1044.2146,Area,HPLC,FALSE,
+4309,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,1331.8053,1331.8053,Area,HPLC,FALSE,
+4310,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,1338.20129,1338.20129,Area,HPLC,FALSE,
+4311,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,1404.83167,1404.83167,Area,HPLC,FALSE,
+4312,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,1342.22021,1342.22021,Area,HPLC,FALSE,
+4313,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,glyc,1383.59912,1383.59912,Area,HPLC,FALSE,
+4314,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,1376.99634,1376.99634,Area,HPLC,FALSE,
+4315,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,1404.84863,1404.84863,Area,HPLC,FALSE,
+4316,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,glyc,1546.40088,1546.40088,Area,HPLC,FALSE,
+4317,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,glyc,1617.98975,1617.98975,Area,HPLC,FALSE,
+4318,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,1567.1709,1567.1709,Area,HPLC,FALSE,
+4319,ALEsKOs01,140811_1_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,1484.64795,1484.64795,Area,HPLC,FALSE,
+4320,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,1335.32129,1335.32129,Area,HPLC,FALSE,
+4321,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,1383.40259,1383.40259,Area,HPLC,FALSE,
+4322,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,1503.07593,1503.07593,Area,HPLC,FALSE,
+4323,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,1437.00549,1437.00549,Area,HPLC,FALSE,
+4324,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,1590.89246,1590.89246,Area,HPLC,FALSE,
+4325,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,1620.11804,1620.11804,Area,HPLC,FALSE,
+4326,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,1581.26489,1581.26489,Area,HPLC,FALSE,
+4327,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,1612.17664,1612.17664,Area,HPLC,FALSE,
+4328,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,1587.98645,1587.98645,Area,HPLC,FALSE,
+4329,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,1703.78162,1703.78162,Area,HPLC,FALSE,
+4330,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,1773.37048,1773.37048,Area,HPLC,FALSE,
+4331,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,1716.26245,1716.26245,Area,HPLC,FALSE,
+4332,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,glyc,1875.92871,1875.92871,Area,HPLC,FALSE,
+4333,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,glyc,2067.83301,2067.83301,Area,HPLC,FALSE,
+4334,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,glyc,1977.81042,1977.81042,Area,HPLC,FALSE,
+4335,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,1825.776,1825.776,Area,HPLC,FALSE,
+4336,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,2369.88745,2369.88745,Area,HPLC,TRUE,
+4337,ALEsKOs01,140807_2_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,2084.63159,2084.63159,Area,HPLC,TRUE,
+4338,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,5099.06934,5099.06934,Area,HPLC,TRUE,
+4339,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,5541.48877,5541.48877,Area,HPLC,TRUE,
+4340,ALEsKOs01,140807_3_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,5002.79932,5002.79932,Area,HPLC,TRUE,
+4341,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,9375.34473,9375.34473,Area,HPLC,TRUE,
+4342,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,10059.44043,10059.44043,Area,HPLC,TRUE,
+4343,ALEsKOs01,140807_4_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,9271.83594,9271.83594,Area,HPLC,TRUE,
+4344,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,11614.64355,11614.64355,Area,HPLC,TRUE,
+4345,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,12105.15527,12105.15527,Area,HPLC,TRUE,
+4346,ALEsKOs01,140807_5_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,11244.86035,11244.86035,Area,HPLC,TRUE,
+4347,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,ac,8453.82715,8453.82715,Area,HPLC,FALSE,
+4348,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-2,ac,14255.69727,14255.69727,Area,HPLC,TRUE,
+4349,ALEsKOs01,140807_6_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-3,ac,13615.09277,13615.09277,Area,HPLC,TRUE,
+4350,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,3771.17188,3771.17188,Area,HPLC,TRUE,
+4351,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,3713.8833,3713.8833,Area,HPLC,TRUE,
+4352,ALEsKOs01,140807_3_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,3694.521,3694.521,Area,HPLC,TRUE,
+4353,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,7347.54883,7347.54883,Area,HPLC,TRUE,
+4354,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,7216.80371,7216.80371,Area,HPLC,TRUE,
+4355,ALEsKOs01,140807_4_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,7517.32617,7517.32617,Area,HPLC,TRUE,
+4356,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,9110.04297,9110.04297,Area,HPLC,TRUE,
+4357,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,8968.70215,8968.70215,Area,HPLC,TRUE,
+4358,ALEsKOs01,140807_5_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,9070.59961,9070.59961,Area,HPLC,TRUE,
+4359,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,ac,10061.88379,10061.88379,Area,HPLC,FALSE,
+4360,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-2,ac,6458.67627,6458.67627,Area,HPLC,FALSE,
+4361,ALEsKOs01,140807_6_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-3,ac,9817.91504,9817.91504,Area,HPLC,FALSE,
+4362,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,2165.79932,2165.79932,Area,HPLC,TRUE,
+4363,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,2130.61719,2130.61719,Area,HPLC,TRUE,
+4364,ALEsKOs01,140811_2_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,1986.16968,1986.16968,Area,HPLC,TRUE,
+4365,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,4810.47949,4810.47949,Area,HPLC,TRUE,
+4366,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,4856.95313,4856.95313,Area,HPLC,TRUE,
+4367,ALEsKOs01,140811_3_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,4575.5083,4575.5083,Area,HPLC,TRUE,
+4368,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,8864.07129,8864.07129,Area,HPLC,TRUE,
+4369,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,8923.03809,8923.03809,Area,HPLC,TRUE,
+4370,ALEsKOs01,140811_4_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,8173.9624,8173.9624,Area,HPLC,TRUE,
+4371,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,11285.37402,11285.37402,Area,HPLC,TRUE,
+4372,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,11094.90723,11094.90723,Area,HPLC,TRUE,
+4373,ALEsKOs01,140811_5_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,9975.76855,9975.76855,Area,HPLC,TRUE,
+4374,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,ac,14306.25195,14306.25195,Area,HPLC,TRUE,
+4375,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-2,ac,13213.0127,13213.0127,Area,HPLC,TRUE,
+4376,ALEsKOs01,140811_6_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-3,ac,12798.92285,12798.92285,Area,HPLC,TRUE,
+4377,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,778683,778683,Area,HPLC,TRUE,
+4378,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,755711.6875,755711.6875,Area,HPLC,FALSE,
+4379,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,776663.375,776663.375,Area,HPLC,TRUE,
+4380,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,762387.8125,762387.8125,Area,HPLC,TRUE,
+4381,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,761764.6875,761764.6875,Area,HPLC,TRUE,
+4382,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,745036.625,745036.625,Area,HPLC,TRUE,
+4383,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,727869.375,727869.375,Area,HPLC,TRUE,
+4384,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,385471.3438,385471.3438,Area,HPLC,FALSE,
+4385,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,701348.375,701348.375,Area,HPLC,TRUE,
+4386,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,652305.3125,652305.3125,Area,HPLC,TRUE,
+4387,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,645251.375,645251.375,Area,HPLC,TRUE,
+4388,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,650490.25,650490.25,Area,HPLC,TRUE,
+4389,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,593707.6875,593707.6875,Area,HPLC,TRUE,
+4390,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,568896.9375,568896.9375,Area,HPLC,TRUE,
+4391,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,572070.625,572070.625,Area,HPLC,TRUE,
+4392,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glc-D,518221.3125,518221.3125,Area,HPLC,TRUE,
+4393,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glc-D,512599.5313,512599.5313,Area,HPLC,TRUE,
+4394,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glc-D,511359.5938,511359.5938,Area,HPLC,FALSE,
+4467,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,2060.88281,2060.88281,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4468,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,2036.44324,2036.44324,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4469,ALEsKOs01,140811_1_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,2245.29053,2245.29053,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4470,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,5455.88574,5455.88574,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4471,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,5431.52783,5431.52783,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4472,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,5344.50781,5344.50781,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4473,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,8177.9541,8177.9541,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4474,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,4506.93311,4506.93311,Area,HPLC,FALSE,Outlier; poor sample acquisition
+4475,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,7860.98828,7860.98828,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4476,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,7921.17188,7921.17188,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4477,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,7966.854,7966.854,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4478,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,8126.56885,8126.56885,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4479,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,7310.79932,7310.79932,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4480,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,7227.62988,7227.62988,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4481,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,7074.12842,7074.12842,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4482,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,succ,6664.37744,6664.37744,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4483,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,succ,6802.12354,6802.12354,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4484,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,succ,6544.89941,6544.89941,Area,HPLC,FALSE,"Appears to initally produce succinate at lower biomass values, then slightly consume or stop producing at higher biomass values"
+4490,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,1291.70325,1291.70325,Area,HPLC,TRUE,
+4491,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,1400.15552,1400.15552,Area,HPLC,TRUE,
+4492,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,1386.80981,1386.80981,Area,HPLC,TRUE,
+4493,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,5498.08545,5498.08545,Area,HPLC,TRUE,
+4494,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,3058.50708,3058.50708,Area,HPLC,FALSE,
+4495,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,5640.3916,5640.3916,Area,HPLC,TRUE,
+4496,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,17318.37305,17318.37305,Area,HPLC,TRUE,
+4497,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,17855.07813,17855.07813,Area,HPLC,TRUE,
+4498,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,18101.11328,18101.11328,Area,HPLC,TRUE,
+4499,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,27329.92188,27329.92188,Area,HPLC,TRUE,
+4500,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,26249.03906,26249.03906,Area,HPLC,TRUE,
+4501,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,26605.09375,26605.09375,Area,HPLC,TRUE,
+4502,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,lac-L,42444.33203,42444.33203,Area,HPLC,TRUE,
+4503,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,lac-L,42348.36328,42348.36328,Area,HPLC,TRUE,
+4504,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,lac-L,41719.83594,41719.83594,Area,HPLC,TRUE,
+4505,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glyc,1067.74316,1067.74316,Area,HPLC,FALSE,
+4506,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,1267.97742,1267.97742,Area,HPLC,FALSE,
+4507,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,1179.85596,1179.85596,Area,HPLC,FALSE,
+4508,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,glyc,1427.09558,1427.09558,Area,HPLC,FALSE,
+4509,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,glyc,1793.98206,1793.98206,Area,HPLC,FALSE,
+4510,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,glyc,1680.22351,1680.22351,Area,HPLC,FALSE,
+4511,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,1716.95044,1716.95044,Area,HPLC,TRUE,
+4512,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,1851.33435,1851.33435,Area,HPLC,TRUE,
+4513,ALEsKOs01,140811_2_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,1701.27502,1701.27502,Area,HPLC,TRUE,
+4514,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,4158.69336,4158.69336,Area,HPLC,TRUE,
+4515,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,2434.64575,2434.64575,Area,HPLC,FALSE,
+4516,ALEsKOs01,140811_3_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,4233.86816,4233.86816,Area,HPLC,TRUE,
+4517,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,8040.58838,8040.58838,Area,HPLC,TRUE,
+4518,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,8200.87891,8200.87891,Area,HPLC,TRUE,
+4519,ALEsKOs01,140811_4_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,8353.97363,8353.97363,Area,HPLC,TRUE,
+4520,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,10104.18652,10104.18652,Area,HPLC,TRUE,
+4521,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,10335.33984,10335.33984,Area,HPLC,TRUE,
+4522,ALEsKOs01,140811_5_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,9883.25391,9883.25391,Area,HPLC,TRUE,
+4523,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,ac,11935.06543,11935.06543,Area,HPLC,TRUE,
+4524,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-2,ac,12591.4248,12591.4248,Area,HPLC,TRUE,
+4525,ALEsKOs01,140811_6_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-3,ac,12159.12793,12159.12793,Area,HPLC,TRUE,

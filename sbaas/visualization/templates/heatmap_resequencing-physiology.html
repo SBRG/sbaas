@@ -1,0 +1,45 @@
+﻿{% extends "base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{filename_css}}" />
+{% endblock %}
+{% block content %}
+<!-- tootip -->
+<div id="tooltip" class="hidden">
+    <p><span id="value"></span></p>
+</div>
+
+<!-- js dependencies -->
+<script src="{{d3}}"></script>
+<script src="{{filename_js}}"></script>
+<script src="{{utilities_js}}"></script>
+<script src="{{vkbeautify}}"></script>
+
+<!-- menu options -->
+<select id="order">
+    <option value="hclust">by cluster</option>
+    <option value="probecontrast">by physiology_id and resequencing_id</option>
+    <option value="probe">by physiology_id</option>
+    <option value="contrast">by resequencing_id</option>
+    <option value="custom">by count</option>
+</select>
+
+<!-- SVG element -->
+<!--<div>
+    <h1>{{chart_title}}</h1>
+</div>-->
+<div id="chart1" style='overflow:auto; width:auto; height:600px;'></div>
+
+<!-- d3 render -->
+<script type="text/javascript">
+    {{data_id}}; //var data = ...(loaded json structure)
+    heatmap_d3(data, "chart1");
+</script>
+
+<!-- export -->
+<form name="download">
+    <label>Export as SVG</label>
+    <input type=button value="Download" onclick="export_svg('{{export_svg_filename}}', '#chart1', true)" />
+</form>
+{% endblock %}
+

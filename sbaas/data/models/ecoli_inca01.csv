@@ -1,0 +1,69 @@
+rxn_equation_INCA,rxn_id_INCA
+G6P (abcdef) <-> F6P (abcdef),v1
+F6P (abcdef) -> FBP (abcdef),v2
+FBP (abcdef) <-> DHAP (cba) + GAP (def),v3
+DHAP (abc) <-> GAP (abc),v4
+GAP (abc) <-> PG3 (abc),v5
+PG3 (abc) <-> PEP (abc),v6
+PEP (abc) -> Pyr (abc),v7
+G6P (abcdef) -> PG6 (abcdef),v8
+PG6 (abcdef) -> Ru5P (bcdef) + CO2 (a),v9
+Ru5P (abcde) <-> X5P (abcde),v10
+Ru5P (abcde) <-> R5P (abcde),v11
+X5P (abcde) <-> GAP (cde) + EC2 (ab),v12
+F6P (abcdef) <-> E4P (cdef) + EC2 (ab),v13
+S7P (abcdefg) <-> R5P (cdefg) + EC2 (ab),v14
+F6P (abcdef) <-> GAP (def) + EC3 (abc),v15
+S7P (abcdefg) <-> E4P (defg) + EC3 (abc),v16
+PG6 (abcdef) -> KDPG (abcdef),v17
+KDPG (abcdef) -> Pyr (abc) + GAP (def),v18
+Pyr (abc) -> AcCoA (bc) + CO2 (a),v19
+OAA (abcd) + AcCoA (ef) -> Cit (dcbfea),v20
+Cit (abcdef) <-> ICit (abcdef),v21
+ICit (abcdef) <-> AKG (abcde) + CO2 (f),v22
+AKG (abcde) -> SucCoA (bcde) + CO2 (a),v23
+SucCoA (abcd) <-> Suc (abcd),v24
+Suc (abcd) <-> Fum (abcd),v25
+Fum (abcd) <-> Mal (abcd),v26
+Mal (abcd) <-> OAA (abcd),v27
+Mal (abcd) -> Pyr (abc) + CO2 (d),v28
+PEP (abc) + CO2 (d) <-> OAA (abcd),v29
+AcCoA (ab) <-> Ac (ab),v30
+DHAP (abc) <-> Glyc3P (abc),v31
+Glyc3P (abc) -> Glyc (abc),v32
+Glyc (abc) -> HPA (abc),v33
+HPA (abc) -> PDO (abc),v34
+AKG (abcde) -> Glu (abcde),v35
+Glu (abcde) -> Gln (abcde),v36
+Glu (abcde) -> Pro (abcde),v37
+Glu (abcde) + CO2 (f) + Gln (ghijk) + Asp (lmno) + AcCoA (pq) -> Arg (abcdef) + AKG (ghijk) + Fum (lmno) + Ac (pq),v38
+OAA (abcd) + Glu (efghi) -> Asp (abcd) + AKG (efghi),v39
+Asp (abcd) -> Asn (abcd),v40
+Pyr (abc) + Glu (defgh) -> Ala (abc) + AKG (defgh),v41
+PG3 (abc) + Glu (defgh) -> Ser (abc) + AKG (defgh),v42
+Ser (abc) <-> Gly (ab) + MEETHF (c),v43
+Gly (ab) <-> CO2 (a) + MEETHF (b),v44
+Thr (abcd) -> Gly (ab) + AcCoA (cd),v45
+Ser (abc) + AcCoA (de) -> Cys (abc) + Ac (de),v46
+Asp (abcd) + Pyr (efg) + Glu (hijkl) + SucCoA (mnop) -> LL_DAP (abcdgfe) + AKG (hijkl) + Suc (mnop),v47
+LL_DAP (abcdefg) -> Lys (abcdef) + CO2 (g),v48
+Asp (abcd) -> Thr (abcd),v49
+Asp (abcd) + METHF (e) + Cys (fgh) + SucCoA (ijkl) -> Met (abcde) + Pyr (fgh) + Suc (ijkl),v50
+Pyr (abc) + Pyr (def) + Glu (ghijk) -> Val (abcef) + CO2 (d) + AKG (ghijk),v51
+AcCoA (ab) + Pyr (cde) + Pyr (fgh) + Glu (ijklm) -> Leu (abdghe) + CO2 (c) + CO2 (f) + AKG (ijklm),v52
+Thr (abcd) + Pyr (efg) + Glu (hijkl) -> Ile (abfcdg) + CO2 (e) + AKG (hijkl),v53
+PEP (abc) + PEP (def) + E4P (ghij) + Glu (klmno) -> Phe (abcefghij) + CO2 (d) + AKG (klmno),v54
+PEP (abc) + PEP (def) + E4P (ghij) + Glu (klmno) -> Tyr (abcefghij) + CO2 (d) + AKG (klmno),v55
+Ser (abc) + R5P (defgh) + PEP (ijk) + E4P (lmno) + PEP (pqr) + Gln (stuvw) -> Trp (abcedklmnoj) + CO2 (i) + GAP (fgh) + Pyr (pqr) + Glu (stuvw),v56
+R5P (abcde) + FTHF (f) + Gln (ghijk) + Asp (lmno) -> His (edcbaf) + AKG (ghijk) + Fum (lmno),v57
+MEETHF (a) -> METHF (a),v58
+MEETHF (a) -> FTHF (a),v59
+Gluc.pre (abcdef) -> G6P (abcdef),v60
+Gluc.ext (abcdef) -> G6P (abcdef),v61
+Cit.ext (abcdef) -> Cit (abcdef),v62
+Glyc.ext (abc) + Dummy.ext <-> Glyc (abc) + Dummy,v63
+PDO (abc) -> PDO.ext (abc),v64
+Ac (ab) -> Ac.ext (ab),v65
+CO2 (a) -> CO2.ext (a),v66
+0.488 Ala + 0.281 Arg + 0.229 Asn + 0.229 Asp + 0.087 Cys + 0.250 Glu + 0.250 Gln + 0.582 Gly + 0.090 His + 0.276 Ile + 0.428 Leu + 0.326 Lys + 0.146 Met + 0.176 Phe + 0.210 Pro + 0.205 Ser + 0.241 Thr + 0.054 Trp + 0.131 Tyr + 0.402 Val + 0.205 G6P + 0.071 F6P + 0.754 R5P + 0.129 GAP + 0.619 PG3 + 0.051 PEP + 0.083 Pyr + 2.510 AcCoA + 0.087 AKG + 0.340 OAA + 0.443 MEETHF -> 39.68 Biomass,v67
+Dummy -> Dummy.ext,v68

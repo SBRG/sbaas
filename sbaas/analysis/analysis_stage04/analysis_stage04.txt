@@ -1,0 +1,9 @@
+1. add in explicity enzyme/protein term to reaction network
+2. sample the enzyme space
+GSA
+MCA
+PERCs
+How to go from state a to b?
+	1. change enzyme conc
+	2. change enzyme efficiency
+	3. maintain met conc

@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>database schema</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../css/reingoldTilfordTree.css">
+</head>
+    <body>
+        <!-- javascript dependencies -->
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="../js/export_svg.js"></script>
+        <script src="../js/reingoldTilfordTree.js"></script>
+        <!-- Use CDN'd libraries: Jquery, d3js, BootStrap, google-code-prettify -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+
+        <!-- The Drawing Section -->
+        <div class="row">
+            <div class="span12">
+
+                <h2>d3js drawing</h2>
+
+                <!-- This will be the d3js drawing element -->
+                <div class='chart' id='ex1'></div>
+            </div>
+        </div>
+
+        <!-- The Export Section -->
+        <form name="download">
+            <label>download</label>
+            <input type=button value="Go" onclick="export_svg('name', '#ex1', true)" />
+        </form>
+
+        <!-- js call to d3 -->
+        <script>
+            create_d3js_drawing("../data/ReingoldTilfordTree/data.json");
+        </script>
+    </body>
+</html>

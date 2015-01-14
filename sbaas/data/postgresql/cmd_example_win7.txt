@@ -1,0 +1,3 @@
+C:\"Program Files"\PostgreSQL\9.3\bin\psql -h localhost -p 5432 -f C:\Users\dmccloskey-sbrg\Documents\GitHub\sbaas\sbaas\data\postgresql\create_sbaas.sql postgres postgres
+C:\"Program Files"\PostgreSQL\9.3\bin\psql -h localhost -p 5432 -f C:\Users\dmccloskey-sbrg\Documents\GitHub\sbaas\sbaas\data\postgresql\initialize_sbaas.sql sbaas postgres
+C:\"Program Files"\PostgreSQL\9.3\bin\psql -h localhost -p 5432 -f C:\Users\dmccloskey-sbrg\Documents\GitHub\sbaas\sbaas\data\postgresql\initialize_data_stage00_sbaas.sql sbaas postgres

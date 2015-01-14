@@ -1,0 +1,14 @@
+experiment_id,sample_name,filename
+ALEsKOs01,140807_11_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\Evo04tpiAEvo01EP\\output.gd
+ALEsKOs01,140807_11_OxicEvo04tpiAEvo02EPEcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\Evo04tpiAEvo02EP\\output.gd
+ALEsKOs01,140807_11_OxicEvo04tpiAEvo03EPEcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\Evo04tpiAEvo03EP\\output.gd
+ALEsKOs01,140807_11_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\Evo04tpiAEvo04EP\\output.gd
+ALEsKOs01,140702_1_OxicEvo04tpiAEvo01J01EcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\tpi_13_1\\output.gd
+ALEsKOs01,140702_3_OxicEvo04tpiAEvo01J03EcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\tpi_13_3\\output.gd
+ALEsKOs01,140702_1_OxicEvo04tpiAEvo02J01EcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\tpi_14_1\\output.gd
+ALEsKOs01,140702_3_OxicEvo04tpiAEvo02J03EcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\tpi_14_3\\output.gd
+ALEsKOs01,140702_1_OxicEvo04tpiAEvo03J01EcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\tpi_15_1\\output.gd
+ALEsKOs01,140702_3_OxicEvo04tpiAEvo03J03EcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\tpi_15_3\\output.gd
+ALEsKOs01,140702_1_OxicEvo04tpiAEvo04J01EcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\tpi_16_1\\output.gd
+ALEsKOs01,140702_3_OxicEvo04tpiAEvo04J03EcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\tpi_16_3\\output.gd
+ALEsKOs01,140401_0_OxicEvo04tpiAEcoliGlcM9_Broth-1,data\\tests\\analysis_resequencing\\breseq\\ALEevo04-tpiA\\output.gd

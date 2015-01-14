@@ -1,0 +1,114 @@
+html,
+body {
+    height: 100%;
+    background-color: #FCFCFC;
+/* The html and body elements cannot have any padding or margin. */
+}
+
+body {
+    font-size: 15px;
+    color: #585858;
+}
+
+/* Wrapper for page content to push down footer */
+main {
+    /* Negative indent footer by it's height */
+    margin: 0px auto -60px auto;
+    max-width: 700px;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+
+/* Set the fixed height of the footer here */
+#push {
+    height: 80px;
+}
+footer {
+    height: 60px;
+    background-color: #291E1E;
+    color: #eee;
+}
+ a,  a:hover,  a:focus,  a:visited {
+    color: #CF6965;
+}
+footer a, footer a:hover, footer a:focus, footer a:visited {
+    color: #FFA09D;
+}
+@media (max-width: 768px) {
+    #footer {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+.container {
+    width: auto;
+    max-width: 700px;
+}
+.container .more {
+    margin: 20px 0;
+    float: left;
+}
+.container .version {
+    margin: 20px 0;
+    float: right;
+}
+.column-button {
+    width: 100%;
+    margin-top: 35px;
+}
+#title-box {
+    display: inline-block;
+}
+#title {
+    color: #291E1E;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    /*font-family: tulpen-one, Futura, serif;*/
+    font-weight: 100;
+}
+#logo {
+    vertical-align: inherit;
+}
+#faq li {
+    padding-top: 5px;
+}
+@media (max-width: 768px) {
+    #title-box {
+	width: 100%;
+	text-align: center;
+    }
+    #logo {
+	display: none;
+    }
+}
+@media (min-width: 768px) { /*@screen-sm-min) { */
+    .column-button {
+	margin-top: 56px;
+    }
+    header {
+	margin-bottom: 50px;
+    }
+    #title-box {
+	max-width: 400px;
+	overflow: hidden;
+    }
+    #title {
+	position: relative;
+	/*top: 45px;*/
+	font-size: 48px;
+	text-align: justify;
+    }
+    #logo {
+	position: relative;
+	width: 768px;
+	display: inline-block;
+	overflow: hidden;
+    }
+    #faq {
+	margin-top: 50px;
+    }
+}

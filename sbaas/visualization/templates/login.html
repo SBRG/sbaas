@@ -1,0 +1,49 @@
+﻿{% extends "base.html" %}
+{% block title %}Data analysis visualization{% endblock %}
+{% block head %}
+<script src="{{d3}}"></script>
+
+<link rel="stylesheet" href="{{boot_css}}" />
+<link rel="stylesheet" href="{{index_css}}" />
+
+<!-- This font cannot be downloaded. -->
+<script src="//use.edgefonts.net/tulpen-one.js"></script>
+{% endblock %}
+{% block content %}
+<main>
+    <div class="container">
+        <header class="row">
+            <div class="col-sm-12">
+                <div id="title-box">
+                    <h3 id="title">Systems Biochemistry</h3>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div id="title-logo">
+                    <img src="{{logo}}" id="logo">
+                </div>
+            </div>
+        </header>
+        <div class="row">
+            <div class="col-sm-6">
+                <form name="login" method="post">
+                    Username: <input type="text" name="username"><br>
+                    Password: <input type="password" name="password">
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="push"></div>
+</main>
+<footer>
+    <div class="container">
+        <p class="more">
+            Learn more about <a href="{{github}}">this project</a>
+        </p>
+        <p class="version">
+            Version {{version}}
+        </p>
+    </div>
+</footer>
+{% endblock %}

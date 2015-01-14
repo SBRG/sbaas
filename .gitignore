@@ -1,0 +1,22 @@
+# vs solution files #
+#####################
+*.sln
+*.suo
+obj/
+
+# vs project files #
+####################
+sbaas.pyproj
+sbaas.py
+
+# log files #
+#############
+*.log
+
+# local R dir #
+###############
+dmccloskey-sbrg/
+
+# compile py files #
+####################
+*.pyc

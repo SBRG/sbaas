@@ -1,0 +1,52 @@
+﻿body {
+	margin:0px auto; padding:0px;
+	text-align:center;
+	}
+	
+.container {
+    width: auto;
+	margin:0px auto;
+    float:none;
+	text-align:left;
+	padding:15px;
+}
+div.chart {
+        width: 1000px;
+        height: 1000px;
+        border: 1px solid black;
+    }
+
+    .node circle {
+        fill: #fff;
+        stroke: steelblue;
+        stroke-width: 1.5px;
+    }
+
+    .node {
+        font: 10px sans-serif;
+    }
+
+    .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 1.5px;
+    }
+
+    button {
+        background-color: steelblue;
+        color: #ffffff;
+    }
+
+    button {
+        background-color: steelblue;
+        color: #ffffff;
+        display: inline-block;
+        padding: 4px 14px;
+        margin-bottom: 0;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        background-repeat: repeat-x;
+    }

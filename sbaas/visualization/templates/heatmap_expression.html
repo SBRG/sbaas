@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title>ALE sKOs Expression</title>
+        <link rel="stylesheet" type="text/css" href="../css/heatmap_expression.css">
+    </head>
+    <body>
+        <!-- tootip -->
+        <div id="tooltip" class="hidden">
+            <p><span id="value"></span></p>
+        </div>
+
+        <!-- menu options -->
+        <select id="order">
+            <option value="hclust">by cluster</option>
+            <option value="probecontrast">by probe name and contrast name</option>
+            <option value="probe">by probe name</option>
+            <option value="contrast">by contrast name</option>
+            <option value="custom">by log2 ratio</option>
+        </select>
+
+        <!-- svg element -->
+        <div id="chart" style='overflow:auto; width:960px; height:auto;'></div>
+
+        <!-- js dependencies -->
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="../js/heatmap_expression.js"></script>
+        <script src="../data/Heatmap_expression/data.js"></script>
+
+        <!-- js call to d3 -->
+        <script type="text/javascript">
+            heatmap_d3(data);
+        </script>
+    </body>
+</html>

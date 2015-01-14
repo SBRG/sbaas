@@ -1,0 +1,72 @@
+﻿{% extends "base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{filename_css}}" />
+{% endblock %}
+{% block content %}
+<!-- js dependencies -->
+<script src="{{d3}}"></script>
+<script src="{{filename_js}}"></script>
+<script src="{{utilities_js}}"></script>
+<script src="{{vkbeautify}}"></script>
+<div>
+    <h1>{{chart_title}}</h1>
+</div>
+<!-- index menu -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Time point</label>
+            <select id="time_points" class="form-control">
+                <option value="none">None</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Concentration units</label>
+            <select id="concentration_units" class="form-control">
+                <option value="none">None</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Samples</label>
+            <select id="samples" class="form-control">
+                <option value="none">None</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <button type="button" id="submit" class="btn btn-default column-button">
+                Load data
+            </button>
+        </div>
+    </div>
+</div>
+<div id="push"></div>
+
+<!-- index control -->
+<script src="{{index_js}}"></script>
+<script type="text/javascript">
+    {{data}};
+    setup(data_filter);
+</script>
+
+<!-- tootip -->
+<div id="tooltip" class="hidden">
+    <p><span id="value"></span></p>
+</div>
+
+<div id="chart1"></div>
+
+<!-- d3 render -->
+<script type="text/javascript">
+    {{data_id}}; //var data = ...(loaded json structure)
+    scatterplot_d3(data, "chart1");
+</script>
+
+<!-- export -->
+<form name="download">
+    <label>Export as SVG</label>
+    <input type=button value="Download" onclick="export_svg('{{export_svg_filename}}', '#chart1', true)" />
+</form>
+{% endblock %}
