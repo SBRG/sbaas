@@ -382,11 +382,12 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage02_isotopomer_fittedFluxes(d['simulation_id'],
-                    d['experiment_id'],
-                    d['model_id'],
-                    d['mapping_id'],
-                    d['sample_name_abbreviation'],
-                    d['time_point'],
+                    d['simulation_dateAndTime'],
+                    #d['experiment_id'],
+                    #d['model_id'],
+                    #d['mapping_id'],
+                    #d['sample_name_abbreviation'],
+                    #d['time_point'],
                     d['rxn_id'],
                     d['flux'],
                     d['flux_stdev'],
@@ -410,11 +411,12 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage02_isotopomer_fittedData(d['simulation_id'],
-                    d['experiment_id'],
-                    d['model_id'],
-                    d['mapping_id'],
-                    d['sample_name_abbreviation'],
-                    d['time_point'],
+                    d['simulation_dateAndTime'],
+                    #d['experiment_id'],
+                    #d['model_id'],
+                    #d['mapping_id'],
+                    #d['sample_name_abbreviation'],
+                    #d['time_point'],
                     d['fitted_echi2'],
                     d['fitted_alf'],
                     d['fitted_chi2'],
@@ -431,6 +433,7 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage02_isotopomer_fittedMeasuredFluxes(d['simulation_id'],
+                    d['simulation_dateAndTime'],
                     d['experiment_id'],
                     d['model_id'],
                     d['mapping_id'],
@@ -450,6 +453,7 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage02_isotopomer_fittedMeasuredFragments(d['simulation_id'],
+                    d['simulation_dateAndTime'],
                     d['experiment_id'],
                     d['model_id'],
                     d['mapping_id'],
@@ -471,6 +475,7 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage02_isotopomer_fittedMeasuredFluxResiduals(d['simulation_id'],
+                    d['simulation_dateAndTime'],
                     d['experiment_id'],
                     d['model_id'],
                     d['mapping_id'],
@@ -496,6 +501,7 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage02_isotopomer_fittedMeasuredFragmentResiduals(d['simulation_id'],
+                    d['simulation_dateAndTime'],
                     d['experiment_id'],
                     d['model_id'],
                     d['mapping_id'],
@@ -970,11 +976,12 @@ class stage02_isotopomer_io(base_analysis):
                             #data_stage02_isotopomer_fittedFluxes.sample_name.like(d['sample_name'])
                             ).update(
                             {'simulation_id':d['simulation_id'],
-                            'experiment_id':d['experiment_id'],
-                            'model_id':d['model_id'],
-                            'mapping_id':d['mapping_id'],
-                            'sample_name_abbreviation':d['sample_name_abbreviation'],
-                            'time_point':d['time_point'],
+                            'simulation_dateAndTime':d['simulation_dateAndTime'],
+                            #'experiment_id':d['experiment_id'],
+                            #'model_id':d['model_id'],
+                            #'mapping_id':d['mapping_id'],
+                            #'sample_name_abbreviation':d['sample_name_abbreviation'],
+                            #'time_point':d['time_point'],
                             'rxn_id':d['rxn_id'],
                             'flux':d['flux'],
                             'flux_stdev':d['flux_stdev'],
@@ -1002,11 +1009,12 @@ class stage02_isotopomer_io(base_analysis):
                             #data_stage02_isotopomer_fittedData.sample_name.like(d['sample_name'])
                             ).update(
                             {'simulation_id':d['simulation_id'],
-                            'experiment_id':d['experiment_id'],
-                            'model_id':d['model_id'],
-                            'mapping_id':d['mapping_id'],
-                            'sample_name_abbreviation':d['sample_name_abbreviation'],
-                            'time_point':d['time_point'],
+                            'simulation_dateAndTime':d['simulation_dateAndTime'],
+                            #'experiment_id':d['experiment_id'],
+                            #'model_id':d['model_id'],
+                            #'mapping_id':d['mapping_id'],
+                            #'sample_name_abbreviation':d['sample_name_abbreviation'],
+                            #'time_point':d['time_point'],
                             'fitted_echi2':d['fitted_echi2'],
                             'fitted_alf':d['fitted_alf'],
                             'fitted_chi2':d['fitted_chi2'],
@@ -1027,6 +1035,7 @@ class stage02_isotopomer_io(base_analysis):
                             #data_stage02_isotopomer_fittedMeasuredFluxes.sample_name.like(d['sample_name'])
                             ).update(
                             {'simulation_id':d['simulation_id'],
+                            'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'experiment_id':d['experiment_id'],
                             'model_id':d['model_id'],
                             'mapping_id':d['mapping_id'],
@@ -1050,6 +1059,7 @@ class stage02_isotopomer_io(base_analysis):
                             #data_stage02_isotopomer_fittedMeasuredFragments.sample_name.like(d['sample_name'])
                             ).update(
                             {'simulation_id':d['simulation_id'],
+                            'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'experiment_id':d['experiment_id'],
                             'model_id':d['model_id'],
                             'mapping_id':d['mapping_id'],
@@ -1075,6 +1085,7 @@ class stage02_isotopomer_io(base_analysis):
                             #data_stage02_isotopomer_fittedMeasuredFluxResiduals.sample_name.like(d['sample_name'])
                             ).update(
                             {'simulation_id':d['simulation_id'],
+                            'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'experiment_id':d['experiment_id'],
                             'model_id':d['model_id'],
                             'mapping_id':d['mapping_id'],
@@ -1104,6 +1115,7 @@ class stage02_isotopomer_io(base_analysis):
                             #data_stage02_isotopomer_fittedMeasuredFragmentResiduals.sample_name.like(d['sample_name'])
                             ).update(
                             {'simulation_id':d['simulation_id'],
+                            'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'experiment_id':d['experiment_id'],
                             'model_id':d['model_id'],
                             'mapping_id':d['mapping_id'],
@@ -1135,7 +1147,7 @@ class stage02_isotopomer_io(base_analysis):
                             #data_stage02_isotopomer_simulationParameters.sample_name.like(d['sample_name'])
                             ).update(
                             {'simulation_id':d['simulation_id'],
-                            'experiment_id':d['experiment_id'],
+                            'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'cont_alpha':d['cont_alpha'],
                             'cont_reltol':d['cont_reltol'],
                             'cont_steps':d['cont_steps'],
@@ -2241,15 +2253,37 @@ class stage02_isotopomer_io(base_analysis):
         self.add_(data.data);
         data.clear_data();
         return
-    def import_isotopomerSimulationResults_INCA(self, filename, model_rxn_conversion_I=None):
+    def import_isotopomerSimulationResults_INCA(self, simulation_id, filename, model_rxn_conversion_I=None):
         '''import results from a fluxomics simulation using INCA1.3
         Please reference the model, fitdata, and simdata class structures in the INCA documentation'''
         #TODO
         '''table adds'''
+        # extract information about the file
+        import os, time
+        from stat import ST_SIZE, ST_MTIME
+        try:
+            st = os.stat(filename)
+        except IOError:
+            print "failed to get information about", filename
+            return;
+        else:
+            file_size = st[ST_SIZE]
+            simulation_dateAndTime = time.localtime(st[ST_MTIME])
+        # lookup information about the simulation:
+        simulation_info = {};
+        simulation_info = self.stage02_isotopomer_query.get_simulation_experimentID_dataStage02IsotopomerSimulation(simulation_id);
+        # determine if the simulation is a parallel labeling experiment, non-stationary, or both
+        parallel = False;
+        non_stationary = False;
+        if len(simulation_info['experiment_id'])>1 or simulation_info['sample_name_abbreviation']:
+            parallel = True;
+        if len(simulation_info['time_point'])>1:
+            non_stationary = True;
+        # extract out simulation data
         m = scipy.io.loadmat(filename)['m']; #model
         f = scipy.io.loadmat(filename)['f']; #fitdata
         s = scipy.io.loadmat(filename)['s']; #simdata
-        # extract out model information
+        # extract out model information (not currently recorded)
         m_ms_id = [];
         m_ms_on = [];
         m_ms_expt = [];
@@ -2259,21 +2293,110 @@ class stage02_isotopomer_io(base_analysis):
                 m_ms_expt.append(exp_id);
                 m_ms_id.append(d[0]);
                 m_ms_on.append(bool(d[0][0]));
+        # extract out simulation parameters (options)
+        m_options = {
+                    'cont_alpha':m['options'][0][0][0]['cont_alpha'][0][0][0],
+                    'cont_reltol':m['options'][0][0][0]['cont_reltol'][0][0][0],
+                    'cont_steps':m['options'][0][0][0]['cont_steps'][0][0][0],
+                    'fit_nudge':m['options'][0][0][0]['fit_nudge'][0][0][0],
+                    'fit_reinit':m['options'][0][0][0]['fit_reinit'][0][0][0],
+                    'fit_reltol':m['options'][0][0][0]['fit_reltol'][0][0][0],
+                    'fit_starts':m['options'][0][0][0]['fit_starts'][0][0][0],
+                    'fit_tau':m['options'][0][0][0]['fit_tau'][0][0][0],
+                    'hpc_mcr':m['options'][0][0][0]['hpc_mcr'][0][0][0],
+                    'hpc_on':m['options'][0][0][0]['hpc_on'][0][0][0],
+                    'hpc_serve':m['options'][0][0][0]['hpc_serve'][0][0][0],
+                    'int_maxstep':m['options'][0][0][0]['int_maxstep'][0][0][0],
+                    'int_reltol':m['options'][0][0][0]['int_reltol'][0][0][0],
+                    'int_senstol':m['options'][0][0][0]['int_senstol'][0][0][0],
+                    'int_timeout':m['options'][0][0][0]['int_timeout'][0][0][0],
+                    'int_tspan':m['options'][0][0][0]['int_tspan'][0][0][0],
+                    'ms_correct':m['options'][0][0][0]['ms_correct'][0][0][0],
+                    'oed_crit':m['options'][0][0][0]['oed_crit'][0][0][0],
+                    'oed_reinit':m['options'][0][0][0]['oed_reinit'][0][0][0],
+                    'oed_tolf':m['options'][0][0][0]['oed_tolf'][0][0][0],
+                    'oed_tolx':m['options'][0][0][0]['oed_tolx'][0][0][0],
+                    'sim_more':m['options'][0][0][0]['sim_more'][0][0][0],
+                    'sim_na':m['options'][0][0][0]['sim_na'][0][0][0],
+                    'sim_sens':m['options'][0][0][0]['sim_sens'][0][0][0],
+                    'sim_ss':m['options'][0][0][0]['sim_ss'][0][0][0],
+                    'sim_tunit':m['options'][0][0][0]['sim_tunit'][0][0][0]}
+        simulationParameters = [];
+        m_options.update({'simulation_id':simulation_id_I,'simulation_dateAndTime':simulation_dateAndTime,
+                    'used_':True,
+                    'comment_':None});
+        simulationParameters.append(m_options);
         # extract out fit information
-        f_Echi2 = [];
-        f_alf = [];
-        f_chi2 = [];
-        f_dof = [];
+        fittedData = [];
+        f_Echi2 = [f['Echi2'][0][0][0][0],f['Echi2'][0][0][0][1]];
+        f_alf = f['alf'][0][0][0][0];
+        f_chi2 = f['chi2'][0][0][0][0];
+        f_dof = f['dof'][0][0][0][0];
+        f_ = {'fitted_echi2':f_Echi2,
+        'fitted_alf':f_alf,
+        'fitted_chi2':f_chi2,
+        'fitted_dof':f_dof};
+        f_.update({'simulation_id':simulation_id_I,'simulation_dateAndTime':simulation_dateAndTime,
+                    'used_':True,
+                    'comment_':None})
+        fittedData.append(f_);
         # extract out sum of the squared residuals of the fitted measurements
         f_mnt_id = [];
         f_mnt_sres = [];
         f_mnt_expt = [];
+        f_mnt_type = []; #Flux or MS
         for d in f['mnt'][0][0][0]['id']:
             f_mnt_id.append(d[0]);
         for d in f['mnt'][0][0][0]['sres']:
             f_mnt_sres.append(d[0]);
         for d in f['mnt'][0][0][0]['expt']:
             f_mnt_expt.append(d[0]);
+        for d in f['mnt'][0][0][0]['type']:
+            f_mnt_type.append(d[0]);
+        # seperate into appropriate table rows
+        fittedMeasuredFluxes = [];
+        fittedMeasuredFragments = [];
+        for cnt,type in enumerate(f_mnt_type):
+            if type=='Flux':
+                if f_mnt_exp[cnt] in simulation_info['experiment_id']:
+                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':f_mnt_exp[cnt],
+                    'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
+                    'rxn_id':f_mnt_id[cnt],
+                    'fitted_sres':f_mnt_sres[cnt],
+                    'used_':True,
+                    'comment_':None})
+                elif f_mnt_exp[cnt] in simulation_info['sample_name_abbreviation']:
+                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':simulation_info['experiment_id'][0],
+                    'sample_name_abbreviation':f_mnt_exp[cnt],
+                    'rxn_id':f_mnt_id[cnt],
+                    'fitted_sres':f_mnt_sres[cnt],
+                    'used_':True,
+                    'comment_':None})
+            elif type=='MS':
+                if f_mnt_exp[cnt] in simulation_info['experiment_id']:
+                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':f_mnt_exp[cnt],
+                    'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
+                    'fragment_id':f_mnt_id[cnt],
+                    'fitted_sres':f_mnt_sres[cnt],
+                    'used_':True,
+                    'comment_':None})
+                elif f_mnt_exp[cnt] in simulation_info['sample_name_abbreviation']:
+                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':simulation_info['experiment_id'][0],
+                    'sample_name_abbreviation':f_mnt_exp[cnt],
+                    'fragment_id':f_mnt_id[cnt],
+                    'fitted_sres':f_mnt_sres[cnt],
+                    'used_':True,
+                    'comment_':None})
+            else:
+                print 'type not recognized';
         # extract out the residuals of the fitted measurements
         f_mnt_res_val = [];
         f_mnt_res_fit = [];
@@ -2290,6 +2413,59 @@ class stage02_isotopomer_io(base_analysis):
             f_mnt_res_std.append([0][0]['std'][0]);
             f_mnt_res_time.append([0][0]['time'][0]);
             f_mnt_res_expt.append([0][0]['expt'][0]);
+        # seperate into appropriate table rows
+        fittedMeasuredFluxResiduals = [];
+        fittedMeasuredFragmentResiduals = [];
+        for cnt,type in enumerate(f_mnt_type):
+            if type=='Flux':
+                if f_mnt_res_exp[cnt] in simulation_info['experiment_id']:
+                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':f_mnt_exp[cnt],
+                    'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
+                    'rxn_id':f_mnt_id[cnt],
+                    'fitted_sres':f_mnt_sres[cnt],
+                    'fitted_sres':f_mnt_sres[cnt],
+                    'fitted_sres':f_mnt_sres[cnt],
+                    'used_':True,
+                    'comment_':None})
+                elif f_mnt_res_exp[cnt] in simulation_info['sample_name_abbreviation']:
+                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':simulation_info['experiment_id'][0],
+                    'sample_name_abbreviation':f_mnt_exp[cnt],
+                    'rxn_id':f_mnt_res_id[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'used_':True,
+                    'comment_':None})
+            elif type=='MS':
+                if f_mnt_res_exp[cnt] in simulation_info['experiment_id']:
+                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':f_mnt_exp[cnt],
+                    'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
+                    'fragment_id':f_mnt_res_id[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'used_':True,
+                    'comment_':None})
+                elif f_mnt_res_exp[cnt] in simulation_info['sample_name_abbreviation']:
+                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':simulation_info['experiment_id'][0],
+                    'sample_name_abbreviation':f_mnt_exp[cnt],
+                    'fragment_id':f_mnt_res_id[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'used_':True,
+                    'comment_':None})
+            else:
+                print 'type not recognized';
+
         # extract out the fitted parameters
         f_par_id = [];
         f_par_val = [];

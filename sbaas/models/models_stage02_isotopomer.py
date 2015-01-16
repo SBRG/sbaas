@@ -541,13 +541,13 @@ class data_stage02_isotopomer_measuredPools(Base):
 class data_stage02_isotopomer_measuredFragments(Base):
     __tablename__ = 'data_stage02_isotopomer_measuredFragments'
     id = Column(Integer, Sequence('data_stage02_isotopomer_measuredFragments_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    met_id = Column(String(100), primary_key=True)
-    fragment_id = Column(String(100), primary_key=True)
-    fragment_formula = Column(String(500), primary_key=True)
-    #fragment_mass = Column(Integer, primary_key=True)
+    experiment_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    met_id = Column(String(100))
+    fragment_id = Column(String(100))
+    fragment_formula = Column(String(500))
+    #fragment_mass = Column(Integer)
     #n_replicates = Column(Integer)
     intensity_normalized_average = Column(postgresql.ARRAY(Float))
     intensity_normalized_cv = Column(postgresql.ARRAY(Float))
@@ -615,8 +615,8 @@ class data_stage02_isotopomer_atomMappingReactions(Base):
     rxn_description = Column(String(500))
     reactants_stoichiometry_tracked = Column(postgresql.ARRAY(Float)) # stoichiometry of metabolites (e.g. ['-1','-1'])
     products_stoichiometry_tracked = Column(postgresql.ARRAY(Float))  
-    reactants_ids_tracked = Column(postgresql.ARRAY(String(50))) # list of met_ids that are tracked (e.g. ['pyr_c','accoa_c'])
-    products_ids_tracked = Column(postgresql.ARRAY(String(50)))
+    reactants_ids_tracked = Column(postgresql.ARRAY(String(100))) # list of met_ids that are tracked (e.g. ['pyr_c','accoa_c'])
+    products_ids_tracked = Column(postgresql.ARRAY(String(100)))
     reactants_elements_tracked = Column(postgresql.JSON) # list of elements that are tracked (e.g. ['C','C'])
     products_elements_tracked = Column(postgresql.JSON)
     reactants_positions_tracked = Column(postgresql.JSON) # list of elements that are tracked (e.g. ['C','C'])
@@ -892,7 +892,7 @@ class data_stage02_isotopomer_atomMappingMetabolites(Base):
     id = Column(Integer, Sequence('data_stage02_isotopomer_atomMappingMetabolites_id_seq'), primary_key=True)
     mapping_id = Column(String(100), primary_key=True)
     #met_name = Column(String(500))
-    met_id = Column(String(50), primary_key=True)
+    met_id = Column(String(100), primary_key=True)
     #formula = Column(String(100))
     met_elements = Column(postgresql.ARRAY(String(3))) # the elements that are tracked (e.g. C,C,C)
     met_atompositions = Column(postgresql.ARRAY(Integer)) #the atoms positions that are tracked (e.g. 1,2,3) 
@@ -975,11 +975,12 @@ class data_stage02_isotopomer_fittedFluxes(Base):
     __tablename__ = 'data_stage02_isotopomer_fittedFluxes'
     id = Column(Integer, Sequence('data_stage02_isotopomer_fittedFluxes_id_seq'), primary_key=True)
     simulation_id = Column(String(500))
-    experiment_id = Column(String(50))
-    model_id = Column(String(50))
-    mapping_id = Column(String(100))
-    sample_name_abbreviation = Column(String(100))
-    time_point = Column(String(10))
+    simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #mapping_id = Column(String(100))
+    #sample_name_abbreviation = Column(String(100))
+    #time_point = Column(String(10))
     rxn_id = Column(String(100))
     flux = Column(Float);
     flux_stdev = Column(Float);
@@ -996,15 +997,16 @@ class data_stage02_isotopomer_fittedFluxes(Base):
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id','rxn_id'),
+            UniqueConstraint('simulation_id','rxn_id','simulation_dateAndTime'),
             )
 
     def __init__(self,simulation_id_I,
-        experiment_id_I,
-        model_id_I,
-        mapping_id_I,
-        sample_name_abbreviation_I,
-        time_point_I,
+        simulation_dateAndTime_I,
+        #experiment_id_I,
+        #model_id_I,
+        #mapping_id_I,
+        #sample_name_abbreviation_I,
+        #time_point_I,
         rxn_id_I,
         flux_I,
         flux_stdev_I,
@@ -1019,11 +1021,12 @@ class data_stage02_isotopomer_fittedFluxes(Base):
         used__I,
         comment__I):
         self.simulation_id=simulation_id_I
-        self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.mapping_id=mapping_id_I
-        self.sample_name_abbreviation=sample_name_abbreviation_I
-        self.time_point=time_point_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.mapping_id=mapping_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
+        #self.time_point=time_point_I
         self.rxn_id=rxn_id_I
         self.flux=flux_I
         self.flux_stdev=flux_stdev_I
@@ -1040,11 +1043,12 @@ class data_stage02_isotopomer_fittedFluxes(Base):
 
     def __repr__dict__(self):
         return {'simulation_id':self.simulation_id,
-        'experiment_id':self.experiment_id,
-        'model_id':self.model_id,
-        'mapping_id':self.mapping_id,
-        'sample_name_abbreviation':self.sample_name_abbreviation,
-        'time_point':self.time_point,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
+        #'experiment_id':self.experiment_id,
+        #'model_id':self.model_id,
+        #'mapping_id':self.mapping_id,
+        #'sample_name_abbreviation':self.sample_name_abbreviation,
+        #'time_point':self.time_point,
         'rxn_id':self.rxn_id,
         'flux':self.flux,
         'flux_stdev':self.flux_stdev,
@@ -1065,12 +1069,13 @@ class data_stage02_isotopomer_fittedData(Base):
     __tablename__ = 'data_stage02_isotopomer_fittedData'
     id = Column(Integer, Sequence('data_stage02_isotopomer_fittedData_id_seq'), primary_key=True)
     simulation_id = Column(String(500))
-    experiment_id = Column(String(50))
-    model_id = Column(String(50))
-    mapping_id = Column(String(100))
-    sample_name_abbreviation = Column(String(100))
-    time_point = Column(String(10))
-    fitted_echi2 = Column(Float);
+    simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #mapping_id = Column(String(100))
+    #sample_name_abbreviation = Column(String(100))
+    #time_point = Column(String(10))
+    fitted_echi2 = Column(postgresql.ARRAY(Float));
     fitted_alf = Column(Float);
     fitted_chi2 = Column(Float);
     fitted_dof = Column(Float);
@@ -1079,16 +1084,17 @@ class data_stage02_isotopomer_fittedData(Base):
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id'),
+            UniqueConstraint('simulation_id','simulation_dateAndTime'),
             )
 
     def __init__(self,
         simulation_id_I,
-        experiment_id_I,
-        model_id_I,
-        mapping_id_I,
-        sample_name_abbreviation_I,
-        time_point_I,
+        simulation_dateAndTime_I,
+        #experiment_id_I,
+        #model_id_I,
+        #mapping_id_I,
+        #sample_name_abbreviation_I,
+        #time_point_I,
         fitted_echi2_I,
         fitted_alf_I,
         fitted_chi2_I,
@@ -1096,10 +1102,11 @@ class data_stage02_isotopomer_fittedData(Base):
         used__I,
         comment__I):
         self.simulation_id=simulation_id_I
-        self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.mapping_id=mapping_id_I
-        self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.mapping_id=mapping_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
         self.time_point=time_point_I
         self.fitted_echi2=fitted_echi2_I
         self.fitted_alf=fitted_alf_I
@@ -1110,11 +1117,12 @@ class data_stage02_isotopomer_fittedData(Base):
 
     def __repr__dict__(self):
         return {'simulation_id':self.simulation_id,
-        'experiment_id':self.experiment_id,
-        'model_id':self.model_id,
-        'mapping_id':self.mapping_id,
-        'sample_name_abbreviation':self.sample_name_abbreviation,
-        'time_point':self.time_point,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
+        #'experiment_id':self.experiment_id,
+        #'model_id':self.model_id,
+        #'mapping_id':self.mapping_id,
+        #'sample_name_abbreviation':self.sample_name_abbreviation,
+        #'time_point':self.time_point,
         'fitted_echi2':self.fitted_echi2,
         'fitted_alf':self.fitted_alf,
         'fitted_chi2':self.fitted_chi2,
@@ -1128,11 +1136,12 @@ class data_stage02_isotopomer_fittedMeasuredFluxes(Base):
     __tablename__ = 'data_stage02_isotopomer_fittedMeasuredFluxes'
     id = Column(Integer, Sequence('data_stage02_isotopomer_fittedMeasuredFluxes_id_seq'), primary_key=True)
     simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
     experiment_id = Column(String(50))
-    model_id = Column(String(50))
-    mapping_id = Column(String(100))
+    #model_id = Column(String(50))
+    #mapping_id = Column(String(100))
     sample_name_abbreviation = Column(String(100))
-    time_point = Column(String(10))
+    #time_point = Column(String(10))
     rxn_id = Column(String(100))
     fitted_sres = Column(Float);
     used_ = Column(Boolean);
@@ -1140,26 +1149,28 @@ class data_stage02_isotopomer_fittedMeasuredFluxes(Base):
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id','rxn_id'),
+            UniqueConstraint('simulation_id','rxn_id','simulation_dateAndTime'),
             )
 
     def __init__(self,
         simulation_id_I,
+        simulation_dateAndTime_I,
         experiment_id_I,
-        model_id_I,
-        mapping_id_I,
+        #model_id_I,
+        #mapping_id_I,
         sample_name_abbreviation_I,
-        time_point_I,
+        #time_point_I,
         rxn_id_I,
         fitted_sres_I,
         used__I,
         comment__I):
         self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
         self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.mapping_id=mapping_id_I
+        #self.model_id=model_id_I
+        #self.mapping_id=mapping_id_I
         self.sample_name_abbreviation=sample_name_abbreviation_I
-        self.time_point=time_point_I
+        #self.time_point=time_point_I
         self.rxn_id=rxn_id_I
         self.fitted_sres=fitted_sres_I
         self.used_=used__I
@@ -1167,11 +1178,12 @@ class data_stage02_isotopomer_fittedMeasuredFluxes(Base):
 
     def __repr__dict__(self):
         return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
-        'model_id':self.model_id,
-        'mapping_id':self.mapping_id,
+        #'model_id':self.model_id,
+        #'mapping_id':self.mapping_id,
         'sample_name_abbreviation':self.sample_name_abbreviation,
-        'time_point':self.time_point,
+        #'time_point':self.time_point,
         'rxn_id':self.rxn_id,
         'fitted_sres':self.fitted_sres,
         'used_':self.used_,
@@ -1183,58 +1195,62 @@ class data_stage02_isotopomer_fittedMeasuredFragments(Base):
     __tablename__ = 'data_stage02_isotopomer_fittedMeasuredFragments'
     id = Column(Integer, Sequence('data_stage02_isotopomer_fittedMeasuredFragments_id_seq'), primary_key=True)
     simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
     experiment_id = Column(String(50))
-    model_id = Column(String(50))
-    mapping_id = Column(String(100))
+    #model_id = Column(String(50))
+    #mapping_id = Column(String(100))
     sample_name_abbreviation = Column(String(100))
-    time_point = Column(String(10))
-    met_id = Column(String(100))
+    #time_point = Column(String(10))
+    #met_id = Column(String(100))
     fragment_id = Column(String(100))
-    fragment_formula = Column(String(500))
+    #fragment_formula = Column(String(500))
     fitted_sres = Column(Float);
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id','fragment_id'),
+            UniqueConstraint('simulation_id','fragment_id','simulation_dateAndTime'),
             )
 
     def __init__(self,simulation_id_I,
     experiment_id_I,
-    model_id_I,
-    mapping_id_I,
+    simulation_dateAndTime_I,
+    #model_id_I,
+    #mapping_id_I,
     sample_name_abbreviation_I,
-    time_point_I,
-    met_id_I,
+    #time_point_I,
+    #met_id_I,
     fragment_id_I,
-    fragment_formula_I,
+    #fragment_formula_I,
     fitted_sres_I,
     used__I,
     comment__I):
         self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
         self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.mapping_id=mapping_id_I
+        #self.model_id=model_id_I
+        #self.mapping_id=mapping_id_I
         self.sample_name_abbreviation=sample_name_abbreviation_I
-        self.time_point=time_point_I
-        self.met_id=met_id_I
+        #self.time_point=time_point_I
+        #self.met_id=met_id_I
         self.fragment_id=fragment_id_I
-        self.fragment_formula=fragment_formula_I
+        #self.fragment_formula=fragment_formula_I
         self.fitted_sres=fitted_sres_I
         self.used_=used__I
         self.comment_=comment__I
 
     def __repr__dict__(self):
         return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
-        'model_id':self.model_id,
-        'mapping_id':self.mapping_id,
+        #'model_id':self.model_id,
+        #'mapping_id':self.mapping_id,
         'sample_name_abbreviation':self.sample_name_abbreviation,
-        'time_point':self.time_point,
-        'met_id':self.met_id,
+        #'time_point':self.time_point,
+        #'met_id':self.met_id,
         'fragment_id':self.fragment_id,
-        'fragment_formula':self.fragment_formula,
+        #'fragment_formula':self.fragment_formula,
         'fitted_sres':self.fitted_sres,
         'used_':self.used_,
         'comment_':self.comment_}
@@ -1245,9 +1261,10 @@ class data_stage02_isotopomer_fittedMeasuredFluxResiduals(Base):
     __tablename__ = 'data_stage02_isotopomer_fittedMeasuredFluxResiduals'
     id = Column(Integer, Sequence('data_stage02_isotopomer_fittedMeasuredFluxResiduals_id_seq'), primary_key=True)
     simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
     experiment_id = Column(String(50))
-    model_id = Column(String(50))
-    mapping_id = Column(String(100))
+    #model_id = Column(String(50))
+    #mapping_id = Column(String(100))
     sample_name_abbreviation = Column(String(100))
     time_point = Column(String(10))
     rxn_id = Column(String(100))
@@ -1263,13 +1280,14 @@ class data_stage02_isotopomer_fittedMeasuredFluxResiduals(Base):
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id','rxn_id'),
+            UniqueConstraint('simulation_id','rxn_id','simulation_dateAndTime'),
             )
 
     def __init__(self,simulation_id_I,
+        simulation_dateAndTime_I,
         experiment_id_I,
-        model_id_I,
-        mapping_id_I,
+        #model_id_I,
+        #mapping_id_I,
         sample_name_abbreviation_I,
         time_point_I,
         rxn_id_I,
@@ -1283,9 +1301,10 @@ class data_stage02_isotopomer_fittedMeasuredFluxResiduals(Base):
         used__I,
         comment__I):
         self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
         self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.mapping_id=mapping_id_I
+        #self.model_id=model_id_I
+        #self.mapping_id=mapping_id_I
         self.sample_name_abbreviation=sample_name_abbreviation_I
         self.time_point=time_point_I
         self.rxn_id=rxn_id_I
@@ -1301,9 +1320,10 @@ class data_stage02_isotopomer_fittedMeasuredFluxResiduals(Base):
 
     def __repr__dict__(self):
         return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
-        'model_id':self.model_id,
-        'mapping_id':self.mapping_id,
+        #'model_id':self.model_id,
+        #'mapping_id':self.mapping_id,
         'sample_name_abbreviation':self.sample_name_abbreviation,
         'time_point':self.time_point,
         'rxn_id':self.rxn_id,
@@ -1323,14 +1343,15 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
     __tablename__ = 'data_stage02_isotopomer_fittedMeasuredFragmentResiduals'
     id = Column(Integer, Sequence('data_stage02_isotopomer_fittedMeasuredFragmentResiduals_id_seq'), primary_key=True)
     simulation_id = Column(String(500))
-    experiment_id = Column(String(50))
-    model_id = Column(String(50))
-    mapping_id = Column(String(100))
-    sample_name_abbreviation = Column(String(100))
-    time_point = Column(String(10))
-    fragment_id = Column(String(100))
-    fragment_formula = Column(String(500))
-    fragment_mass = Column(Integer)
+    simulation_dateAndTime = Column(DateTime);
+    experiment_id = Column(String(50));
+    #model_id = Column(String(50));
+    #mapping_id = Column(String(100));
+    sample_name_abbreviation = Column(String(100));
+    time_point = Column(String(10));
+    fragment_id = Column(String(100));
+    fragment_formula = Column(String(500));
+    fragment_mass = Column(Integer);
     res_data = Column(Float);
     res_esens = Column(Float);
     res_fit = Column(Float);
@@ -1343,13 +1364,14 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id','fragment_id'),
+            UniqueConstraint('simulation_id','fragment_id','simulation_dateAndTime'),
             )
 
     def __init__(self,simulation_id_I,
+        simulation_dateAndTime_I,
         experiment_id_I,
-        model_id_I,
-        mapping_id_I,
+        #model_id_I,
+        #mapping_id_I,
         sample_name_abbreviation_I,
         time_point_I,
         fragment_id_I,
@@ -1365,9 +1387,10 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
         used__I,
         comment__I):
         self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
         self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.mapping_id=mapping_id_I
+        #self.model_id=model_id_I
+        #self.mapping_id=mapping_id_I
         self.sample_name_abbreviation=sample_name_abbreviation_I
         self.time_point=time_point_I
         self.fragment_id=fragment_id_I
@@ -1385,9 +1408,10 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
 
     def __repr__dict__(self):
         return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
-        'model_id':self.model_id,
-        'mapping_id':self.mapping_id,
+        #'model_id':self.model_id,
+        #'mapping_id':self.mapping_id,
         'sample_name_abbreviation':self.sample_name_abbreviation,
         'time_point':self.time_point,
         'fragment_id':self.fragment_id,
@@ -1409,7 +1433,7 @@ class data_stage02_isotopomer_simulationParameters(Base):
     __tablename__ = 'data_stage02_isotopomer_simulationParameters'
     id = Column(Integer, Sequence('data_stage02_isotopomer_simulationParameters_id_seq'), primary_key=True)
     simulation_id = Column(String(500))
-    experiment_id = Column(String(50))
+    simulation_dateAndTime = Column(DateTime);
     cont_alpha = Column(Float);
     cont_reltol = Column(Float);
     cont_steps = Column(Float);
@@ -1439,11 +1463,11 @@ class data_stage02_isotopomer_simulationParameters(Base):
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id'),
+            UniqueConstraint('simulation_id','simulation_dateAndTime'),
             )
 
     def __init__(self,simulation_id_I,
-        experiment_id_I,
+        simulation_dateAndTime_I,
         cont_alpha_I,
         cont_reltol_I,
         cont_steps_I,
@@ -1471,7 +1495,7 @@ class data_stage02_isotopomer_simulationParameters(Base):
         sim_ss_I,
         sim_tunit_I):
         self.simulation_id=simulation_id_I
-        self.experiment_id=experiment_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
         self.cont_alpha=cont_alpha_I
         self.cont_reltol=cont_reltol_I
         self.cont_steps=cont_steps_I
@@ -1501,7 +1525,7 @@ class data_stage02_isotopomer_simulationParameters(Base):
 
     def __repr__dict__(self):
         return {'simulation_id':self.simulation_id,
-            'experiment_id':self.experiment_id,
+            'simulation_dateAndTime':self.simulation_dateAndTime,
             'cont_alpha':self.cont_alpha,
             'cont_reltol':self.cont_reltol,
             'cont_steps':self.cont_steps,

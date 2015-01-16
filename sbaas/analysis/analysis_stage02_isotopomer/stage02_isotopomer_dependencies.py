@@ -3228,7 +3228,6 @@ class stage02_isotopomer_reactionMapping():
             self.reactionMapping['reactants_elements_tracked'].append(irm.reactionMapping['reactants_elements_tracked'][reactant_id_cnt])
             self.reactionMapping['reactants_positions_tracked'].append(irm.reactionMapping['reactants_positions_tracked'][reactant_id_cnt])
             self.reactionMapping['reactants_mapping'].append(irm.reactionMapping['reactants_mapping'][reactant_id_cnt])
-            self.reactionMapping['products_mapping'].append(irm.reactionMapping['products_mapping'][reactant_id_cnt])
         for product_id_cnt,product_id in enumerate(irm.reactionMapping['products_ids_tracked']):
             self.reactionMapping['products_stoichiometry_tracked'].append(irm.reactionMapping['products_stoichiometry_tracked'][product_id_cnt])
             self.reactionMapping['products_ids_tracked'].append(irm.reactionMapping['products_ids_tracked'][product_id_cnt])
@@ -3807,7 +3806,7 @@ class stage02_isotopomer_reactionMapping():
         #                       default: None, user current self
 
         if reactionMapping_I: reactionMapping_tmp = reactionMapping_I;
-        else: reactionMapping_tmp = reactionMapping_tmp;
+        else: reactionMapping_tmp = self.reactionMapping;
         for cnt,met in enumerate(reactionMapping_tmp['reactants_ids_tracked']):
             imm = stage02_isotopomer_metaboliteMapping(mapping_id_I=reactionMapping_tmp['mapping_id'],
                 met_id_I=met,
@@ -3994,12 +3993,15 @@ class stage02_isotopomer_reactionMapping():
                 product_positions_tracked = [];
                 product_elements_tracked = [];
                 balance_met = None;
+                product_cnt = 0;
                 for mapping_pos,mapping in enumerate(reactant_mapping): 
                     if mapping not in products_mappings:
                         balance_met = self.reactionMapping['rxn_id'] + '_' + self.reactionMapping['reactants_ids_tracked'][reactant_pos] + '_' + str(reactant_pos) + '.balance';
                         product_mapping.append(mapping);
-                        product_positions_tracked.append(self.reactionMapping['reactants_positions_tracked'][reactant_pos][mapping_pos]);
+                        #product_positions_tracked.append(self.reactionMapping['reactants_positions_tracked'][reactant_pos][mapping_pos]);
+                        product_positions_tracked.append(product_cnt);
                         product_elements_tracked.append(self.reactionMapping['reactants_elements_tracked'][reactant_pos][mapping_pos]);
+                        product_cnt += 1;
                 if balance_met:        
                     imm = stage02_isotopomer_metaboliteMapping(mapping_id_I=self.reactionMapping['mapping_id'],
                         met_id_I=balance_met,
@@ -4242,6 +4244,12 @@ class stage02_isotopomer_reactionMapping():
         return reactants_ids_stoichiometry_check,reactants_elements_positions_check,reactants_elements_mapping_check,reactants_positions_mapping_check,\
                 products_ids_stoichiometry_check,products_elements_positions_check,products_elements_mapping_check,products_positions_mapping_check,\
                 element_balance_check,mapping_check;
+    def clear_elementsAndPositions(self):
+        '''Clear the reactants/products elements/positions'''
+        self.reactionMapping['reactants_elements_tracked']=None;
+        self.reactionMapping['reactants_positions_tracked']=None;
+        self.reactionMapping['products_elements_tracked']=None;
+        self.reactionMapping['products_positions_tracked']=None;
 
 class stage02_isotopomer_mappingUtilities():
     def __init__(self):
@@ -4323,9 +4331,11 @@ class stage02_isotopomer_mappingUtilities():
                         if not mapping_row: data_add_O.append(d);
                     self.stage02_isotopomer_query.add_data_dataStage02IsotopomerAtomMappingMetabolites(data_add_O);
     def make_missingReactionMappings(self,experiment_id_I,model_id_I=[],mapping_id_rxns_I=[],mapping_id_mets_I=[],mapping_id_new_I=None):
-        '''Update missing reaction mappings for the current mapping from the matching metabolite mappings,
+        '''Update missing or incomplete reaction mappings for the current mapping from the matching metabolite mappings,
         and optionally, from the previous reaction mappings'''
         #Note: prior to running, remove all reaction mappings that are not used.
+
+        imm = stage02_isotopomer_metaboliteMapping();
         data_O = [];
         #get model ids:
         if model_id_I:
@@ -4428,7 +4438,11 @@ class stage02_isotopomer_mappingUtilities():
                                             #add missing data
                                             data_tmp['reactants_ids_tracked'].append(tracked_reactant['met_id']);
                                             data_tmp['reactants_stoichiometry_tracked'].append(0);
-                                            data_tmp['reactants_mapping'].append('');
+                                            imm.make_trackedMetabolite(mapping_id_rxns,model_id,{tracked_reactant['met_id']:tracked_reactant['met_elements'][0]},stoich_cnt)
+                                            new_mapping = imm.convert_arrayMapping2StringMapping();
+                                            imm.clear_metaboliteMapping();
+                                            data_tmp['reactants_mapping'].append(new_mapping);
+                                            #data_tmp['reactants_mapping'].append('');
                                             data_tmp['reactants_elements_tracked'].append(tracked_reactant['met_elements']);
                                             data_tmp['reactants_positions_tracked'].append(tracked_reactant['met_atompositions']);
                                             data_tmp['rxn_description']=tracked_reaction['rxn_description'];
@@ -4436,10 +4450,19 @@ class stage02_isotopomer_mappingUtilities():
                                             data_tmp['comment_']+=tracked_reactant['met_id']+',';
                                 else:
                                     missing_reactants.append(tracked_reactant);
+                                    reaction_stoich = 0;
+                                    for met_id_cnt,met_id in enumerate(reaction['reactants_ids']):
+                                        if met_id == tracked_reactant['met_id']:
+                                            reaction_stoich = reaction['reactants_stoichiometry'][met_id_cnt];
+                                            break;
                                     #add missing data
                                     data_tmp['reactants_ids_tracked'].append(tracked_reactant['met_id']);
-                                    data_tmp['reactants_stoichiometry_tracked'].append(0);
-                                    data_tmp['reactants_mapping'].append('');
+                                    data_tmp['reactants_stoichiometry_tracked'].append(reaction_stoich);
+                                    imm.make_trackedMetabolite(mapping_id_rxns,model_id,{tracked_reactant['met_id']:tracked_reactant['met_elements'][0]},0)
+                                    new_mapping = imm.convert_arrayMapping2StringMapping();
+                                    imm.clear_metaboliteMapping();
+                                    data_tmp['reactants_mapping'].append(new_mapping);
+                                    #data_tmp['reactants_mapping'].append('');
                                     data_tmp['reactants_elements_tracked'].append(tracked_reactant['met_elements']);
                                     data_tmp['reactants_positions_tracked'].append(tracked_reactant['met_atompositions']);
                                     data_tmp['rxn_description']=tracked_reaction['rxn_description'];
@@ -4474,7 +4497,11 @@ class stage02_isotopomer_mappingUtilities():
                                             #add missing data
                                             data_tmp['products_ids_tracked'].append(tracked_product['met_id']);
                                             data_tmp['products_stoichiometry_tracked'].append(0);
-                                            data_tmp['products_mapping'].append('');
+                                            imm.make_trackedMetabolite(mapping_id_rxns,model_id,{tracked_product['met_id']:tracked_product['met_elements'][0]},stoich_cnt)
+                                            new_mapping = imm.convert_arrayMapping2StringMapping();
+                                            imm.clear_metaboliteMapping();
+                                            data_tmp['products_mapping'].append(new_mapping);
+                                            #data_tmp['products_mapping'].append('');
                                             data_tmp['products_elements_tracked'].append(tracked_product['met_elements']);
                                             data_tmp['products_positions_tracked'].append(tracked_product['met_atompositions']);
                                             data_tmp['rxn_description']=tracked_reaction['rxn_description'];
@@ -4482,10 +4509,19 @@ class stage02_isotopomer_mappingUtilities():
                                             data_tmp['comment_']+=tracked_product['met_id']+',';
                                 else:
                                     missing_products.append(tracked_product);
+                                    reaction_stoich = 0;
+                                    for met_id_cnt,met_id in enumerate(reaction['products_ids']):
+                                        if met_id == tracked_product['met_id']:
+                                            reaction_stoich = abs(reaction['products_stoichiometry'][met_id_cnt]);
+                                            break;
                                     #add missing data
                                     data_tmp['products_ids_tracked'].append(tracked_product['met_id']);
-                                    data_tmp['products_stoichiometry_tracked'].append(0);
-                                    data_tmp['products_mapping'].append('');
+                                    data_tmp['products_stoichiometry_tracked'].append(reaction_stoich);
+                                    imm.make_trackedMetabolite(mapping_id_rxns,model_id,{tracked_product['met_id']:tracked_product['met_elements'][0]},0)
+                                    new_mapping = imm.convert_arrayMapping2StringMapping();
+                                    imm.clear_metaboliteMapping();
+                                    data_tmp['products_mapping'].append(new_mapping);
+                                    #data_tmp['products_mapping'].append('');
                                     data_tmp['products_elements_tracked'].append(tracked_product['met_elements']);
                                     data_tmp['products_positions_tracked'].append(tracked_product['met_atompositions']);
                                     data_tmp['rxn_description']=tracked_reaction['rxn_description'];
@@ -4505,29 +4541,48 @@ class stage02_isotopomer_mappingUtilities():
                             tmp.update({'tracked_products':tracked_products});
                             missing_reactions_O.append(reaction);
                             for tracked_reactant in tracked_reactants:
+                                reaction_stoich = 0;
+                                for met_id_cnt,met_id in enumerate(reaction['reactants_ids']):
+                                    if met_id == tracked_reactant['met_id']:
+                                        reaction_stoich = reaction['reactants_stoichiometry'][met_id_cnt];
+                                        break;
                                 #add missing data
                                 data_tmp['reactants_ids_tracked'].append(tracked_reactant['met_id']);
-                                data_tmp['reactants_stoichiometry_tracked'].append(0);
-                                data_tmp['reactants_mapping'].append('');
+                                data_tmp['reactants_stoichiometry_tracked'].append(reaction_stoich);
+                                imm.make_trackedMetabolite(mapping_id_rxns,model_id,{tracked_reactant['met_id']:tracked_reactant['met_elements'][0]},0)
+                                new_mapping = imm.convert_arrayMapping2StringMapping();
+                                imm.clear_metaboliteMapping();
+                                data_tmp['reactants_mapping'].append(new_mapping);
+                                #data_tmp['reactants_mapping'].append('');
                                 data_tmp['reactants_elements_tracked'].append(tracked_reactant['met_elements']);
                                 data_tmp['reactants_positions_tracked'].append(tracked_reactant['met_atompositions']);
                                 data_tmp['rxn_description']=None;
                                 data_tmp['used_']=False;
                                 data_tmp['comment_']=reaction['rxn_id'];
                             for tracked_product in tracked_products:
+                                reaction_stoich = 0;
+                                for met_id_cnt,met_id in enumerate(reaction['products_ids']):
+                                    if met_id == tracked_product['met_id']:
+                                        reaction_stoich = abs(reaction['products_stoichiometry'][met_id_cnt]);
+                                        break;
                                 #add missing data
                                 data_tmp['products_ids_tracked'].append(tracked_product['met_id']);
-                                data_tmp['products_stoichiometry_tracked'].append(0);
-                                data_tmp['products_mapping'].append('');
+                                data_tmp['products_stoichiometry_tracked'].append(reaction_stoich);
+                                imm.make_trackedMetabolite(mapping_id_rxns,model_id,{tracked_product['met_id']:tracked_product['met_elements'][0]},0)
+                                new_mapping = imm.convert_arrayMapping2StringMapping();
+                                imm.clear_metaboliteMapping();
+                                data_tmp['products_mapping'].append(new_mapping);
+                                #data_tmp['products_mapping'].append('');
                                 data_tmp['products_elements_tracked'].append(tracked_product['met_elements']);
                                 data_tmp['products_positions_tracked'].append(tracked_product['met_atompositions']);
                                 data_tmp['rxn_description']=None;
                                 data_tmp['used_']=False;
                                 data_tmp['comment_']=reaction['rxn_id'];
                     data_O.append(data_tmp);
-                self.print_missingReactionMappings(missing_reactions_O,missing_metabolites_O);
+                #self.print_missingReactionMappings(missing_reactions_O,missing_metabolites_O);
+                return missing_reactions_O,missing_metabolites_O;
         #add data to the database:
-        #self.stage02_isotopomer_query.add_data_dataStage02IsotopomerAtomMappingReactions(data_O);
+        self.stage02_isotopomer_query.add_data_dataStage02IsotopomerAtomMappingReactions(data_O);
     def print_missingReactionMappings(self,missing_reactions_I,missing_metabolites_I):
         '''print missing reaction mappings to the screen'''
         #missing reactions

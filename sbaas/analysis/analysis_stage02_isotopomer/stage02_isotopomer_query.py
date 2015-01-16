@@ -577,6 +577,66 @@ class stage02_isotopomer_query(base_analysis):
             return mapping_ids_O;
         except SQLAlchemyError as e:
             print(e);
+    # query rows from data_stage02_isotopomer_simulation
+    def get_rows_experimentID_dataStage02IsotopomerSimulation(self,simulation_id_I):
+        '''Querry rows that are used from the simulation'''
+        try:
+            data = query_session.query(data_stage02_isotopomer_simulation).filter(
+                    data_stage02_isotopomer_simulation.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_simulation.used_.is_(True)).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    rows_O.append({
+                            'simulation_id':d.simulation_id,
+                            'experiment_id':d.experiment_id,
+                            'model_id':d.model_id,
+                            'mapping_id':d.mapping_id,
+                            'sample_name_abbreviation':d.sample_name_abbreviation,
+                            'time_point':d.time_point,
+                            'used_':d.used_,
+                            'comment_':d.comment_});
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_simulation_experimentID_dataStage02IsotopomerSimulation(self,simulation_id_I):
+        '''Querry rows that are used from the simulation'''
+        try:
+            data = query_session.query(data_stage02_isotopomer_simulation).filter(
+                    data_stage02_isotopomer_simulation.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_simulation.used_.is_(True)).all();
+            simulation_id_O = []
+            experiment_id_O = []
+            model_id_O = []
+            mapping_id_O = []
+            sample_name_abbreviation_O = []
+            time_point_O = []
+            simulation_O = {};
+            if data: 
+                for d in data:
+                    simulation_id_O.append(d.simulation_id);
+                    experiment_id_O.append(d.experiment_id);
+                    model_id_O.append(d.model_id);
+                    mapping_id_O.append(d.mapping_id);
+                    sample_name_abbreviation_O.append(d.sample_name_abbreviation);
+                    time_point_O.append(d.time_point);
+                simulation_id_O = list(set(simulation_id_O))
+                experiment_id_O = list(set(experiment_id_O))
+                model_id_O = list(set(model_id_O))
+                mapping_id_O = list(set(mapping_id_O))
+                sample_name_abbreviation_O = list(set(sample_name_abbreviation_O))
+                time_point_O = list(set(time_point_O))
+                simulation_O={
+                        'simulation_id':simulation_id_O,
+                        'experiment_id':experiment_id_O,
+                        'model_id':model_id_O,
+                        'mapping_id':mapping_id_O,
+                        'sample_name_abbreviation':sample_name_abbreviation_O,
+                        'time_point':time_point_O};
+                
+            return simulation_O;
+        except SQLAlchemyError as e:
+            print(e);
 
     ## Query from data_stage02_isotopomer_measuredFragments
     # query sample_name_abbreviations from data_stage02_isotopomer_measuredFragments

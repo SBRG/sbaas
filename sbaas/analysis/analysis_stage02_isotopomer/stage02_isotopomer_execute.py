@@ -16,7 +16,7 @@ class stage02_isotopomer_execute():
         self.calculate = base_calculate();
         self.models = {};
         #modified biomass (INCA does not like exponential terms)
-        self.biomass_INCA_iJS2012 = '0.488*ala_DASH_L_c + 0.0004*nadph_c + 0.176*phe_DASH_L_c + 0.582*gly_c + 0.00013*nadp_c + 0.276*ile_DASH_L_c + 0.21*pro_DASH_L_c + 0.25*glu_DASH_L_c + 0.154*glycogen_c + 45.73*atp_c + 0.139*utp_c + 0.00645*clpnEC_e + 0.131*tyr_DASH_L_c + 0.203*gtp_c + 0.00005*nadh_c + 0.0000006*coa_c + 0.00215*nad_c + 0.326*lys_DASH_L_c + 0.25*gln_DASH_L_c + 0.000003*succoa_c + 45.56*h2o_c + 0.205*ser_DASH_L_c + 0.126*ctp_c + 0.001*amp_c + 0.09675*peEC_e + 0.054*trp_DASH_L_c + 0.09*his_DASH_L_c + 0.0276*peptidoEC_e + 0.087*cys_DASH_L_c + 0.0084*lpsEC_e + 0.0247*datp_c + 0.0247*dttp_c + 0.241*thr_DASH_L_c + 0.281*arg_DASH_L_c + 0.00005*accoa_c + 0.402*val_DASH_L_c + 0.007*spmd_c + 0.0254*dgtp_c + 0.0232*pgEC_e + 0.146*met_DASH_L_c + 0.035*ptrc_c + 0.0254*dctp_c + 0.428*leu_DASH_L_c + 0.05*5mthf_c + 0.229*asp_DASH_L_c + 0.229*asn_DASH_L_c + 0.003*g1p_c + 0.0026*psEC_e + 0.00001*fad_c + 45.56*h_c + 45.56*adp_c + 0.7332*ppi_c';
+        self.biomass_INCA_iJS2012 = '0.488*ala_DASH_L_c + 0.0004*nadph_c + 0.176*phe_DASH_L_c + 0.582*gly_c + 0.00013*nadp_c + 0.276*ile_DASH_L_c + 0.21*pro_DASH_L_c + 0.25*glu_DASH_L_c + 0.154*glycogen_c + 45.73*atp_c + 0.139*utp_c + 0.00645*clpnEC_e + 0.131*tyr_DASH_L_c + 0.203*gtp_c + 0.00005*nadh_c + 0.0000006*coa_c + 0.00215*nad_c + 0.326*lys_DASH_L_c + 0.25*gln_DASH_L_c + 0.000003*succoa_c + 45.56*h2o_c + 0.205*ser_DASH_L_c + 0.126*ctp_c + 0.001*amp_c + 0.09675*peEC_e + 0.054*trp_DASH_L_c + 0.09*his_DASH_L_c + 0.0276*peptidoEC_e + 0.087*cys_DASH_L_c + 0.0084*lpsEC_e + 0.0247*datp_c + 0.0247*dttp_c + 0.241*thr_DASH_L_c + 0.281*arg_DASH_L_c + 0.00005*accoa_c + 0.402*val_DASH_L_c + 0.007*spmd_c + 0.0254*dgtp_c + 0.0232*pgEC_e + 0.146*met_DASH_L_c + 0.035*ptrc_c + 0.0254*dctp_c + 0.428*leu_DASH_L_c + 0.05*5mthf_c + 0.229*asp_DASH_L_c + 0.229*asn_DASH_L_c + 0.003*g1p_c + 0.0026*psEC_e + 0.00001*fad_c -> 45.56*pi_c + 45.56*h_c + 45.56*adp_c + 0.7332*ppi_c';
         self.biomass_INCA_iJS2012_v1 = '0.488*ala_DASH_L_c (C1:d C2:e C3:f) + 0.0004*nadph_c + 0.176*phe_DASH_L_c (C1:p C2:q C3:r C4:s C5:t C6:u C7:v C8:w C9:x) + 0.582*gly_c (C1:N C2:O) + 0.00013*nadp_c + 0.276*ile_DASH_L_c (C1:2 C2:3 C3:4 C4:5 C5:6 C6:7) + 0.21*pro_DASH_L_c (C1:y C2:z C3:A C4:B C5:C) + 0.25*glu_DASH_L_c (C1:I C2:J C3:K C4:L C5:M) + 0.154*glycogen_c (C1:P C2:Q C3:R C4:S C5:T C6:U) + 45.7318*atp_c + 0.139*utp_c + 0.00645*clpnEC_e + 0.131*tyr_DASH_L_c (C1:b C2:c C3:d C4:e C5:f C6:g C7:h C8:i C9:j) + 0.203*gtp_c + 0.00005*nadh_c + 0.000006*coa_c + 0.00215*nad_c + 0.326*lys_DASH_L_c (C1:e C2:f C3:g C4:h C5:i C6:j) + 0.25*gln_DASH_L_c (C1:D C2:E C3:F C4:G C5:H) + 0.000003*succoa_c (C1:R C2:S C3:T C4:U) + 45.5608*h2o_c + 0.205*ser_DASH_L_c (C1:H C2:I C3:J) + 0.126*ctp_c + 0.001*amp_c + 0.09675*peEC_e + 0.054*trp_DASH_L_c (C1:Z C2:1 C3:2 C4:3 C5:4 C6:5 C7:6 C8:7 C9:8 C10:9 C11:a) + 0.09*his_DASH_L_c (C1:V C2:W C3:X C4:Y C5:Z C6:1) + 0.0276*peptidoEC_e + 0.087*cys_DASH_L_c (C1:u C2:v C3:w) + 0.0084*lpsEC_e + 0.0247*datp_c + 0.0247*dttp_c + 0.241*thr_DASH_L_c (C1:V C2:W C3:X C4:Y) + 0.281*arg_DASH_L_c (C1:g C2:h C3:i C4:j C5:k C6:l) + 0.00005*accoa_c (C1:b C2:c) + 0.402*val_DASH_L_c (C1:k C2:l C3:m C4:n C5:o) + 0.007*spmd_c (C1:K C2:L C3:M C4:N C5:O C6:P C7:Q) + 0.0254*dgtp_c + 0.0232*pgEC_e + 0.146*met_DASH_L_c (C1:k C2:l C3:m C4:n C5:o) + 0.035*ptrc_c (C1:D C2:E C3:F C4:G) + 0.0254*dctp_c + 0.428*leu_DASH_L_c (C1:8 C2:9 C3:a C4:b C5:c C6:d) + 0.05*5mthf_c (C1:a) + 0.229*asp_DASH_L_c (C1:q C2:r C3:s C4:t) + 0.229*asn_DASH_L_c (C1:m C2:n C3:o C4:p) + 0.003*g1p_c (C1:x C2:y C3:z C4:A C5:B C6:C) + 0.0026*psEC_e + 0.00001*fad_c -> 45.5628*pi_c + 45.55735*h_c + 45.5608*adp_c + 0.7332*ppi_c ';
         self.biomass_INCA_iJS2012_v2 = '0.488*ala_DASH_L_c (C1:ala_DASH_L_cd C2:ala_DASH_L_ce C3:ala_DASH_L_cf) + 0.0004*nadph_c + 0.176*phe_DASH_L_c (C1:phe_DASH_L_cp C2:phe_DASH_L_cq C3:phe_DASH_L_cr C4:phe_DASH_L_cs C5:phe_DASH_L_ct C6:phe_DASH_L_cu C7:phe_DASH_L_cv C8:phe_DASH_L_cw C9:phe_DASH_L_cx) + 0.582*gly_c (C1:gly_cN C2:gly_cO) + 0.00013*nadp_c + 0.276*ile_DASH_L_c (C1:ile_DASH_L_c2 C2:ile_DASH_L_c3 C3:ile_DASH_L_c4 C4:ile_DASH_L_c5 C5:ile_DASH_L_c6 C6:ile_DASH_L_c7) + 0.21*pro_DASH_L_c (C1:pro_DASH_L_cy C2:pro_DASH_L_cz C3:pro_DASH_L_cA C4:pro_DASH_L_cB C5:pro_DASH_L_cC) + 0.25*glu_DASH_L_c (C1:glu_DASH_L_cI C2:glu_DASH_L_cJ C3:glu_DASH_L_cK C4:glu_DASH_L_cL C5:glu_DASH_L_cM) + 0.154*glycogen_c (C1:glycogen_cP C2:glycogen_cQ C3:glycogen_cR C4:glycogen_cS C5:glycogen_cT C6:glycogen_cU) + 45.73*atp_c + 0.139*utp_c + 0.00645*clpnEC_e + 0.131*tyr_DASH_L_c (C1:tyr_DASH_L_cb C2:tyr_DASH_L_cc C3:tyr_DASH_L_cd C4:tyr_DASH_L_ce C5:tyr_DASH_L_cf C6:tyr_DASH_L_cg C7:tyr_DASH_L_ch C8:tyr_DASH_L_ci C9:tyr_DASH_L_cj) + 0.203*gtp_c + 0.00005*nadh_c + 0.0000006*coa_c + 0.00215*nad_c + 0.326*lys_DASH_L_c (C1:lys_DASH_L_ce C2:lys_DASH_L_cf C3:lys_DASH_L_cg C4:lys_DASH_L_ch C5:lys_DASH_L_ci C6:lys_DASH_L_cj) + 0.25*gln_DASH_L_c (C1:gln_DASH_L_cD C2:gln_DASH_L_cE C3:gln_DASH_L_cF C4:gln_DASH_L_cG C5:gln_DASH_L_cH) + 0.000003*succoa_c (C1:succoa_cR C2:succoa_cS C3:succoa_cT C4:succoa_cU) + 45.56*h2o_c + 0.205*ser_DASH_L_c (C1:ser_DASH_L_cH C2:ser_DASH_L_cI C3:ser_DASH_L_cJ) + 0.126*ctp_c + 0.001*amp_c + 0.09675*peEC_e + 0.054*trp_DASH_L_c (C1:trp_DASH_L_cZ C2:trp_DASH_L_c1 C3:trp_DASH_L_c2 C4:trp_DASH_L_c3 C5:trp_DASH_L_c4 C6:trp_DASH_L_c5 C7:trp_DASH_L_c6 C8:trp_DASH_L_c7 C9:trp_DASH_L_c8 C10:trp_DASH_L_c9 C11:trp_DASH_L_ca) + 0.09*his_DASH_L_c (C1:his_DASH_L_cV C2:his_DASH_L_cW C3:his_DASH_L_cX C4:his_DASH_L_cY C5:his_DASH_L_cZ C6:his_DASH_L_c1) + 0.0276*peptidoEC_e + 0.087*cys_DASH_L_c (C1:cys_DASH_L_cu C2:cys_DASH_L_cv C3:cys_DASH_L_cw) + 0.0084*lpsEC_e + 0.0247*datp_c + 0.0247*dttp_c + 0.241*thr_DASH_L_c (C1:thr_DASH_L_cV C2:thr_DASH_L_cW C3:thr_DASH_L_cX C4:thr_DASH_L_cY) + 0.281*arg_DASH_L_c (C1:arg_DASH_L_cg C2:arg_DASH_L_ch C3:arg_DASH_L_ci C4:arg_DASH_L_cj C5:arg_DASH_L_ck C6:arg_DASH_L_cl) + 0.00005*accoa_c (C1:accoa_cb C2:accoa_cc) + 0.402*val_DASH_L_c (C1:val_DASH_L_ck C2:val_DASH_L_cl C3:val_DASH_L_cm C4:val_DASH_L_cn C5:val_DASH_L_co) + 0.007*spmd_c (C1:spmd_cK C2:spmd_cL C3:spmd_cM C4:spmd_cN C5:spmd_cO C6:spmd_cP C7:spmd_cQ) + 0.0254*dgtp_c + 0.0232*pgEC_e + 0.146*met_DASH_L_c (C1:met_DASH_L_ck C2:met_DASH_L_cl C3:met_DASH_L_cm C4:met_DASH_L_cn C5:met_DASH_L_co) + 0.035*ptrc_c (C1:ptrc_cD C2:ptrc_cE C3:ptrc_cF C4:ptrc_cG) + 0.0254*dctp_c + 0.428*leu_DASH_L_c (C1:leu_DASH_L_c8 C2:leu_DASH_L_c9 C3:leu_DASH_L_ca C4:leu_DASH_L_cb C5:leu_DASH_L_cc C6:leu_DASH_L_cd) + 0.05*5mthf_c (C1:5mthf_ca) + 0.229*asp_DASH_L_c (C1:asp_DASH_L_cq C2:asp_DASH_L_cr C3:asp_DASH_L_cs C4:asp_DASH_L_ct) + 0.229*asn_DASH_L_c (C1:asn_DASH_L_cm C2:asn_DASH_L_cn C3:asn_DASH_L_co C4:asn_DASH_L_cp) + 0.003*g1p_c (C1:g1p_cx C2:g1p_cy C3:g1p_cz C4:g1p_cA C5:g1p_cB C6:g1p_cC) + 0.0026*psEC_e + 0.00001*fad_c -> 45.56*pi_c + 45.56*h_c + 45.56*adp_c + 0.7332*ppi_c';
         self.biomass_INCA_v1 = '0.005707*pg160_c (C1:Y C2:1 C3:2) + \
@@ -232,9 +232,6 @@ class stage02_isotopomer_execute():
     #table initializations:
     def drop_datastage02(self):
         try:
-            data_stage02_isotopomer_calcFragments1.__table__.drop(engine,True);
-            data_stage02_isotopomer_calcFragments.__table__.drop(engine,True);
-            data_stage02_isotopomer_calcFluxes.__table__.drop(engine,True);
             data_stage02_isotopomer_tracers.__table__.drop(engine,True);
             data_stage02_isotopomer_models.__table__.drop(engine,True);
             data_stage02_isotopomer_modelReactions.__table__.drop(engine,True);
@@ -244,23 +241,34 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_measuredFragments.__table__.drop(engine,True);
             data_stage02_isotopomer_atomMappingReactions.__table__.drop(engine,True);
             data_stage02_isotopomer_atomMappingMetabolites.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedFluxes.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedData.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedMeasuredFluxes.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedMeasuredFragments.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedMeasuredFluxResiduals.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedMeasuredFragmentResiduals.__table__.drop(engine,True);
+            data_stage02_isotopomer_simulationParameters.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
-    def reset_datastage02(self,experiment_id_I = None):
+    def reset_datastage02(self,experiment_id_I = None,simulation_id_I = None):
         try:
             if experiment_id_I:
-                reset = self.session.query(data_stage02_isotopomer_simulation).filter(data_stage02_isotopomer_simulation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_tracers).filter(data_stage02_isotopomer_tracers.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_calcFluxes).filter(data_stage02_isotopomer_calcFluxes.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_calcFragments).filter(data_stage02_isotopomer_calcFragments.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_measuredFluxes).filter(data_stage02_isotopomer_measuredFluxes.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_measuredPools).filter(data_stage02_isotopomer_measuredPools.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_measuredFragments).filter(data_stage02_isotopomer_measuredFragments.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            elif simulation_id_I:
+                reset = self.session.query(data_stage02_isotopomer_simulation).filter(data_stage02_isotopomer_simulation.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxes).filter(data_stage02_isotopomer_fittedFluxes.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedData).filter(data_stage02_isotopomer_fittedData.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxes).filter(data_stage02_isotopomer_fittedMeasuredFluxes.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragments).filter(data_stage02_isotopomer_fittedMeasuredFragments.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxResiduals).filter(data_stage02_isotopomer_fittedMeasuredFluxResiduals.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragmentResiduals).filter(data_stage02_isotopomer_fittedMeasuredFragmentResiduals.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_simulationParameters).filter(data_stage02_isotopomer_simulationParameters.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage02_isotopomer_simulation).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_tracers).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_calcFluxes).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_calcFragments).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_models).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_measuredFluxes).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_modelMetabolites).delete(synchronize_session=False);
@@ -269,6 +277,13 @@ class stage02_isotopomer_execute():
                 reset = self.session.query(data_stage02_isotopomer_measuredFragments).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_atomMappingReactions).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_atomMappingMetabolites).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxes).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedData).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxes).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragments).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxResiduals).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragmentResiduals).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_simulationParameters).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -276,8 +291,6 @@ class stage02_isotopomer_execute():
         try:
             data_stage02_isotopomer_simulation.__table__.create(engine,True);
             data_stage02_isotopomer_tracers.__table__.create(engine,True);
-            data_stage02_isotopomer_calcFluxes.__table__.create(engine,True);
-            data_stage02_isotopomer_calcFragments.__table__.create(engine,True);
             data_stage02_isotopomer_models.__table__.create(engine,True);
             data_stage02_isotopomer_measuredFluxes.__table__.create(engine,True);
             data_stage02_isotopomer_modelMetabolites.__table__.create(engine,True);
@@ -286,6 +299,13 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_measuredFragments.__table__.create(engine,True);
             data_stage02_isotopomer_atomMappingReactions.__table__.create(engine,True);
             data_stage02_isotopomer_atomMappingMetabolites.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedFluxes.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedData.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedMeasuredFluxes.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedMeasuredFragments.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedMeasuredFluxResiduals.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedMeasuredFragmentResiduals.__table__.create(engine,True);
+            data_stage02_isotopomer_simulationParameters.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     #analysis
@@ -1032,10 +1052,11 @@ class stage02_isotopomer_execute():
                 rxn_ids_INCA[rxn['rxn_id']] = ('R'+str(cnt+1));
                 cnt+=1;
                 if rxn['rxn_id'] == 'Ec_biomass_iJO1366_WT_53p95M':
-                    tmp_script = tmp_script + "'" + self.biomass_INCA + "';...\n"
-                    #tmp_script = tmp_script + "'" + self.biomass_INCA_iJS2012 + "';...\n"
+                    #tmp_script = tmp_script + "'" + self.biomass_INCA + "';...\n"
+                    tmp_script = tmp_script + "'" + self.biomass_INCA_iJS2012 + "';...\n"
                 else:
                     tmp_script = tmp_script + "'" + rxn['rxn_equation'] + "';...\n"
+                #tmp_script = tmp_script + "'" + rxn['rxn_equation'] + "';...\n"
             else:
                 print 'rxn_id ' + rxn['rxn_id'] + ' will be excluded from INCA' 
         tmp_script = tmp_script + '});\n';
