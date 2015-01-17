@@ -85,3 +85,5 @@ and data_stage01_isotopomer)
 3.	Direct integration with breseq
 
 4.	Web-UI for data analysis beyond only data visualization
+
+5.  Modular database and pipeline deployment

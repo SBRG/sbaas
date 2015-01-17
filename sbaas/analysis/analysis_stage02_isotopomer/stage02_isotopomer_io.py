@@ -3,6 +3,8 @@ from analysis.analysis_base import *
 from stage02_isotopomer_query import stage02_isotopomer_query
 from resources.molmass import Formula
 from copy import copy
+from math import isnan, isinf
+import re
 # Dependencies from 3rd party
 import scipy.io
 import numpy
@@ -405,6 +407,35 @@ class stage02_isotopomer_io(base_analysis):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
+    def add_data_stage02_isotopomer_fittedFragments(self, data_I):
+        '''add rows of data_stage02_isotopomer_fittedFragments'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = data_stage02_isotopomer_fittedFragments(d['simulation_id'],
+                            d['simulation_dateAndTime'],
+                            d['experiment_id'],
+                            #d['model_id'],
+                            #d['mapping_id'],
+                            d['sample_name_abbreviation'],
+                            d['time_point'],
+                            d['fragment_id'],
+                            #d['fragment_formula'],
+                            d['fragment_mass'],
+                            d['fit_val'],
+                            d['fit_stdev'],
+                            d['fit_units'],
+                            d['fit_alf'],
+                            d['fit_cor'],
+                            d['fit_cov'],
+                            d['free'],
+                            d['used_'],
+                            d['comment_']
+                            );
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
     def add_data_stage02_isotopomer_fittedData(self, data_I):
         '''add rows of data_stage02_isotopomer_fittedData'''
         if data_I:
@@ -435,10 +466,10 @@ class stage02_isotopomer_io(base_analysis):
                     data_add = data_stage02_isotopomer_fittedMeasuredFluxes(d['simulation_id'],
                     d['simulation_dateAndTime'],
                     d['experiment_id'],
-                    d['model_id'],
-                    d['mapping_id'],
+                    #d['model_id'],
+                    #d['mapping_id'],
                     d['sample_name_abbreviation'],
-                    d['time_point'],
+                    #d['time_point'],
                     d['rxn_id'],
                     d['fitted_sres'],
                     d['used_'],
@@ -455,13 +486,13 @@ class stage02_isotopomer_io(base_analysis):
                     data_add = data_stage02_isotopomer_fittedMeasuredFragments(d['simulation_id'],
                     d['simulation_dateAndTime'],
                     d['experiment_id'],
-                    d['model_id'],
-                    d['mapping_id'],
+                    #d['model_id'],
+                    #d['mapping_id'],
                     d['sample_name_abbreviation'],
-                    d['time_point'],
-                    d['met_id'],
+                    #d['time_point'],
+                    #d['met_id'],
                     d['fragment_id'],
-                    d['fragment_formula'],
+                    #d['fragment_formula'],
                     d['fitted_sres'],
                     d['used_'],
                     d['comment_']);
@@ -477,8 +508,8 @@ class stage02_isotopomer_io(base_analysis):
                     data_add = data_stage02_isotopomer_fittedMeasuredFluxResiduals(d['simulation_id'],
                     d['simulation_dateAndTime'],
                     d['experiment_id'],
-                    d['model_id'],
-                    d['mapping_id'],
+                    #d['model_id'],
+                    #d['mapping_id'],
                     d['sample_name_abbreviation'],
                     d['time_point'],
                     d['rxn_id'],
@@ -503,12 +534,12 @@ class stage02_isotopomer_io(base_analysis):
                     data_add = data_stage02_isotopomer_fittedMeasuredFragmentResiduals(d['simulation_id'],
                     d['simulation_dateAndTime'],
                     d['experiment_id'],
-                    d['model_id'],
-                    d['mapping_id'],
+                    #d['model_id'],
+                    #d['mapping_id'],
                     d['sample_name_abbreviation'],
                     d['time_point'],
                     d['fragment_id'],
-                    d['fragment_formula'],
+                    #d['fragment_formula'],
                     d['fragment_mass'],
                     d['res_data'],
                     d['res_esens'],
@@ -529,7 +560,7 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage02_isotopomer_simulationParameters(d['simulation_id'],
-                    d['experiment_id'],
+                    d['simulation_dateAndTime'],
                     d['cont_alpha'],
                     d['cont_reltol'],
                     d['cont_steps'],
@@ -999,6 +1030,39 @@ class stage02_isotopomer_io(base_analysis):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
+    def update_data_stage02_isotopomer_fittedFragments(self,data_I):
+        #TODO:
+        '''update rows of data_stage02_isotopomer_fittedFragments'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_update = self.session.query(data_stage02_isotopomer_fittedFragments).filter(
+                            #data_stage02_isotopomer_fittedFragments.sample_name.like(d['sample_name'])
+                            ).update(
+                            {'simulation_id':d['simulation_id'],
+                            'simulation_dateAndTime':d['simulation_dateAndTime'],
+                            'experiment_id':d['experiment_id'],
+                            #'model_id':d['model_id'],
+                            #'mapping_id':d['mapping_id'],
+                            'sample_name_abbreviation':d['sample_name_abbreviation'],
+                            'time_point':d['time_point'],
+                            'fragment_id':d['fragment_id'],
+                            #'fragment_formula':d['fragment_formula'],
+                            'fragment_mass':d['fragment_mass'],
+                            'fit_val':d['fit_val'],
+                            'fit_stdev':d['fit_stdev'],
+                            'fit_units':d['fit_units'],
+                            'fit_alf':d['fit_alf'],
+                            'fit_chi2s':d['fit_chi2s'],
+                            'fit_cor':d['fit_cor'],
+                            'fit_cov':d['fit_cov'],
+                            'free':d['free'],
+                            'used_':d['used_'],
+                            'comment_':d['comment_']},
+                            synchronize_session=False);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
     def update_data_stage02_isotopomer_fittedData(self,data_I):
         #TODO:
         '''update rows of data_stage02_isotopomer_fittedData'''
@@ -1037,10 +1101,10 @@ class stage02_isotopomer_io(base_analysis):
                             {'simulation_id':d['simulation_id'],
                             'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'experiment_id':d['experiment_id'],
-                            'model_id':d['model_id'],
-                            'mapping_id':d['mapping_id'],
+                            #'model_id':d['model_id'],
+                            #'mapping_id':d['mapping_id'],
                             'sample_name_abbreviation':d['sample_name_abbreviation'],
-                            'time_point':d['time_point'],
+                            #'time_point':d['time_point'],
                             'rxn_id':d['rxn_id'],
                             'fitted_sres':d['fitted_sres'],
                             'used_':d['used_'],
@@ -1061,13 +1125,13 @@ class stage02_isotopomer_io(base_analysis):
                             {'simulation_id':d['simulation_id'],
                             'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'experiment_id':d['experiment_id'],
-                            'model_id':d['model_id'],
-                            'mapping_id':d['mapping_id'],
+                            #'model_id':d['model_id'],
+                            #'mapping_id':d['mapping_id'],
                             'sample_name_abbreviation':d['sample_name_abbreviation'],
-                            'time_point':d['time_point'],
-                            'met_id':d['met_id'],
+                            #'time_point':d['time_point'],
+                            #'met_id':d['met_id'],
                             'fragment_id':d['fragment_id'],
-                            'fragment_formula':d['fragment_formula'],
+                            #'fragment_formula':d['fragment_formula'],
                             'fitted_sres':d['fitted_sres'],
                             'used_':d['used_'],
                             'comment_':d['comment_']},
@@ -1087,8 +1151,8 @@ class stage02_isotopomer_io(base_analysis):
                             {'simulation_id':d['simulation_id'],
                             'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'experiment_id':d['experiment_id'],
-                            'model_id':d['model_id'],
-                            'mapping_id':d['mapping_id'],
+                            #'model_id':d['model_id'],
+                            #'mapping_id':d['mapping_id'],
                             'sample_name_abbreviation':d['sample_name_abbreviation'],
                             'time_point':d['time_point'],
                             'rxn_id':d['rxn_id'],
@@ -1117,12 +1181,12 @@ class stage02_isotopomer_io(base_analysis):
                             {'simulation_id':d['simulation_id'],
                             'simulation_dateAndTime':d['simulation_dateAndTime'],
                             'experiment_id':d['experiment_id'],
-                            'model_id':d['model_id'],
-                            'mapping_id':d['mapping_id'],
+                            #'model_id':d['model_id'],
+                            #'mapping_id':d['mapping_id'],
                             'sample_name_abbreviation':d['sample_name_abbreviation'],
                             'time_point':d['time_point'],
                             'fragment_id':d['fragment_id'],
-                            'fragment_formula':d['fragment_formula'],
+                            #'fragment_formula':d['fragment_formula'],
                             'fragment_mass':d['fragment_mass'],
                             'res_data':d['res_data'],
                             'res_esens':d['res_esens'],
@@ -2260,6 +2324,7 @@ class stage02_isotopomer_io(base_analysis):
         '''table adds'''
         # extract information about the file
         import os, time
+        from datetime import datetime
         from stat import ST_SIZE, ST_MTIME
         try:
             st = os.stat(filename)
@@ -2268,14 +2333,15 @@ class stage02_isotopomer_io(base_analysis):
             return;
         else:
             file_size = st[ST_SIZE]
-            simulation_dateAndTime = time.localtime(st[ST_MTIME])
+            simulation_dateAndTime_struct = time.localtime(st[ST_MTIME])
+            simulation_dateAndTime = datetime.fromtimestamp(time.mktime(simulation_dateAndTime_struct))
         # lookup information about the simulation:
         simulation_info = {};
         simulation_info = self.stage02_isotopomer_query.get_simulation_experimentID_dataStage02IsotopomerSimulation(simulation_id);
         # determine if the simulation is a parallel labeling experiment, non-stationary, or both
         parallel = False;
         non_stationary = False;
-        if len(simulation_info['experiment_id'])>1 or simulation_info['sample_name_abbreviation']:
+        if len(simulation_info['experiment_id'])>1 or len(simulation_info['sample_name_abbreviation'])>1:
             parallel = True;
         if len(simulation_info['time_point'])>1:
             non_stationary = True;
@@ -2295,48 +2361,50 @@ class stage02_isotopomer_io(base_analysis):
                 m_ms_on.append(bool(d[0][0]));
         # extract out simulation parameters (options)
         m_options = {
-                    'cont_alpha':m['options'][0][0][0]['cont_alpha'][0][0][0],
-                    'cont_reltol':m['options'][0][0][0]['cont_reltol'][0][0][0],
-                    'cont_steps':m['options'][0][0][0]['cont_steps'][0][0][0],
-                    'fit_nudge':m['options'][0][0][0]['fit_nudge'][0][0][0],
-                    'fit_reinit':m['options'][0][0][0]['fit_reinit'][0][0][0],
-                    'fit_reltol':m['options'][0][0][0]['fit_reltol'][0][0][0],
-                    'fit_starts':m['options'][0][0][0]['fit_starts'][0][0][0],
-                    'fit_tau':m['options'][0][0][0]['fit_tau'][0][0][0],
-                    'hpc_mcr':m['options'][0][0][0]['hpc_mcr'][0][0][0],
-                    'hpc_on':m['options'][0][0][0]['hpc_on'][0][0][0],
-                    'hpc_serve':m['options'][0][0][0]['hpc_serve'][0][0][0],
-                    'int_maxstep':m['options'][0][0][0]['int_maxstep'][0][0][0],
-                    'int_reltol':m['options'][0][0][0]['int_reltol'][0][0][0],
-                    'int_senstol':m['options'][0][0][0]['int_senstol'][0][0][0],
-                    'int_timeout':m['options'][0][0][0]['int_timeout'][0][0][0],
-                    'int_tspan':m['options'][0][0][0]['int_tspan'][0][0][0],
-                    'ms_correct':m['options'][0][0][0]['ms_correct'][0][0][0],
-                    'oed_crit':m['options'][0][0][0]['oed_crit'][0][0][0],
-                    'oed_reinit':m['options'][0][0][0]['oed_reinit'][0][0][0],
-                    'oed_tolf':m['options'][0][0][0]['oed_tolf'][0][0][0],
-                    'oed_tolx':m['options'][0][0][0]['oed_tolx'][0][0][0],
-                    'sim_more':m['options'][0][0][0]['sim_more'][0][0][0],
-                    'sim_na':m['options'][0][0][0]['sim_na'][0][0][0],
-                    'sim_sens':m['options'][0][0][0]['sim_sens'][0][0][0],
-                    'sim_ss':m['options'][0][0][0]['sim_ss'][0][0][0],
-                    'sim_tunit':m['options'][0][0][0]['sim_tunit'][0][0][0]}
+                    'cont_alpha':float(m['options'][0][0][0]['cont_alpha'][0][0][0]),
+                    'cont_reltol':float(m['options'][0][0][0]['cont_reltol'][0][0][0]),
+                    'cont_steps':float(m['options'][0][0][0]['cont_steps'][0][0][0]),
+                    'fit_nudge':float(m['options'][0][0][0]['fit_nudge'][0][0][0]),
+                    'fit_reinit':bool(m['options'][0][0][0]['fit_reinit'][0][0][0]),
+                    'fit_reltol':float(m['options'][0][0][0]['fit_reltol'][0][0][0]),
+                    'fit_starts':float(m['options'][0][0][0]['fit_starts'][0][0][0]),
+                    'fit_tau':float(m['options'][0][0][0]['fit_tau'][0][0][0]),
+                    'hpc_mcr':m['options'][0][0][0]['hpc_mcr'][0][0],
+                    'hpc_on':bool(m['options'][0][0][0]['hpc_on'][0][0][0]),
+                    'hpc_serve':m['options'][0][0][0]['hpc_serve'][0][0],
+                    'int_maxstep':float(m['options'][0][0][0]['int_maxstep'][0][0][0]),
+                    'int_reltol':float(m['options'][0][0][0]['int_reltol'][0][0][0]),
+                    'int_senstol':float(m['options'][0][0][0]['int_senstol'][0][0][0]),
+                    'int_timeout':float(m['options'][0][0][0]['int_timeout'][0][0][0]),
+                    'int_tspan':float(m['options'][0][0][0]['int_tspan'][0][0][0]),
+                    'ms_correct':bool(m['options'][0][0][0]['ms_correct'][0][0][0]),
+                    'oed_crit':m['options'][0][0][0]['oed_crit'][0][0],
+                    'oed_reinit':bool(m['options'][0][0][0]['oed_reinit'][0][0][0]),
+                    'oed_tolf':float(m['options'][0][0][0]['oed_tolf'][0][0][0]),
+                    'oed_tolx':float(m['options'][0][0][0]['oed_tolx'][0][0][0]),
+                    'sim_more':bool(m['options'][0][0][0]['sim_more'][0][0][0]),
+                    'sim_na':bool(m['options'][0][0][0]['sim_na'][0][0][0]),
+                    'sim_sens':bool(m['options'][0][0][0]['sim_sens'][0][0][0]),
+                    'sim_ss':bool(m['options'][0][0][0]['sim_ss'][0][0][0]),
+                    'sim_tunit':m['options'][0][0][0]['sim_tunit'][0][0]}
         simulationParameters = [];
-        m_options.update({'simulation_id':simulation_id_I,'simulation_dateAndTime':simulation_dateAndTime,
+        m_options.update({'simulation_id':simulation_id,'simulation_dateAndTime':simulation_dateAndTime,
                     'used_':True,
                     'comment_':None});
         simulationParameters.append(m_options);
         # extract out fit information
         fittedData = [];
-        f_Echi2 = [f['Echi2'][0][0][0][0],f['Echi2'][0][0][0][1]];
+        f_Echi2 = None;
+        if not isnan(f['Echi2'][0][0][0][0]):
+            f_Echi2 = [f['Echi2'][0][0][0][0],f['Echi2'][0][0][0][1]];
         f_alf = f['alf'][0][0][0][0];
         f_chi2 = f['chi2'][0][0][0][0];
-        f_dof = f['dof'][0][0][0][0];
+        f_dof = int(f['dof'][0][0][0][0]);
         f_ = {'fitted_echi2':f_Echi2,
         'fitted_alf':f_alf,
         'fitted_chi2':f_chi2,
         'fitted_dof':f_dof};
-        f_.update({'simulation_id':simulation_id_I,'simulation_dateAndTime':simulation_dateAndTime,
+        f_.update({'simulation_id':simulation_id,'simulation_dateAndTime':simulation_dateAndTime,
                     'used_':True,
                     'comment_':None})
         fittedData.append(f_);
@@ -2348,7 +2416,7 @@ class stage02_isotopomer_io(base_analysis):
         for d in f['mnt'][0][0][0]['id']:
             f_mnt_id.append(d[0]);
         for d in f['mnt'][0][0][0]['sres']:
-            f_mnt_sres.append(d[0]);
+            f_mnt_sres.append(d[0][0]);
         for d in f['mnt'][0][0][0]['expt']:
             f_mnt_expt.append(d[0]);
         for d in f['mnt'][0][0][0]['type']:
@@ -2358,39 +2426,39 @@ class stage02_isotopomer_io(base_analysis):
         fittedMeasuredFragments = [];
         for cnt,type in enumerate(f_mnt_type):
             if type=='Flux':
-                if f_mnt_exp[cnt] in simulation_info['experiment_id']:
+                if f_mnt_expt[cnt] in simulation_info['experiment_id']:
                     fittedMeasuredFluxes.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
-                    'experiment_id':f_mnt_exp[cnt],
+                    'experiment_id':f_mnt_expt[cnt],
                     'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
                     'rxn_id':f_mnt_id[cnt],
                     'fitted_sres':f_mnt_sres[cnt],
                     'used_':True,
                     'comment_':None})
-                elif f_mnt_exp[cnt] in simulation_info['sample_name_abbreviation']:
+                elif f_mnt_expt[cnt] in simulation_info['sample_name_abbreviation']:
                     fittedMeasuredFluxes.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
                     'experiment_id':simulation_info['experiment_id'][0],
-                    'sample_name_abbreviation':f_mnt_exp[cnt],
+                    'sample_name_abbreviation':f_mnt_expt[cnt],
                     'rxn_id':f_mnt_id[cnt],
                     'fitted_sres':f_mnt_sres[cnt],
                     'used_':True,
                     'comment_':None})
             elif type=='MS':
-                if f_mnt_exp[cnt] in simulation_info['experiment_id']:
-                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                if f_mnt_expt[cnt] in simulation_info['experiment_id']:
+                    fittedMeasuredFragments.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
-                    'experiment_id':f_mnt_exp[cnt],
+                    'experiment_id':f_mnt_expt[cnt],
                     'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
                     'fragment_id':f_mnt_id[cnt],
                     'fitted_sres':f_mnt_sres[cnt],
                     'used_':True,
                     'comment_':None})
-                elif f_mnt_exp[cnt] in simulation_info['sample_name_abbreviation']:
-                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                elif f_mnt_expt[cnt] in simulation_info['sample_name_abbreviation']:
+                    fittedMeasuredFragments.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
                     'experiment_id':simulation_info['experiment_id'][0],
-                    'sample_name_abbreviation':f_mnt_exp[cnt],
+                    'sample_name_abbreviation':f_mnt_expt[cnt],
                     'fragment_id':f_mnt_id[cnt],
                     'fitted_sres':f_mnt_sres[cnt],
                     'used_':True,
@@ -2405,93 +2473,281 @@ class stage02_isotopomer_io(base_analysis):
         f_mnt_res_std = [];
         f_mnt_res_time = [];
         f_mnt_res_expt = [];
+        f_mnt_res_data = [];
+        #f_mnt_res_esens = [];
+        #f_mnt_res_msens = [];
+        f_mnt_res_peak = [];
         for d in f['mnt'][0][0][0]['res']: 
-            f_mnt_res_val.append([0][0]['val'][0]);
-            f_mnt_res_fit.append([0][0]['fit'][0]);
-            f_mnt_res_type.append([0][0]['type'][0]);
-            f_mnt_res_id.append([0][0]['id'][0]);
-            f_mnt_res_std.append([0][0]['std'][0]);
-            f_mnt_res_time.append([0][0]['time'][0]);
-            f_mnt_res_expt.append([0][0]['expt'][0]);
+            f_mnt_res_val.append(d[0][0]['val'][0][0]);
+            f_mnt_res_fit.append(d[0][0]['fit'][0][0]);
+            f_mnt_res_type.append(d[0][0]['type'][0]);
+            f_mnt_res_id.append(d[0][0]['id'][0]);
+            f_mnt_res_std.append(d[0][0]['std'][0][0]);
+            #change default of time inf to 0
+            if isinf(d[0][0]['time'][0][0]):
+                f_mnt_res_time.append('0');
+            else:
+                f_mnt_res_time.append(str(d[0][0]['time'][0][0]));
+            f_mnt_res_expt.append(d[0][0]['expt'][0]);
+            f_mnt_res_data.append(d[0][0]['data'][0][0]);
+            #f_mnt_res_esens.append(d[0][0]['esens'].data); #not needed, and matlab->python conversion has several bugs
+            #f_mnt_res_msens.append(d[0][0]['msens'].data);
+            if d[0][0]['peak']: f_mnt_res_peak.append(d[0][0]['peak'][0]);
+            else: f_mnt_res_peak.append(None);
         # seperate into appropriate table rows
         fittedMeasuredFluxResiduals = [];
         fittedMeasuredFragmentResiduals = [];
-        for cnt,type in enumerate(f_mnt_type):
+        for cnt,type in enumerate(f_mnt_res_type):
             if type=='Flux':
-                if f_mnt_res_exp[cnt] in simulation_info['experiment_id']:
-                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                if f_mnt_res_expt[cnt] in simulation_info['experiment_id']:
+                    fittedMeasuredFluxResiduals.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
-                    'experiment_id':f_mnt_exp[cnt],
+                    'experiment_id':f_mnt_res_expt[cnt],
                     'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
-                    'rxn_id':f_mnt_id[cnt],
-                    'fitted_sres':f_mnt_sres[cnt],
-                    'fitted_sres':f_mnt_sres[cnt],
-                    'fitted_sres':f_mnt_sres[cnt],
+                    'time_point':f_mnt_res_time[cnt],
+                    'rxn_id':f_mnt_res_id[cnt],
+                    'res_data':f_mnt_res_data[cnt],
+                    #'res_esens':f_mnt_res_esens[cnt],
+                    'res_fit':f_mnt_res_fit[cnt],
+                    #'res_msens':f_mnt_res_msens[cnt],
+                    'res_peak':f_mnt_res_peak[cnt],
+                    'res_stdev':f_mnt_res_std[cnt],
+                    'res_val':f_mnt_res_val[cnt],
+                    'res_msens':None,
+                    'res_esens':None,
                     'used_':True,
                     'comment_':None})
-                elif f_mnt_res_exp[cnt] in simulation_info['sample_name_abbreviation']:
-                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                elif f_mnt_res_expt[cnt] in simulation_info['sample_name_abbreviation']:
+                    fittedMeasuredFluxResiduals.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
                     'experiment_id':simulation_info['experiment_id'][0],
-                    'sample_name_abbreviation':f_mnt_exp[cnt],
+                    'sample_name_abbreviation':f_mnt_res_expt[cnt],
+                    'time_point':f_mnt_res_time[cnt],
                     'rxn_id':f_mnt_res_id[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'res_data':f_mnt_res_data[cnt],
+                    #'res_esens':f_mnt_res_esens[cnt],
+                    'res_fit':f_mnt_res_fit[cnt],
+                    #'res_msens':f_mnt_res_msens[cnt],
+                    'res_peak':f_mnt_res_peak[cnt],
+                    'res_stdev':f_mnt_res_std[cnt],
+                    'res_val':f_mnt_res_val[cnt],
+                    'res_msens':None,
+                    'res_esens':None,
                     'used_':True,
                     'comment_':None})
             elif type=='MS':
-                if f_mnt_res_exp[cnt] in simulation_info['experiment_id']:
-                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                # parse the id into fragment_id and mass
+                fragment_string = f_mnt_res_id[cnt]
+                fragment_string = re.sub('_DASH_','-',fragment_string)
+                fragment_string = re.sub('_LPARANTHES_','[(]',fragment_string)
+                fragment_string = re.sub('_RPARANTHES_','[)]',fragment_string)
+                fragment_list = fragment_string.split('_');
+                fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2]])
+                fragment_id = re.sub('-','_DASH_',fragment_id)
+                fragment_id = re.sub('[(]','_LPARANTHES_',fragment_id)
+                fragment_id = re.sub('[)]','_RPARANTHES_',fragment_id)
+                fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
+                time_point = fragment_list[4];
+                exp_id = fragment_list[5];
+                if f_mnt_res_expt[cnt] in simulation_info['experiment_id']:
+                    fittedMeasuredFragmentResiduals.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
-                    'experiment_id':f_mnt_exp[cnt],
+                    'experiment_id':f_mnt_res_expt[cnt],
                     'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
-                    'fragment_id':f_mnt_res_id[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'time_point':f_mnt_res_time[cnt],
+                    'fragment_id':fragment_id,
+                    'fragment_mass':fragment_mass,
+                    'res_data':f_mnt_res_data[cnt],
+                    #'res_esens':f_mnt_res_esens[cnt],
+                    'res_fit':f_mnt_res_fit[cnt],
+                    #'res_msens':f_mnt_res_msens[cnt],
+                    'res_peak':f_mnt_res_peak[cnt],
+                    'res_stdev':f_mnt_res_std[cnt],
+                    'res_val':f_mnt_res_val[cnt],
+                    'res_msens':None,
+                    'res_esens':None,
                     'used_':True,
                     'comment_':None})
-                elif f_mnt_res_exp[cnt] in simulation_info['sample_name_abbreviation']:
-                    fittedMeasuredFluxes.append({'simulation_id':simulation_id,
+                elif f_mnt_res_expt[cnt] in simulation_info['sample_name_abbreviation']:
+                    fittedMeasuredFragmentResiduals.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
                     'experiment_id':simulation_info['experiment_id'][0],
-                    'sample_name_abbreviation':f_mnt_exp[cnt],
-                    'fragment_id':f_mnt_res_id[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
-                    'fitted_sres':f_mnt_res_sres[cnt],
+                    'sample_name_abbreviation':f_mnt_res_expt[cnt],
+                    'time_point':f_mnt_res_time[cnt],
+                    'fragment_id':fragment_id,
+                    'fragment_mass':fragment_mass,
+                    'res_data':f_mnt_res_data[cnt],
+                    #'res_esens':f_mnt_res_esens[cnt],
+                    'res_fit':f_mnt_res_fit[cnt],
+                    #'res_msens':f_mnt_res_msens[cnt],
+                    'res_peak':f_mnt_res_peak[cnt],
+                    'res_stdev':f_mnt_res_std[cnt],
+                    'res_val':f_mnt_res_val[cnt],
+                    'res_msens':None,
+                    'res_esens':None,
                     'used_':True,
                     'comment_':None})
             else:
                 print 'type not recognized';
-
         # extract out the fitted parameters
         f_par_id = [];
         f_par_val = [];
         f_par_std = [];
-        f_par_type = []; # 'Net Flux'
+        f_par_type = []; # 'Net flux' or 'Norm'
         f_par_lb = [];
         f_par_ub = [];
+        f_par_unit = [];
+        f_par_alf = [];
+        f_par_chi2s = [];
+        f_par_cor = [];
+        f_par_cov = [];
+        f_par_free = [];
         for d in f['par'][0][0][0]['id']:
             f_par_id.append(d[0])
+        # ensure that there are no negative values or infinite values
         for d in f['par'][0][0][0]['val']:
-            f_par_val.append(d[0])
+            if not d:
+                f_par_val.append(None)
+            elif isnan(d[0][0]) or d[0][0]<0:
+                f_par_val.append(0.0)
+            elif isinf(d[0][0]) or d[0][0]>1e3:
+                f_par_val.append(1.0e3)
+            else:
+                f_par_val.append(float(d[0][0]))
         for d in f['par'][0][0][0]['std']:
-            f_par_std.append(d[0])
+            f_par_std.append(d[0][0])
         for d in f['par'][0][0][0]['type']:
             f_par_type.append(d[0])
-        for d in f['par'][0][0][0]['lb']:
-            f_par_lb.append(d[0])
+        #adjust the lb and ub to [0,1000];
+        for cnt,d in enumerate(f['par'][0][0][0]['lb']):
+            if not d:
+                f_par_lb.append(0.0)
+            elif isnan(d[0][0]) or d[0][0]<0:
+                f_par_lb.append(0.0)
+            else:
+                f_par_lb.append(float(d[0][0]))
         for d in f['par'][0][0][0]['ub']:
-            f_par_ub.append(d[0])
+            if not d:
+                f_par_ub.append(1.0e3)
+            elif isinf(d[0][0]) or d[0][0]>1.0e3:
+                f_par_ub.append(1.0e3)
+            else:
+                f_par_ub.append(float(d[0][0]))
+        for d in f['par'][0][0][0]['unit']:
+            if not d:
+                #f_par_unit.append(None);
+                #use default: mmol*gDCW-1*hr-1
+                f_par_unit.append('mmol*gDCW-1*hr-1');
+            else:
+                f_par_unit.append(d[0])
+        for d in f['par'][0][0][0]['alf']:
+            f_par_alf.append(d[0][0])
+        for d in f['par'][0][0][0]['chi2s']:
+            f_par_chi2s.append(d)
+        for d in f['par'][0][0][0]['cor']:
+            f_par_cor.append(d)
+        for d in f['par'][0][0][0]['cov']:
+            f_par_cov.append(d)
+        for d in f['par'][0][0][0]['free']:
+            f_par_free.append(bool(d[0][0]))
+        # seperate into appropriate table rows
+        fittedFluxes = [];
+        fittedFragments = [];
+        for cnt,type in enumerate(f_par_type):
+            if type=='Net flux':
+                fittedFluxes.append({'simulation_id':simulation_id,
+                'simulation_dateAndTime':simulation_dateAndTime,
+                'rxn_id':f_par_id[cnt],
+                'flux':f_par_val[cnt],
+                'flux_stdev':f_par_std[cnt],
+                'flux_lb':f_par_lb[cnt],
+                'flux_ub':f_par_ub[cnt],
+                'flux_units':f_par_unit[cnt],
+                'fit_alf':f_par_alf[cnt],
+                'fit_chi2s':None,
+                #'fit_chi2s':f_par_chi2s[cnt],
+                'fit_cor':None,
+                'fit_cov':None,
+                #'fit_cor':f_par_cor[cnt],
+                #'fit_cov':f_par_cov[cnt],
+                'free':f_par_free[cnt],
+                'used_':True,
+                'comment_':None})
+            elif type=='Norm':
+                # parse the id 
+                id_list = f_par_id[cnt].split(' ');
+                expt = id_list[0];
+                fragment_id = id_list[1];
+                fragment_string = id_list[2];
+                units = id_list[3];
+                # parse the id into fragment_id and mass
+                fragment_string = re.sub('_DASH_','-',fragment_string)
+                fragment_string = re.sub('_LPARANTHES_','[(]',fragment_string)
+                fragment_string = re.sub('_RPARANTHES_','[)]',fragment_string)
+                fragment_list = fragment_string.split('_');
+                #fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2]])
+                #fragment_id = re.sub('-','_DASH_',fragment_id)
+                #fragment_id = re.sub('[(]','_LPARANTHES_',fragment_id)
+                #fragment_id = re.sub('[)]','_RPARANTHES_',fragment_id)
+                fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
+                time_point = fragment_list[4];
+                expt_id = fragment_list[5];
+                if expt in simulation_info['experiment_id']:
+                    fittedFragments.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':expt,
+                    'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
+                    'time_point':time_point,
+                    'fragment_id':fragment_id,
+                    'fragment_mass':fragment_mass,
+                    'fit_val':f_par_val[cnt],
+                    'fit_stdev':f_par_std[cnt],
+                    'fit_units':units,
+                    'fit_alf':f_par_alf[cnt],
+                    'fit_cor':None,
+                    'fit_cov':None,
+                    #'fit_cor':f_par_cor[cnt],
+                    #'fit_cov':f_par_cov[cnt],
+                    'free':f_par_free[cnt],
+                    'used_':True,
+                    'comment_':None})
+                elif expt in simulation_info['sample_name_abbreviation']:
+                    fittedFragments.append({'simulation_id':simulation_id,
+                    'simulation_dateAndTime':simulation_dateAndTime,
+                    'experiment_id':simulation_info['experiment_id'][0],
+                    'sample_name_abbreviation':expt,
+                    'time_point':time_point,
+                    'fragment_id':fragment_id,
+                    'fragment_mass':fragment_mass,
+                    'fit_val':f_par_val[cnt],
+                    'fit_stdev':f_par_std[cnt],
+                    'fit_units':units,
+                    'fit_alf':f_par_alf[cnt],
+                    'fit_cor':None,
+                    'fit_cov':None,
+                    #'fit_cor':f_par_cor[cnt],
+                    #'fit_cov':f_par_cov[cnt],
+                    'free':f_par_free[cnt],
+                    'used_':True,
+                    'comment_':None})
+            else:
+                print 'type not recognized';
+        # add data to the database
+        self.add_data_stage02_isotopomer_fittedData(fittedData);
+        self.add_data_stage02_isotopomer_fittedFluxes(fittedFluxes);
+        self.add_data_stage02_isotopomer_fittedFragments(fittedFragments);
+        self.add_data_stage02_isotopomer_fittedMeasuredFluxes(fittedMeasuredFluxes);
+        self.add_data_stage02_isotopomer_fittedMeasuredFragments(fittedMeasuredFragments);
+        self.add_data_stage02_isotopomer_fittedMeasuredFluxResiduals(fittedMeasuredFluxResiduals);
+        self.add_data_stage02_isotopomer_fittedMeasuredFragmentResiduals(fittedMeasuredFragmentResiduals);
+        self.add_data_stage02_isotopomer_simulationParameters(simulationParameters)
 
     # Visualization
     def export_fluxomicsAnalysis_escher(self,experiment_id_I,model_ids_I=[],
                          model_ids_dict_I={},
                      mapping_ids_I=[],
                      sample_name_abbreviations_I=[],
-                     filename=['visualization\\data\\','\\isotopomer\\metabolicmap\\','fluxomics\\']):
+                     filename=[settings.visualization_data,'\\isotopomer\\metabolicmap\\','fluxomics\\']):
         '''export concentration and dG_r data for visualization'''
         
         # get the model ids:
@@ -2518,20 +2774,19 @@ class stage02_isotopomer_io(base_analysis):
                 cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id);
                 # write the model to a temporary file
                 if cobra_model_sbml['file_type'] == 'sbml':
-                    with open('data\\cobra_model_tmp.xml','wb') as file:
+                    with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                         file.write(cobra_model_sbml['model_file']);
                         file.close()
                     cobra_model = None;
-                    cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                    cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
                 elif cobra_model_sbml['file_type'] == 'json':
-                    with open('data\\cobra_model_tmp.json','wb') as file:
+                    with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
                         file.write(cobra_model_sbml['model_file']);
                         file.close()
                     cobra_model = None;
-                    cobra_model = load_json_model('data\\cobra_model_tmp.json');
+                    cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
                 else:
                     print 'file_type not supported'
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
             # get the time-points
             if mapping_ids_I:
                 mapping_ids = mapping_ids_I;
@@ -2552,14 +2807,21 @@ class stage02_isotopomer_io(base_analysis):
                     filter_sna_str = 'model_id/'+ model_id.replace('_','') +'/mapping_id/'+mapping.replace('_','')+'/sample/'+sna.replace('_','');
                     filter_O['sample'].append(filter_sna_str);
                     print 'exporting fluxomic analysis for sample_name_abbreviation ' + sna;
+                    # get the simulation_id
+                    simulation_ids = [];
+                    simulation_ids = self.stage02_isotopomer_query.get_simulationID_experimentIDAndSampleNameAbbreviationsAndModelIDAndMappingID_dataStage02IsotopomerSimulation(experiment_id_I,sna,model_id,mapping);
+                    if len(simulation_ids)>1:
+                        print 'more than 1 simulation found'
+                        return;
+                    else: simulation_id = simulation_ids[0];
                     # calculated fluxes
                     flux_lbub = [];
-                    flux_lbub = self.stage02_isotopomer_query.get_rowsEscherFluxLbUb_experimentIDAndModelIDAndMappingIDAndSampleNameAbbreviations_dataStage02IsotopomerCalcFluxes(experiment_id_I,model_id,mapping,sna);
+                    flux_lbub = self.stage02_isotopomer_query.get_rowsEscherFluxLbUb_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id);
                     flux = {};
-                    flux = self.stage02_isotopomer_query.get_rowsEscherFlux_experimentIDAndModelIDAndMappingIDAndSampleNameAbbreviations_dataStage02IsotopomerCalcFluxes(experiment_id_I,model_id,mapping,sna);
+                    flux = self.stage02_isotopomer_query.get_rowsEscherFlux_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id);
                     for map_id in [
-                        'Alternate Carbon Metabolism',\
-                        'Amino Acid Metabolism',\
+                        #'Alternate Carbon Metabolism',\
+                        #'Amino Acid Metabolism',\
                         #'Cofactor Biosynthesis',\
                         #'Inorganic Ion Metabolism',\
                         #'Nucleotide Metabolism',\
@@ -2569,16 +2831,25 @@ class stage02_isotopomer_io(base_analysis):
                         filter_O['map_id'].append(filter_map_str);
                         print 'exporting fluxomics analysis for map_id ' + map_id;
                         # generate the map html using escher
-                        map_json = json.load(open('data\\escher_maps\\' + map_id + '.json','rb'));
+                        map_json = json.load(open(settings.sbaas + '\\data\\escher_maps\\' + map_id + '.json','rb'));
                         map = Builder(map_json=json.dumps(map_json), reaction_data=flux);
                         #html_file = map._get_html(scroll_behavior='zoom')
-                        html_file = map._get_html(menu='all')
-                        filename_str = filename[0] + experiment_id_I.replace('_','') + filename[1] + filename[2] + model_id.replace('_','') + '_' + mapping.replace('_','') + '_' + sna.replace('_','') + '_' + map_id.replace('_','') + '.html';
-                        with open(filename_str,'w') as file:
-                            file.write(html_file);
+                        #html_file = map._get_html(menu='all',
+                        #  # make the output a standalone HTML file
+                        #  html_wrapper=True,
+                        #  # make sure the application fills the screen
+                        #  fill_screen=True,
+                        #  # choose whether to enable map editing
+                        #  enable_editing=True,
+                        #  # choose whether to enable keyboard shortcuts
+                        #  enable_keys=True)
+                        filename_str = filename[0] + '\\' + experiment_id_I.replace('_','') + filename[1] + filename[2] + model_id.replace('_','') + '_' + mapping.replace('_','') + '_' + sna.replace('_','') + '_' + map_id.replace('_','') + '.html';
+                        #with open(filename_str,'wb') as file:
+                        #    file.write(html_file);
+                        map.save_html(filename_str)
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0] + experiment_id_I.replace('_','') + filename[1] + filename[2] + 'filter.js'
-        with open(filename_str,'w') as file:
+        filename_str = filename[0]+ '\\' +experiment_id_I.replace('_','') + filename[1] + filename[2] + 'filter.js'
+        with open(filename_str,'wb') as file:
             file.write(json_str);
     

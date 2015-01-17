@@ -24,15 +24,15 @@ class stage02_physiology_execute():
             cobra_model_sbml = self.stage02_physiology_query.get_row_modelID_dataStage02PhysiologyModels(model_id_I);
             # write the model to a temporary file
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + 'cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + 'cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + 'cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
             # Apply KOs, if any:
@@ -49,10 +49,10 @@ class stage02_physiology_execute():
             # test the model
             if self.test_model(cobra_model):
                 # write the model to a temporary file
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model);
                 # upload the model to the database
-                qio02.import_dataStage02PhysiologyModel_sbml(model_id_I, date_I, settings.workspace_data + 'cobra_model_tmp.xml');
+                qio02.import_dataStage02PhysiologyModel_sbml(model_id_I, date_I, settings.workspace_data + '\\cobra_model_tmp.xml');
         elif model_file_name_I and model_id_O: #modify an existing model in not in the database
             # Read in the sbml file and define the model conditions
             cobra_model = create_cobra_model_from_sbml_file(model_file_name_I, print_time=True);
@@ -70,10 +70,10 @@ class stage02_physiology_execute():
             # test the model
             if self.test_model(cobra_model):
                 # write the model to a temporary file
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model);
                 # upload the model to the database
-                qio02.import_dataStage02PhysiologyModel_sbml(model_id_I, date_I, settings.workspace_data + 'cobra_model_tmp.xml');
+                qio02.import_dataStage02PhysiologyModel_sbml(model_id_I, date_I, settings.workspace_data + '\\cobra_model_tmp.xml');
         else:
             print 'need to specify either an existing model_id or model_file_name!'
         return
@@ -394,17 +394,17 @@ class stage02_physiology_execute():
             cobra_model_sbml = self.stage02_physiology_query.get_row_modelID_dataStage02PhysiologyModels(model_id_I);
             # load the model
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + 'cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + 'cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + 'cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
         elif cobra_model_I:
@@ -440,15 +440,15 @@ class stage02_physiology_execute():
             cobra_model_sbml = self.stage02_physiology_query.get_row_modelID_dataStage02PhysiologyModels(model_id);
             # write the model to a temporary file
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + 'cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + 'cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + 'cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
             self.models[model_id]=cobra_model;

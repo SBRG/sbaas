@@ -242,6 +242,7 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_atomMappingReactions.__table__.drop(engine,True);
             data_stage02_isotopomer_atomMappingMetabolites.__table__.drop(engine,True);
             data_stage02_isotopomer_fittedFluxes.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedFragments.__table__.drop(engine,True);
             data_stage02_isotopomer_fittedData.__table__.drop(engine,True);
             data_stage02_isotopomer_fittedMeasuredFluxes.__table__.drop(engine,True);
             data_stage02_isotopomer_fittedMeasuredFragments.__table__.drop(engine,True);
@@ -260,6 +261,7 @@ class stage02_isotopomer_execute():
             elif simulation_id_I:
                 reset = self.session.query(data_stage02_isotopomer_simulation).filter(data_stage02_isotopomer_simulation.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedFluxes).filter(data_stage02_isotopomer_fittedFluxes.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedFragments).filter(data_stage02_isotopomer_fittedFluxes.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedData).filter(data_stage02_isotopomer_fittedData.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxes).filter(data_stage02_isotopomer_fittedMeasuredFluxes.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragments).filter(data_stage02_isotopomer_fittedMeasuredFragments.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
@@ -278,6 +280,7 @@ class stage02_isotopomer_execute():
                 reset = self.session.query(data_stage02_isotopomer_atomMappingReactions).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_atomMappingMetabolites).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedFluxes).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedFragments).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedData).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxes).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragments).delete(synchronize_session=False);
@@ -300,6 +303,7 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_atomMappingReactions.__table__.create(engine,True);
             data_stage02_isotopomer_atomMappingMetabolites.__table__.create(engine,True);
             data_stage02_isotopomer_fittedFluxes.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedFragments.__table__.create(engine,True);
             data_stage02_isotopomer_fittedData.__table__.create(engine,True);
             data_stage02_isotopomer_fittedMeasuredFluxes.__table__.create(engine,True);
             data_stage02_isotopomer_fittedMeasuredFragments.__table__.create(engine,True);
@@ -325,17 +329,17 @@ class stage02_isotopomer_execute():
         # load the model
         if cobra_model_sbml:
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + 'cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + 'cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + 'cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
         # implement optimal KOs and flux constraints:
@@ -369,17 +373,17 @@ class stage02_isotopomer_execute():
             cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id_I);
             # write the model to a temporary file
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + 'cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + 'cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + 'cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
             # Apply KOs, if any:
@@ -396,10 +400,10 @@ class stage02_isotopomer_execute():
             # test the model
             if self.test_model(cobra_model):
                 # write the model to a temporary file
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model);
                 # upload the model to the database
-                qio02.import_dataStage02Model_sbml(model_id_I, date_I, settings.workspace_data + 'cobra_model_tmp.xml');
+                qio02.import_dataStage02Model_sbml(model_id_I, date_I, settings.workspace_data + '\\cobra_model_tmp.xml');
         elif model_file_name_I and model_id_O: #modify an existing model in not in the database
             # check for the file type
             if '.json' in model_file_name_I:
@@ -425,12 +429,12 @@ class stage02_isotopomer_execute():
                 # write the model to a temporary file
                 filename = '';
                 if '.xml' in model_file_name_I:
-                    filename = settings.workspace_data + 'cobra_model_tmp.xml'
+                    filename = settings.workspace_data + '\\cobra_model_tmp.xml'
                     with open(filename,'wb') as file:
                         file.write(cobra_model);
                         file.close()
                 elif '.json' in model_file_name_I:
-                    filename = settings.workspace_data + 'cobra_model_tmp.json';
+                    filename = settings.workspace_data + '\\cobra_model_tmp.json';
                     with open(filename,'wb') as file:
                         file.write(cobra_model);
                         file.close()
@@ -1523,17 +1527,17 @@ class stage02_isotopomer_execute():
             cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id);
             # write the model to a temporary file
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + 'cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + 'cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + 'cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + 'cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
             self.models[model_id]=cobra_model;

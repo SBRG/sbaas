@@ -1065,6 +1065,97 @@ class data_stage02_isotopomer_fittedFluxes(Base):
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
+class data_stage02_isotopomer_fittedFragments(Base):
+    __tablename__ = 'data_stage02_isotopomer_fittedFragments'
+    id = Column(Integer, Sequence('data_stage02_isotopomer_fittedFragments_id_seq'), primary_key=True)
+    simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
+    experiment_id = Column(String(50));
+    #model_id = Column(String(50));
+    #mapping_id = Column(String(100));
+    sample_name_abbreviation = Column(String(100));
+    time_point = Column(String(10));
+    fragment_id = Column(String(100));
+    #fragment_formula = Column(String(500));
+    fragment_mass = Column(Integer);
+    fit_val = Column(Float);
+    fit_stdev = Column(Float);
+    fit_units = Column(String(50));
+    fit_alf = Column(Float);
+    fit_cor = Column(postgresql.ARRAY(Float));
+    fit_cov = Column(postgresql.ARRAY(Float));
+    free = Column(Boolean);
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
+            UniqueConstraint('simulation_id','time_point','fragment_id','fragment_mass','simulation_dateAndTime'),
+            )
+
+    def __init__(self,simulation_id_I,
+        simulation_dateAndTime_I,
+        experiment_id_I,
+        #model_id_I,
+        #mapping_id_I,
+        sample_name_abbreviation_I,
+        time_point_I,
+        fragment_id_I,
+        #fragment_formula_I,
+        fragment_mass_I,
+        fit_val_I,
+        fit_stdev_I,
+        fit_units_I,
+        fit_alf_I,
+        fit_cor_I,
+        fit_cov_I,
+        free_I,
+        used__I,
+        comment__I):
+        self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
+        self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.mapping_id=mapping_id_I
+        self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.time_point=time_point_I
+        self.fragment_id=fragment_id_I
+        #self.fragment_formula=fragment_formula_I
+        self.fragment_mass=fragment_mass_I
+        self.fit_val=fit_val_I
+        self.fit_stdev=fit_stdev_I
+        self.fit_units=fit_units_I
+        self.fit_alf=fit_alf_I
+        self.fit_cor=fit_cor_I
+        self.fit_cov=fit_cov_I
+        self.free=free_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
+        'experiment_id':self.experiment_id,
+        #'model_id':self.model_id,
+        #'mapping_id':self.mapping_id,
+        'sample_name_abbreviation':self.sample_name_abbreviation,
+        'time_point':self.time_point,
+        'fragment_id':self.fragment_id,
+        #'fragment_formula':self.fragment_formula,
+        'fragment_mass':self.fragment_mass,
+        'fit_val':self.fit_val,
+        'fit_stdev':self.fit_stdev,
+        'fit_units':self.fit_units,
+        'fit_alf':self.fit_alf,
+        'fit_chi2s':self.fit_chi2s,
+        'fit_cor':self.fit_cor,
+        'fit_cov':self.fit_cov,
+        'free':self.free,
+        'used_':self.used_,
+        'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
 class data_stage02_isotopomer_fittedData(Base):
     __tablename__ = 'data_stage02_isotopomer_fittedData'
     id = Column(Integer, Sequence('data_stage02_isotopomer_fittedData_id_seq'), primary_key=True)
@@ -1078,7 +1169,7 @@ class data_stage02_isotopomer_fittedData(Base):
     fitted_echi2 = Column(postgresql.ARRAY(Float));
     fitted_alf = Column(Float);
     fitted_chi2 = Column(Float);
-    fitted_dof = Column(Float);
+    fitted_dof = Column(Integer);
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
@@ -1107,7 +1198,7 @@ class data_stage02_isotopomer_fittedData(Base):
         #self.model_id=model_id_I
         #self.mapping_id=mapping_id_I
         #self.sample_name_abbreviation=sample_name_abbreviation_I
-        self.time_point=time_point_I
+        #self.time_point=time_point_I
         self.fitted_echi2=fitted_echi2_I
         self.fitted_alf=fitted_alf_I
         self.fitted_chi2=fitted_chi2_I
@@ -1214,8 +1305,8 @@ class data_stage02_isotopomer_fittedMeasuredFragments(Base):
             )
 
     def __init__(self,simulation_id_I,
-    experiment_id_I,
     simulation_dateAndTime_I,
+    experiment_id_I,
     #model_id_I,
     #mapping_id_I,
     sample_name_abbreviation_I,
@@ -1280,7 +1371,7 @@ class data_stage02_isotopomer_fittedMeasuredFluxResiduals(Base):
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id','rxn_id','simulation_dateAndTime'),
+            UniqueConstraint('simulation_id','rxn_id','time_point','simulation_dateAndTime'),
             )
 
     def __init__(self,simulation_id_I,
@@ -1350,7 +1441,7 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
     sample_name_abbreviation = Column(String(100));
     time_point = Column(String(10));
     fragment_id = Column(String(100));
-    fragment_formula = Column(String(500));
+    #fragment_formula = Column(String(500));
     fragment_mass = Column(Integer);
     res_data = Column(Float);
     res_esens = Column(Float);
@@ -1364,7 +1455,7 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
 
     __table_args__ = (
             #ForeignKeyConstraint(['simulation_id'], ['data_stage02_isotopomer_simulation.simulation_id']),
-            UniqueConstraint('simulation_id','fragment_id','simulation_dateAndTime'),
+            UniqueConstraint('simulation_id','time_point','fragment_id','fragment_mass','simulation_dateAndTime'),
             )
 
     def __init__(self,simulation_id_I,
@@ -1375,7 +1466,7 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
         sample_name_abbreviation_I,
         time_point_I,
         fragment_id_I,
-        fragment_formula_I,
+        #fragment_formula_I,
         fragment_mass_I,
         res_data_I,
         res_esens_I,
@@ -1394,7 +1485,7 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
         self.sample_name_abbreviation=sample_name_abbreviation_I
         self.time_point=time_point_I
         self.fragment_id=fragment_id_I
-        self.fragment_formula=fragment_formula_I
+        #self.fragment_formula=fragment_formula_I
         self.fragment_mass=fragment_mass_I
         self.res_data=res_data_I
         self.res_esens=res_esens_I
@@ -1415,7 +1506,7 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
         'sample_name_abbreviation':self.sample_name_abbreviation,
         'time_point':self.time_point,
         'fragment_id':self.fragment_id,
-        'fragment_formula':self.fragment_formula,
+        #'fragment_formula':self.fragment_formula,
         'fragment_mass':self.fragment_mass,
         'res_data':self.res_data,
         'res_esens':self.res_esens,
