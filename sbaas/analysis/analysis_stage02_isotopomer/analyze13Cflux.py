@@ -272,7 +272,7 @@ def plot_ci_calculated(ci):
     data.append(flux1);
     data.append(flux2);
     io = base_exportData(data);
-    io.write_dict2json('visualization\\escher\\ci.json');
+    io.write_dict2json('visualization/escher/ci.json');
 
 def export_modelWithFlux(cobra_model_xml_I,ci_list_I,cobra_model_xml_O):
     '''update model lower_bound/upper_bound with calculated flux confidence intervals'''

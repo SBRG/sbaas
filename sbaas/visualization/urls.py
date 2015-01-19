@@ -1,5 +1,6 @@
 from version import __version__
 import json
+from data import sbaas_settings as settings
 
 # TODO remove all os.path.join when using urls
 
@@ -7,19 +8,19 @@ class urls():
 
     def __init__(self):
 
-        self._visualization_css = json.load(open('visualization\\resources\\urls_visualization_css.json'));
+        self._visualization_css = json.load(open(settings.visualization_resources+'/urls_visualization_css.json'));
 
-        self._visualization_js = json.load(open('visualization\\resources\\urls_visualization_js.json'));
+        self._visualization_js = json.load(open(settings.visualization_resources+'/urls_visualization_js.json'));
 
-        self._visualization_data_dir = json.load(open('visualization\\resources\\urls_visualization_data_dir.json'));
+        self._visualization_data_dir = json.load(open(settings.visualization_resources+'/urls_visualization_data_dir.json'));
 
-        self._resources = json.load(open('visualization\\resources\\urls_resources.json'));
+        self._resources = json.load(open(settings.visualization_resources+'/urls_resources.json'));
     
-        self._dependencies = json.load(open('visualization\\resources\\urls_dependencies.json'));
+        self._dependencies = json.load(open(settings.visualization_resources+'/urls_dependencies.json'));
     
-        self._dependencies_cdn = json.load(open('visualization\\resources\\urls_dependencies_cdn.json'));
+        self._dependencies_cdn = json.load(open(settings.visualization_resources+'/urls_dependencies_cdn.json'));
 
-        self._links = json.load(open('visualization\\resources\\urls_links.json'));
+        self._links = json.load(open(settings.visualization_resources+'/urls_links.json'));
 
         # external dependencies
         self.names = self._visualization_css.keys() + self._visualization_js.keys() + self._visualization_data_dir.keys() + self._resources.keys() + self._dependencies.keys() + self._links.keys()

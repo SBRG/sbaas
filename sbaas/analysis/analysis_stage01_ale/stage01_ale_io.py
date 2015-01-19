@@ -146,7 +146,7 @@ class stage01_ale_io(base_analysis):
                                                  x_axis_I=[],
                                                  y_axis_I=[],
                                                  json_var_name='data',
-                                                 filename=['visualization\\data\\ALEsKOs01\\','\\scatterlineplot\\','.js']):
+                                                 filename=['visualization/data/ALEsKOs01/','/scatterlineplot/','.js']):
         '''Export data for viewing using d3'''
         
         data_O = [];

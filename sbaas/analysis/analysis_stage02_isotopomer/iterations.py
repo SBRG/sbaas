@@ -42,14 +42,14 @@ def isotopomer_model_iteration1():
     # Find minimal flux solution:
     pfba = optimize_minimal_flux(cobra_model,True,solver='gurobi');
     # Write pfba solution to file
-    with open('data\\iteration1_140407_ijo1366_reduced_modified_pfba.csv',mode='wb') as outfile:
+    with open('data/iteration1_140407_ijo1366_reduced_modified_pfba.csv',mode='wb') as outfile:
         writer = csv.writer(outfile)
         writer.writerow(['Reaction','Flux'])
         for k,v in cobra_model.solution.x_dict.iteritems():
             writer.writerow([k,v]);
     # Read in pfba solution 
     pfba_sol = {};
-    with open('data\\iteration1_140407_ijo1366_reduced_modified_pfba.csv',mode='r') as infile:
+    with open('data/iteration1_140407_ijo1366_reduced_modified_pfba.csv',mode='r') as infile:
         dictreader = csv.DictReader(infile)
         for r in dictreader:
             pfba_sol[r['Reaction']] = r['Flux'];
@@ -74,12 +74,12 @@ def isotopomer_model_iteration1():
     remove_noflux_reactions(cobra_model,pfba_sol,['Transport, Outer Membrane Porin','Transport, Inner Membrane','Transport, Outer Membrane'])
     revert_to_reversible(cobra_model);
     # write model to sbml
-    write_cobra_model_to_sbml_file(cobra_model,'data\\iteration1_140407_ijo1366_netrxn_irreversible.xml')
+    write_cobra_model_to_sbml_file(cobra_model,'data/iteration1_140407_ijo1366_netrxn_irreversible.xml')
     # Reduce model using FVA:
-    reduce_model(cobra_model,"data\\iteration1_140407_ijo1366_reduced.xml")
+    reduce_model(cobra_model,"data/iteration1_140407_ijo1366_reduced.xml")
     # Remove all reactions with 0 flux
     remove_noflux_reactions(cobra_model);
-    with open('data\\iteration1_140407_ijo1366_reduced_netrxn_lbub.csv',mode='wb') as outfile:
+    with open('data/iteration1_140407_ijo1366_reduced_netrxn_lbub.csv',mode='wb') as outfile:
         writer = csv.writer(outfile)
         writer.writerow(['Reaction','Formula','LB','UB','Subsystem'])
         for r in cobra_model.reactions:

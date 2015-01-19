@@ -591,6 +591,30 @@ class stage02_isotopomer_io(base_analysis):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
+    def add_data_stage02_isotopomer_fittedNetFluxes(self, data_I):
+        '''add rows of data_stage02_isotopomer_fittedNetFluxes'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = data_stage02_isotopomer_fittedNetFluxes(d['simulation_id'],
+                    d['simulation_dateAndTime'],
+                    #d['experiment_id'],
+                    #d['model_id'],
+                    #d['mapping_id'],
+                    #d['sample_name_abbreviation'],
+                    #d['time_point'],
+                    d['rxn_id'],
+                    d['flux'],
+                    d['flux_stdev'],
+                    d['flux_lb'],
+                    d['flux_ub'],
+                    d['flux_units'],
+                    d['used_'],
+                    d['comment_']);
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
     # TODO: add filters for update queries:
     def update_data_stage02_isotopomer_simulation(self,data_I):
         #TODO:
@@ -1680,17 +1704,17 @@ class stage02_isotopomer_io(base_analysis):
         cobra_model_sbml = None; # get the cobra model
         cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels('140407_iDM2014');
         if cobra_model_sbml['file_type'] == 'sbml':
-            with open('data\\cobra_model_tmp.xml','wb') as file:
+            with open('data/cobra_model_tmp.xml','wb') as file:
                 file.write(cobra_model_sbml['model_file']);
                 file.close()
             cobra_model1 = None;
-            cobra_model1 = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+            cobra_model1 = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
         elif cobra_model_sbml['file_type'] == 'json':
-            with open('data\\cobra_model_tmp.json','wb') as file:
+            with open('data/cobra_model_tmp.json','wb') as file:
                 file.write(cobra_model_sbml['model_file']);
                 file.close()
             cobra_model1 = None;
-            cobra_model1 = load_json_model('data\\cobra_model_tmp.json');
+            cobra_model1 = load_json_model('data/cobra_model_tmp.json');
         else:
             print 'file_type not supported'
         # delete exchange reactions:
@@ -1764,14 +1788,14 @@ class stage02_isotopomer_io(base_analysis):
                 cobra_model.metabolites.get_by_id(met.id).name = '';
                 cobra_model.repair();
         # write the model to a temporary file
-        #write_cobra_model_to_sbml_file(cobra_model,'data\\cobra_model_tmp.xml')
-        save_json_model(cobra_model,'data\\cobra_model_tmp.json')
+        #write_cobra_model_to_sbml_file(cobra_model,'data/cobra_model_tmp.xml')
+        save_json_model(cobra_model,'data/cobra_model_tmp.json')
         # add the model information to the database
         dataStage02IsotopomerModelRxns_data = [];
         dataStage02IsotopomerModelMets_data = [];
         dataStage02IsotopomerModels_data,\
             dataStage02IsotopomerModelRxns_data,\
-            dataStage02IsotopomerModelMets_data = self._parse_model_json(model_id_I, date_I, 'data\\cobra_model_tmp.json')
+            dataStage02IsotopomerModelMets_data = self._parse_model_json(model_id_I, date_I, 'data/cobra_model_tmp.json')
         self.add_data_stage02_isotopomer_modelMetabolites(dataStage02IsotopomerModelMets_data);
         self.add_data_stage02_isotopomer_modelReactions(dataStage02IsotopomerModelRxns_data);
         self.add_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
@@ -2171,14 +2195,14 @@ class stage02_isotopomer_io(base_analysis):
         #create the model from modelReactions and modelMetabolites
         cobra_model = self.create_modelFromReactionsAndMetabolitesTables(modelReactions,modelMetabolites)
         convert_to_irreversible(cobra_model);
-        save_json_model(cobra_model,settings.workspace_data+'\\cobra_model_tmp.json')
+        save_json_model(cobra_model,settings.workspace_data+'/cobra_model_tmp.json')
 
         # add the model information to the database
         dataStage02IsotopomerModelRxns_data = [];
         dataStage02IsotopomerModelMets_data = [];
         dataStage02IsotopomerModels_data,\
             dataStage02IsotopomerModelRxns_data,\
-            dataStage02IsotopomerModelMets_data = self._parse_model_json(model_id_I, date_I, settings.workspace_data+'\\cobra_model_tmp.json')
+            dataStage02IsotopomerModelMets_data = self._parse_model_json(model_id_I, date_I, settings.workspace_data+'/cobra_model_tmp.json')
 
         # add modelReactions to the database
         #if add_rxns_I: self.add_data_stage02_isotopomer_modelReactions(dataStage02IsotopomerModelRxns_data);
@@ -2396,7 +2420,10 @@ class stage02_isotopomer_io(base_analysis):
         fittedData = [];
         f_Echi2 = None;
         if not isnan(f['Echi2'][0][0][0][0]):
-            f_Echi2 = [f['Echi2'][0][0][0][0],f['Echi2'][0][0][0][1]];
+            if len(f['Echi2'][0][0][0])>1:
+                f_Echi2 = [f['Echi2'][0][0][0][0],f['Echi2'][0][0][0][1]];
+            else:
+                f_Echi2 = [f['Echi2'][0][0][0][0]];
         f_alf = f['alf'][0][0][0][0];
         f_chi2 = f['chi2'][0][0][0][0];
         f_dof = int(f['dof'][0][0][0][0]);
@@ -2488,7 +2515,10 @@ class stage02_isotopomer_io(base_analysis):
                 f_mnt_res_time.append('0');
             else:
                 f_mnt_res_time.append(str(d[0][0]['time'][0][0]));
-            f_mnt_res_expt.append(d[0][0]['expt'][0]);
+            if d[0][0]['expt'][0] == 'Expt #1':
+                f_mnt_res_expt.append(simulation_info['experiment_id'][0]);
+            else:
+                f_mnt_res_expt.append(d[0][0]['expt'][0]);
             f_mnt_res_data.append(d[0][0]['data'][0][0]);
             #f_mnt_res_esens.append(d[0][0]['esens'].data); #not needed, and matlab->python conversion has several bugs
             #f_mnt_res_msens.append(d[0][0]['msens'].data);
@@ -2548,7 +2578,7 @@ class stage02_isotopomer_io(base_analysis):
                 fragment_id = re.sub('[)]','_RPARANTHES_',fragment_id)
                 fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
                 time_point = fragment_list[4];
-                exp_id = fragment_list[5];
+                #exp_id = fragment_list[5];
                 if f_mnt_res_expt[cnt] in simulation_info['experiment_id']:
                     fittedMeasuredFragmentResiduals.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
@@ -2603,12 +2633,16 @@ class stage02_isotopomer_io(base_analysis):
         f_par_cov = [];
         f_par_free = [];
         for d in f['par'][0][0][0]['id']:
-            f_par_id.append(d[0])
+            if 'Expt #1' in d[0]:
+                id_str = d[0].astype('str')
+                f_par_id.append(id_str.replace('Expt #1',simulation_info['experiment_id'][0]))
+            else:
+                f_par_id.append(d[0])
         # ensure that there are no negative values or infinite values
         for d in f['par'][0][0][0]['val']:
             if not d:
                 f_par_val.append(None)
-            elif isnan(d[0][0]) or d[0][0]<0:
+            elif isnan(d[0][0]) or d[0][0]<1.0e-6:
                 f_par_val.append(0.0)
             elif isinf(d[0][0]) or d[0][0]>1e3:
                 f_par_val.append(1.0e3)
@@ -2622,7 +2656,7 @@ class stage02_isotopomer_io(base_analysis):
         for cnt,d in enumerate(f['par'][0][0][0]['lb']):
             if not d:
                 f_par_lb.append(0.0)
-            elif isnan(d[0][0]) or d[0][0]<0:
+            elif isnan(d[0][0]) or d[0][0]<1.0e-6:
                 f_par_lb.append(0.0)
             else:
                 f_par_lb.append(float(d[0][0]))
@@ -2691,7 +2725,7 @@ class stage02_isotopomer_io(base_analysis):
                 #fragment_id = re.sub('[)]','_RPARANTHES_',fragment_id)
                 fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
                 time_point = fragment_list[4];
-                expt_id = fragment_list[5];
+                #expt_id = fragment_list[5];
                 if expt in simulation_info['experiment_id']:
                     fittedFragments.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
@@ -2747,7 +2781,7 @@ class stage02_isotopomer_io(base_analysis):
                          model_ids_dict_I={},
                      mapping_ids_I=[],
                      sample_name_abbreviations_I=[],
-                     filename=[settings.visualization_data,'\\isotopomer\\metabolicmap\\','fluxomics\\']):
+                     filename=[settings.visualization_data,'/isotopomer/metabolicmap/','fluxomics/']):
         '''export concentration and dG_r data for visualization'''
         
         # get the model ids:
@@ -2774,17 +2808,17 @@ class stage02_isotopomer_io(base_analysis):
                 cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id);
                 # write the model to a temporary file
                 if cobra_model_sbml['file_type'] == 'sbml':
-                    with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
+                    with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
                         file.write(cobra_model_sbml['model_file']);
                         file.close()
                     cobra_model = None;
-                    cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
+                    cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '/cobra_model_tmp.xml', print_time=True);
                 elif cobra_model_sbml['file_type'] == 'json':
-                    with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
+                    with open(settings.workspace_data + '/cobra_model_tmp.json','wb') as file:
                         file.write(cobra_model_sbml['model_file']);
                         file.close()
                     cobra_model = None;
-                    cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
+                    cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
                 else:
                     print 'file_type not supported'
             # get the time-points
@@ -2816,22 +2850,22 @@ class stage02_isotopomer_io(base_analysis):
                     else: simulation_id = simulation_ids[0];
                     # calculated fluxes
                     flux_lbub = [];
-                    flux_lbub = self.stage02_isotopomer_query.get_rowsEscherFluxLbUb_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id);
+                    flux_lbub = self.stage02_isotopomer_query.get_rowsEscherFluxLbUb_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
                     flux = {};
-                    flux = self.stage02_isotopomer_query.get_rowsEscherFlux_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id);
+                    flux = self.stage02_isotopomer_query.get_rowsEscherFlux_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
                     for map_id in [
-                        #'Alternate Carbon Metabolism',\
-                        #'Amino Acid Metabolism',\
-                        #'Cofactor Biosynthesis',\
-                        #'Inorganic Ion Metabolism',\
-                        #'Nucleotide Metabolism',\
-                        'Central Metabolism'
+                        #'AlternateCarbonMetabolism',\
+                        #'AminoAcidMetabolism',\
+                        #'CofactorBiosynthesis',\
+                        #'InorganicIonMetabolism',\
+                        #'NucleotideMetabolism',\
+                        'CentralMetabolism'
                         ]:
                         filter_map_str = 'model_id/'+ model_id.replace('_','') +'/mapping_id/'+mapping.replace('_','')+'/sample/'+sna.replace('_','')+'/map_id/'+map_id.replace('_','');
                         filter_O['map_id'].append(filter_map_str);
                         print 'exporting fluxomics analysis for map_id ' + map_id;
                         # generate the map html using escher
-                        map_json = json.load(open(settings.sbaas + '\\data\\escher_maps\\' + map_id + '.json','rb'));
+                        map_json = json.load(open(settings.sbaas + '/data/escher_maps/' + map_id + '.json','rb'));
                         map = Builder(map_json=json.dumps(map_json), reaction_data=flux);
                         #html_file = map._get_html(scroll_behavior='zoom')
                         #html_file = map._get_html(menu='all',
@@ -2843,13 +2877,13 @@ class stage02_isotopomer_io(base_analysis):
                         #  enable_editing=True,
                         #  # choose whether to enable keyboard shortcuts
                         #  enable_keys=True)
-                        filename_str = filename[0] + '\\' + experiment_id_I.replace('_','') + filename[1] + filename[2] + model_id.replace('_','') + '_' + mapping.replace('_','') + '_' + sna.replace('_','') + '_' + map_id.replace('_','') + '.html';
+                        filename_str = filename[0] + '/' + experiment_id_I.replace('_','') + filename[1] + filename[2] + model_id.replace('_','') + '_' + mapping.replace('_','') + '_' + sna.replace('_','') + '_' + map_id.replace('_','') + '.html';
                         #with open(filename_str,'wb') as file:
                         #    file.write(html_file);
                         map.save_html(filename_str)
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0]+ '\\' +experiment_id_I.replace('_','') + filename[1] + filename[2] + 'filter.js'
+        filename_str = filename[0]+ '/' +experiment_id_I.replace('_','') + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'wb') as file:
             file.write(json_str);
     

@@ -686,7 +686,7 @@ class stage01_quantification_io(base_analysis):
 
     def export_dataStage01physiologicalRatios_d3(self, experiment_id,sample_name_abbreviations_I=[], time_points_I=[],ratios_I=[],
                                                  json_var_name='data',
-                                                 filename=['visualization\\data\\','\\quantification\\boxandwhiskers\\','ratios\\']):
+                                                 filename=['visualization/data/','/quantification/boxandwhiskers/','ratios/']):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id
@@ -785,7 +785,7 @@ class stage01_quantification_io(base_analysis):
 
     def export_dataStage01replicatesMI_d3(self, experiment_id,sample_name_abbreviations_I=[], time_points_I=[],component_names_I=[],
                                                  json_var_name='data',
-                                                 filename=['visualization\\data\\','\\quantification\\boxandwhiskers\\','concentrations\\']):
+                                                 filename=['visualization/data/','/quantification/boxandwhiskers/','concentrations/']):
         '''Export data for viewing using d3'''
         
         print 'Exporting replicatesMI for d3 boxandwhiskers plot'
@@ -886,7 +886,7 @@ class stage01_quantification_io(base_analysis):
 
     def export_dataStage01physiologicalRatios2_d3(self, experiment_id,sample_name_abbreviations_I=[], time_points_I=[],ratios_I=[],
                                                  json_var_name='data',
-                                                 filename=['visualization\\data\\','\\quantification\\scatterplot\\','ratios\\']):
+                                                 filename=['visualization/data/','/quantification/scatterplot/','ratios/']):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id

@@ -249,25 +249,27 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_fittedMeasuredFluxResiduals.__table__.drop(engine,True);
             data_stage02_isotopomer_fittedMeasuredFragmentResiduals.__table__.drop(engine,True);
             data_stage02_isotopomer_simulationParameters.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedNetFluxes.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_datastage02(self,experiment_id_I = None,simulation_id_I = None):
         try:
             if experiment_id_I:
+                reset = self.session.query(data_stage02_isotopomer_simulation).filter(data_stage02_isotopomer_simulation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_tracers).filter(data_stage02_isotopomer_tracers.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_measuredFluxes).filter(data_stage02_isotopomer_measuredFluxes.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_measuredPools).filter(data_stage02_isotopomer_measuredPools.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_measuredFragments).filter(data_stage02_isotopomer_measuredFragments.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
             elif simulation_id_I:
-                reset = self.session.query(data_stage02_isotopomer_simulation).filter(data_stage02_isotopomer_simulation.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_fittedFluxes).filter(data_stage02_isotopomer_fittedFluxes.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_fittedFragments).filter(data_stage02_isotopomer_fittedFluxes.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_fittedData).filter(data_stage02_isotopomer_fittedData.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxes).filter(data_stage02_isotopomer_fittedMeasuredFluxes.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragments).filter(data_stage02_isotopomer_fittedMeasuredFragments.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxResiduals).filter(data_stage02_isotopomer_fittedMeasuredFluxResiduals.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragmentResiduals).filter(data_stage02_isotopomer_fittedMeasuredFragmentResiduals.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_isotopomer_simulationParameters).filter(data_stage02_isotopomer_simulationParameters.experiment_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxes).filter(data_stage02_isotopomer_fittedFluxes.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedFragments).filter(data_stage02_isotopomer_fittedFluxes.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedData).filter(data_stage02_isotopomer_fittedData.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxes).filter(data_stage02_isotopomer_fittedMeasuredFluxes.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragments).filter(data_stage02_isotopomer_fittedMeasuredFragments.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxResiduals).filter(data_stage02_isotopomer_fittedMeasuredFluxResiduals.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragmentResiduals).filter(data_stage02_isotopomer_fittedMeasuredFragmentResiduals.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_simulationParameters).filter(data_stage02_isotopomer_simulationParameters.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedNetFluxes).filter(data_stage02_isotopomer_fittedNetFluxes.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage02_isotopomer_simulation).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_tracers).delete(synchronize_session=False);
@@ -287,6 +289,13 @@ class stage02_isotopomer_execute():
                 reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFluxResiduals).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedMeasuredFragmentResiduals).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_simulationParameters).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_isotopomer_fittedNetFluxes).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_datastage02_isotopomer_fittedNetFluxes(self,simulation_id_I = None):
+        try:
+            reset = self.session.query(data_stage02_isotopomer_fittedNetFluxes).filter(data_stage02_isotopomer_fittedNetFluxes.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -310,6 +319,7 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_fittedMeasuredFluxResiduals.__table__.create(engine,True);
             data_stage02_isotopomer_fittedMeasuredFragmentResiduals.__table__.create(engine,True);
             data_stage02_isotopomer_simulationParameters.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedNetFluxes.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     #analysis
@@ -329,17 +339,17 @@ class stage02_isotopomer_execute():
         # load the model
         if cobra_model_sbml:
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '/cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '/cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
         # implement optimal KOs and flux constraints:
@@ -373,17 +383,17 @@ class stage02_isotopomer_execute():
             cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id_I);
             # write the model to a temporary file
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '/cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '/cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
             # Apply KOs, if any:
@@ -400,10 +410,10 @@ class stage02_isotopomer_execute():
             # test the model
             if self.test_model(cobra_model):
                 # write the model to a temporary file
-                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model);
                 # upload the model to the database
-                qio02.import_dataStage02Model_sbml(model_id_I, date_I, settings.workspace_data + '\\cobra_model_tmp.xml');
+                qio02.import_dataStage02Model_sbml(model_id_I, date_I, settings.workspace_data + '/cobra_model_tmp.xml');
         elif model_file_name_I and model_id_O: #modify an existing model in not in the database
             # check for the file type
             if '.json' in model_file_name_I:
@@ -429,12 +439,12 @@ class stage02_isotopomer_execute():
                 # write the model to a temporary file
                 filename = '';
                 if '.xml' in model_file_name_I:
-                    filename = settings.workspace_data + '\\cobra_model_tmp.xml'
+                    filename = settings.workspace_data + '/cobra_model_tmp.xml'
                     with open(filename,'wb') as file:
                         file.write(cobra_model);
                         file.close()
                 elif '.json' in model_file_name_I:
-                    filename = settings.workspace_data + '\\cobra_model_tmp.json';
+                    filename = settings.workspace_data + '/cobra_model_tmp.json';
                     with open(filename,'wb') as file:
                         file.write(cobra_model);
                         file.close()
@@ -797,9 +807,9 @@ class stage02_isotopomer_execute():
                             # get the MS data
                             experimentalMS_data =self.stage02_isotopomer_query.get_row_experimentIDAndSampleNameAbbreviationAndTimePoint_dataStage02IsotopomerMeasuredFragments(experiment_id_I,sna,tp);
                             experiment_name = 'Isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp));
-                            filename_mat = settings.workspace_data + '\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.m';
-                            filename_csv = settings.workspace_data + '\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.csv';
-                            filename_json = settings.workspace_data + '\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.json';
+                            filename_mat = settings.workspace_data + '/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.m';
+                            filename_csv = settings.workspace_data + '/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.csv';
+                            filename_json = settings.workspace_data + '/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.json';
                             #mat_script,rxn_ids_INCA = self.write_isotopomerExperiment_INCA(modelReaction_data,modelMetabolite_data,measuredFluxes_data,experimentalMS_data,tracers);
                             mat_script = self.write_isotopomerExperiment_INCA(modelReaction_data,modelMetabolite_data,measuredFluxes_data,experimentalMS_data,tracers);
                             with open(filename_mat,'w') as f:
@@ -810,9 +820,9 @@ class stage02_isotopomer_execute():
                         # get the MS data
                         experimentalMS_data = self.stage02_isotopomer_query.get_row_experimentIDAndSampleNameAbbreviation_dataStage02IsotopomerMeasuredFragments(experiment_id_I,sna);
                         experiment_name = 'Isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna);
-                        filename_mat = settings.workspace_data + '\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '.m';
-                        filename_csv = settings.workspace_data + '\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '.csv';
-                        filename_json = settings.workspace_data + '\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '.json';
+                        filename_mat = settings.workspace_data + '/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '.m';
+                        filename_csv = settings.workspace_data + '/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '.csv';
+                        filename_json = settings.workspace_data + '/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '.json';
                         mat_script = self.write_isotopomerExperiment_INCA(modelReaction_data,modelMetabolite_data,measuredFluxes_data,experimentalMS_data,tracers);
                         with open(filename_mat,'w') as f:
                             f.write(mat_script);
@@ -1299,220 +1309,6 @@ class stage02_isotopomer_execute():
         #return mat_script,rxn_ids_INCA_O;
 
         return mat_script;
-    def make_missingReactionMappings_v1(self,experiment_id_I,mapping_id_new_I=None,model_id_I=[],mapping_id_I=[]):
-        '''find reactions that contain a mapped metabolite that is present in the model, but not present in table atomMappingReactions;
-        and create a new set of reaction mappings that need to be QC/QA'd'''
-
-        #data structures:
-        data_O = [];
-        #get model ids:
-        if model_id_I:
-            model_ids = model_id_I;
-        else:
-            model_ids = [];
-            model_ids = self.stage02_isotopomer_query.get_modelID_experimentID_dataStage02IsotopomerSimulation(experiment_id_I);
-        for model_id in model_ids:
-            #get all reactions in the model:
-            reactions = [];
-            reactions = self.stage02_isotopomer_query.get_rows_modelID_dataStage02IsotopomerModelReactions(model_id);
-            #get mapping ids
-            if mapping_id_I:
-                mapping_ids=mapping_id_I;
-            else:
-                mapping_ids=[];
-                mapping_ids=self.stage02_isotopomer_query.get_mappingID_experimentIDAndModelID_dataStage02IsotopomerSimulation(experiment_id_I,model_id);
-            for mapping_id in mapping_ids:
-                missing_reactions_O = [];
-                missing_metabolites_O = [];
-                for reaction in reactions:
-                    data_tmp={'mapping_id':mapping_id_new_I,
-                                'rxn_id':reaction['rxn_id'],
-                                'rxn_description':None,
-                                'reactants_stoichiometry_tracked':[],
-                                'products_stoichiometry_tracked':[],
-                                'reactants_ids_tracked':[],
-                                'products_ids_tracked':[],
-                                'reactants_mapping':[],
-                                'products_mapping':[],
-                                'rxn_equation':reaction['equation'],
-                                'products_elements_tracked':[],
-                                'products_positions_tracked':[],
-                                'reactants_elements_tracked':[],
-                                'reactants_positions_tracked':[],
-                                'used_':True,
-                                'comment_':''};
-                    #check if the reactants or products are tracked
-                    tracked_reactants = [];
-                    for reactant in reaction['reactants_ids']:
-                        tracked_reactant = {};
-                        tracked_reactant = self.stage02_isotopomer_query.get_rows_mappingIDAndMetID_dataStage02IsotopomerAtomMappingMetabolites(mapping_id,reactant);
-                        if tracked_reactant:
-                            tracked_reactants.append(tracked_reactant);
-                    tracked_products = [];
-                    for product in reaction['products_ids']:
-                        tracked_product = {};
-                        tracked_product = self.stage02_isotopomer_query.get_rows_mappingIDAndMetID_dataStage02IsotopomerAtomMappingMetabolites(mapping_id,product);
-                        if tracked_product:
-                            tracked_products.append(tracked_product);
-                    if tracked_reactants or tracked_products:
-                        #check if the reaction is missing or is missing a tracked metabolite
-                        tracked_reaction = {};
-                        tracked_reaction = self.stage02_isotopomer_query.get_row_mappingIDAndRxnID_dataStage02IsotopomerAtomMappingReactions(mapping_id,reaction['rxn_id']);
-                        if tracked_reaction:
-                            missing_reactants = [];
-                            #copy existing data
-                            data_tmp['reactants_ids_tracked'].extend(tracked_reaction['reactants_ids_tracked']);
-                            data_tmp['reactants_stoichiometry_tracked'].extend(tracked_reaction['reactants_stoichiometry_tracked']);
-                            data_tmp['reactants_mapping'].extend(tracked_reaction['reactants_mapping']);
-                            data_tmp['reactants_elements_tracked'].extend(tracked_reaction['reactants_elements_tracked']);
-                            data_tmp['reactants_positions_tracked'].extend(tracked_reaction['reactants_positions_tracked']);
-                            data_tmp['rxn_description']=tracked_reaction['rxn_description'];
-                            for tracked_reactant in tracked_reactants:
-                                if tracked_reactant['met_id'] in tracked_reaction['reactants_ids_tracked']:
-                                    continue;
-                                else:
-                                    missing_reactants.append(tracked_reactant);
-                                    #add missing data
-                                    data_tmp['reactants_ids_tracked'].append(tracked_reactant['met_id']);
-                                    data_tmp['reactants_stoichiometry_tracked'].append(0);
-                                    data_tmp['reactants_mapping'].append('');
-                                    data_tmp['reactants_elements_tracked'].append(tracked_reactant['met_elements']);
-                                    data_tmp['reactants_positions_tracked'].append(tracked_reactant['met_atompositions']);
-                                    data_tmp['rxn_description']=tracked_reaction['rxn_description'];
-                                    data_tmp['used_']=False;
-                                    data_tmp['comment_']+=tracked_reactant['met_id']+',';
-                            missing_products = [];
-                            #copy existing data
-                            data_tmp['products_ids_tracked'].extend(tracked_reaction['products_ids_tracked']);
-                            data_tmp['products_stoichiometry_tracked'].extend(tracked_reaction['products_stoichiometry_tracked']);
-                            data_tmp['products_mapping'].extend(tracked_reaction['products_mapping']);
-                            data_tmp['products_elements_tracked'].extend(tracked_reaction['products_elements_tracked']);
-                            data_tmp['products_positions_tracked'].extend(tracked_reaction['products_positions_tracked']);
-                            data_tmp['rxn_description']=tracked_reaction['rxn_description'];
-                            for tracked_product in tracked_products:
-                                if tracked_product['met_id'] in tracked_reaction['products_ids_tracked']:
-                                    continue;
-                                else:
-                                    missing_products.append(tracked_product);
-                                    #add missing data
-                                    data_tmp['products_ids_tracked'].append(tracked_product['met_id']);
-                                    data_tmp['products_stoichiometry_tracked'].append(0);
-                                    data_tmp['products_mapping'].append('');
-                                    data_tmp['products_elements_tracked'].append(tracked_product['met_elements']);
-                                    data_tmp['products_positions_tracked'].append(tracked_product['met_atompositions']);
-                                    data_tmp['rxn_description']=tracked_reaction['rxn_description'];
-                                    data_tmp['used_']=False;
-                                    data_tmp['comment_']+=tracked_product['met_id']+',';
-                            if missing_reactants or missing_products:
-                                tmp = {};
-                                tmp = tracked_reaction;
-                                tmp.update({'missing_reactants':missing_reactants});
-                                tmp.update({'missing_products':missing_products});
-                                tmp.update({'equation':reaction['equation']})
-                                missing_metabolites_O.append(tmp);
-                        else:
-                            tmp = {};
-                            tmp = reaction;
-                            tmp.update({'tracked_reactants':tracked_reactants});
-                            tmp.update({'tracked_products':tracked_products});
-                            missing_reactions_O.append(reaction);
-                            for tracked_reactant in tracked_reactants:
-                                #add missing data
-                                data_tmp['reactants_ids_tracked'].append(tracked_reactant['met_id']);
-                                data_tmp['reactants_stoichiometry_tracked'].append(0);
-                                data_tmp['reactants_mapping'].append('');
-                                data_tmp['reactants_elements_tracked'].append(tracked_reactant['met_elements']);
-                                data_tmp['reactants_positions_tracked'].append(tracked_reactant['met_atompositions']);
-                                data_tmp['rxn_description']=None;
-                                data_tmp['used_']=False;
-                                data_tmp['comment_']=reaction['rxn_id'];
-                            for tracked_product in tracked_products:
-                                #add missing data
-                                data_tmp['products_ids_tracked'].append(tracked_product['met_id']);
-                                data_tmp['products_stoichiometry_tracked'].append(0);
-                                data_tmp['products_mapping'].append('');
-                                data_tmp['products_elements_tracked'].append(tracked_product['met_elements']);
-                                data_tmp['products_positions_tracked'].append(tracked_product['met_atompositions']);
-                                data_tmp['rxn_description']=None;
-                                data_tmp['used_']=False;
-                                data_tmp['comment_']=reaction['rxn_id'];
-                    data_O.append(data_tmp);
-                #self.print_missingReactionMappings(missing_reactions_O,missing_metabolites_O);
-        #add data to the database:
-        for d in data_O:
-            row = None;
-            row = data_stage02_isotopomer_atomMappingReactions(d['mapping_id'],
-                                d['rxn_id'],
-                                d['rxn_description'],
-                                d['reactants_stoichiometry_tracked'],
-                                d['products_stoichiometry_tracked'],
-                                d['reactants_ids_tracked'],
-                                d['products_ids_tracked'],
-                                d['reactants_elements_tracked'],
-                                d['products_elements_tracked'],
-                                d['reactants_positions_tracked'],
-                                d['products_positions_tracked'],
-                                d['reactants_mapping'],
-                                d['products_mapping'],
-                                d['rxn_equation'],
-                                d['used_'],
-                                d['comment_']);
-            self.session.add(row);
-        self.session.commit();
-    def make_missingMetaboliteMappings_v1(self,experiment_id_I,model_id_I=[],mapping_id_rxns_I=[],mapping_id_mets_I=[]):
-        '''Make atom mapping metabolites from atom mapping reactions, QC atom mapping reactions;
-        and create a new set of metabolite mappings that correspond to the current reaction mappings that need to be QC/QA'd'''
-        
-        #get model ids:
-        if model_id_I:
-            model_ids = model_id_I;
-        else:
-            model_ids = [];
-            model_ids = self.stage02_isotopomer_query.get_modelID_experimentID_dataStage02IsotopomerSimulation(experiment_id_I);
-        for model_id in model_ids:
-            #get mapping ids
-            if mapping_id_rxns_I and mapping_id_mets_I:
-                mapping_ids_rxns=mapping_id_rxns_I;
-                mapping_ids_mets=mapping_id_mets_I;
-            elif mapping_id_rxns_I:
-                mapping_ids_rxns=mapping_id_rxns_I;
-            else:
-                mapping_ids_rxns=[];
-                mapping_ids_rxns=self.stage02_isotopomer_query.get_mappingID_experimentIDAndModelID_dataStage02IsotopomerSimulation(experiment_id_I,model_id);
-            for mapping_cnt,mapping_id_rxns in enumerate(mapping_ids_rxns):
-                # get the metabolite mappings
-                if mapping_id_rxns_I and mapping_id_mets_I:
-                    mappings=self.stage02_isotopomer_query.get_atomMappingMetabolites_mappingID_dataStage02IsotopomerAtomMappingReactionsAndAtomMappingMetabolites(mapping_id_rxns,mapping_ids_mets[mapping_cnt]);
-                else:
-                    mappings = self.stage02_isotopomer_query.get_atomMappingMetabolites_mappingID_dataStage02IsotopomerAtomMappingReactions(mapping_id_rxns);
-                # remove duplicates
-                duplicate_ind = [];
-                for d1_cnt,d1 in enumerate(mappings):
-                    for d2_cnt in range(d1_cnt+1,len(mappings)):
-                        if d1['mapping_id'] == mappings[d2_cnt]['mapping_id'] and \
-                        d1['met_id'] == mappings[d2_cnt]['met_id'] and \
-                        d1['met_elements'] == mappings[d2_cnt]['met_elements'] and \
-                        d1['met_atompositions'] == mappings[d2_cnt]['met_atompositions'] and \
-                        d1['met_symmetry_elements'] == mappings[d2_cnt]['met_symmetry_elements'] and \
-                        d1['met_symmetry_atompositions'] == mappings[d2_cnt]['met_symmetry_atompositions']:
-                            duplicate_ind.append(d2_cnt);
-                duplicate_ind_unique=list(set(duplicate_ind));
-                # copy out unique metabolites
-                data_O = [];
-                for d1_cnt,d1 in enumerate(mappings):
-                    if d1_cnt in duplicate_ind_unique:
-                        continue;
-                    else:
-                        data_O.append(d1);
-                met_ids = [x['met_id'] for x in data_O];
-                met_ids_unique = list(set(met_ids));
-                data_mets_cnt = {};
-                for met in met_ids_unique:
-                    data_mets_cnt[met] = 0;
-                for d in data_O:
-                    data_mets_cnt[d['met_id']] += 1;
-                # add data to the database
-                self.stage02_isotopomer_query.add_data_dataStage02IsotopomerAtomMappingMetabolites(data_O);
     def load_models(self,experiment_id_I,model_ids_I=[]):
         '''pre-load all models for the experiment_id'''
         # get the model ids:
@@ -1527,28 +1323,20 @@ class stage02_isotopomer_execute():
             cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id);
             # write the model to a temporary file
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open(settings.workspace_data + '\\cobra_model_tmp.xml','wb') as file:
+                with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '/cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open(settings.workspace_data + '\\cobra_model_tmp.json','wb') as file:
+                with open(settings.workspace_data + '/cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model(settings.workspace_data + '\\cobra_model_tmp.json');
+                cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
             self.models[model_id]=cobra_model;
-    #TODO:
-    def make_isotopomerSimulation_Inca(self):
-        '''Generate parameters for isotopomer simulation data for INCA1.1'''
-        return
-    def make_isotopomerParameterEstimation_Inca(self):
-        '''Generate parameters for isotopomer parameter estimations (i.e. free fluxes) for INCA1.1'''
-        return
-
     def make_modelFromRxnsAndMetsTables(self,model_id_I=None,model_id_O=None,date_I=None,ko_list=[],flux_dict={},description=None):
         '''make/update the model using the modelReactions and modelMetabolites table'''
 
@@ -1576,13 +1364,13 @@ class stage02_isotopomer_execute():
             # test the model
             if self.test_model(cobra_model):
                 # write the model to a temporary file
-                save_json_model(cobra_model,settings.workspace_data+'\\cobra_model_tmp.json')
+                save_json_model(cobra_model,settings.workspace_data+'/cobra_model_tmp.json')
                 # add the model information to the database
                 dataStage02IsotopomerModelRxns_data = [];
                 dataStage02IsotopomerModelMets_data = [];
                 dataStage02IsotopomerModels_data,\
                     dataStage02IsotopomerModelRxns_data,\
-                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_O, date_I, settings.workspace_data+'\\cobra_model_tmp.json')
+                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_O, date_I, settings.workspace_data+'/cobra_model_tmp.json')
                 qio02.add_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
         elif model_id_I and not model_id_O:  #update an existing model in the database
             # get the model reactions and metabolites from the database
@@ -1606,20 +1394,19 @@ class stage02_isotopomer_execute():
             # test the model
             if self.test_model(cobra_model):
                 # write the model to a temporary file
-                save_json_model(cobra_model,settings.workspace_data+'\\cobra_model_tmp.json')
+                save_json_model(cobra_model,settings.workspace_data+'/cobra_model_tmp.json')
                 # upload the model to the database
                 # add the model information to the database
                 dataStage02IsotopomerModelRxns_data = [];
                 dataStage02IsotopomerModelMets_data = [];
                 dataStage02IsotopomerModels_data,\
                     dataStage02IsotopomerModelRxns_data,\
-                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_I, date_I, settings.workspace_data+'\\cobra_model_tmp.json')
+                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_I, date_I, settings.workspace_data+'/cobra_model_tmp.json')
                 qio02.update_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
 
         else:
             print 'need to specify either an existing model_id!'
         return
-    
     def test_model(self,cobra_model):
         '''simulate a cobra model'''
         
@@ -1634,3 +1421,154 @@ class stage02_isotopomer_execute():
         else:
             print 'solution = ' + str(cobra_model.solution.f)
             return True;
+    #TODO:
+    def make_isotopomerSimulation_Inca(self):
+        '''Generate parameters for isotopomer simulation data for INCA1.1'''
+        return
+    def make_isotopomerParameterEstimation_Inca(self):
+        '''Generate parameters for isotopomer parameter estimations (i.e. free fluxes) for INCA1.1'''
+        return
+
+    def check_observableFlux(self,flux_I,flux_lb_I,flux_ub_I):
+        '''Determine if a flux is observable
+        based on the criteria in doi:10.1016/j.ymben.2010.11.006'''
+        flux_span = flux_ub_I-flux_lb_I;
+        if flux_span > 4*flux_I and flux_lb_I == 0:
+            observable = False;
+        else:
+            observable = True;
+        return observable;
+    def execute_makeNetFluxes(self, simulation_id_I):
+        '''Determine the net flux through a reaction'''
+        
+        data_O = [];
+        # simulation_dateAndTime
+        simulation_dateAndTimes = [];
+        simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
+        for simulation_dateAndTime in simulation_dateAndTimes:
+            # get all reactions included in the simulation (in alphabetical order)
+            rxns = [];
+            rxns = self.stage02_isotopomer_query.get_rxnIDs_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime)
+            # group into forward and reverse reactions
+            rxns_pairs = {};
+            rxn_pair = [];
+            for rxn_cnt,rxn in enumerate(rxns):
+                if not rxn_pair:
+                    rxn_pair.append(rxn);
+                else:
+                    if '_reverse' in rxn and rxn_pair[0] in rxn:
+                        rxn_pair.append(rxn);
+                        rxns_pairs[rxn_pair[0]]=rxn_pair;
+                        rxn_pair = [];
+                    elif '_reverse' in rxn_pair[0]:
+                        rxn_pair.insert(0,None);
+                        rxn_name = rxn_pair[1].replace('_reverse','');
+                        rxns_pairs[rxn_name]=rxn_pair;
+                        rxn_pair = [];
+                        rxn_pair.append(rxn);
+                    else:
+                        rxn_pair.append(None);
+                        rxns_pairs[rxn_pair[0]]=rxn_pair;
+                        rxn_pair = [];
+                        rxn_pair.append(rxn);
+            # calculate the net reaction flux average, stdev, lb and ub
+            for k,v in rxns_pairs.iteritems():
+                flux_average_1 = 0.0
+                flux_average_2 = 0.0
+                flux_stdev_1 = 0.0
+                flux_stdev_2 = 0.0
+                flux_lb_1 = 0.0
+                flux_lb_2 = 0.0
+                flux_ub_1 = 0.0
+                flux_ub_2 = 0.0
+                flux_units_1 = None
+                flux_units_2 = None
+                # get the flux data
+                if v[0]:
+                    flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndRxnID_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime,v[0]);
+                if v[1]:
+                    flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndRxnID_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime,v[1]);
+                # determine if the fluxes are observable
+                observable_1 = self.check_observableFlux(flux_average_1,flux_lb_1,flux_ub_1)
+                observable_2 = self.check_observableFlux(flux_average_2,flux_lb_2,flux_ub_2)
+                # calculate the net flux
+                flux_average = flux_average_1-flux_average_2
+                flux_stdev = sqrt(abs(flux_stdev_1*flux_stdev_1-flux_stdev_2*flux_stdev_2))
+                if observable_1 and observable_2:
+                    if flux_average_1 > 999.0:
+                        flux_lb = flux_lb_1-flux_average_2
+                        flux_ub = flux_ub_1-0.0
+                    elif flux_average_2 > 999.0:
+                        flux_lb = flux_average_1-flux_lb_2
+                        flux_ub = 0.0-flux_ub_2
+                    else:
+                        flux_lb = flux_lb_1-flux_lb_2
+                        flux_ub = flux_ub_1-flux_ub_2
+                    flux_units = flux_units_1;
+                elif not observable_1 and not v[1]:
+                    flux_average = None;
+                    flux_lb = 0.0
+                    flux_ub = 1000.0
+                    flux_units = flux_units_1;
+                elif not observable_2 and not v[0]:
+                    flux_average = None;
+                    flux_lb = -1000.0
+                    flux_ub = 0.0
+                    flux_units = flux_units_2;
+                elif observable_1:
+                    flux_lb = flux_lb_1-flux_average_2
+                    flux_ub = flux_ub_1-0.0
+                    flux_units = flux_units_1;
+                elif observable_2:
+                    flux_lb = flux_average_1-flux_lb_2
+                    flux_ub = 0.0-flux_ub_2
+                    flux_units = flux_units_2;
+                else:
+                    flux_average = None;
+                    flux_lb = -1000.0
+                    flux_ub = 1000.0
+                    flux_units = 'mmol*gDCW-1*hr-1';
+                # check the direction of the lower/upper bounds
+                if flux_lb>flux_ub:
+                    flux_lb_tmp,flux_ub_tmp = flux_lb,flux_ub;
+                    flux_lb = flux_ub_tmp;
+                    flux_ub = flux_lb_tmp;
+                elif flux_lb==0.0 and flux_ub==0.0:
+                    flux_lb = -1000.0;
+                    flux_ub = 1000.0;
+                # record net reaction flux
+                data_O.append({'simulation_id':simulation_id_I,
+                            'simulation_dateAndTime':simulation_dateAndTime,
+                            'rxn_id':k,
+                            'flux':flux_average,
+                            'flux_stdev':flux_stdev,
+                            'flux_lb':flux_lb,
+                            'flux_ub':flux_ub,
+                            'flux_units':flux_units,
+                            'used_':True,
+                            'comment_':None})
+        # add data to the database:
+        for d in data_O:
+            try:
+                data_add = data_stage02_isotopomer_fittedNetFluxes(d['simulation_id'],
+                d['simulation_dateAndTime'],
+                d['rxn_id'],
+                d['flux'],
+                d['flux_stdev'],
+                d['flux_lb'],
+                d['flux_ub'],
+                d['flux_units'],
+                d['used_'],
+                d['comment_']);
+                self.session.add(data_add);
+            except SQLAlchemyError as e:
+                print(e);
+        self.session.commit();
+
+
+
+
+
+
+
+

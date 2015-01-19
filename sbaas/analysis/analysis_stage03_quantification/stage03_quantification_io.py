@@ -1071,7 +1071,7 @@ class stage03_quantification_io(base_analysis):
                      sample_name_abbreviations_I=[],
                      measured_concentration_coverage_criteria_I=0.49,
                      measured_dG_f_coverage_criteria_I=0.99,
-                     filename=['visualization\\data\\','\\quantification\\metabolicmap\\','thermodynamics\\']):
+                     filename=['visualization/data/','/quantification/metabolicmap/','thermodynamics/']):
         '''export concentration and dG_r data for visualization'''
         
         # get the model ids:
@@ -1096,10 +1096,10 @@ class stage03_quantification_io(base_analysis):
                 cobra_model_sbml = None;
                 cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
                 # write the model to a temporary file
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['sbml_file']);
                 # Read in the sbml file and define the model conditions
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get the time-points
             if time_points_I:
                 time_points = time_points_I;
@@ -1140,7 +1140,7 @@ class stage03_quantification_io(base_analysis):
                         filter_O['map_id'].append(filter_map_str);
                         print 'exporting thermodynamic analysis for map_id ' + map_id;
                         # generate the map html using escher
-                        map_json = json.load(open('data\\escher_maps\\' + map_id + '.json','rb'));
+                        map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                         #map = Builder(map_json=, metabolite_data=concentrations_lbub, reaction_data=dG_r_lbub)
                         map = Builder(map_json=json.dumps(map_json), metabolite_data=concentrations, reaction_data=dG_r);
                         #html_file = map._get_html(scroll_behavior='zoom')
@@ -1161,7 +1161,7 @@ class stage03_quantification_io(base_analysis):
                      sample_name_abbreviations_I=[],
                      measured_concentration_coverage_criteria_I=0.49,
                      measured_dG_f_coverage_criteria_I=0.99,
-                     filename=['visualization\\data\\','\\quantification\\metabolicmap\\','thermodynamics\\']):
+                     filename=['visualization/data/','/quantification/metabolicmap/','thermodynamics/']):
         '''export concentration and dG_r data for visualization'''
         
         # get the model ids:
@@ -1186,10 +1186,10 @@ class stage03_quantification_io(base_analysis):
                 cobra_model_sbml = None;
                 cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
                 # write the model to a temporary file
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['sbml_file']);
                 # Read in the sbml file and define the model conditions
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get the time-points
             if time_points_I:
                 time_points = time_points_I;
@@ -1242,7 +1242,7 @@ class stage03_quantification_io(base_analysis):
                         filter_O['map_id'].append(filter_map_str);
                         print 'exporting thermodynamic analysis for map_id ' + map_id;
                         # generate the map html using escher
-                        map_json = json.load(open('data\\escher_maps\\' + map_id + '.json','rb'));
+                        map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                         #map = Builder(map_json=, metabolite_data=concentrations_lbub, reaction_data=dG_r_lbub)
                         map = Builder(map_json=json.dumps(map_json), metabolite_data=concentrations_diff, reaction_data=dG_r_diff);
                         #html_file = map._get_html(scroll_behavior='zoom')
@@ -1263,7 +1263,7 @@ class stage03_quantification_io(base_analysis):
                      sample_name_abbreviations_I=[],
                      measured_concentration_coverage_criteria_I=0.5,
                      measured_dG_f_coverage_criteria_I=0.99,
-                     filename=['data\\_output\\','tacomparison.csv']):
+                     filename=['data/_output/','tacomparison.csv']):
         '''export concentration and dG_r data for visualization'''
         
         # get the model ids:
@@ -1282,10 +1282,10 @@ class stage03_quantification_io(base_analysis):
                 cobra_model_sbml = None;
                 cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
                 # write the model to a temporary file
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['sbml_file']);
                 # Read in the sbml file and define the model conditions
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get the time-points
             if time_points_I:
                 time_points = time_points_I;

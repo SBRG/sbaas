@@ -26,10 +26,10 @@ def reduce_model(cobra_model,cobra_model_outFileName=None):
                                           lp_method=1, lp_parallel=0, new_objective=None,
                                           relax_b=None, error_reporting=None,
                                           number_of_processes=1, copy_model=False);
-    #with open("data\\ijo1366_irrev_fva.json", 'w') as outfile:
+    #with open("data/ijo1366_irrev_fva.json", 'w') as outfile:
     #    json.dump(data, outfile, indent=4);
 
-    #fva_data = json.load(open("data\\ijo1366_irrev_fva.json"));
+    #fva_data = json.load(open("data/ijo1366_irrev_fva.json"));
 
     # Reduce model
     rxns_noflux = [];

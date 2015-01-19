@@ -75,10 +75,10 @@ class stage03_quantification_execute():
             cobra_model_sbml = None;
             cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id_I);
             # write the model to a temporary file
-            with open('data\\cobra_model_tmp.xml','wb') as file:
+            with open('data/cobra_model_tmp.xml','wb') as file:
                 file.write(cobra_model_sbml['sbml_file']);
             # Read in the sbml file and define the model conditions
-            cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+            cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
@@ -93,10 +93,10 @@ class stage03_quantification_execute():
             # test the model
             if self.test_model(cobra_model):
                 # write the model to a temporary file
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model);
                 # upload the model to the database
-                qio03.import_dataStage03QuantificationModel_sbml(model_id_I, date_I, 'data\\cobra_model_tmp.xml');
+                qio03.import_dataStage03QuantificationModel_sbml(model_id_I, date_I, 'data/cobra_model_tmp.xml');
         elif model_file_name_I and model_id_O: #modify an existing model in not in the database
             # Read in the sbml file and define the model conditions
             cobra_model = create_cobra_model_from_sbml_file(model_file_name_I, print_time=True);
@@ -114,10 +114,10 @@ class stage03_quantification_execute():
             # test the model
             if self.test_model(cobra_model):
                 # write the model to a temporary file
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model);
                 # upload the model to the database
-                qio03.import_dataStage03QuantificationModel_sbml(model_id_I, date_I, 'data\\cobra_model_tmp.xml');
+                qio03.import_dataStage03QuantificationModel_sbml(model_id_I, date_I, 'data/cobra_model_tmp.xml');
         else:
             print 'need to specify either an existing model_id or model_file_name!'
         return
@@ -587,10 +587,10 @@ class stage03_quantification_execute():
         model_xml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id_I);
         # load the model
         if model_xml:
-            with open('data\\cobra_model_tmp.xml','wb') as file:
+            with open('data/cobra_model_tmp.xml','wb') as file:
                 file.write(model_xml['sbml_file']);
                 file.close();
-            cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml');
+            cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml');
         # implement optimal KOs and flux constraints:
         for ko in ko_list:
             cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
@@ -619,10 +619,10 @@ class stage03_quantification_execute():
             cobra_model_sbml = None;
             cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
             # write the model to a temporary file
-            with open('data\\cobra_model_tmp.xml','wb') as file:
+            with open('data/cobra_model_tmp.xml','wb') as file:
                 file.write(cobra_model_sbml['sbml_file']);
             cobra_model = None;
-            cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+            cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             self.models[model_id]=cobra_model;
     #TODO                
     def execute_calculate_dG_p(self,experiment_id_I,model_ids_I = [],

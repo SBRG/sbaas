@@ -19,7 +19,7 @@ def get_points_matlab(matlab_data,sampler_model_name):
 
     # load sample points from MATLAB file into numpy array
     points = scipy.io.loadmat(matlab_data)[sampler_model_name]['points'][0][0];
-    #mat = scipy.io.loadmat('data\\EvoWt.mat')
+    #mat = scipy.io.loadmat('data/EvoWt.mat')
     #points = mat['model_WT_sampler_out']['points'][0][0]
 
     points_dict = {};
@@ -170,11 +170,11 @@ def export_points(ijo1366_sbml, points_loopless_mean, data_srd, data_pfba, data_
 
 def _main_():
     # data files:
-    matlab_data = 'data\\EvoWt.mat'
-    numpy_data = 'data\\samplertest.txt'
-    ijo1366_sbml = "data\\ijo1366_netrxn_irreversible.xml"
-    data_fva = 'data\\ijo1366_netrxn_irreversible_fva_loops.json';
-    data_points = 'data\\ijo1366_netrxn_irreversible_sampling_loopless.csv';
+    matlab_data = 'data/EvoWt.mat'
+    numpy_data = 'data/samplertest.txt'
+    ijo1366_sbml = "data/ijo1366_netrxn_irreversible.xml"
+    data_fva = 'data/ijo1366_netrxn_irreversible_fva_loops.json';
+    data_points = 'data/ijo1366_netrxn_irreversible_sampling_loopless.csv';
 
     points_dict = get_points_numpy(numpy_data,ijo1366_sbml);
     plot_points(points_dict);

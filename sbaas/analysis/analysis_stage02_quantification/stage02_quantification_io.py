@@ -12,7 +12,7 @@ class stage02_quantification_io(base_analysis):
     
     def export_volcanoPlot_d3(self,experiment_id_I,time_points_I=[],concentration_units_I=[],
                                 json_var_name='data',
-                                filename=['visualization\\data\\','\\quantification\\scatterplot\\','volcanoplot\\']):
+                                filename=['visualization/data/','/quantification/scatterplot/','volcanoplot/']):
         '''generate a volcano plot from pairwiseTest table'''
 
         print 'exporting volcanoPlot...'
@@ -94,7 +94,7 @@ class stage02_quantification_io(base_analysis):
             file.write(json_str);
     def export_pcaPlot_d3(self,experiment_id_I,time_points_I=[],concentration_units_I=[],
                             json_var_name='data',
-                            filename=['visualization\\data\\','\\quantification\\scatterplot\\','pcaplot\\']):
+                            filename=['visualization/data/','/quantification/scatterplot/','pcaplot/']):
         '''generate a pca plot'''
 
         print 'export_pcaPlot...'
@@ -199,7 +199,7 @@ class stage02_quantification_io(base_analysis):
                           time_points_I=[],concentration_units_I=[],
                           sample_name_shorts_I=[],component_group_names_I=[],
                         json_var_name='data',
-                        filename=['visualization\\data\\','\\quantification\\heatmap\\','hcluster\\']):
+                        filename=['visualization/data/','/quantification/heatmap/','hcluster/']):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id

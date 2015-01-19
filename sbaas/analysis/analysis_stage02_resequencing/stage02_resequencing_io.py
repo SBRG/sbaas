@@ -165,7 +165,7 @@ class stage02_resequencing_io(stage01_resequencing_io):
 
     def export_dataStage02ResequencingLineage_d3_v1(self, experiment_id,group_names_I=[],
                                                  json_var_name='data',
-                                                 filename=['visualization\\data\\','\\resequencing-physiology\\heatmap\\','.js']):
+                                                 filename=['visualization/data/','/resequencing-physiology/heatmap/','.js']):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id
@@ -238,7 +238,7 @@ class stage02_resequencing_io(stage01_resequencing_io):
 
     def export_dataStage02ResequencingLineage_d3(self, experiment_id,group_names_I=[],
                                                  json_var_name='data',
-                                                 filename=['visualization\\data\\','\\resequencing-physiology\\heatmap\\','.js']):
+                                                 filename=['visualization/data/','/resequencing-physiology/heatmap/','.js']):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id

@@ -185,7 +185,7 @@ class stage00_execute():
         # input:
         #       data_I = [{met_id = list of metabolite ids,
         #                  file_directory = file directory for structure files
-        #                       e.g. data\\Compound Structure Files\\
+        #                       e.g. data/Compound Structure Files/
         #                  file_ext = extension of the file (e.g. .mol)}]
         # output:
         #       update to standards table
@@ -215,11 +215,11 @@ class stage00_execute():
             # query the structure file and extension
             struct_file, struct_file_ext = self.stage00_query.get_structureFile_standards(met);
             # write the structure file to a temporary directory
-            struct_file_name = 'data\\struct'+struct_file_ext
+            struct_file_name = 'data/struct'+struct_file_ext
             with open(struct_file_name, 'w') as outfile:
                 outfile.write(struct_file);
             # calculate the formula and exact mass using chemAxon cxcalc
-            molfile = os.getcwd() + '\\' + struct_file_name
+            molfile = os.getcwd() + '/' + struct_file_name
             args = [molfile];
             cmd = 'exactmass';
             res = RunCxcalc(cxcalc_bin,cmd,args)
@@ -256,12 +256,12 @@ class stage00_execute():
             ## query the structure file and extension
             #struct_file, struct_file_ext = self.stage00_query.get_structureFile_standards(met);
             ## write the structure file to a temporary directory
-            #struct_file_name = 'data\\struct'+struct_file_ext
+            #struct_file_name = 'data/struct'+struct_file_ext
             #with open(struct_file_name, 'w') as outfile:
             #    outfile.write(struct_file);
             ## calculate the formula and exact mass using chemAxon cxcalc
             ## alternatively, one could query standards for the formula
-            #molfile = os.getcwd() + '\\' + struct_file_name
+            #molfile = os.getcwd() + '/' + struct_file_name
             #args = [molfile];
             #cmd = 'formula';
             #res = RunCxcalc(cxcalc_bin,cmd,args)
@@ -656,7 +656,7 @@ class stage00_execute():
             platePos = 1;
             rackCode = 'CStk' + str(platePos) + '-0' + str(rackPos); #e.g. CStk1-01
             setName = DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
-            outputFile = DateAcquisition_I + '02\\' + DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
+            outputFile = DateAcquisition_I + '02/' + DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
             row = [];
             row.append(data_qc_I[cnt_qc]['sample_name']);
             row.append('');
@@ -682,7 +682,7 @@ class stage00_execute():
         platePos = 1;
         rackCode = 'CStk' + str(platePos) + '-0' + str(rackPos); #e.g. CStk1-01
         setName = DateAcquisition_I + '_' + data_unknown_I[cnt_sample]['id'];
-        outputFile = DateAcquisition_I + '02\\' + DateAcquisition_I + '_' + data_unknown_I[cnt_sample]['id'];
+        outputFile = DateAcquisition_I + '02/' + DateAcquisition_I + '_' + data_unknown_I[cnt_sample]['id'];
         row = [];
         row.append(DateAcquisition_I + '_Blank' + str(cnt_blank));
         row.append('');
@@ -710,7 +710,7 @@ class stage00_execute():
             #rackCode = CStk1-01;
             rackCode = 'CStk' + str(platePos) + '-0' + str(rackPos); #CStk1-01
             setName = DateAcquisition_I + '_' + d['id'];
-            outputFile = DateAcquisition_I + '02\\' + DateAcquisition_I + '_' + d['id'];
+            outputFile = DateAcquisition_I + '02/' + DateAcquisition_I + '_' + d['id'];
             row = [];
             row.append(d['sample_name']);
             row.append('');
@@ -762,7 +762,7 @@ class stage00_execute():
                     platePos = 1;
                     rackCode = 'CStk' + str(platePos) + '-0' + str(rackPos); #e.g. CStk1-01
                     setName = DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
-                    outputFile = DateAcquisition_I + '02\\' + DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
+                    outputFile = DateAcquisition_I + '02/' + DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
                     row = [];
                     row.append(data_qc_I[cnt_qc]['sample_name']);
                     row.append('');
@@ -792,7 +792,7 @@ class stage00_execute():
                 platePos = 1;
                 rackCode = 'CStk' + str(platePos) + '-0' + str(rackPos); #e.g. CStk1-01
                 setName = DateAcquisition_I + '_' + d['id'];
-                outputFile = DateAcquisition_I + '02\\' + DateAcquisition_I + '_' + d['id'];
+                outputFile = DateAcquisition_I + '02/' + DateAcquisition_I + '_' + d['id'];
                 row = [];
                 row.append(DateAcquisition_I + '_Blank' + str(cnt_blank));
                 row.append('');
@@ -824,7 +824,7 @@ class stage00_execute():
             platePos = 1;
             rackCode = 'CStk' + str(platePos) + '-0' + str(rackPos); #e.g. CStk1-01
             setName = DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
-            outputFile = DateAcquisition_I + '02\\' + DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
+            outputFile = DateAcquisition_I + '02/' + DateAcquisition_I + '_' + data_qc_I[cnt_qc]['id'];
             row = [];
             row.append(data_qc_I[cnt_qc]['sample_name']);
             row.append('');
@@ -850,7 +850,7 @@ class stage00_execute():
         platePos = 1;
         rackCode = 'CStk' + str(platePos) + '-0' + str(rackPos); #e.g. CStk1-01
         setName = DateAcquisition_I + '_' + data_unknown_I[cnt_sample]['id'];
-        outputFile = DateAcquisition_I + '02\\' + DateAcquisition_I + '_' + data_unknown_I[cnt_sample]['id'];
+        outputFile = DateAcquisition_I + '02/' + DateAcquisition_I + '_' + data_unknown_I[cnt_sample]['id'];
         row = [];
         row.append(DateAcquisition_I + '_Blank' + str(cnt_blank));
         row.append('');

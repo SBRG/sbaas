@@ -1768,7 +1768,7 @@ class stage01_quantification_execute():
                         if y_data_type_I == 'acquisition_date_and_time':acquisition_date_and_times_hrs[t_cnt] = t - t_start;
                         elif y_data_type_I == 'count':acquisition_date_and_times_hrs[t_cnt] = t_cnt;
                     title = cn + '\n' + parameter;
-                    filename = 'data\\_output\\' + experiment_id_I + '_' + cn + '_' + parameter + '.png'
+                    filename = 'data/_output/' + experiment_id_I + '_' + cn + '_' + parameter + '.png'
                     self.matplot.scatterLinePlot(title,x_title_I,y_title_I,acquisition_date_and_times_hrs,data_parameters[parameter],fit_func_I='lowess',show_eqn_I=False,show_r2_I=False,filename_I=filename,show_plot_I=False);
         if plot_type_I == 'multiple':
              for parameter in peakInfo_I:
@@ -1808,7 +1808,7 @@ class stage01_quantification_execute():
                     sample_names_parameter.append(sample_name_parameter);
                     sample_types_parameter.append(sample_type_parameter)
                 title = parameter;
-                filename = 'data\\_output\\' + experiment_id_I + '_' + parameter + '.eps'
+                filename = 'data/_output/' + experiment_id_I + '_' + parameter + '.eps'
                 self.matplot.multiScatterLinePlot(title,x_title_I,y_title_I,acquisition_date_and_times_hrs,data_parameters,data_labels_I=component_group_names,fit_func_I=None,show_eqn_I=False,show_r2_I=False,filename_I=filename,show_plot_I=False);
     def execute_scatterLinePlot_peakResolution(self,experiment_id_I,sample_names_I=[],sample_types_I=['Standard'],component_name_pairs_I=[],
                             peakInfo_I = ['rt_dif','resolution'],
@@ -1896,7 +1896,7 @@ class stage01_quantification_execute():
                         if y_data_type_I == 'acquisition_date_and_time':acquisition_date_and_times_hrs[t_cnt] = t - t_start;
                         elif y_data_type_I == 'count':acquisition_date_and_times_hrs[t_cnt] = t_cnt;
                     title = cn + '\n' + parameter;
-                    filename = 'data\\_output\\' + experiment_id_I + '_' + cn + '_' + parameter + '.png'
+                    filename = 'data/_output/' + experiment_id_I + '_' + cn + '_' + parameter + '.png'
                     self.matplot.scatterLinePlot(title,x_title_I,y_title_I,acquisition_date_and_times_hrs,data_parameters[parameter],fit_func_I='lowess',show_eqn_I=False,show_r2_I=False,filename_I=filename,show_plot_I=False);
         if plot_type_I == 'multiple':
              for parameter in peakInfo_I:
@@ -1940,7 +1940,7 @@ class stage01_quantification_execute():
                 for component_group_names in component_group_names_pair:
                     data_labels.append(component_group_names[0] + '/' + component_group_names[1]);
                 title = parameter;
-                filename = 'data\\_output\\' + experiment_id_I + '_' + parameter + '.eps'
+                filename = 'data/_output/' + experiment_id_I + '_' + parameter + '.eps'
                 self.matplot.multiScatterLinePlot(title,x_title_I,y_title_I,acquisition_date_and_times_hrs,data_parameters,data_labels_I=data_labels,fit_func_I=None,show_eqn_I=False,show_r2_I=False,filename_I=filename,show_plot_I=False);
     
     def execute_boxAndWhiskersPlot_peakInformation(self,experiment_id_I,
@@ -1983,7 +1983,7 @@ class stage01_quantification_execute():
                     data_plot_units.append('Retention_time [min]');
             # visualize the stats:
             data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
-            filename = 'data\\_output\\' + experiment_id_I + '_' + parameter + '.eps';
+            filename = 'data/_output/' + experiment_id_I + '_' + parameter + '.eps';
             self.matplot.boxAndWhiskersPlot(data_plot_parameters[0],data_plot_component_names,data_plot_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci,filename_I=filename,show_plot_I=False);
     def execute_boxAndWhiskersPlot_peakResolution(self,experiment_id_I,component_name_pairs_I=[],
                             peakInfo_parameter_I = ['rt_dif','resolution']):
@@ -2023,5 +2023,5 @@ class stage01_quantification_execute():
                     data_plot_units.append('Retention_time [min]');
             # visualize the stats:
             data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
-            filename = 'data\\_output\\' + experiment_id_I + '_' + parameter + '.eps';
+            filename = 'data/_output/' + experiment_id_I + '_' + parameter + '.eps';
             self.matplot.boxAndWhiskersPlot(data_plot_parameters[0],data_plot_component_names,data_plot_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci,filename_I=filename,show_plot_I=False);

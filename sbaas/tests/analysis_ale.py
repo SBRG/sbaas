@@ -13,7 +13,7 @@ def data_stage01():
     '''exeriment data imports'''
     data_io = stage01_ale_io();
     data_io.import_dataStage01AleTrajectories_matlab('ALEsKOs01',
-          'data\\tests\\analysis_ale\\ALEsKOs_trajectories.mat');
+          'data/tests/analysis_ale/ALEsKOs_trajectories.mat');
 
     '''data analysis'''
     #execute01.execute_findJumps('ALEsKOs01');
@@ -27,7 +27,7 @@ def data_stage01():
                                                 'OxicEvo04tpiAEvo04EcoliGlc'],
                         fit_func_I='lowess',
                         json_var_name='data',
-                        filename='visualization\\data\\ALEsKOs01\\ale\\scatterlineplot\\tpiA.js');
+                        filename='visualization/data/ALEsKOs01/ale/scatterlineplot/tpiA.js');
 
 def run_all_tests():
     print 'testing data_stage00_ale...'

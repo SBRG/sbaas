@@ -20,7 +20,7 @@ class cobra_sampling(base_calculate):
 
     def __init__(self,data_dir_I):
         if data_dir_I:self.data_dir =  data_dir_I;
-        else: self.data_dir = 'C:\\Users\\dmccloskey-sbrg\\Documents\\MATLAB\\sampling';
+        else: self.data_dir = 'C:/Users/dmccloskey-sbrg/Documents/MATLAB/sampling';
         self.points = {};
         self.mixed_fraction = None;
         self.model = None;
@@ -180,15 +180,15 @@ class cobra_sampling(base_calculate):
 class matlab_calculate(base_calculate):
     def __init__(self,matlab_path_I):
         if matlab_path_I:self.matlab_path =  matlab_path_I;
-        else: self.matlab_path = 'C:\\Users\\dmccloskey-sbrg\\Documents\\MATLAB\\ALEsKOs'
+        else: self.matlab_path = 'C:/Users/dmccloskey-sbrg/Documents/MATLAB/ALEsKOs'
 
     def SMLtools(self,x_I,y_I,filename_I=None,filename_O=None,degree_I=3,knots_I=10,interiorknots_I='free',plot_I='off',increasing_I='on'):
         '''Compute a spline fit of the data using matlab's SMLtools'''
 
         if not filename_I:
-            filename_I = matlab_path + "\\SMLtool_in.m";
+            filename_I = matlab_path + "/SMLtool_in.m";
         if not filename_O:
-            filename_O = matlab_path + "\\SMLtool_out.m";
+            filename_O = matlab_path + "/SMLtool_out.m";
 
         mat_cmd = '';
         #export data
@@ -222,7 +222,7 @@ class matlab_sampling(cobra_sampling):
 
     def __init__(self,matlab_path_I):
         if matlab_path_I:self.matlab_path =  matlab_path_I;
-        else: self.matlab_path = 'C:\\Users\\dmccloskey-sbrg\\Documents\\MATLAB\\sampling';
+        else: self.matlab_path = 'C:/Users/dmccloskey-sbrg/Documents/MATLAB/sampling';
         self.points = {};
         self.mixed_fraction = None;
         self.model = None;
@@ -233,12 +233,12 @@ class matlab_sampling(cobra_sampling):
         '''load sampling points from MATLAB'''
 
         # load model from MATLAB file
-        model = load_matlab_model(self.matlab_path + '\\' + matlab_data,sampler_model_name);
+        model = load_matlab_model(self.matlab_path + '/' + matlab_data,sampler_model_name);
 
         # load sample points from MATLAB file into numpy array
-        points = scipy.io.loadmat(self.matlab_path + '\\' + matlab_data)[sampler_model_name]['points'][0][0];
-        mixed_fraction=scipy.io.loadmat(self.matlab_path + '\\' + matlab_data)['mixedFrac'][0][0];
-        #mat = scipy.io.loadmat('data\\EvoWt.mat')
+        points = scipy.io.loadmat(self.matlab_path + '/' + matlab_data)[sampler_model_name]['points'][0][0];
+        mixed_fraction=scipy.io.loadmat(self.matlab_path + '/' + matlab_data)['mixedFrac'][0][0];
+        #mat = scipy.io.loadmat('data/EvoWt.mat')
         #points = mat['model_WT_sampler_out']['points'][0][0]
 
         points_dict = {};
@@ -272,16 +272,16 @@ class matlab_sampling(cobra_sampling):
             objective = [x.id for x in cobra_model.reactions if x.objective_coefficient == 1]
             cobra_model.reactions.get_by_id(objective[0]).upper_bound = fraction_optimal * cobra_model.solution.f;
         # write model to mat
-        save_matlab_model(cobra_model,self.matlab_path + '\\' + filename_model);
+        save_matlab_model(cobra_model,self.matlab_path + '/' + filename_model);
         ## write model to xml
-        #write_sbml_model(cobra_model,'data\\sampling\\sampler.xml');
+        #write_sbml_model(cobra_model,'data/sampling/sampler.xml');
         # write the sampling script to file\
         mat_script = "% initialize with Tomlab_CPLEX\n"+\
-                      "load('" + self.matlab_path + '\\' + filename_model + "')\n"+\
+                      "load('" + self.matlab_path + '/' + filename_model + "')\n"+\
                       "initCobraToolbox();\n"+\
                       "% sample\n"+\
                       "[sampler_out, mixedFrac] = gpSampler(" + cobra_model.description + ", [], [], [], [], [], true);\n"+\
                       "[sampler_out, mixedFrac] = gpSampler(sampler_out, [], [], [], 20000, [], true);\n"+\
-                      "save('"+ self.matlab_path + '\\' + filename_points + "','sampler_out', 'mixedFrac');";
-        with open(self.matlab_path + '\\' + filename_script,'w') as f:
+                      "save('"+ self.matlab_path + '/' + filename_points + "','sampler_out', 'mixedFrac');";
+        with open(self.matlab_path + '/' + filename_script,'w') as f:
             f.write(mat_script);

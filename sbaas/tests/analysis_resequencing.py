@@ -32,7 +32,7 @@ def data_stage00():
     
     '''data import'''
     execute00 = stage00_execute();
-    execute00.execute_makeExperimentFromSampleFile('data\\tests\\analysis_resequencing\\140823_Resequencing_ALEsKOs01_sampleFile01.csv',0,[]);
+    execute00.execute_makeExperimentFromSampleFile('data/tests/analysis_resequencing/140823_Resequencing_ALEsKOs01_sampleFile01.csv',0,[]);
 
 def data_stage01():
 
@@ -44,7 +44,7 @@ def data_stage01():
     io = stage01_resequencing_io();
     # import resequencing data from breseq
     iobase = base_importData();
-    iobase.read_csv('data\\tests\\analysis_resequencing\\140823_Resequencing_ALEsKOs01_fileList01.csv');
+    iobase.read_csv('data/tests/analysis_resequencing/140823_Resequencing_ALEsKOs01_fileList01.csv');
     fileList = iobase.data;
     # read in each data file
     for file in fileList:
@@ -79,7 +79,7 @@ def data_stage01():
                         'SNP_wcaA_2130811']
     io.export_dataStage01ResequencingLineage_d3('ALEsKOs01',
                                                 ['evo04tpiAevo01','evo04tpiAevo02','evo04tpiAevo03','evo04tpiAevo04'],
-                                                filename='visualization\\data\\ALEsKOs01\\resequencing\\heatmap\\tpiA.js',
+                                                filename='visualization/data/ALEsKOs01/resequencing/heatmap/tpiA.js',
                                                 mutation_id_exclusion_list = mutation_id_base);
 
     io.export_dataStage01ResequencingMutationsAnnotated_d3('ALEsKOs01',

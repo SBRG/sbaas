@@ -4,8 +4,8 @@ def data_stage00():
     
     '''acqusition method import'''
     execute00 = stage00_execute();
-    execute00.execute_makeExperimentFromSampleFile('data\\tests\\analysis_physiology\\140905_Physiology_ALEsKOs01_sampleFile01.csv',0,[]);
-    execute00.execute_makeExperimentFromSampleFile('data\\tests\\analysis_physiology\\140905_Quantification_ALEsKOs01_biomass01.csv',0,[]);
+    execute00.execute_makeExperimentFromSampleFile('data/tests/analysis_physiology/140905_Physiology_ALEsKOs01_sampleFile01.csv',0,[]);
+    execute00.execute_makeExperimentFromSampleFile('data/tests/analysis_physiology/140905_Quantification_ALEsKOs01_biomass01.csv',0,[]);
 
 def data_stage01():
 
@@ -14,9 +14,9 @@ def data_stage01():
 
     '''data import'''
     io = stage01_physiology_io();
-    io.import_dataStage01PhysiologyData_add('data\\tests\\analysis_physiology\\140905_Physiology_ALEsKOs01_samples01.csv');
-    io.import_dataStage01PhysiologyData_update('data\\tests\\analysis_physiology\\140905_Physiology_ALEsKOs01_update01.csv');
-    io.import_dataStage01PhysiologyData_add('data\\tests\\analysis_physiology\\140905_Quantification_ALEsKOs01_biomass01.csv');
+    io.import_dataStage01PhysiologyData_add('data/tests/analysis_physiology/140905_Physiology_ALEsKOs01_samples01.csv');
+    io.import_dataStage01PhysiologyData_update('data/tests/analysis_physiology/140905_Physiology_ALEsKOs01_update01.csv');
+    io.import_dataStage01PhysiologyData_add('data/tests/analysis_physiology/140905_Quantification_ALEsKOs01_biomass01.csv');
 
     '''data analysis'''
     #functions to return sample names
@@ -266,8 +266,8 @@ def data_stage01():
                                                     'OxicEvo04tpiAEvo04EPEcoliGlc'],
                                                     #met_ids_exclude_I=['glc-D'],
                                                     json_var_name='data',
-                                                 #filename='visualization\\data\\ALEsKOs01\\physiology\\barchart\\tpiA.csv');
-                                                 filename='visualization\\data\\ALEsKOs01\\physiology\\barchart\\tpiA.js');
+                                                 #filename='visualization/data/ALEsKOs01/physiology/barchart/tpiA.csv');
+                                                 filename='visualization/data/ALEsKOs01/physiology/barchart/tpiA.js');
 
 def data_stage02():
     ex02 = stage02_physiology_execute();
@@ -275,8 +275,8 @@ def data_stage02():
 
     '''data import'''
     qio02 = stage02_physiology_io();
-    qio02.import_dataStage02PhysiologySimulation_add('data\\tests\\analysis_physiology\\141020_data_stage02_physiology_simulation.csv');
-    qio02.import_dataStage02PhysiologyModel_sbml('iJO1366','10/11/2011 0:00','data\\models\\iJO1366.xml')
+    qio02.import_dataStage02PhysiologySimulation_add('data/tests/analysis_physiology/141020_data_stage02_physiology_simulation.csv');
+    qio02.import_dataStage02PhysiologyModel_sbml('iJO1366','10/11/2011 0:00','data/models/iJO1366.xml')
 
     ex02.load_models('ALEsKOs01');
     ex02.execute_makeMeasuredFluxes('ALEsKOs01',

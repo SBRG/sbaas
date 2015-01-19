@@ -155,7 +155,7 @@ class stage02_isotopomer_dependencies():
 	    5. depending on oxygen availability, constrain the model to use the correct RNR enzymes
 	    6. depending on oxygen availability, constrain the model to use the correct Dihydroorotate dehydrogenase (PyrD) enzymes
 	    7. constrain fatty acid biosynthesis to use the physiologically preferred enzymes'''
-        ijo1366_sbml = "data\\iJO1366.xml"
+        ijo1366_sbml = "data/iJO1366.xml"
         # Read in the sbml file and define the model conditions
         cobra_model = create_cobra_model_from_sbml_file(ijo1366_sbml, print_time=True)
         # Update AMPMS2
@@ -313,10 +313,10 @@ class stage02_isotopomer_dependencies():
                                               lp_method=1, lp_parallel=0, new_objective=None,
                                               relax_b=None, error_reporting=None,
                                               number_of_processes=1, copy_model=False);
-        #with open("data\\ijo1366_irrev_fva.json", 'w') as outfile:
+        #with open("data/ijo1366_irrev_fva.json", 'w') as outfile:
         #    json.dump(data, outfile, indent=4);
 
-        #fva_data = json.load(open("data\\ijo1366_irrev_fva.json"));
+        #fva_data = json.load(open("data/ijo1366_irrev_fva.json"));
 
         # Reduce model
         rxns_noflux = [];
@@ -804,17 +804,17 @@ class stage02_isotopomer_dependencies():
         # load the model
         if cobra_model_sbml:
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open('data\\cobra_model_tmp.json','wb') as file:
+                with open('data/cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model('data\\cobra_model_tmp.json');
+                cobra_model = load_json_model('data/cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
 
@@ -1179,7 +1179,7 @@ class stage02_isotopomer_dependencies():
         #atomMappingReactions.append(row)   
     
         # write the model to a temporary file
-        save_json_model(cobra_model,'data\\cobra_model_tmp.json')
+        save_json_model(cobra_model,'data/cobra_model_tmp.json')
         
         # add the model information to the database
         io = stage02_isotopomer_io()
@@ -1187,7 +1187,7 @@ class stage02_isotopomer_dependencies():
         dataStage02IsotopomerModelMets_data = [];
         dataStage02IsotopomerModels_data,\
             dataStage02IsotopomerModelRxns_data,\
-            dataStage02IsotopomerModelMets_data = io._parse_model_json(model_id_O, date_I, 'data\\cobra_model_tmp.json')
+            dataStage02IsotopomerModelMets_data = io._parse_model_json(model_id_O, date_I, 'data/cobra_model_tmp.json')
         io.add_data_stage02_isotopomer_modelMetabolites(dataStage02IsotopomerModelMets_data);
         io.add_data_stage02_isotopomer_modelReactions(dataStage02IsotopomerModelRxns_data);
         io.add_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
@@ -1204,17 +1204,17 @@ class stage02_isotopomer_dependencies():
         # load the model
         if cobra_model_sbml:
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open('data\\cobra_model_tmp.json','wb') as file:
+                with open('data/cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model('data\\cobra_model_tmp.json');
+                cobra_model = load_json_model('data/cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
 
@@ -1705,7 +1705,7 @@ class stage02_isotopomer_dependencies():
               atp:-53.95,gtp:-0.20912,fad:-0.000223,utp:-0.1401});
 
         # write the model to a temporary file
-        save_json_model(cobra_model,'data\\cobra_model_tmp.json')
+        save_json_model(cobra_model,'data/cobra_model_tmp.json')
         
         # add the model information to the database
         io = stage02_isotopomer_io()
@@ -1713,7 +1713,7 @@ class stage02_isotopomer_dependencies():
         dataStage02IsotopomerModelMets_data = [];
         dataStage02IsotopomerModels_data,\
             dataStage02IsotopomerModelRxns_data,\
-            dataStage02IsotopomerModelMets_data = io._parse_model_json(model_id_O, date_I, 'data\\cobra_model_tmp.json')
+            dataStage02IsotopomerModelMets_data = io._parse_model_json(model_id_O, date_I, 'data/cobra_model_tmp.json')
         io.add_data_stage02_isotopomer_modelMetabolites(dataStage02IsotopomerModelMets_data);
         io.add_data_stage02_isotopomer_modelReactions(dataStage02IsotopomerModelRxns_data);
         io.add_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
@@ -1972,17 +1972,17 @@ class stage02_isotopomer_dependencies():
         # load the model
         if cobra_model_sbml:
             if cobra_model_sbml['file_type'] == 'sbml':
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             elif cobra_model_sbml['file_type'] == 'json':
-                with open('data\\cobra_model_tmp.json','wb') as file:
+                with open('data/cobra_model_tmp.json','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                     file.close()
                 cobra_model = None;
-                cobra_model = load_json_model('data\\cobra_model_tmp.json');
+                cobra_model = load_json_model('data/cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
 
@@ -2219,7 +2219,7 @@ class stage02_isotopomer_dependencies():
                 atomMappingReactions[rxn]['reactants_ids_tracked']=[r.replace('r5p_c','prpp_c') for r in atomMappingReactions[rxn]['reactants_ids_tracked']]  
     
         # write the model to a temporary file
-        save_json_model(cobra_model,'data\\cobra_model_tmp.json')
+        save_json_model(cobra_model,'data/cobra_model_tmp.json')
         
         # add the model information to the database
         io = stage02_isotopomer_io()
@@ -2227,7 +2227,7 @@ class stage02_isotopomer_dependencies():
         dataStage02IsotopomerModelMets_data = [];
         dataStage02IsotopomerModels_data,\
             dataStage02IsotopomerModelRxns_data,\
-            dataStage02IsotopomerModelMets_data = io._parse_model_json(model_id_O, date_I, 'data\\cobra_model_tmp.json')
+            dataStage02IsotopomerModelMets_data = io._parse_model_json(model_id_O, date_I, 'data/cobra_model_tmp.json')
         io.add_data_stage02_isotopomer_modelMetabolites(dataStage02IsotopomerModelMets_data);
         io.add_data_stage02_isotopomer_modelReactions(dataStage02IsotopomerModelRxns_data);
         io.add_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
@@ -2516,7 +2516,7 @@ class stage02_isotopomer_dependencies():
         data.append(flux1);
         data.append(flux2);
         io = base_exportData(data);
-        io.write_dict2json('visualization\\escher\\ci.json');
+        io.write_dict2json('visualization/escher/ci.json');
     def export_modelWithFlux(self,cobra_model_xml_I,ci_list_I,cobra_model_xml_O):
         '''update model lower_bound/upper_bound with calculated flux confidence intervals'''
 

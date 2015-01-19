@@ -1400,9 +1400,9 @@ class stage01_isotopomer_execute():
             for sna_cnt,sna in enumerate(sample_abbreviations):
                 # Matlab script file to make the structures
                 experiment_name = 'Isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp));
-                filename = 'data\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.m';
-                filename_dict = 'data\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.json';
-                #filename_mat = 'data\\_output\\' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.mat';
+                filename = 'data/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.m';
+                filename_dict = 'data/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.json';
+                #filename_mat = 'data/_output/' + 'isotopomer_' + re.sub('[.\/]','',experiment_id_I) + '_' + re.sub(' ','',sna) + '_' + re.sub(' ','',str(tp)) + '.mat';
                 mat_script = '';
                 experiment = {};
                 struct_data = {};
@@ -1942,8 +1942,8 @@ class stage01_isotopomer_execute():
         '''The algorithm implement below does not track the peak width for calculation of peak area,
         nor for calculate of resolution using FWHM.  However, compared to peak-picking algorithm
         implemented in analyst(r) and peakView(r), the intensities for most compounds match
-        the intensities calculated as peaks (compare 140228_MRM_EPI\\..._EPI to ..._EPI_peakList
-        or 140228_ER_EPI\\...I to ..._ER).'''
+        the intensities calculated as peaks (compare 140228_MRM_EPI/..._EPI to ..._EPI_peakList
+        or 140228_ER_EPI/...I to ..._ER).'''
 
         # min peak height
         detectionThreshold = 2500.0

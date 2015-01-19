@@ -50,7 +50,7 @@ class stage01_resequencing_execute():
         #add data to the database table
         self.session.commit();
     def execute_annotateFilteredMutations(self,experiment_id,sample_names_I=[],
-                                                 ref_genome_I='data\\U00096.2.gb'):
+                                                 ref_genome_I='data/U00096.2.gb'):
 
         from Bio import SeqIO
         from Bio import Entrez
@@ -386,7 +386,7 @@ class stage01_resequencing_execute():
                 None,None,None,None,None);
             self.session.add(row);
         self.session.commit();
-    def execute_annotateMutations_lineage(self,experiment_id,sample_names_I=[],ref_genome_I='data\\U00096.2.gb'):
+    def execute_annotateMutations_lineage(self,experiment_id,sample_names_I=[],ref_genome_I='data/U00096.2.gb'):
         '''Annotate mutations for date_stage01_resequencing_lineage
         based on position, reference genome, and reference genome biologicalmaterial_id'''
 
@@ -429,7 +429,7 @@ class stage01_resequencing_execute():
         # update rows in the database
         io = stage01_resequencing_io();
         io.update_dataStage01ResequencingLineage(data_O);
-    def execute_annotateMutations_endpoints(self,experiment_id,sample_names_I=[],ref_genome_I='data\\U00096.2.gb'):
+    def execute_annotateMutations_endpoints(self,experiment_id,sample_names_I=[],ref_genome_I='data/U00096.2.gb'):
         '''Annotate mutations for date_stage01_resequencing_endpoints
         based on position, reference genome, and reference genome biologicalmaterial_id'''
         

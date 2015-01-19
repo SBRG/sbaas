@@ -15,6 +15,7 @@ from mimetypes import guess_type
 
 from urls import urls
 from version import __version__
+from data import sbaas_settings as sbaas_settings
 
 # set up jinja2 template location
 env = Environment(loader=PackageLoader('visualization', 'templates'))
@@ -129,7 +130,7 @@ class IndexHandler(BaseHandler):
         #response = yield gen.Task(AsyncHTTPClient().fetch,
         #                          '/'.join([url.get_url('index_filter', source='local',protocol='https')]));
         #json_data = response.body if response.body is not None else json.dumps(None)
-        with open('visualization/'+url.get_url('index_filter', source='local',protocol='https'), "rb") as file:
+        with open(sbaas_settings.visualization_resources+'/'+url.get_url('index_filter', source='local',protocol='https'), "rb") as file:
             json_data = file.read();
         # render the template
         template = env.get_template('index.html')
@@ -168,7 +169,7 @@ class VisualizationHandler(BaseHandler):
         # parse the input
         visualization_kwargs = {};
         arguments = [];
-        for arg in ['experiment_id_name','experiment_type_name','template_name','data_name','time_point_name','feature_name','concentration_unit_name','sample_name','component_name','score_loading_name','model_id_name','map_id_name']:
+        for arg in ['experiment_id_name','experiment_type_name','template_name','data_name','time_point_name','feature_name','concentration_unit_name','sample_name','component_name','score_loading_name','model_id_name','map_id_name','mapping_id_name']:
             args = self.get_arguments(arg);
             if len(args)==1:
                 visualization_kwargs[arg] = args[0];
@@ -183,7 +184,7 @@ class VisualizationHandler(BaseHandler):
             filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['feature_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
-                with open('visualization/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
                     data_json = file.read();
             except:
                 data_json = '';
@@ -192,7 +193,7 @@ class VisualizationHandler(BaseHandler):
             filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['concentration_unit_name'] + '_' + visualization_kwargs['sample_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
-                with open('visualization/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
                     data_json = file.read();
             except:
                 data_json = '';
@@ -201,17 +202,17 @@ class VisualizationHandler(BaseHandler):
             filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['concentration_unit_name'] + '_' + visualization_kwargs['component_name'] + '_' + visualization_kwargs['score_loading_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
-                with open('visualization/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
                     data_json = file.read();
             except:
                 data_json = '';
         #metabolicmap
         elif visualization_kwargs.has_key('model_id_name') and visualization_kwargs.has_key('sample_name') and visualization_kwargs.has_key('map_id_name'):
             if visualization_kwargs.has_key('time_point_name'): filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['model_id_name'] + '_' + visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['sample_name'] + '_' + visualization_kwargs['map_id_name']+ '.html';
-            else: filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['model_id_name'] + '_' + visualization_kwargs['sample_name'] + '_' + visualization_kwargs['map_id_name']+ '.html';
+            else: filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['model_id_name'] + '_' + visualization_kwargs['mapping_id_name'] + '_' + visualization_kwargs['sample_name'] + '_' + visualization_kwargs['map_id_name']+ '.html';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
-                with open('visualization/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
                     data_json = file.read();
             except:
                 data_json = '';
@@ -220,7 +221,7 @@ class VisualizationHandler(BaseHandler):
             filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['concentration_unit_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
-                with open('visualization/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
                     data_json = file.read();
             except:
                 data_json = '';
@@ -228,14 +229,14 @@ class VisualizationHandler(BaseHandler):
             filename_data_id = visualization_kwargs['data_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
-                with open('visualization/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
                     data_json = file.read();
             except:
                 data_json = '';
-        print data_json
+        #print data_json
         # get the index data directory if it exists
         try:
-            with open('visualization/'+url.get_url(data_dir, source='local',protocol='https') + '/'+ visualization_kwargs['data_name'] + '/'+'filter.js', "rb") as file:
+            with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https') + '/'+ visualization_kwargs['data_name'] + '/'+'filter.js', "rb") as file:
                 data_index = file.read();
         except IOError as e:
             data_index = None;

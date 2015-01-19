@@ -387,7 +387,7 @@ class stage02_physiology_io(base_analysis):
     def export_samplingAnalysis_escher(self,experiment_id_I,model_ids_I=[],
                      model_ids_dict_I={},
                      sample_name_abbreviations_I=[],
-                     filename=['visualization\\data\\','\\physiology\\metabolicmap\\','sampling\\']):
+                     filename=['visualization/data/','/physiology/metabolicmap/','sampling/']):
         '''export sampling data for visualization'''
         
         # get the model ids:
@@ -411,10 +411,10 @@ class stage02_physiology_io(base_analysis):
                 cobra_model_sbml = None;
                 cobra_model_sbml = self.stage02_physiology_query.get_row_modelID_dataStage02PhysiologyModels(model_id);
                 # write the model to a temporary file
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                 # Read in the sbml file and define the model conditions
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get sample_name_abbreviations
             if sample_name_abbreviations_I:
                 sample_name_abbreviations = sample_name_abbreviations_I;
@@ -438,7 +438,7 @@ class stage02_physiology_io(base_analysis):
                     filter_O['map_id'].append(filter_map_str);
                     print 'exporting sampling analysis for map_id ' + map_id;
                     # generate the map html using escher
-                    map_json = json.load(open('data\\escher_maps\\' + map_id + '.json','rb'));
+                    map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                     map = Builder(map_json=json.dumps(map_json), reaction_data=sampling_ave);
                     html_file = map._get_html(menu='all',enable_editing=True)
                     filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + model_id + '_' + sna + '_' + map_id + '.html';
@@ -454,7 +454,7 @@ class stage02_physiology_io(base_analysis):
                     model_ids_I=[],
                     model_ids_dict_I={},
                      sample_name_abbreviations_I=[],
-                     filename=['visualization\\data\\','\\physiology\\metabolicmap\\','sampling\\']):
+                     filename=['visualization/data/','/physiology/metabolicmap/','sampling/']):
         '''export sampling data for visualization'''
         
         # get the model ids:
@@ -478,10 +478,10 @@ class stage02_physiology_io(base_analysis):
                 cobra_model_sbml = None;
                 cobra_model_sbml = self.stage02_physiology_query.get_row_modelID_datastage02physiologyModels(model_id);
                 # write the model to a temporary file
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                 # Read in the sbml file and define the model conditions
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get sample_name_abbreviations
             if sample_name_abbreviations_I:
                 sample_name_abbreviations = sample_name_abbreviations_I;
@@ -511,7 +511,7 @@ class stage02_physiology_io(base_analysis):
                     filter_O['map_id'].append(filter_map_str);
                     print 'exporting sampling analysis for map_id ' + map_id;
                     # generate the map html using escher
-                    map_json = json.load(open('data\\escher_maps\\' + map_id + '.json','rb'));
+                    map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                     map = Builder(map_json=json.dumps(map_json), reaction_data=sampling_diff);
                     #html_file = map._get_html(scroll_behavior='zoom')
                     html_file = map._get_html(menu='all',enable_editing=True)
@@ -530,7 +530,7 @@ class stage02_physiology_io(base_analysis):
                     model_ids_dict_I={},
                      time_points_I=[],
                      sample_name_abbreviations_I=[],
-                     filename=['data\\_output\\','sampling_comparison.csv']):
+                     filename=['data/_output/','sampling_comparison.csv']):
         '''export sampling data comparison'''
         
         # get the model ids:
@@ -549,10 +549,10 @@ class stage02_physiology_io(base_analysis):
                 cobra_model_sbml = None;
                 cobra_model_sbml = self.stage02_physiology_query.get_row_modelID_datastage02physiologyModels(model_id);
                 # write the model to a temporary file
-                with open('data\\cobra_model_tmp.xml','wb') as file:
+                with open('data/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model_sbml['model_file']);
                 # Read in the sbml file and define the model conditions
-                cobra_model = create_cobra_model_from_sbml_file('data\\cobra_model_tmp.xml', print_time=True);
+                cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get the time-points
             if time_points_I:
                 time_points = time_points_I;

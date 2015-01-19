@@ -254,7 +254,7 @@ class stage01_resequencing_io(base_analysis):
             self.session.commit();
 
     def export_dataStage01ResequencingLineage_d3_v1(self, experiment_id, lineage_names,
-                                                 filename='visualization\\data\\ALEsKOs01\\resequencing\\heatmap\\data.js',
+                                                 filename='visualization/data/ALEsKOs01/resequencing/heatmap/data.js',
                                                  mutation_id_exclusion_list = []):
         '''Export data for viewing using d3'''
         #Input:
@@ -345,7 +345,7 @@ class stage01_resequencing_io(base_analysis):
             file.write(json_str);
 
     def export_dataStage01ResequencingLineage_d3_v2(self, experiment_id, lineage_names,
-                                                 filename='visualization\\data\\ALEsKOs01\\resequencing\\heatmap\\data.js',
+                                                 filename='visualization/data/ALEsKOs01/resequencing/heatmap/data.js',
                                                  json_var_name='data',
                                                  mutation_id_exclusion_list = []):
         '''Export data for viewing using d3'''
@@ -457,7 +457,7 @@ class stage01_resequencing_io(base_analysis):
             file.write(json_str);
 
     def export_dataStage01ResequencingLineage_d3(self, experiment_id, lineage_names,
-                                                 filename='visualization\\data\\ALEsKOs01\\resequencing\\heatmap\\data.js',
+                                                 filename='visualization/data/ALEsKOs01/resequencing/heatmap/data.js',
                                                  json_var_name='data',
                                                  mutation_id_exclusion_list = []):
         '''Export data for viewing using d3'''
@@ -595,6 +595,6 @@ class stage01_resequencing_io(base_analysis):
             json_O['options'] = options_O;
             # dump the data to a json file
             json_str = 'var ' + 'data' + ' = ' + json.dumps(json_O);
-            filename_str = 'visualization\\data\\' + experiment_id + '\\resequencing\\scatterlineplot\\' + lineage_name + '.js'
+            filename_str = 'visualization/data/' + experiment_id + '/resequencing/scatterlineplot/' + lineage_name + '.js'
             with open(filename_str,'w') as file:
                 file.write(json_str);

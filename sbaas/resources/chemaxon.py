@@ -2,7 +2,7 @@ import itertools, os, csv
 import StringIO
 from subprocess import Popen, PIPE
     
-cxcalc_bin = 'C:\\Program Files (x86)\\ChemAxon\\MarvinBeans\\bin\\cxcalc'
+cxcalc_bin = 'C:/Program Files (x86)/ChemAxon/MarvinBeans/bin/cxcalc'
 
 class ChemAxonError(Exception):
     pass
