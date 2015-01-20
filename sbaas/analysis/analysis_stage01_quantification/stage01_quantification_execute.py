@@ -1254,6 +1254,7 @@ class stage01_quantification_execute():
     # data_stage01_quantification initializations
     def drop_dataStage01_quantification(self):
         try:
+            #data_stage01_quantification_MQResultsTable.__table__.drop(engine,True);
             data_stage01_quantification_LLOQAndULOQ.__table__.drop(engine,True);
             data_stage01_quantification_checkLLOQAndULOQ.__table__.drop(engine,True);
             data_stage01_quantification_checkISMatch.__table__.drop(engine,True);
@@ -1351,6 +1352,7 @@ class stage01_quantification_execute():
             print(e);
     def initialize_dataStage01_quantification(self):
         try:
+            data_stage01_quantification_MQResultsTable.__table__.create(engine,True);
             data_stage01_quantification_LLOQAndULOQ.__table__.create(engine,True);
             data_stage01_quantification_checkLLOQAndULOQ.__table__.create(engine,True);
             data_stage01_quantification_checkISMatch.__table__.create(engine,True);

@@ -2769,6 +2769,7 @@ class stage01_isotopomer_execute():
     #table initializations:
     def drop_dataStage01(self):
         try:
+            #data_stage01_isotopomer_MQResultsTable.__table__.drop(engine,True);
             data_stage01_isotopomer_peakData.__table__.drop(engine,True);
             data_stage01_isotopomer_peakList.__table__.drop(engine,True);
             data_stage01_isotopomer_peakSpectrum.__table__.drop(engine,True);
@@ -2809,6 +2810,7 @@ class stage01_isotopomer_execute():
             print(e);
     def initialize_dataStage01(self):
         try:
+            data_stage01_isotopomer_MQResultsTable.__table__.create(engine,True);
             data_stage01_isotopomer_peakSpectrum.__table__.create(engine,True);
             data_stage01_isotopomer_peakList.__table__.create(engine,True);
             data_stage01_isotopomer_peakData.__table__.create(engine,True);

@@ -2649,7 +2649,12 @@ class stage02_isotopomer_io(base_analysis):
             else:
                 f_par_val.append(float(d[0][0]))
         for d in f['par'][0][0][0]['std']:
-            f_par_std.append(d[0][0])
+            if not d:
+                f_par_std.append(None)
+            elif isnan(d[0][0]):
+                f_par_val.append(0.0)
+            else:
+                f_par_std.append(d[0][0])
         for d in f['par'][0][0][0]['type']:
             f_par_type.append(d[0])
         #adjust the lb and ub to [0,1000];
@@ -2663,7 +2668,7 @@ class stage02_isotopomer_io(base_analysis):
         for d in f['par'][0][0][0]['ub']:
             if not d:
                 f_par_ub.append(1.0e3)
-            elif isinf(d[0][0]) or d[0][0]>1.0e3:
+            elif isinf(d[0][0]) or isnan(d[0][0]) or d[0][0]>1.0e3:
                 f_par_ub.append(1.0e3)
             else:
                 f_par_ub.append(float(d[0][0]))

@@ -299,6 +299,24 @@ class stage02_isotopomer_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
+    def reset_datastage02_isotopomer_measuredPools(self,experiment_id_I = None):
+        try:
+            reset = self.session.query(data_stage02_isotopomer_measuredPools).filter(data_stage02_isotopomer_measuredPools.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_datastage02_isotopomer_measuredFluxes(self,experiment_id_I = None):
+        try:
+            reset = self.session.query(data_stage02_isotopomer_measuredFluxes).filter(data_stage02_isotopomer_measuredFluxes.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_datastage02_isotopomer_measuredFragments(self,experiment_id_I = None):
+        try:
+            reset = self.session.query(data_stage02_isotopomer_measuredFragments).filter(data_stage02_isotopomer_measuredFragments.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
     def initialize_datastage02(self):
         try:
             data_stage02_isotopomer_simulation.__table__.create(engine,True);
@@ -1433,11 +1451,121 @@ class stage02_isotopomer_execute():
         '''Determine if a flux is observable
         based on the criteria in doi:10.1016/j.ymben.2010.11.006'''
         flux_span = flux_ub_I-flux_lb_I;
-        if flux_span > 4*flux_I and flux_lb_I == 0:
+        if flux_I==0.0 and flux_lb_I==0.0 and flux_ub_I==0.0:
+            observable = False;
+        elif flux_span > 4*flux_I and flux_lb_I == 0:
             observable = False;
         else:
             observable = True;
         return observable;
+
+    def correct_fluxStdev(self,flux_lb_I,flux_ub_I):
+        '''Calculate the standard deviation based off of the 95% confidence intervals
+        described in doi:0.1016/j.ymben.2013.08.006'''
+        flux_stdev = 0.0;
+        flux_stdev = (flux_ub_I - flux_lb_I)/4
+        return flux_stdev;
+
+    def calculate_netFlux(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
+                          flux_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2):
+        '''Calculate the net flux through a reaction,
+        where "1" denotes the forward flux, and "2" denotes the reverse flux'''
+
+        # determine if the fluxes are observable
+        observable_1 = self.check_observableFlux(flux_1,flux_lb_1,flux_ub_1)
+        observable_2 = self.check_observableFlux(flux_2,flux_lb_2,flux_ub_2)
+        # calculate the net flux
+        flux_average = flux_1-flux_2
+        flux_stdev = sqrt(abs(flux_stdev_1*flux_stdev_1-flux_stdev_2*flux_stdev_2))
+        # flux 1 and 2 are observable
+        if observable_1 and observable_2:
+            # note that both fluxes cannot be unbounded
+            if flux_1 > 999.9 and flux_2 > 999.9:
+                print 'both fluxes are unbounded'
+                flux_average = None;
+                flux_lb = -1000.0;
+                flux_ub = 1000.0;
+            elif flux_1 > 999.9: # flux 1 is unbounded
+                flux_lb = flux_lb_1-flux_2
+                flux_ub = flux_ub_1-0.0
+            elif flux_2 > 999.9: # flux 2 is unbounded
+                flux_lb = flux_1-flux_lb_2
+                flux_ub = 0.0-flux_ub_2
+            else:
+                flux_lb = flux_lb_1-flux_lb_2
+                flux_ub = flux_ub_1-flux_ub_2
+            flux_units = flux_units_1;
+        # flux 1 is observable, flux 2 is not observable, and flux 2 exists
+        elif observable_1 and not observable_2 and flux_units_2:
+            flux_lb = flux_lb_1-flux_2
+            flux_ub = flux_ub_1-0.0
+            flux_units = flux_units_1;
+        # flux 2 is observable, flux 1 is not observable, and flux 1 exists
+        elif observable_2 and not observable_1 and flux_units_1:
+            flux_lb = flux_1-flux_lb_2
+            flux_ub = 0.0-flux_ub_2
+            flux_units = flux_units_2;
+        # flux 1 is observable, flux 2 is not observable, and there is no flux 2
+        elif observable_1 and not observable_2 and not flux_units_2:
+            flux_lb = flux_lb_1
+            flux_ub = flux_ub_1
+            flux_units = flux_units_1;
+        # flux 2 is observable, flux 1 is not observable,, and there is no flux 1
+        elif observable_2 and not observable_1 and not flux_units_1:
+            flux_lb = -flux_lb_2
+            flux_ub = -flux_ub_2
+            flux_units = flux_units_2;
+        # flux 1 is not observable, flux 1 is calculated to be 0 or None, and there is no flux 2
+        elif not observable_1 and (flux_1 == 0.0 or not flux_1) and not flux_units_2:
+            flux_average = None;
+            flux_lb = flux_lb_1
+            flux_ub = flux_ub_1
+            flux_units = flux_units_1;
+        # flux 2 is not observable, flux 2 is calculated to be 0 or None,  and there is no flux 1
+        elif not observable_2 and (flux_2 == 0.0 or not flux_2) and not flux_units_1:
+            flux_average = None;
+            flux_lb = -flux_ub_2
+            flux_ub = -flux_lb_2
+            flux_units = flux_units_2;
+        # flux 1 is not observable and there is no flux 2
+        elif not observable_1 and not flux_units_2:
+            flux_lb = flux_lb_1
+            flux_ub = flux_ub_1
+            #flux_lb = 0.0
+            #flux_ub = 1000.0
+            flux_units = flux_units_1;
+        # flux 2 is not observable and there is no flux 1
+        elif not observable_2 and not flux_units_1:
+            flux_lb = -flux_ub_2
+            flux_ub = -flux_lb_2
+            #flux_lb = -1000.0
+            #flux_ub = 0.0
+            flux_units = flux_units_2;
+        #elif not observable_1 and not flux_units_1 and not flux_units_2:
+        #    flux_average = None;
+        #    flux_lb = 0.0
+        #    flux_ub = 1000.0
+        #    flux_units = flux_units_1;
+        #elif not observable_2 and not flux_units_2:
+        #    flux_average = None;
+        #    flux_lb = -1000.0
+        #    flux_ub = 0.0
+        #    flux_units = flux_units_2;
+        else:
+            flux_average = None;
+            flux_lb = -1000.0
+            flux_ub = 1000.0
+            flux_units = 'mmol*gDCW-1*hr-1';
+        # check the direction of the lower/upper bounds
+        if flux_lb>flux_ub:
+            flux_lb_tmp,flux_ub_tmp = flux_lb,flux_ub;
+            flux_lb = flux_ub_tmp;
+            flux_ub = flux_lb_tmp;
+        elif flux_lb==0.0 and flux_ub==0.0:
+            flux_lb = -1000.0;
+            flux_ub = 1000.0;
+        return flux_average,flux_stdev,flux_lb,flux_ub,flux_units
+
     def execute_makeNetFluxes(self, simulation_id_I):
         '''Determine the net flux through a reaction'''
         
@@ -1492,50 +1620,12 @@ class stage02_isotopomer_execute():
                 observable_1 = self.check_observableFlux(flux_average_1,flux_lb_1,flux_ub_1)
                 observable_2 = self.check_observableFlux(flux_average_2,flux_lb_2,flux_ub_2)
                 # calculate the net flux
-                flux_average = flux_average_1-flux_average_2
-                flux_stdev = sqrt(abs(flux_stdev_1*flux_stdev_1-flux_stdev_2*flux_stdev_2))
-                if observable_1 and observable_2:
-                    if flux_average_1 > 999.0:
-                        flux_lb = flux_lb_1-flux_average_2
-                        flux_ub = flux_ub_1-0.0
-                    elif flux_average_2 > 999.0:
-                        flux_lb = flux_average_1-flux_lb_2
-                        flux_ub = 0.0-flux_ub_2
-                    else:
-                        flux_lb = flux_lb_1-flux_lb_2
-                        flux_ub = flux_ub_1-flux_ub_2
-                    flux_units = flux_units_1;
-                elif not observable_1 and not v[1]:
-                    flux_average = None;
-                    flux_lb = 0.0
-                    flux_ub = 1000.0
-                    flux_units = flux_units_1;
-                elif not observable_2 and not v[0]:
-                    flux_average = None;
-                    flux_lb = -1000.0
-                    flux_ub = 0.0
-                    flux_units = flux_units_2;
-                elif observable_1:
-                    flux_lb = flux_lb_1-flux_average_2
-                    flux_ub = flux_ub_1-0.0
-                    flux_units = flux_units_1;
-                elif observable_2:
-                    flux_lb = flux_average_1-flux_lb_2
-                    flux_ub = 0.0-flux_ub_2
-                    flux_units = flux_units_2;
-                else:
-                    flux_average = None;
-                    flux_lb = -1000.0
-                    flux_ub = 1000.0
-                    flux_units = 'mmol*gDCW-1*hr-1';
-                # check the direction of the lower/upper bounds
-                if flux_lb>flux_ub:
-                    flux_lb_tmp,flux_ub_tmp = flux_lb,flux_ub;
-                    flux_lb = flux_ub_tmp;
-                    flux_ub = flux_lb_tmp;
-                elif flux_lb==0.0 and flux_ub==0.0:
-                    flux_lb = -1000.0;
-                    flux_ub = 1000.0;
+                #if k=='PDH':
+                #    print 'check';
+                flux_average,flux_stdev,flux_lb,flux_ub,flux_units = self.calculate_netFlux(flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
+                          flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2)
+                # correct the flux stdev
+                flux_stdev = self.correct_fluxStdev(flux_lb,flux_ub)
                 # record net reaction flux
                 data_O.append({'simulation_id':simulation_id_I,
                             'simulation_dateAndTime':simulation_dateAndTime,
