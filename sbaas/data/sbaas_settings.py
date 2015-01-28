@@ -30,11 +30,11 @@ config.add_section("DATA_DIR")
 
 ## default data directories to run the tests
 ## uncomment out to run the tests
-#config.set("DATA_DIR", "sbaas", "")
+#config.set("DATA_DIR", "sbaas", "PATH_TO_SBAAS")
 #config.set("DATA_DIR", "workspace", "")
-#config.set("DATA_DIR", "workspace_data", "data")
-#config.set("DATA_DIR", "visualization_data", "visualization/data")
-#config.set("DATA_DIR", "visualization_resources", "visualization/resources")
+#config.set("DATA_DIR", "workspace_data", "PATH_TO_SBAAS/data")
+#config.set("DATA_DIR", "visualization_data", "PATH_TO_SBAAS/visualization/data")
+#config.set("DATA_DIR", "visualization_resources", "PATH_TO_SBAAS/visualization/resources")
 
 # user defined data directories
 # comment out to run the tests

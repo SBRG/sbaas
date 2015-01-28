@@ -75,7 +75,7 @@ class stage01_physiology_io(base_analysis):
                                                  met_ids_include_I=[],
                                                  met_ids_exclude_I=[],
                                                  json_var_name='data',
-                                                 filename='visualization/data/ALEsKOs01/physiology/barchart/data.json'):
+                                                 filename=[settings.visualization_data,'/physiology/barchart/data.js']):
         '''Export data for viewing using d3'''
 
         #Input:
@@ -161,6 +161,7 @@ class stage01_physiology_io(base_analysis):
         json_O['data'] = d3data_O;
         # dump the data to a json file
         json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-        with open(filename,'w') as file:
+        filename_O = filename[0] + '/' + experiment_id + filename[1];
+        with open(filename_O,'w') as file:
             file.write(json_str);
     

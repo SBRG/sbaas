@@ -84,13 +84,24 @@ class matplot():
         #fig.savefig("scatterplot.png")
         # Show the image.
         plt.show();
-    def boxAndWhiskersPlot(self,title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I,filename_I=None,show_plot_I=True):
-        '''generates a box and whiskers plot using the mean instead of the median'''
+    def boxAndWhiskersPlot(self,title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I=None,ci_I=None,filename_I=None,show_plot_I=True,bootstrap_I=5000,notch_I = 0):
+        '''generates a box and whiskers plot using the mean instead of the median
+        default: Make a box and whisker plot for each column of data_I or each vector in sequence data_I.
+                 The box extends from the lower to upper quartile values of the data, with a line at the median.
+                 The whiskers extend from the box to show the range of the data.
+                 Flier points are those past the end of the whiskers.
+        mean_I: defines the median
+        ci_I and notch_I: defines the notch confidence intervals
+        Use case 1: set the whiskers to the 95% confidence intervals and median to the mean
+                    data_I = [[ci_lb,ci_ub,mean],...]'''
+
+        whiskers_I=[5,95]
 
         fig, ax = plt.subplots()
         pos = numpy.array(range(len(data_I)))+1
-        bp = ax.boxplot(data_I, sym='k+', positions=pos,
-                        notch=0, bootstrap=5000,
+        bp = ax.boxplot(data_I, sym='k+', #whis=whiskers_I,
+                        positions=pos,
+                        notch=notch_I, bootstrap=bootstrap_I,
                         usermedians=mean_I,
                         conf_intervals=ci_I)
 

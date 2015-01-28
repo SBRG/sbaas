@@ -846,6 +846,94 @@ class stage02_isotopomer_execute():
                             f.write(mat_script);
                         #exportData = base_exportData(rxn_ids_INCA);
                         #exportData.write_dict2csv(filename_csv);
+    def execute_makeNetFluxes(self, simulation_id_I):
+        '''Determine the net flux through a reaction'''
+        
+        data_O = [];
+        # simulation_dateAndTime
+        simulation_dateAndTimes = [];
+        simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
+        for simulation_dateAndTime in simulation_dateAndTimes:
+            # get all reactions included in the simulation (in alphabetical order)
+            rxns = [];
+            rxns = self.stage02_isotopomer_query.get_rxnIDs_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime)
+            # group into forward and reverse reactions
+            rxns_pairs = {};
+            rxn_pair = [];
+            for rxn_cnt,rxn in enumerate(rxns):
+                if not rxn_pair:
+                    rxn_pair.append(rxn);
+                else:
+                    if '_reverse' in rxn and rxn_pair[0] in rxn:
+                        rxn_pair.append(rxn);
+                        rxns_pairs[rxn_pair[0]]=rxn_pair;
+                        rxn_pair = [];
+                    elif '_reverse' in rxn_pair[0]:
+                        rxn_pair.insert(0,None);
+                        rxn_name = rxn_pair[1].replace('_reverse','');
+                        rxns_pairs[rxn_name]=rxn_pair;
+                        rxn_pair = [];
+                        rxn_pair.append(rxn);
+                    else:
+                        rxn_pair.append(None);
+                        rxns_pairs[rxn_pair[0]]=rxn_pair;
+                        rxn_pair = [];
+                        rxn_pair.append(rxn);
+            # calculate the net reaction flux average, stdev, lb and ub
+            for k,v in rxns_pairs.iteritems():
+                flux_average_1 = 0.0
+                flux_average_2 = 0.0
+                flux_stdev_1 = 0.0
+                flux_stdev_2 = 0.0
+                flux_lb_1 = 0.0
+                flux_lb_2 = 0.0
+                flux_ub_1 = 0.0
+                flux_ub_2 = 0.0
+                flux_units_1 = None
+                flux_units_2 = None
+                # get the flux data
+                if v[0]:
+                    flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndRxnID_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime,v[0]);
+                if v[1]:
+                    flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndRxnID_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime,v[1]);
+                # determine if the fluxes are observable
+                observable_1 = self.check_observableFlux(flux_average_1,flux_lb_1,flux_ub_1)
+                observable_2 = self.check_observableFlux(flux_average_2,flux_lb_2,flux_ub_2)
+                ## calculate the net flux
+                #if k=='SUCOAS':
+                #    print 'check';
+                flux_average,flux_stdev,flux_lb,flux_ub,flux_units = self.calculate_netFlux(flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
+                          flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2)
+                # correct the flux stdev
+                flux_stdev = self.correct_fluxStdev(flux_lb,flux_ub)
+                # record net reaction flux
+                data_O.append({'simulation_id':simulation_id_I,
+                            'simulation_dateAndTime':simulation_dateAndTime,
+                            'rxn_id':k,
+                            'flux':flux_average,
+                            'flux_stdev':flux_stdev,
+                            'flux_lb':flux_lb,
+                            'flux_ub':flux_ub,
+                            'flux_units':flux_units,
+                            'used_':True,
+                            'comment_':None})
+        # add data to the database:
+        for d in data_O:
+            try:
+                data_add = data_stage02_isotopomer_fittedNetFluxes(d['simulation_id'],
+                d['simulation_dateAndTime'],
+                d['rxn_id'],
+                d['flux'],
+                d['flux_stdev'],
+                d['flux_lb'],
+                d['flux_ub'],
+                d['flux_units'],
+                d['used_'],
+                d['comment_']);
+                self.session.add(data_add);
+            except SQLAlchemyError as e:
+                print(e);
+        self.session.commit();
     #internal functions
     def make_isotopomerRxnEquations_INCA(self,reactants_ids_I = [],
                                         products_ids_I = [],
@@ -1439,14 +1527,6 @@ class stage02_isotopomer_execute():
         else:
             print 'solution = ' + str(cobra_model.solution.f)
             return True;
-    #TODO:
-    def make_isotopomerSimulation_Inca(self):
-        '''Generate parameters for isotopomer simulation data for INCA1.1'''
-        return
-    def make_isotopomerParameterEstimation_Inca(self):
-        '''Generate parameters for isotopomer parameter estimations (i.e. free fluxes) for INCA1.1'''
-        return
-
     def check_observableFlux(self,flux_I,flux_lb_I,flux_ub_I):
         '''Determine if a flux is observable
         based on the criteria in doi:10.1016/j.ymben.2010.11.006'''
@@ -1458,14 +1538,12 @@ class stage02_isotopomer_execute():
         else:
             observable = True;
         return observable;
-
     def correct_fluxStdev(self,flux_lb_I,flux_ub_I):
         '''Calculate the standard deviation based off of the 95% confidence intervals
         described in doi:0.1016/j.ymben.2013.08.006'''
         flux_stdev = 0.0;
         flux_stdev = (flux_ub_I - flux_lb_I)/4
         return flux_stdev;
-
     def calculate_netFlux(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
                           flux_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2):
         '''Calculate the net flux through a reaction,
@@ -1515,17 +1593,25 @@ class stage02_isotopomer_execute():
             flux_lb = -flux_lb_2
             flux_ub = -flux_ub_2
             flux_units = flux_units_2;
-        # flux 1 is not observable, flux 1 is calculated to be 0 or None, and there is no flux 2
-        elif not observable_1 and (flux_1 == 0.0 or not flux_1) and not flux_units_2:
-            flux_average = None;
+        # flux 1 is not observable, and there is no flux 2
+        elif not observable_1 and not flux_units_2:
             flux_lb = flux_lb_1
             flux_ub = flux_ub_1
             flux_units = flux_units_1;
-        # flux 2 is not observable, flux 2 is calculated to be 0 or None,  and there is no flux 1
-        elif not observable_2 and (flux_2 == 0.0 or not flux_2) and not flux_units_1:
-            flux_average = None;
+        # flux 2 is not observable,  and there is no flux 1
+        elif not observable_2 and not flux_units_1:
             flux_lb = -flux_ub_2
             flux_ub = -flux_lb_2
+            flux_units = flux_units_2;
+        # flux 1 is observable, flux 2 is not observable, and flux 2 exists
+        elif not observable_1 and not observable_2 and flux_units_2:
+            flux_lb = -1000.0
+            flux_ub = 1000.0
+            flux_units = flux_units_1;
+        # flux 2 is observable, flux 1 is not observable, and flux 1 exists
+        elif not observable_2 and not observable_1 and flux_units_1:
+            flux_lb = -1000.0
+            flux_ub = 1000.0
             flux_units = flux_units_2;
         # flux 1 is not observable and there is no flux 2
         elif not observable_1 and not flux_units_2:
@@ -1564,101 +1650,70 @@ class stage02_isotopomer_execute():
         elif flux_lb==0.0 and flux_ub==0.0:
             flux_lb = -1000.0;
             flux_ub = 1000.0;
+        # substitute 0.0 for None
+        if flux_average == 0.0:
+            flux_average = None;
         return flux_average,flux_stdev,flux_lb,flux_ub,flux_units
+    #TODO:
+    def make_isotopomerSimulation_Inca(self):
+        '''Generate parameters for isotopomer simulation data for INCA1.1'''
+        return
+    def make_isotopomerParameterEstimation_Inca(self):
+        '''Generate parameters for isotopomer parameter estimations (i.e. free fluxes) for INCA1.1'''
+        return
+    def plot_fluxPrecision(self,simulation_ids_I = [], rxn_ids_I = [],plot_by_rxn_id_I=True):
+        '''Plot the flux precision for a given set of simulations and a given set of reactions
+        Default: plot the flux precision for each simulation on a single plot for a single reaction'''
 
-    def execute_makeNetFluxes(self, simulation_id_I):
-        '''Determine the net flux through a reaction'''
-        
-        data_O = [];
-        # simulation_dateAndTime
-        simulation_dateAndTimes = [];
-        simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
-        for simulation_dateAndTime in simulation_dateAndTimes:
-            # get all reactions included in the simulation (in alphabetical order)
-            rxns = [];
-            rxns = self.stage02_isotopomer_query.get_rxnIDs_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime)
-            # group into forward and reverse reactions
-            rxns_pairs = {};
-            rxn_pair = [];
-            for rxn_cnt,rxn in enumerate(rxns):
-                if not rxn_pair:
-                    rxn_pair.append(rxn);
-                else:
-                    if '_reverse' in rxn and rxn_pair[0] in rxn:
-                        rxn_pair.append(rxn);
-                        rxns_pairs[rxn_pair[0]]=rxn_pair;
-                        rxn_pair = [];
-                    elif '_reverse' in rxn_pair[0]:
-                        rxn_pair.insert(0,None);
-                        rxn_name = rxn_pair[1].replace('_reverse','');
-                        rxns_pairs[rxn_name]=rxn_pair;
-                        rxn_pair = [];
-                        rxn_pair.append(rxn);
-                    else:
-                        rxn_pair.append(None);
-                        rxns_pairs[rxn_pair[0]]=rxn_pair;
-                        rxn_pair = [];
-                        rxn_pair.append(rxn);
-            # calculate the net reaction flux average, stdev, lb and ub
-            for k,v in rxns_pairs.iteritems():
-                flux_average_1 = 0.0
-                flux_average_2 = 0.0
-                flux_stdev_1 = 0.0
-                flux_stdev_2 = 0.0
-                flux_lb_1 = 0.0
-                flux_lb_2 = 0.0
-                flux_ub_1 = 0.0
-                flux_ub_2 = 0.0
-                flux_units_1 = None
-                flux_units_2 = None
-                # get the flux data
-                if v[0]:
-                    flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndRxnID_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime,v[0]);
-                if v[1]:
-                    flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndRxnID_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime,v[1]);
-                # determine if the fluxes are observable
-                observable_1 = self.check_observableFlux(flux_average_1,flux_lb_1,flux_ub_1)
-                observable_2 = self.check_observableFlux(flux_average_2,flux_lb_2,flux_ub_2)
-                # calculate the net flux
-                #if k=='PDH':
-                #    print 'check';
-                flux_average,flux_stdev,flux_lb,flux_ub,flux_units = self.calculate_netFlux(flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
-                          flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2)
-                # correct the flux stdev
-                flux_stdev = self.correct_fluxStdev(flux_lb,flux_ub)
-                # record net reaction flux
-                data_O.append({'simulation_id':simulation_id_I,
-                            'simulation_dateAndTime':simulation_dateAndTime,
-                            'rxn_id':k,
-                            'flux':flux_average,
-                            'flux_stdev':flux_stdev,
-                            'flux_lb':flux_lb,
-                            'flux_ub':flux_ub,
-                            'flux_units':flux_units,
-                            'used_':True,
-                            'comment_':None})
-        # add data to the database:
-        for d in data_O:
-            try:
-                data_add = data_stage02_isotopomer_fittedNetFluxes(d['simulation_id'],
-                d['simulation_dateAndTime'],
-                d['rxn_id'],
-                d['flux'],
-                d['flux_stdev'],
-                d['flux_lb'],
-                d['flux_ub'],
-                d['flux_units'],
-                d['used_'],
-                d['comment_']);
-                self.session.add(data_add);
-            except SQLAlchemyError as e:
-                print(e);
-        self.session.commit();
+        from resources.matplot import matplot
+        plot = matplot();
 
-
-
-
-
-
-
-
+        data_O ={}; # keys = simulation_id, values = {rxn_id:{flux_info}};
+        for simulation_id in simulation_ids_I:
+            # get the simulation dataAndTime
+            simulation_dateAndTimes = [];
+            simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
+            data_O[simulation_id] = {};
+            if len(simulation_dateAndTimes) > 1:
+                print 'more than 1 simulation date and time found!'
+                continue;
+            else:
+                simulation_dataAndTime = simulation_dateAndTimes[0];
+            # get the rxn_ids
+            if rxn_ids_I:
+                rxn_ids = rxn_ids_I;
+            else:
+                rxn_ids = [];
+                rxn_ids = self.stage02_isotopomer_query.get_rxnIDs_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id,simulation_dataAndTime)
+            # get the flux information for each simulation
+            for rxn_id in rxn_ids:
+                data_O[simulation_id][rxn_id] = {}
+                flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
+                flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O = self.stage02_isotopomer_query.get_flux_simulationIDAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id,rxn_id);
+                # check for None flux
+                if not flux_O: flux_O = 0.0;
+                # save the flux information
+                tmp_O = {};
+                tmp_O = {'flux':flux_O,'flux_stdev':flux_stdev_O,'flux_lb':flux_lb_O,
+                         'flux_ub':flux_ub_O,'flux_units':flux_units_O}
+                data_O[simulation_id][rxn_id] = tmp_O;
+        # reorder the data for plotting
+        if plot_by_rxn_id_I:
+            rxn_ids_all = [];
+            for k1,v1 in data_O.iteritems():
+                for k in v1.keys():
+                    rxn_ids_all.append(k);
+            rxn_ids = list(set(rxn_ids_all));
+            for rxn_id in rxn_ids:
+                title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I = '',[],'','',[],[],[];
+                for simulation_id in simulation_ids_I:
+                    xticklabels_I.append(simulation_id);
+                    data_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub'],data_O[simulation_id][rxn_id]['flux']])
+                    mean_I.append(data_O[simulation_id][rxn_id]['flux'])
+                    ci_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub']])
+                title_I = rxn_id;
+                ylabel_I = 'Flux [' + data_O[simulation_id][rxn_id]['flux_units'] + ']';
+                xlabel_I = 'Simulation_id'
+                plot.boxAndWhiskersPlot(title_I,xticklabels_I,ylabel_I,xlabel_I,data_I=data_I,mean_I=mean_I,ci_I=ci_I)
+        else: 
+            return;
