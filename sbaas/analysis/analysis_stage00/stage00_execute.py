@@ -400,7 +400,7 @@ class stage00_execute():
         experiment_ids = [v['id'] for v in experiment_data_I];
         experiment_ids_unique = list(set(experiment_ids));
         exp_types = [v['exp_type_id'] for v in experiment_data_I];
-        exp_types_unique = list(set(experiment_ids));
+        exp_types_unique = list(set(exp_types));
         for experiment_id in experiment_ids_unique:
             for exp_type in exp_types_unique:
                 # get the bioRep sample names for the experiment

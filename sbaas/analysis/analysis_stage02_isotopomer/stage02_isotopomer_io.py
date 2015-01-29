@@ -2859,11 +2859,11 @@ class stage02_isotopomer_io(base_analysis):
                     flux = {};
                     flux = self.stage02_isotopomer_query.get_rowsEscherFlux_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
                     for map_id in [
-                        #'AlternateCarbonMetabolism',\
-                        #'AminoAcidMetabolism',\
-                        #'CofactorBiosynthesis',\
-                        #'InorganicIonMetabolism',\
-                        #'NucleotideMetabolism',\
+                        'AlternateCarbonMetabolism',\
+                        'AminoAcidMetabolism',\
+                        'CofactorBiosynthesis',\
+                        'InorganicIonMetabolism',\
+                        'NucleotideMetabolism',\
                         'CentralMetabolism'
                         ]:
                         filter_map_str = 'model_id/'+ model_id.replace('_','') +'/mapping_id/'+mapping.replace('_','')+'/sample/'+sna.replace('_','')+'/map_id/'+map_id.replace('_','');

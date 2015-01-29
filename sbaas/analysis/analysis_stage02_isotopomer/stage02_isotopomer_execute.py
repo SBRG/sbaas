@@ -1650,9 +1650,12 @@ class stage02_isotopomer_execute():
         elif flux_lb==0.0 and flux_ub==0.0:
             flux_lb = -1000.0;
             flux_ub = 1000.0;
+        # check the flux
         # substitute 0.0 for None
         if flux_average == 0.0:
             flux_average = None;
+        elif flux_average < flux_lb or flux_average > flux_ub:
+            flux_average = numpy.mean([flux_lb,flux_ub]);
         return flux_average,flux_stdev,flux_lb,flux_ub,flux_units
     #TODO:
     def make_isotopomerSimulation_Inca(self):
@@ -1661,7 +1664,7 @@ class stage02_isotopomer_execute():
     def make_isotopomerParameterEstimation_Inca(self):
         '''Generate parameters for isotopomer parameter estimations (i.e. free fluxes) for INCA1.1'''
         return
-    def plot_fluxPrecision(self,simulation_ids_I = [], rxn_ids_I = [],plot_by_rxn_id_I=True):
+    def plot_fluxPrecision(self,simulation_ids_I = [], rxn_ids_I = [],plot_by_rxn_id_I=True,exclude_I = {}):
         '''Plot the flux precision for a given set of simulations and a given set of reactions
         Default: plot the flux precision for each simulation on a single plot for a single reaction'''
 
@@ -1688,15 +1691,18 @@ class stage02_isotopomer_execute():
             # get the flux information for each simulation
             for rxn_id in rxn_ids:
                 data_O[simulation_id][rxn_id] = {}
-                flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
-                flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O = self.stage02_isotopomer_query.get_flux_simulationIDAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id,rxn_id);
-                # check for None flux
-                if not flux_O: flux_O = 0.0;
-                # save the flux information
-                tmp_O = {};
-                tmp_O = {'flux':flux_O,'flux_stdev':flux_stdev_O,'flux_lb':flux_lb_O,
-                         'flux_ub':flux_ub_O,'flux_units':flux_units_O}
-                data_O[simulation_id][rxn_id] = tmp_O;
+                if exclude_I and exclude_I.has_key(rxn_id) and exclude_I[rxn_id] == simulation_id:
+                    data_O[simulation_id][rxn_id] = {};
+                else:
+                    flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
+                    flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O = self.stage02_isotopomer_query.get_flux_simulationIDAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id,rxn_id);
+                    # check for None flux
+                    if not flux_O: flux_O = 0.0;
+                    # save the flux information
+                    tmp_O = {};
+                    tmp_O = {'flux':flux_O,'flux_stdev':flux_stdev_O,'flux_lb':flux_lb_O,
+                             'flux_ub':flux_ub_O,'flux_units':flux_units_O}
+                    data_O[simulation_id][rxn_id] = tmp_O;
         # reorder the data for plotting
         if plot_by_rxn_id_I:
             rxn_ids_all = [];
@@ -1707,12 +1713,13 @@ class stage02_isotopomer_execute():
             for rxn_id in rxn_ids:
                 title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I = '',[],'','',[],[],[];
                 for simulation_id in simulation_ids_I:
-                    xticklabels_I.append(simulation_id);
-                    data_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub'],data_O[simulation_id][rxn_id]['flux']])
-                    mean_I.append(data_O[simulation_id][rxn_id]['flux'])
-                    ci_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub']])
+                    if data_O[simulation_id][rxn_id]:
+                        xticklabels_I.append(simulation_id);
+                        data_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub'],data_O[simulation_id][rxn_id]['flux']])
+                        mean_I.append(data_O[simulation_id][rxn_id]['flux'])
+                        ci_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub']])
+                        ylabel_I = 'Flux [' + data_O[simulation_id][rxn_id]['flux_units'] + ']';
                 title_I = rxn_id;
-                ylabel_I = 'Flux [' + data_O[simulation_id][rxn_id]['flux_units'] + ']';
                 xlabel_I = 'Simulation_id'
                 plot.boxAndWhiskersPlot(title_I,xticklabels_I,ylabel_I,xlabel_I,data_I=data_I,mean_I=mean_I,ci_I=ci_I)
         else: 

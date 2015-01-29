@@ -662,7 +662,7 @@ class stage00_query(base_analysis):
         try:
             bioReps = self.session.query(sample_description.sample_replicate).filter(
                     experiment.id.like(experiment_id_I),
-                    experiment.exp_type_id.like(exp_type_I),
+                    experiment.exp_type_id==exp_type_I,
                     experiment.sample_name.like(sample.sample_name),
                     sample.sample_id.like(sample_description.sample_id),
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
