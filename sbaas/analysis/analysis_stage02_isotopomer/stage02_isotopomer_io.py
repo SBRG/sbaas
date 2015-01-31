@@ -113,6 +113,7 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage02_isotopomer_tracers(d['experiment_id'],
+                            d['sample_name_abbreviation'],
                             d['met_id'],
                             d['met_name'],
                             d['isotopomer_formula'],
@@ -194,6 +195,13 @@ class stage02_isotopomer_io(base_analysis):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
+    def import_data_stage02_isotopomer_measuredFluxes_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_data_stage02_isotopomer_measuredFluxes(data.data);
+        data.clear_data();
     def add_data_stage02_isotopomer_measuredFluxes(self, data_I):
         '''add rows of data_stage02_isotopomer_measuredFluxes'''
         if data_I:
@@ -237,6 +245,13 @@ class stage02_isotopomer_io(base_analysis):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
+    def import_data_stage02_isotopomer_measuredFragments_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_data_stage02_isotopomer_measuredFragments(data.data);
+        data.clear_data();
     def add_data_stage02_isotopomer_measuredFragments(self, data_I):
         '''add rows of data_stage02_isotopomer_measuredFragments'''
         if data_I:
@@ -701,6 +716,7 @@ class stage02_isotopomer_io(base_analysis):
                             #sample.sample_name.like(d['sample_name'])
                             ).update(
                             {'experiment_id':d['experiment_id'],
+                            'sample_name_abbreviation':d['sample_name_abbreviation'],
                             'model_id':d['model_id'],
                             'met_id':d['met_id'],
                             'met_name':d['met_name'],
