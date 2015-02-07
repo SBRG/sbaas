@@ -27,7 +27,7 @@ class stage02_isotopomer_io(base_analysis):
     def import_data_stage02_isotopomer_simulation_add(self, filename):
         '''table adds'''
         data = base_importData();
-        data.read_csv(filename);
+        data.read_csv(settings.workspace_data+filename);
         data.format_data();
         self.add_data_stage02_isotopomer_simulation(data.data);
         data.clear_data();
@@ -74,7 +74,7 @@ class stage02_isotopomer_io(base_analysis):
     def import_data_stage02_isotopomer_calcFluxes_add(self, filename):
         '''table adds'''
         data = base_importData();
-        data.read_csv(filename);
+        data.read_csv(settings.workspace_data+filename);
         data.format_data();
         self.add_data_stage02_isotopomer_calcFluxes(data.data);
         data.clear_data();
@@ -103,7 +103,7 @@ class stage02_isotopomer_io(base_analysis):
     def import_data_stage02_isotopomer_tracers_add(self, filename):
         '''table adds'''
         data = base_importData();
-        data.read_csv(filename);
+        data.read_csv(settings.workspace_data+filename);
         data.format_data();
         self.add_data_stage02_isotopomer_tracers(data.data);
         data.clear_data();
@@ -111,14 +111,33 @@ class stage02_isotopomer_io(base_analysis):
         '''add rows of data_stage02_isotopomer_tracers'''
         if data_I:
             for d in data_I:
+                met_elements = None;
+                if d['met_elements']:
+                    met_elements = d['met_elements']
+                    met_elements = met_elements.replace('{','')
+                    met_elements = met_elements.replace('}','')
+                    met_elements = met_elements.split(',')
+                met_atompositions = None;
+                if d['met_atompositions']:
+                    met_atompositions = d['met_atompositions']
+                    met_atompositions = met_atompositions.replace('{','')
+                    met_atompositions = met_atompositions.replace('}','')
+                    met_atompositions = met_atompositions.split(',')
+                    met_atompositions = [int(x) for x in met_atompositions];
+                isotopomer_formula = None;
+                if d['isotopomer_formula']:
+                    isotopomer_formula = d['isotopomer_formula']
+                    isotopomer_formula = isotopomer_formula.replace('{','')
+                    isotopomer_formula = isotopomer_formula.replace('}','')
+                    isotopomer_formula = isotopomer_formula.split(',')
                 try:
                     data_add = data_stage02_isotopomer_tracers(d['experiment_id'],
                             d['sample_name_abbreviation'],
                             d['met_id'],
                             d['met_name'],
-                            d['isotopomer_formula'],
-                            d['met_elements'],
-                            d['met_atompositions'],
+                            isotopomer_formula,
+                            met_elements,
+                            met_atompositions,
                             d['ratio'],
                             d['supplier'],
                             d['supplier_reference'],
@@ -198,7 +217,7 @@ class stage02_isotopomer_io(base_analysis):
     def import_data_stage02_isotopomer_measuredFluxes_add(self, filename):
         '''table adds'''
         data = base_importData();
-        data.read_csv(filename);
+        data.read_csv(settings.workspace_data+filename);
         data.format_data();
         self.add_data_stage02_isotopomer_measuredFluxes(data.data);
         data.clear_data();
@@ -248,7 +267,7 @@ class stage02_isotopomer_io(base_analysis):
     def import_data_stage02_isotopomer_measuredFragments_add(self, filename):
         '''table adds'''
         data = base_importData();
-        data.read_csv(filename);
+        data.read_csv(settings.workspace_data+filename);
         data.format_data();
         self.add_data_stage02_isotopomer_measuredFragments(data.data);
         data.clear_data();
@@ -256,6 +275,37 @@ class stage02_isotopomer_io(base_analysis):
         '''add rows of data_stage02_isotopomer_measuredFragments'''
         if data_I:
             for d in data_I:
+                intensity_normalized_average = None;
+                if d['intensity_normalized_average']:
+                    intensity_normalized_average = d['intensity_normalized_average']
+                    intensity_normalized_average = intensity_normalized_average.replace('{','')
+                    intensity_normalized_average = intensity_normalized_average.replace('}','')
+                    intensity_normalized_average = intensity_normalized_average.split(',')
+                intensity_normalized_cv = None;
+                if d['intensity_normalized_cv']:
+                    intensity_normalized_cv = d['intensity_normalized_cv']
+                    intensity_normalized_cv = intensity_normalized_cv.replace('{','')
+                    intensity_normalized_cv = intensity_normalized_cv.replace('}','')
+                    intensity_normalized_cv = intensity_normalized_cv.split(',')
+                intensity_normalized_stdev = None;
+                if d['intensity_normalized_stdev']:
+                    intensity_normalized_stdev = d['intensity_normalized_stdev']
+                    intensity_normalized_stdev = intensity_normalized_stdev.replace('{','')
+                    intensity_normalized_stdev = intensity_normalized_stdev.replace('}','')
+                    intensity_normalized_stdev = intensity_normalized_stdev.split(',')
+                met_elements = None;
+                if d['met_elements']:
+                    met_elements = d['met_elements']
+                    met_elements = met_elements.replace('{','')
+                    met_elements = met_elements.replace('}','')
+                    met_elements = met_elements.split(',')
+                met_atompositions = None;
+                if d['met_atompositions']:
+                    met_atompositions = d['met_atompositions']
+                    met_atompositions = met_atompositions.replace('{','')
+                    met_atompositions = met_atompositions.replace('}','')
+                    met_atompositions = met_atompositions.split(',')
+                    met_atompositions = [int(x) for x in met_atompositions];
                 try:
                     data_add = data_stage02_isotopomer_measuredFragments(d['experiment_id'],
                                 d['sample_name_abbreviation'],
@@ -263,13 +313,13 @@ class stage02_isotopomer_io(base_analysis):
                                 d['met_id'],
                                 d['fragment_id'],
                                 d['fragment_formula'],
-                                d['intensity_normalized_average'],
-                                d['intensity_normalized_cv'],
-                                d['intensity_normalized_stdev'],
+                                intensity_normalized_average,
+                                intensity_normalized_cv,
+                                intensity_normalized_stdev,
                                 d['intensity_normalized_units'],
                                 d['scan_type'],
-                                d['met_elements'],
-                                d['met_atompositions'],
+                                met_elements,
+                                met_atompositions,
                                 d['used_'],
                                 d['comment_']);
                     self.session.add(data_add);
@@ -893,7 +943,7 @@ class stage02_isotopomer_io(base_analysis):
     def import_data_stage02_isotopomer_atomMappingReactions_update(self, filename):
         '''table updates'''
         data = base_importData();
-        data.read_csv(filename);
+        data.read_csv(settings.workspace_data+filename);
         #data.read_json(filename);
         data.format_data();
         self.update_data_stage02_isotopomer_atomMappingReactions(data.data);
@@ -929,7 +979,7 @@ class stage02_isotopomer_io(base_analysis):
     def import_data_stage02_isotopomer_atomMappingMetabolites_update(self, filename):
         '''table updates'''
         data = base_importData();
-        data.read_csv(filename);
+        data.read_csv(settings.workspace_data+filename);
         #data.read_json(filename);
         data.format_data();
         self.update_data_stage02_isotopomer_atomMappingMetabolites(data.data);

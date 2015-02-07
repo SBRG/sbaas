@@ -841,7 +841,9 @@ class stage02_isotopomer_query(base_analysis):
                             'fixed':d.fixed,
                             'free':d.free,
                             'reversibility':d.reversibility,
-                            'weight':d.weight};
+                            'weight':d.weight,
+                            'used_':d.used_,
+                            'comment_':d.comment_};
                     rows_O.append(row_tmp);
             return rows_O;
         except SQLAlchemyError as e:
@@ -1299,7 +1301,7 @@ class stage02_isotopomer_query(base_analysis):
     ## Query from data_stage02_isotopomer_tracers
     # query rows from data_stage02_isotopomer_tracers
     def get_rows_experimentID_dataStage02IsotopomerTracers(self,experiment_id_I):
-        '''Querry rows by model_id that are used'''
+        '''Querry rows by experiment_id that are used'''
         try:
             data = query_session.query(data_stage02_isotopomer_tracers).filter(
                     data_stage02_isotopomer_tracers.experiment_id.like(experiment_id_I)).order_by(
@@ -1308,6 +1310,33 @@ class stage02_isotopomer_query(base_analysis):
             if data: 
                 for d in data:
                     row_tmp = {'experiment_id':d.experiment_id,
+                                'sample_name_abbreviation':d.sample_name_abbreviation,
+                                'met_id':d.met_id,
+                                'met_name':d.met_name,
+                                'isotopomer_formula':d.isotopomer_formula,
+                                'met_elements':d.met_elements,
+                                'met_atompositions':d.met_atompositions,
+                                'ratio':d.ratio,
+                                'supplier':d.supplier,
+                                'supplier_reference':d.supplier_reference,
+                                'purity':d.purity,
+                                'comment_':d.comment_};
+                    rows_O.append(row_tmp);
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_rows_experimentIDAndSampleNameAbbreviation_dataStage02IsotopomerTracers(self,experiment_id_I,sample_name_abbreviation_I):
+        '''Querry rows by experiment_id and sample_name_abbreviation that are used'''
+        try:
+            data = query_session.query(data_stage02_isotopomer_tracers).filter(
+                    data_stage02_isotopomer_tracers.experiment_id.like(experiment_id_I),
+                    data_stage02_isotopomer_tracers.sample_name_abbreviation.like(sample_name_abbreviation_I)).order_by(
+                    data_stage02_isotopomer_tracers.met_id.asc()).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    row_tmp = {'experiment_id':d.experiment_id,
+                                'sample_name_abbreviation':d.sample_name_abbreviation,
                                 'met_id':d.met_id,
                                 'met_name':d.met_name,
                                 'isotopomer_formula':d.isotopomer_formula,
@@ -1416,6 +1445,36 @@ class stage02_isotopomer_query(base_analysis):
             return row_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_rows_mappingID_dataStage02IsotopomerAtomMappingMetabolites(self,mapping_id_I):
+        '''Querry rows by mapping_id that are used'''
+        try:
+            data = query_session.query(data_stage02_isotopomer_atomMappingMetabolites).filter(
+                    data_stage02_isotopomer_atomMappingMetabolites.mapping_id.like(mapping_id_I),
+                    data_stage02_isotopomer_atomMappingMetabolites.used_.is_(True)).order_by(
+                    data_stage02_isotopomer_atomMappingMetabolites.mapping_id.asc(),
+                    data_stage02_isotopomer_atomMappingMetabolites.met_id.asc()).all();
+            row_O = [];
+            if data: 
+                for d in data:
+                    row_tmp = {'mapping_id':d.mapping_id,
+                            'met_id':d.met_id,
+                            'met_elements':d.met_elements,
+                            'met_atompositions':d.met_atompositions,
+                            'met_symmetry_elements':d.met_symmetry_elements,
+                            'met_symmetry_atompositions':d.met_symmetry_atompositions,
+                            'used_':d.used_,
+                            'comment_':d.comment_,
+                            'met_mapping':d.met_mapping,
+                            'base_met_ids':d.base_met_ids,
+                            'base_met_elements':d.base_met_elements,
+                            'base_met_atompositions':d.base_met_atompositions,
+                            'base_met_symmetry_elements':d.base_met_symmetry_elements,
+                            'base_met_symmetry_atompositions':d.base_met_symmetry_atompositions,
+                            'base_met_indices':d.base_met_indices};
+                    row_O.append(row_tmp);
+            return row_O;
+        except SQLAlchemyError as e:
+            print(e);
     # update rows from data_stage02_isotopomer_atomMappingMetabolites
     def update_rows_dataStage02IsotopomerAtomMappingMetabolites(self,data_I):
         '''update rows of data_stage02_isotopomer_atomMappingMetabolites'''
@@ -1513,7 +1572,9 @@ class stage02_isotopomer_query(base_analysis):
                             'lower_bound':d.lower_bound,
                             'upper_bound':d.upper_bound,
                             'balanced':d.balanced,
-                            'fixed':d.fixed};
+                            'fixed':d.fixed,
+                            'used_':d.used_,
+                            'comment_':d.comment_};
                     rows_O.append(row_tmp);
             return rows_O;
         except SQLAlchemyError as e:

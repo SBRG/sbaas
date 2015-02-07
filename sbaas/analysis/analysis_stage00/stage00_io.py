@@ -991,12 +991,12 @@ class stage00_io(base_analysis):
         export.write_dict2csv(filename);
 
     def update_samplePhysiologicalParameters(self,data_I):
-        '''update rows of sample_physiologicalparameters'''
+        '''update rows of sample_physiologicalParameters'''
         if data_I:
             for d in data_I:
                 try:
-                    data_update = self.session.query(sample_physiologicalparameters).filter(
-                           sample_physiologicalparameters.sample_id==d['sample_id']).update(
+                    data_update = self.session.query(sample_physiologicalParameters).filter(
+                           sample_physiologicalParameters.sample_id==d['sample_id']).update(
                             {
                             'growth_condition_short':d['growth_condition_short'],
                             'growth_condition_long':d['growth_condition_long'],

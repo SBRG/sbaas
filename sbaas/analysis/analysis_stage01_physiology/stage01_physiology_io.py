@@ -52,7 +52,9 @@ class stage01_physiology_io(base_analysis):
             for d in data_I:
                 try:
                     data_update = self.session.query(data_stage01_physiology_data).filter(
-                            data_stage01_physiology_data.id == d['id']).update(
+                            #data_stage01_physiology_data.id == d['id'],
+                            data_stage01_physiology_data.experiment_id.like(d['experiment_id']),
+                            data_stage01_physiology_data.sample_id.like(d['sample_id'])).update(
                             {'experiment_id':d['experiment_id'],
                             'sample_id':d['sample_id'],
                             #'sample_name_short':d['sample_name_short'],

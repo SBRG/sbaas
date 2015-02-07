@@ -4822,35 +4822,3 @@ class stage02_isotopomer_mappingUtilities():
                         element_balance_check,mapping_check = irm.check_reactionMapping();
                     #clear reaction
                     irm.clear_reactionMapping();
-
-'''Unit tests for stage02_isotopomer_metaboliteMapping:
-from analysis.analysis_stage02_isotopomer.stage02_isotopomer_dependencies import stage02_isotopomer_metaboliteMapping
-imm = stage02_isotopomer_metaboliteMapping()
-imm.make_trackedMetabolite('full04','140407_iDM2014',{'f6p_c':'C'})
-imm.clear_metaboliteMapping()
-imm.make_compoundTrackedMetabolite('full04','140407_iDM2014',[{'f6p_c':'C'},{'f6p_c':'H'},{'f6p_c':'C'},{'f6p_c':'H'},{'ac_c':'C'},{'utp_c':'C'}],'uacgam_c')
-imm.remove_baseMetabolite_fromMetabolite('140407_iDM2014',{'f6p_c':'C'})
-imm.clear_metaboliteMapping()
-imm.make_compoundTrackedMetabolite('full04','140407_iDM2014',[{'f6p_c':'C'},{'f6p_c':'H'},{'f6p_c':'C'},{'f6p_c':'H'},{'ac_c':'C'},{'utp_c':'C'}],'uacgam_c')
-imm.remove_baseMetabolite_fromMetabolite('140407_iDM2014',{'f6p_c':'C'},met_index_I=2)
-imm.clear_metaboliteMapping()
-imm.make_compoundTrackedMetabolite('full04','140407_iDM2014',[{'f6p_c':'C'},{'f6p_c':'H'},{'f6p_c':'C'},{'f6p_c':'H'},{'ac_c':'C'},{'utp_c':'C'}],'uacgam_c')
-imm.pop_baseMetabolite_fromMetabolite('140407_iDM2014',{'f6p_c':'C'})
-imm.clear_metaboliteMapping()
-imm.make_compoundTrackedMetabolite('full04','140407_iDM2014',[{'f6p_c':'C'},{'f6p_c':'H'},{'f6p_c':'C'},{'f6p_c':'H'},{'ac_c':'C'},{'utp_c':'C'}],'uacgam_c')
-extracted_imm = imm.extract_baseMetabolite_fromMetabolite('140407_iDM2014',{'f6p_c':'C'},met_index_I=2)
-imm.clear_metaboliteMapping()
-'''
-
-'''Unit tests for stage02_isotopomer_reactionMapping:
-from analysis.analysis_stage02_isotopomer.stage02_isotopomer_dependencies import stage02_isotopomer_reactionMapping
-irm = stage02_isotopomer_reactionMapping()
-irm.make_trackedBinaryReaction('full04','140407_iDM2014','COFACTOR_7',[{'dxyl5p_c':'C'}],'h2mb4p_c')
-irm.clear_reactionMapping()
-irm.make_trackedBinaryReaction('full04','140407_iDM2014','COFACTOR_7',[{'dxyl5p_c':'C'},{'dxyl5p_c':'C'}],'h2mb4p_c')
-irm.clear_reactionMapping()
-irm.make_trackedUnitaryReactions('full04','140407_iDM2014','COFACTOR_7',[{'dxyl5p_c':'C'}],['h2mb4p_c'])
-irm.clear_reactionMapping()
-irm.make_trackedUnitaryReactions('full04','140407_iDM2014','COFACTOR_7',[{'dxyl5p_c':'C'},{'dxyl5p_c':'C'}],['h2mb4p_c','h2mb4p_c'])
-irm.clear_reactionMapping()
-'''

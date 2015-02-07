@@ -77,6 +77,8 @@ class stage01_physiology_execute():
             #interpolate based off of the regression parameters
             time = sample_date.year*8765.81277 + sample_date.month*730.484  + sample_date.day*365.242 + sample_date.hour + sample_date.minute / 60. + sample_date.second / 3600.;
             biomass = exp(time*slope+intercept);
+            if biomass < 1e-1:
+                print 'check biomass'
             #update sample_physiologicalParameters
             pp['od600'] = biomass;
             data.append(pp);  
