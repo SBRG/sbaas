@@ -325,11 +325,13 @@ class stage01_quantification_execute():
         NOTE: rows are not removed, but the used value is changed to false
         NOTE: priority is given to the primary transition'''
         return
-    def execute_normalizeSamples2Biomass(self,experiment_id_I,biological_material_I=None,conversion_name_I=None,sample_names_I=[],component_names_I=[]):
+    def execute_normalizeSamples2Biomass(self,experiment_id_I,biological_material_I=None,conversion_name_I=None,sample_names_I=[],component_names_I=[],use_height_I=False):
         '''Normalize calculated concentrations to measured biomass'''
         # Input:
-        #   experiment_id
-        #   biological_material
+        #   experiment_id_I
+        #   biological_material_I =  biological material (if None, no normalization is done)
+        #   conversion_name_I = biomass conversion name (if None, no normalization is done)
+        #   use_height_I = if True, use the ion count for peak height instead of the calculated_concentration or height/area ratio
         # Output:
         #   sample_name
         #   sample_id
@@ -390,7 +392,10 @@ class stage01_quantification_execute():
                     # get the calculated concentration
                     calc_conc = None;
                     calc_conc_units = None;
-                    calc_conc, calc_conc_units = self.stage01_quantification_query.get_concAndConcUnits_sampleNameAndComponentName(sn,cn);
+                    if use_height_I: 
+                        calc_conc, calc_conc_units = self.stage01_quantification_query.get_peakHeight_sampleNameAndComponentName(sn,cn);
+                    else:
+                        calc_conc, calc_conc_units = self.stage01_quantification_query.get_concAndConcUnits_sampleNameAndComponentName(sn,cn);
                     # calculate the normalized concentration
                     norm_conc = None;
                     norm_conc_units = None;
@@ -409,7 +414,10 @@ class stage01_quantification_execute():
                     # get the calculated concentration
                     calc_conc = None;
                     calc_conc_units = None;
-                    calc_conc, calc_conc_units = self.stage01_quantification_query.get_concAndConcUnits_sampleNameAndComponentName(sn,cn);
+                    if use_height_I: 
+                        calc_conc, calc_conc_units = self.stage01_quantification_query.get_peakHeight_sampleNameAndComponentName(sn,cn);
+                    else:
+                        calc_conc, calc_conc_units = self.stage01_quantification_query.get_concAndConcUnits_sampleNameAndComponentName(sn,cn);
                     row = data_stage01_quantification_normalized(experiment_id_I, sn,sample_id,component_group_name,cn,calc_conc,calc_conc_units,True);
                     self.session.add(row);
             self.session.commit();
@@ -461,7 +469,7 @@ class stage01_quantification_execute():
                     conc_var_filtrate = 0.0;
                     # calculate average and CV of concentrations
                     if (not(concs)): conc_average_filtrate = 0;
-                    elif n_replicates<2: conc_average_filtrate = conc;
+                    elif n_replicates<2: conc_average_filtrate = concs[0];
                     else: 
                         #conc_average_filtrate, conc_var_filtrate = self.calculate.calculate_ave_var_R(concs);
                         conc_average_filtrate = numpy.mean(numpy.array(concs));
@@ -545,7 +553,7 @@ class stage01_quantification_execute():
                         conc_average_filtrate = 0;
                         conc_var_filtrate = 0;
                     elif n_replicates_filtrate<2: 
-                        conc_average_filtrate = conc;
+                        conc_average_filtrate = concs[0];
                         conc_var_filtrate = 0;
                     else: 
                         #conc_average_filtrate, conc_var_filtrate = self.calculate.calculate_ave_var_R(concs);
@@ -631,7 +639,7 @@ class stage01_quantification_execute():
                                                       check[n]['used']);
                 self.session.add(row);
         self.session.commit();
-    def execute_calculateMissingValues_replicates(self,experiment_id_I):
+    def execute_calculateMissingValues_replicates(self,experiment_id_I,sample_name_abbreviations_I=[]):
         '''calculate estimates for missing replicates values using AmeliaII from R'''
 
         from resources.r import r_calculate
@@ -640,8 +648,11 @@ class stage01_quantification_execute():
 
         print 'execute_calculateMissingValues_replicates...'
         # get sample name abbreviations
-        sample_names_abbreviation = [];
-        sample_names_abbreviation = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Replicates(experiment_id_I);
+        if sample_name_abbreviations_I:
+            sample_names_abbreviation = sample_name_abbreviations_I;
+        else:
+            sample_names_abbreviation = [];
+            sample_names_abbreviation = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Replicates(experiment_id_I);
         # for each sample name abbreviation
         for sna in sample_names_abbreviation:
             print 'calculating missing values for sample_name_abbreviation ' + sna;
@@ -669,21 +680,23 @@ class stage01_quantification_execute():
                 for n in range(len(sns_NA)):
                     component_group_name = None;
                     calculated_concentration_units = None;
-                    component_group_name, calculated_concentration_units = self.stage01_quantification_query.get_componentGroupNameAndConcUnits_experimentIDAndComponentName_dataStage01Replicates(experiment_id_I,cn_NA[n]);
+                    component_group_name, calculated_concentration_units = self.stage01_quantification_query.get_componentGroupNameAndConcUnits_experimentIDAndComponentNameAndSampleNameAbbreviationAndTimePoint_dataStage01Replicates(experiment_id_I,cn_NA[n],sna,tp);
                     # update data_stage01_quantification_replicatesMI
                     row = data_stage01_quantification_replicatesMI(experiment_id_I,sns_NA[n],tp,component_group_name,cn_NA[n],cc_NA[n],calculated_concentration_units,True);
                     self.session.add(row);
         self.session.commit(); 
-    def execute_calculateMissingComponents_replicates(self,experiment_id_I,biological_material_I=None,conversion_name_I=None):
+    def execute_calculateMissingComponents_replicates(self,experiment_id_I,biological_material_I=None,conversion_name_I=None,sample_names_short_I=[]):
         '''calculate estimates for samples in which a component was not found for any of the replicates'''
         
         io = stage01_quantification_io();
 
         print 'execute_calculateMissingComponents_replicates...'
-        #dataListUpdated_I = [];
         # get all sample names short
-        sample_names_short = [];
-        sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleDescription_dataStage01Normalized(experiment_id_I,'Broth');
+        if sample_names_short_I:
+            sample_names_short = sample_names_short_I;
+        else:
+            sample_names_short = [];
+            sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleDescription_dataStage01Normalized(experiment_id_I,'Broth');
         # get component names
         component_names = []
         component_names = self.stage01_quantification_query.get_componentNames_experimentID_dataStage01ReplicatesMI(experiment_id_I);
@@ -767,13 +780,16 @@ class stage01_quantification_execute():
                             self.session.add(row);
         #io.update_dataStage01ReplicatesMI(dataListUpdated_I);
         self.session.commit();
-    def execute_calculateAverages_replicates(self,experiment_id_I):
+    def execute_calculateAverages_replicates(self,experiment_id_I,sample_name_abbreviations_I=[]):
         '''Calculate the averages from replicates MI'''
         
         print 'execute_calculateAverages_replicates...'
         # get sample_name_abbreviations
-        sample_name_abbreviations = [];
-        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01ReplicatesMI(experiment_id_I);
+        if sample_name_abbreviations_I:
+            sample_names_abbreviation = sample_name_abbreviations_I;
+        else:
+            sample_name_abbreviations = [];
+            sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01ReplicatesMI(experiment_id_I);
         for sna in sample_name_abbreviations:
             print 'calculating averages from replicates for sample_name_abbreviation ' + sna;
             # get component names
@@ -1374,7 +1390,7 @@ class stage01_quantification_execute():
         except SQLAlchemyError as e:
             print(e);
     # data_stage01_quantification deletes
-    def execute_deleteExperimentFromMQResultsTable(self,experiment_id_I):
+    def execute_deleteExperimentFromMQResultsTable(self,experiment_id_I,sample_types_I = ['Quality Control','Unknown']):
         '''delete rows in data_stage01_MQResultsTable by sample name and sample type 
         (default = Quality Control and Unknown) from the experiment'''
         
@@ -1382,8 +1398,7 @@ class stage01_quantification_execute():
         dataDeletes = [];
         # get sample_names
         sample_names = [];
-        sample_types = ['Quality Control','Unknown'];
-        for st in sample_types:
+        for st in sample_types_I:
             sample_names_tmp = [];
             sample_names_tmp = self.stage01_quantification_query.get_sampleNames_experimentIDAndSampleType(experiment_id_I,st);
             sample_names.extend(sample_names_tmp);

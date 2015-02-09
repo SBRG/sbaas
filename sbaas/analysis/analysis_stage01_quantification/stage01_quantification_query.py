@@ -505,6 +505,24 @@ class stage01_quantification_query(base_analysis):
                     return conc_O, conc_units_O;
                 except SQLAlchemyError as e:
                     print(e);
+    def get_peakHeight_sampleNameAndComponentName(self,sample_name_I,component_name_I):
+        '''Querry peak height from sample name and component name
+        NOTE: intended to be used within a for loop'''
+
+        try:
+            data = self.session.query(data_stage01_quantification_MQResultsTable.height).filter(
+                    data_stage01_quantification_MQResultsTable.sample_name.like(sample_name_I),
+                    data_stage01_quantification_MQResultsTable.component_name.like(component_name_I),
+                    data_stage01_quantification_MQResultsTable.used_.is_(True)).all();
+            if data:
+                conc_O = data[0][0];
+                conc_units_O = 'height';
+            else: 
+                conc_O = None;
+                conc_units_O = None;
+            return conc_O, conc_units_O;
+        except SQLAlchemyError as e:
+            print(e);
     def get_used_sampleNameAndComponentName(self,sample_name_I,component_name_I):
         '''Querry used from sample name and component name
         NOTE: intended to be used within a for loop'''
@@ -1174,6 +1192,7 @@ class stage01_quantification_query(base_analysis):
                     sample_description.time_point.like(time_point_I),
                     experiment.exp_type_id == exp_type_I,
                     experiment.id.like(experiment_id_I),
+                    sample_description.sample_id.like(sample.sample_id),
                     experiment.sample_name.like(sample.sample_name),
                     data_stage01_quantification_replicates.experiment_id.like(experiment_id_I),
                     sample_description.sample_description.like('Broth')
@@ -1252,6 +1271,34 @@ class stage01_quantification_query(base_analysis):
         try:
             data = self.session.query(data_stage01_quantification_replicates.component_group_name,
                     data_stage01_quantification_replicates.calculated_concentration_units).filter(
+                    data_stage01_quantification_replicates.experiment_id.like(experiment_id_I),
+                    data_stage01_quantification_replicates.component_name.like(component_name_I)).group_by(
+                    data_stage01_quantification_replicates.component_group_name,
+                    data_stage01_quantification_replicates.calculated_concentration_units).all();
+            if len(data)>1:
+                print('more than 1 component_group_name retrieved per component_name')
+            if data:
+                cgn_O = data[0][0];
+                conc_units_O = data[0][1];
+            else: 
+                conc_O = None;
+                conc_units_O = None;
+            return cgn_O, conc_units_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_componentGroupNameAndConcUnits_experimentIDAndComponentNameAndSampleNameAbbreviationAndTimePoint_dataStage01Replicates(self,experiment_id_I, component_name_I, sample_name_abbreviation_I,time_point_I,exp_type_I=4):
+        '''Querry data (i.e. concentration) from component name and sample name abbreviation and time points
+        NOTE: intended to be used within a for loop'''
+        try:
+            data = self.session.query(data_stage01_quantification_replicates.component_group_name,
+                    data_stage01_quantification_replicates.calculated_concentration_units).filter(
+                    sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    sample_description.time_point.like(time_point_I),
+                    sample_description.sample_id.like(sample.sample_id),
+                    experiment.exp_type_id == exp_type_I,
+                    experiment.id.like(experiment_id_I),
+                    experiment.sample_name.like(sample.sample_name),
+                    data_stage01_quantification_replicates.sample_name_short.like(sample_description.sample_name_short),
                     data_stage01_quantification_replicates.experiment_id.like(experiment_id_I),
                     data_stage01_quantification_replicates.component_name.like(component_name_I)).group_by(
                     data_stage01_quantification_replicates.component_group_name,

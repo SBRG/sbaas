@@ -269,7 +269,7 @@ class stage01_quantification_io(base_analysis):
         '''add rows of quantitation_method'''
         if data_I:
             for d in data_I:
-                if d['IS'] == 'FALSE': # ignore internal standards
+                if not d['IS'] or d['IS'] == 'False': # ignore internal standards
                     try:
                         data_add = quantitation_method(QMethod_id_I,
                                                     d['Q1 Mass - 1'],
@@ -686,7 +686,7 @@ class stage01_quantification_io(base_analysis):
 
     def export_dataStage01physiologicalRatios_d3(self, experiment_id,sample_name_abbreviations_I=[], time_points_I=[],ratios_I=[],
                                                  json_var_name='data',
-                                                 filename=['visualization/data/','/quantification/boxandwhiskers/','ratios/']):
+                                                 filename=[settings.visualization_data,'/quantification/boxandwhiskers/','ratios/']):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id
@@ -774,18 +774,18 @@ class stage01_quantification_io(base_analysis):
                 json_O['options'] = options_O;
                 # dump the data to a json file
                 json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-                filename_str = filename[0] + experiment_id + filename[1] + filename[2] + tp + '_' + k + '.js';
+                filename_str = filename[0] + '/' + experiment_id + filename[1] + filename[2] + tp + '_' + k + '.js';
                 with open(filename_str,'w') as file:
                     file.write(json_str);
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0] + experiment_id + filename[1] + filename[2] + 'filter.js'
+        filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'w') as file:
             file.write(json_str);
 
     def export_dataStage01replicatesMI_d3(self, experiment_id,sample_name_abbreviations_I=[], time_points_I=[],component_names_I=[],
                                                  json_var_name='data',
-                                                 filename=['visualization/data/','/quantification/boxandwhiskers/','concentrations/']):
+                                                 filename=[settings.visualization_data,'/quantification/boxandwhiskers/','concentrations/']):
         '''Export data for viewing using d3'''
         
         print 'Exporting replicatesMI for d3 boxandwhiskers plot'
@@ -874,12 +874,12 @@ class stage01_quantification_io(base_analysis):
                 json_O['options'] = options_O;
                 # dump the data to a json file
                 json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-                filename_str = filename[0] + experiment_id + filename[1] + filename[2]+ tp + '_' + cn + '.js';
+                filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2]+ tp + '_' + cn + '.js';
                 with open(filename_str,'w') as file:
                     file.write(json_str);
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0] + experiment_id + filename[1] + filename[2] + 'filter.js'
+        filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'w') as file:
             file.write(json_str);
             

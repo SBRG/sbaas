@@ -339,8 +339,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
         '''Correlate the mutations found in the resequencing data with the phenotype found in the physiology data'''
         #Input:
         #   experiment_id = id for the experiment
-        return
-    
+        return 
     def execute_quantifyResequencingPysiology_population(self,experiment_id,phenotype_reduce_criteria,genotype_reduce_critiera):
         '''Quantify the change in phenotype found in the physiology data over that of a base strain due to a change in frequency of mutation'''
         #Input:

@@ -6,12 +6,15 @@ from resources.r import robjects,importr
 
 class stage01_quantification_QMethod(base_analysis):
 
-    def execute_quantitationMethodUpdate(self):
+    def execute_quantitationMethodUpdate(self, quant_method_ids_I = []):
         '''calculate regression parameters for all components
         that have not been determined'''
 
-        quant_method_ids = [];
-        quant_method_ids = self.get_quantMethodIds();
+        if quant_method_ids_I:
+            quant_method_ids = quant_method_ids_I;
+        else:
+            quant_method_ids = [];
+            quant_method_ids = self.get_quantMethodIds();
         for id in quant_method_ids:
             # get the samples and components that make were used to make
             # the quantitation method
