@@ -18,7 +18,8 @@ class stage02_quantification_execute():
         self.r_calc = r_calculate();
         self.matplot = matplot();
     # analyses:
-    def execute_glogNormalization(self,experiment_id_I):
+    def execute_glogNormalization(self,experiment_id_I,concentration_units_I=[]
+                                  ):
         '''glog normalize concentration values using R'''
 
         print 'execute_glogNormalization...'
@@ -31,8 +32,11 @@ class stage02_quantification_execute():
             print 'calculating glogNormalization for time_point ' + tp;
             data_transformed = [];
             # get concentration units...
-            concentration_units = [];
-            concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,tp);
+            if concentration_units_I:
+                concentration_units = concentration_units_I;
+            else:
+                concentration_units = [];
+                concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,tp);
             for cu in concentration_units:
                 print 'calculating glogNormalization for concentration_units ' + cu;
                 data = [];
@@ -224,9 +228,10 @@ class stage02_quantification_execute():
             # get concentration units...
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage02GlogNormalized(experiment_id_I,tp);
-            # get original concentration units
-            concentration_units_original = [];
-            concentration_units_original = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,tp);
+            ## get original concentration units
+            #concentration_units_original = [];
+            #concentration_units_original = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,tp);
+            concentration_units_original = [x.split('_glog_normalized')[0] for x in concentration_units];
             for cu_cnt, cu in enumerate(concentration_units):
                 print 'calculating pairwiseTTest for concentration_units ' + cu;
                 # get component_names:

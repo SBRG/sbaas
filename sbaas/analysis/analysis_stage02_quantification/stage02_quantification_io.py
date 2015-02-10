@@ -12,7 +12,7 @@ class stage02_quantification_io(base_analysis):
     
     def export_volcanoPlot_d3(self,experiment_id_I,time_points_I=[],concentration_units_I=[],
                                 json_var_name='data',
-                                filename=['visualization/data/','/quantification/scatterplot/','volcanoplot/']):
+                                filename=[settings.visualization_data,'/quantification/scatterplot/','volcanoplot/']):
         '''generate a volcano plot from pairwiseTest table'''
 
         print 'exporting volcanoPlot...'
@@ -84,17 +84,17 @@ class stage02_quantification_io(base_analysis):
                             json_O['options'] = options_O;
                             # dump the data to a json file
                             json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-                            filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + tp + '_' + cu + '_' + sna_1 + '_' + sna_2 + '.js';
+                            filename_str = filename[0] + '/' + experiment_id_I + filename[1] + filename[2] + tp + '_' + cu + '_' + sna_1 + '_' + sna_2 + '.js';
                             with open(filename_str,'w') as file:
                                 file.write(json_str);
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + 'filter.js'
+        filename_str = filename[0] + '/' + experiment_id_I + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'w') as file:
             file.write(json_str);
     def export_pcaPlot_d3(self,experiment_id_I,time_points_I=[],concentration_units_I=[],
                             json_var_name='data',
-                            filename=['visualization/data/','/quantification/scatterplot/','pcaplot/']):
+                            filename=[settings.visualization_data,'/quantification/scatterplot/','pcaplot/']):
         '''generate a pca plot'''
 
         print 'export_pcaPlot...'
@@ -158,7 +158,7 @@ class stage02_quantification_io(base_analysis):
                     json_O['options'] = options_O;
                     # dump the data to a json file
                     json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-                    filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + tp + '_' + cu + '_' + str(PC[0]) + '_' + str(PC[1]) + '_' +'scores' + '.js';
+                    filename_str = filename[0]  + '/' + experiment_id_I + filename[1] + filename[2] + tp + '_' + cu + '_' + str(PC[0]) + '_' + str(PC[1]) + '_' +'scores' + '.js';
                     with open(filename_str,'w') as file:
                         file.write(json_str);
                     # loadings
@@ -186,12 +186,12 @@ class stage02_quantification_io(base_analysis):
                     json_O['options'] = options_O;
                     # dump the data to a json file
                     json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-                    filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + tp + '_' + cu + '_' + str(PC[0]) + '_' + str(PC[1]) + '_' +'loadings' +'.js';
+                    filename_str = filename[0]  + '/' +  experiment_id_I + filename[1] + filename[2] + tp + '_' + cu + '_' + str(PC[0]) + '_' + str(PC[1]) + '_' +'loadings' +'.js';
                     with open(filename_str,'w') as file:
                         file.write(json_str);
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + 'filter.js'
+        filename_str = filename[0]  + '/' +  experiment_id_I + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'w') as file:
             file.write(json_str);
 
@@ -199,7 +199,7 @@ class stage02_quantification_io(base_analysis):
                           time_points_I=[],concentration_units_I=[],
                           sample_name_shorts_I=[],component_group_names_I=[],
                         json_var_name='data',
-                        filename=['visualization/data/','/quantification/heatmap/','hcluster/']):
+                        filename=[settings.visualization_data,'/quantification/heatmap/','hcluster/']):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id
@@ -307,11 +307,11 @@ class stage02_quantification_io(base_analysis):
                 json_O['options'] = options_O;
                 # dump the data to a json file
                 json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-                filename_str = filename[0] + experiment_id_I + filename[1]+ filename[2] + tp + '_' + cu +'.js'
+                filename_str = filename[0]  + '/' +  experiment_id_I + filename[1]+ filename[2] + tp + '_' + cu +'.js'
                 with open(filename_str,'w') as file:
                     file.write(json_str);
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + 'filter.js'
+        filename_str = filename[0]  + '/' +  experiment_id_I + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'w') as file:
             file.write(json_str);
