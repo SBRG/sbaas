@@ -597,7 +597,7 @@ class stage02_isotopomer_query(base_analysis):
         except SQLAlchemyError as e:
             print(e);
     # query rows from data_stage02_isotopomer_simulation
-    def get_rows_experimentID_dataStage02IsotopomerSimulation(self,simulation_id_I):
+    def get_rows_simulationID_dataStage02IsotopomerSimulation(self,simulation_id_I):
         '''Querry rows that are used from the simulation'''
         try:
             data = query_session.query(data_stage02_isotopomer_simulation).filter(
@@ -618,7 +618,7 @@ class stage02_isotopomer_query(base_analysis):
             return rows_O;
         except SQLAlchemyError as e:
             print(e);
-    def get_simulation_experimentID_dataStage02IsotopomerSimulation(self,simulation_id_I):
+    def get_simulation_simulationID_dataStage02IsotopomerSimulation(self,simulation_id_I):
         '''Querry rows that are used from the simulation'''
         try:
             data = query_session.query(data_stage02_isotopomer_simulation).filter(

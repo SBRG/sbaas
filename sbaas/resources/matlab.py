@@ -226,11 +226,26 @@ class matlab_sampling(cobra_sampling):
         self.points = {};
         self.mixed_fraction = None;
         self.model = None;
+        self.simulation_dateAndTime = None;
         self.loops = {};
         self.calculate = base_calculate();
 
     def get_points_matlab(self,matlab_data,sampler_model_name):
         '''load sampling points from MATLAB'''
+
+        # extract information about the file
+        import os, time
+        from datetime import datetime
+        from stat import ST_SIZE, ST_MTIME
+        try:
+            st = os.stat(self.matlab_path + '/' + matlab_data)
+        except IOError:
+            print "failed to get information about", filename
+            return;
+        else:
+            file_size = st[ST_SIZE]
+            simulation_dateAndTime_struct = time.localtime(st[ST_MTIME])
+            simulation_dateAndTime = datetime.fromtimestamp(time.mktime(simulation_dateAndTime_struct))
 
         # load model from MATLAB file
         model = load_matlab_model(self.matlab_path + '/' + matlab_data,sampler_model_name);
@@ -260,28 +275,83 @@ class matlab_sampling(cobra_sampling):
         self.points = points_dict;
         self.model = model;
         self.mixed_fraction = mixed_fraction;
+        self.simulation_dateAndTime = simulation_dateAndTime;
 
-    def export_sampling_matlab(self,cobra_model,fraction_optimal = None, filename_model='sample_model.mat',filename_script='sample_script.m', filename_points='points.mat'):
+    def export_sampling_matlab(self,cobra_model,fraction_optimal = None, filename_model='sample_model.mat',filename_script='sample_script.m', filename_points='points.mat',
+                               solver_id_I='gurobi',n_points_I = None, n_steps_I = 20000, max_time_I = None):
         '''export model and script for sampling using matlab cobra_toolbox'''
         ## copy the model:
         #cobra_model_copy = cobra_model.copy();
+        # convert numerical input to string
+        n_points,n_steps,max_time = '[]','[]','[]';
+        if n_points_I:
+            n_points = n_points_I;
+        if n_steps_I:
+            n_steps = n_steps_I;
+        if max_time_I:
+            max_time = max_time_I;
         # confine the objective to a fraction of maximum optimal
         if fraction_optimal:
             # optimize
-            cobra_model.optimize(solver='gurobi');
+            cobra_model.optimize(solver_id_I);
             objective = [x.id for x in cobra_model.reactions if x.objective_coefficient == 1]
             cobra_model.reactions.get_by_id(objective[0]).upper_bound = fraction_optimal * cobra_model.solution.f;
         # write model to mat
         save_matlab_model(cobra_model,self.matlab_path + '/' + filename_model);
         ## write model to xml
         #write_sbml_model(cobra_model,'data/sampling/sampler.xml');
-        # write the sampling script to file\
-        mat_script = "% initialize with Tomlab_CPLEX\n"+\
-                      "load('" + self.matlab_path + '/' + filename_model + "')\n"+\
-                      "initCobraToolbox();\n"+\
-                      "% sample\n"+\
-                      "[sampler_out, mixedFrac] = gpSampler(" + cobra_model.description + ", [], [], [], [], [], true);\n"+\
-                      "[sampler_out, mixedFrac] = gpSampler(sampler_out, [], [], [], 20000, [], true);\n"+\
-                      "save('"+ self.matlab_path + '/' + filename_points + "','sampler_out', 'mixedFrac');";
+        # write the sampling script to file
+        #[sampleStructOut, mixedFraction] = gpSampler(sampleStruct, nPoints, bias, maxTime, maxSteps, threads, nPointsCheck)
+        mat_script = "% initialize with Tomlab_CPLEX\n";
+        mat_script +="load('" + self.matlab_path + '/' + filename_model + "')\n";
+        mat_script +="initCobraToolbox();\n";
+        mat_script +="% sample\n";
+        mat_script +="[sampler_out, mixedFrac] = gpSampler(" + cobra_model.description
+        mat_script +=(", %s, [], %s, %s, [], true);\n" %(n_points,n_steps,max_time));
+        mat_script +="[sampler_out, mixedFrac] = gpSampler(sampler_out";
+        mat_script +=(", %s, [], %s, %s, [], true);\n" %(n_points,n_steps,max_time));
+        mat_script +="save('"+ self.matlab_path + '/' + filename_points + "','sampler_out', 'mixedFrac');";
         with open(self.matlab_path + '/' + filename_script,'w') as f:
             f.write(mat_script);
+
+class cobra_sampling_difference(base_calculate):
+
+    def __init__(self,sampled_ave_1_I,sampled_ave_2_I,sampled_var_1_I,sampled_var_2_I,ci_level_I=0.95):
+        if sampled_ave_1_I: self.sampled_ave_1 = sampled_ave_1_I;
+        else: self.sampled_ave_1 = None;
+        if sampled_ave_2_I: self.sampled_ave_2 = sampled_ave_2_I;
+        else: self.sampled_ave_2 = None;
+        if sampled_var_1_I: self.sampled_var_1 = sampled_var_1_I;
+        else: self.sampled_var_1 = None;
+        if sampled_var_2_I: self.sampled_var_2 = sampled_var_2_I;
+        else: self.sampled_var_2 = None;
+        if ci_level_I: self.ci_level = ci_level_I;
+        else: ci_level_I=None;
+        self.sampled_delta_ave = None;
+        self.sampled_delta_var = None;
+        self.sampled_delta_lb = None;
+        self.sampled_delta_ub = None;
+        self.sampled_fold_change = None;
+        self.z_delta = None;
+        self.pvalue_delta = None;
+        self.sampled_delta_ave_metabolites = None;
+        self.sampled_delta_var_metabolites = None;
+        self.sampled_delta_lb_metabolites = None;
+        self.sampled_delta_ub_metabolites = None;
+        self.sampled_fold_change_metabolites = None;
+        self.z_delta_metabolites = None;
+        self.pvalue_delta_metabolites = None;
+        self.sampled_delta_ave_subsystems = None;
+        self.sampled_delta_var_subsystems = None;
+        self.sampled_delta_lb_subsystems = None;
+        self.sampled_delta_ub_subsystems = None;
+        self.sampled_fold_change_subsystems = None;
+        self.z_delta_subsystems = None;
+        self.pvalue_delta_subsystems = None;
+
+    def calculate_sampledZScore(self):
+        return
+    def calculate_reporterMetabolites(self):
+        return
+    def calculate_reporterSubsystems(self):
+        return

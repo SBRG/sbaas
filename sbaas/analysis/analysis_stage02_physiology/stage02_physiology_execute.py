@@ -146,7 +146,7 @@ class stage02_physiology_execute():
                                 'flux_stdev':0.0,
                                 'flux_lb':0.0, 
                                 'flux_ub':0.0,
-                                'flux_units':mmol*gDCW-1*hr-1,
+                                'flux_units':'mmol*gDCW-1*hr-1',
                                 'used_':True,
                                 'comment_':None}
                         data_O.append(data_tmp);
@@ -161,7 +161,7 @@ class stage02_physiology_execute():
                             0.0,
                             0.0, 
                             0.0,
-                            mmol*gDCW-1*hr-1,
+                            'mmol*gDCW-1*hr-1',
                             True,
                             None);
                         self.session.add(row);
@@ -228,12 +228,12 @@ class stage02_physiology_execute():
                     None);
                 self.session.add(row);
         self.session.commit();
-    def execute_sampling(self,experiment_id_I, model_ids_I = [],
+    def execute_sampling_v1(self,experiment_id_I, model_ids_I = [],
                                sample_name_abbreviations_I=[],
                                rxn_ids_I=[]):
-        '''Sample a specified model constrained to measured physiological data'''
+        '''Sample a specified model that is constrained to measured physiological data'''
         
-        print 'executing sampling...';
+        print 'executing sampling...';# get simulation information
         # get the model ids:
         if model_ids_I:
             model_ids = model_ids_I;
@@ -279,7 +279,7 @@ class stage02_physiology_execute():
                     self.sampling.export_sampling_matlab(cobra_model=cobra_model_copy,filename_model=filename_model,filename_script=filename_script,filename_points=filename_points);
                 else:
                     print 'no solution found!';  
-    def execute_analyzeSamplingPoints(self,experiment_id_I, model_ids_I = [],
+    def execute_analyzeSamplingPoints_v1(self,experiment_id_I, model_ids_I = [],
                                sample_name_abbreviations_I=[],
                                rxn_ids_I=[]):
         '''Load and analyze sampling points'''
@@ -377,6 +377,144 @@ class stage02_physiology_execute():
                 else:
                     print 'no solution found!';
         self.session.commit()  
+    def execute_sampling(self,simulation_id_I,
+                               rxn_ids_I=[]):
+        '''Sample a specified model that is constrained to measured physiological data'''
+        
+        print 'executing sampling...';
+        # get simulation information
+        simulation_info_all = [];
+        simulation_info_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id_I);
+        if not simulation_info_all:
+            print 'simulation not found!'
+            return;
+        simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get simulation parameters
+        simulation_parameters_all = [];
+        simulation_parameters_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulationParameters(simulation_id_I);
+        if not simulation_parameters_all:
+            print 'simulation not found!'
+            return;
+        simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get the cobra model
+        cobra_model = self.models[simulation_info['model_id']];
+        # copy the model
+        cobra_model_copy = cobra_model.copy();
+        # get rxn_ids
+        if rxn_ids_I:
+            rxn_ids = rxn_ids_I;
+        else:
+            rxn_ids = [];
+            rxn_ids = self.stage02_physiology_query.get_rows_experimentIDAndModelIDAndSampleNameAbbreviation_dataStage02PhysiologyMeasuredFluxes(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['sample_name_abbreviation']);
+        for rxn in rxn_ids:
+            # constrain the model
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).lower_bound = rxn['flux_lb'];
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).upper_bound = rxn['flux_ub'];
+        # Test model
+        if self.test_model(cobra_model_I=cobra_model_copy):
+            if simulation_parameters['sampler_id']=='gpSampler':
+                filename_model = simulation_id_I + '.mat';
+                filename_script = simulation_id_I + '.m';
+                filename_points = simulation_id_I + '_points' + '.mat';
+                self.sampling.export_sampling_matlab(cobra_model=cobra_model_copy,filename_model=filename_model,filename_script=filename_script,filename_points=filename_points,\
+                    solver_id_I = simulation_parameters['solver_id'],\
+                    n_points_I = simulation_parameters['n_points'],\
+                    n_steps_I = simulation_parameters['n_steps'],\
+                    max_time_I = simulation_parameters['max_time']);
+            elif simulation_parameters['sampler_id']=='optGpSampler':
+                return;
+            else:
+                print 'sampler_id not recognized';
+        else:
+            print 'no solution found!';  
+    def execute_analyzeSamplingPoints(self,simulation_id_I,
+                               rxn_ids_I=[]):
+        '''Load and analyze sampling points'''
+
+        print 'analyzing sampling points';
+        
+        # get simulation information
+        simulation_info_all = [];
+        simulation_info_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id_I);
+        if not simulation_info_all:
+            print 'simulation not found!'
+            return;
+        simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get simulation parameters
+        simulation_parameters_all = [];
+        simulation_parameters_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulationParameters(simulation_id_I);
+        if not simulation_parameters_all:
+            print 'simulation not found!'
+            return;
+        simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get the cobra model
+        cobra_model = self.models[simulation_info['model_id']];
+        # copy the model
+        cobra_model_copy = cobra_model.copy();
+        # get rxn_ids
+        if rxn_ids_I:
+            rxn_ids = rxn_ids_I;
+        else:
+            rxn_ids = [];
+            rxn_ids = self.stage02_physiology_query.get_rows_experimentIDAndModelIDAndSampleNameAbbreviation_dataStage02PhysiologyMeasuredFluxes(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['sample_name_abbreviation']);
+        for rxn in rxn_ids:
+            # constrain the model
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).lower_bound = rxn['flux_lb'];
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).upper_bound = rxn['flux_ub'];
+        # Test each model
+        if self.test_model(cobra_model_I=cobra_model_copy):
+            # load the results of sampling
+            filename_points = simulation_id_I + '_points' + '.mat';
+            self.sampling.get_points_matlab(filename_points,'sampler_out');
+            # check if the model contains loops
+            #loops_bool = self.sampling.check_loops();
+            self.sampling.simulate_loops(data_fva=settings.workspace_data + '/loops_fva_tmp.json');
+            self.sampling.find_loops(data_fva=settings.workspace_data + '/loops_fva_tmp.json');
+            self.sampling.remove_loopsFromPoints();
+            # add data to the database
+            for k,v in self.sampling.points.iteritems():
+                data_tmp = {'simulation_id':simulation_id_I,
+                    'rxn_id':k,
+                    'flux_units':'mmol*gDW-1*hr-1',
+                    'sampling_ave':v['ave'],
+                    'sampling_var':v['var'],
+                    'sampling_lb':v['lb'],
+                    'sampling_ub':v['ub'],
+                    'mixed_fraction':self.sampling.mixed_fraction,
+                    'sampling_points':v['points'],
+                    'data_dir':self.sampling.matlab_path+'/'+filename_points,
+                    'simulation_dateAndTime':self.sampling.simulation_dateAndTime,
+                    'used_':True,
+                    'comment_':None};
+                row = None;
+                row = data_stage02_physiology_sampledPoints(
+                    simulation_id_I,
+                    self.sampling.simulation_dateAndTime,
+                    k,
+                    'mmol*gDW-1*hr-1',
+                    self.sampling.mixed_fraction,
+                    #v['points'],
+                    None,
+                    self.sampling.matlab_path+'/'+filename_points,
+                    True,
+                    None);
+                self.session.add(row);
+                row = None;
+                row = data_stage02_physiology_sampledData(
+                    simulation_id_I,
+                    self.sampling.simulation_dateAndTime,
+                    k,
+                    'mmol*gDW-1*hr-1',
+                    v['ave'],
+                    v['var'],
+                    v['lb'],
+                    v['ub'],
+                    True,
+                    None);
+                self.session.add(row);
+        else:
+            print 'no solution found!';
+        self.session.commit()  
     #internal functions:
     def format_metid(self,met_id_I,compartment_id_I):
         met_formatted = met_id_I
@@ -463,9 +601,10 @@ class stage02_physiology_execute():
             data_stage02_physiology_simulatedData.__table__.drop(engine,True);
             data_stage02_physiology_sampledPoints.__table__.drop(engine,True);
             data_stage02_physiology_sampledData.__table__.drop(engine,True);
+            data_stage02_physiology_simulationParameters.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
-    def reset_dataStage02(self,experiment_id_I = None):
+    def reset_dataStage02(self,experiment_id_I = None,simulation_id_I=None):
         try:
             if experiment_id_I:
                 reset = self.session.query(data_stage02_physiology_simulation).filter(data_stage02_physiology_simulation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
@@ -476,6 +615,13 @@ class stage02_physiology_execute():
                 reset = self.session.query(data_stage02_physiology_sampledData).filter(data_stage02_physiology_sampledData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_physiology_modelReactions).filter(data_stage02_physiology_modelReactions.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_physiology_modelMetabolites).filter(data_stage02_physiology_modelMetabolites.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_simulationParameters).filter(data_stage02_physiology_simulationParameters.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            elif simulation_id_I:
+                reset = self.session.query(data_stage02_physiology_simulation).filter(data_stage02_physiology_simulation.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_simulatedData).filter(data_stage02_physiology_simulatedData.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledPoints).filter(data_stage02_physiology_sampledPoints.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledData).filter(data_stage02_physiology_sampledData.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_simulationParameters).filter(data_stage02_physiology_simulationParameters.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage02_physiology_simulation).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_physiology_models).delete(synchronize_session=False);
@@ -485,6 +631,7 @@ class stage02_physiology_execute():
                 reset = self.session.query(data_stage02_physiology_sampledData).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_physiology_modelReactions).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_physiology_modelMetabolites).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_simulationParameters).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -498,6 +645,29 @@ class stage02_physiology_execute():
             data_stage02_physiology_sampledData.__table__.create(engine,True);
             data_stage02_physiology_modelReactions.__table__.create(engine,True);
             data_stage02_physiology_modelMetabolites.__table__.create(engine,True);
+            data_stage02_physiology_simulationParameters.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     #TODO:
+    def execute_analyzeSamplingDifference(self,simulation_id_1_I,simulation_id_2_I):
+        '''z-score calculation based on doi:10.1186/1752-0509-3-37
+        1. z-score calculated for reaction flux delta
+        2. z-score calculated for reporter metabolites
+        3. z-score calculated for reporter subsystems'''
+
+        # get simulation information
+        simulation_info_1_all = [];
+        simulation_info_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id_1_I);
+        if not simulation_1_info_all:
+            print 'simulation not found!'
+            return;
+        simulation_1_info = simulation_1_info_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get simulation information
+        simulation_info_2_all = [];
+        simulation_info_2_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id_2_I);
+        if not simulation_2_info_all:
+            print 'simulation not found!'
+            return;
+        simulation_2_info = simulation_2_info_all[0]; # unique constraint guarantees only 1 row will be returned
+
+        # get simulation data

@@ -2427,7 +2427,7 @@ class stage02_isotopomer_io(base_analysis):
             simulation_dateAndTime = datetime.fromtimestamp(time.mktime(simulation_dateAndTime_struct))
         # lookup information about the simulation:
         simulation_info = {};
-        simulation_info = self.stage02_isotopomer_query.get_simulation_experimentID_dataStage02IsotopomerSimulation(simulation_id);
+        simulation_info = self.stage02_isotopomer_query.get_simulation_simulationID_dataStage02IsotopomerSimulation(simulation_id);
         # determine if the simulation is a parallel labeling experiment, non-stationary, or both
         parallel = False;
         non_stationary = False;

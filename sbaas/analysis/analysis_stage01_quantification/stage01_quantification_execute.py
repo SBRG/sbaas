@@ -421,7 +421,7 @@ class stage01_quantification_execute():
                     row = data_stage01_quantification_normalized(experiment_id_I, sn,sample_id,component_group_name,cn,calc_conc,calc_conc_units,True);
                     self.session.add(row);
             self.session.commit();
-    def execute_analyzeReplicates(self,experiment_id_I):
+    def execute_analyzeReplicates(self,experiment_id_I,sample_name_abbreviations_I=[],sample_names_I=[],component_names_I=[]):
         '''calculate the replicates by subtracting out the filtrate
         NOTE: data_stage01_quantification_normalized must be populated'''
         # Input:
@@ -435,14 +435,20 @@ class stage01_quantification_execute():
         
         print 'execute_analyzeReplicates...'
         # get sample_name_abbreviations
-        sample_name_abbreviations = [];
-        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Normalized(experiment_id_I);
+        if sample_name_abbreviations_I:
+            sample_name_abbreviations = sample_name_abbreviations_I
+        else:
+            sample_name_abbreviations = [];
+            sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Normalized(experiment_id_I);
         # create database table
         for sna in sample_name_abbreviations:
             print 'analyzing replicates for sample_name_abbreviation ' + sna;
             # get component names
-            component_names = [];
-            component_names = self.stage01_quantification_query.get_componentsNames_experimentIDAndSampleNameAbbreviation_dataStage01Normalized(experiment_id_I,sna);
+            if component_names_I:
+                component_names = component_names_I
+            else:
+                component_names = [];
+                component_names = self.stage01_quantification_query.get_componentsNames_experimentIDAndSampleNameAbbreviation_dataStage01Normalized(experiment_id_I,sna);
             for cn in component_names:
                 print 'analyzing replicates for component_name ' + cn;
                 component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName_dataStage01Normalized(experiment_id_I,cn);
@@ -454,6 +460,8 @@ class stage01_quantification_execute():
                     sample_names = [];
                     sample_description = 'Filtrate';
                     sample_names = self.stage01_quantification_query.get_sampleNames_experimentIDAndSampleNameAbbreviationAndSampleDescriptionAndComponentNameAndTimePoint_dataStage01Normalized(experiment_id_I,sna,sample_description,cn,tp);
+                    if sample_names_I: # screen out sample names that are not in the input
+                        sample_names = [x for x in sample_names if x in sample_names_I];
                     concs = [];
                     conc_units = None;
                     for sn in sample_names:
@@ -478,6 +486,8 @@ class stage01_quantification_execute():
                     sample_names = [];
                     sample_description = 'Broth';
                     sample_names = self.stage01_quantification_query.get_sampleNames_experimentIDAndSampleNameAbbreviationAndSampleDescriptionAndComponentNameAndTimePoint_dataStage01Normalized(experiment_id_I,sna,sample_description,cn,tp);
+                    if sample_names_I: # screen out sample names that are not in the input
+                        sample_names = [x for x in sample_names if x in sample_names_I];
                     for sn in sample_names:
                         print 'analyzing replicates for sample_name ' + sn;
                         # query concentrations and units
@@ -500,7 +510,7 @@ class stage01_quantification_execute():
                                                                 conc_broth, conc_units, True);
                         self.session.add(row);
         self.session.commit();
-    def execute_analyzeAverages(self,experiment_id_I):
+    def execute_analyzeAverages(self,experiment_id_I,sample_name_abbreviations_I=[],sample_names_I=[],component_names_I=[]):
         '''calculate the averages
         NOTE: data_stage01_quantification_normalized must be populated'''
         # Input:
@@ -516,13 +526,19 @@ class stage01_quantification_execute():
         
         print 'execute_analyzeAverages...'
         # get sample_name_abbreviations
-        sample_name_abbreviations = [];
-        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Normalized(experiment_id_I);
+        if sample_name_abbreviations_I:
+            sample_name_abbreviations = sample_name_abbreviations_I
+        else:
+            sample_name_abbreviations = [];
+            sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Normalized(experiment_id_I);
         for sna in sample_name_abbreviations:
             print 'analyzing averages for sample_name_abbreviation ' + sna;
             # get component names
-            component_names = [];
-            component_names = self.stage01_quantification_query.get_componentsNames_experimentIDAndSampleNameAbbreviation_dataStage01Normalized(experiment_id_I,sna);
+            if component_names_I:
+                component_names = component_names_I
+            else:
+                component_names = [];
+                component_names = self.stage01_quantification_query.get_componentsNames_experimentIDAndSampleNameAbbreviation_dataStage01Normalized(experiment_id_I,sna);
             for cn in component_names:
                 print 'analyzing averages for component_name ' + cn;
                 component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName_dataStage01Normalized(experiment_id_I,cn);
@@ -534,6 +550,8 @@ class stage01_quantification_execute():
                     sample_names = [];
                     sample_description = 'Filtrate';
                     sample_names = self.stage01_quantification_query.get_sampleNames_experimentIDAndSampleNameAbbreviationAndSampleDescriptionAndComponentNameAndTimePoint_dataStage01Normalized(experiment_id_I,sna,sample_description,cn,tp);
+                    if sample_names_I: # screen out sample names that are not in the input
+                        sample_names = [x for x in sample_names if x in sample_names_I];
                     concs = [];
                     conc_units = None;
                     for sn in sample_names:
@@ -565,6 +583,8 @@ class stage01_quantification_execute():
                     sample_names = [];
                     sample_description = 'Broth';
                     sample_names = self.stage01_quantification_query.get_sampleNames_experimentIDAndSampleNameAbbreviationAndSampleDescriptionAndComponentNameAndTimePoint_dataStage01Normalized(experiment_id_I,sna,sample_description,cn,tp);
+                    if sample_names_I: # screen out sample names that are not in the input
+                        sample_names = [x for x in sample_names if x in sample_names_I];
                     concs = [];
                     conc_units = None;
                     for sn in sample_names:

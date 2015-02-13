@@ -293,10 +293,12 @@ class stage02_physiology_io(base_analysis):
         if data_I:
             for d in data_I:
                 try:
-                    data_add = data_stage02_physiology_simulation(d['experiment_id'],
+                    data_add = data_stage02_physiology_simulation(d['simulation_id'],
+                        d['experiment_id'],
                         d['model_id'],
                         d['sample_name_abbreviation'],
                         #d['time_point'],
+                        d['simulation_type'],
                         d['used_'],
                         d['comment_']);
                     self.session.add(data_add);
@@ -319,16 +321,12 @@ class stage02_physiology_io(base_analysis):
                 try:
                     data_update = self.session.query(data_stage02_physiology_simulation).filter(
                             data_stage02_physiology_simulation.id.like(d['id'])).update(
-                            {'experiment_id':d['experiment_id'],
+                            {'simulation_id':d['simulation_id'],
+                             'experiment_id':d['experiment_id'],
                             'model_id':d['model_id'],
                             'sample_name_abbreviation':d['sample_name_abbreviation'],
                             #'time_point':d['time_point'],
-                            'compartment_id':d['compartment_id'],
-                            'pH':d['pH'],
-                            'temperature':d['temperature'],
-                            'temperature_units':d['temperature_units'],
-                            'ionic_strength':d['ionic_strength'],
-                            'ionic_strength_units':d['ionic_strength_units'],
+                             'simulation_type':d['simulation_type'],
                             'used_':d['used_'],
                             'comment_I':d['comment_I']},
                             synchronize_session=False);
@@ -387,7 +385,7 @@ class stage02_physiology_io(base_analysis):
     def export_samplingAnalysis_escher(self,experiment_id_I,model_ids_I=[],
                      model_ids_dict_I={},
                      sample_name_abbreviations_I=[],
-                     filename=['visualization/data/','/physiology/metabolicmap/','sampling/']):
+                     filename=[settings.visualization_data,'/physiology/metabolicmap/','sampling/']):
         '''export sampling data for visualization'''
         
         # get the model ids:
@@ -441,12 +439,12 @@ class stage02_physiology_io(base_analysis):
                     map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                     map = Builder(map_json=json.dumps(map_json), reaction_data=sampling_ave);
                     html_file = map._get_html(menu='all',enable_editing=True)
-                    filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + model_id + '_' + sna + '_' + map_id + '.html';
+                    filename_str = filename[0] + '/' + experiment_id_I + filename[1] + filename[2] + model_id + '_' + sna + '_' + map_id + '.html';
                     with open(filename_str,'w') as file:
                         file.write(html_file);
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + 'filter.js'
+        filename_str = filename[0] + '/' + experiment_id_I + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'w') as file:
             file.write(json_str);
 
@@ -454,7 +452,7 @@ class stage02_physiology_io(base_analysis):
                     model_ids_I=[],
                     model_ids_dict_I={},
                      sample_name_abbreviations_I=[],
-                     filename=['visualization/data/','/physiology/metabolicmap/','sampling/']):
+                     filename=[settings.visualization_data,'/physiology/metabolicmap/','sampling/']):
         '''export sampling data for visualization'''
         
         # get the model ids:
@@ -515,12 +513,12 @@ class stage02_physiology_io(base_analysis):
                     map = Builder(map_json=json.dumps(map_json), reaction_data=sampling_diff);
                     #html_file = map._get_html(scroll_behavior='zoom')
                     html_file = map._get_html(menu='all',enable_editing=True)
-                    filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + model_id + '_' + sample_name_abbreviation_base+'_vs_'+sna + '_' + map_id + '.html';
+                    filename_str = filename[0] + '/' + experiment_id_I + filename[1] + filename[2] + model_id + '_' + sample_name_abbreviation_base+'_vs_'+sna + '_' + map_id + '.html';
                     with open(filename_str,'w') as file:
                         file.write(html_file);
         # dump the filter data to a json file
         json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0] + experiment_id_I + filename[1] + filename[2] + 'filter.js'
+        filename_str = filename[0] + '/' + experiment_id_I + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'w') as file:
             file.write(json_str);
 
@@ -703,3 +701,64 @@ class stage02_physiology_io(base_analysis):
             metabolite_data.append(metabolite_data_tmp);
 
         return model_data,reaction_data,metabolite_data
+
+    def import_dataStage02PhysiologySimulationParameters_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_dataStage02PhysiologySimulationParameters(data.data);
+        data.clear_data();
+
+    def add_dataStage02PhysiologySimulationParameters(self, data_I):
+        '''add rows of data_stage02_physiology_simulationParameters'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = data_stage02_physiology_simulationParameters(
+                        d['simulation_id'],
+                        #None, #d['simulation_dateAndTime'],
+                        d['solver_id'],
+                        d['n_points'],
+                        d['n_steps'],
+                        d['max_time'],
+                        d['sampler_id'],
+                        #None,
+                        #None,
+                        d['used_'],
+                        d['comment_']);
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
+
+    def import_dataStage02PhysiologySimulationParameters_update(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.update_dataStage02PhysiologySimulationParameters(data.data);
+        data.clear_data();
+
+    def update_dataStage02PhysiologySimulationParameters(self,data_I):
+        '''update rows of data_stage02_physiology_simulationParameters'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_update = self.session.query(data_stage02_physiology_simulationParameters).filter(
+                            data_stage02_physiology_simulationParameters.id.like(d['id'])).update(
+                            {'simulation_id':d['simulation_id'],
+                             #'simulation_dateAndTime':d['simulation_dateAndTime'],
+                            'solver_id':d['solver_id'],
+                            'n_points':d['n_points'],
+                            'n_steps':d['n_steps'],
+                             'max_time':d['max_time'],
+                             'sampler_id':d['sampler_id'],
+                             #'solve_time':d['solve_time'],
+                             #'solve_time_units':d['solve_time_units'],
+                            'used_':d['used_'],
+                            'comment_I':d['comment_I']},
+                            synchronize_session=False);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();

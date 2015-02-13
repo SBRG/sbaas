@@ -551,7 +551,7 @@ class stage02_isotopomer_execute():
 
         # get simulation information
         simulation_info = {};
-        simulation_info = self.stage02_isotopomer_query.get_simulation_experimentID_dataStage02IsotopomerSimulation(simulation_id_I);
+        simulation_info = self.stage02_isotopomer_query.get_simulation_simulationID_dataStage02IsotopomerSimulation(simulation_id_I);
 
         # extract model/mapping info
         if len(simulation_info['model_id'])>1 or len(simulation_info['mapping_id'])>1:

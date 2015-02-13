@@ -1,4 +1,4 @@
-# models_stage03_quantification
+# models_stage03_physiology
 # i.e. thermodynamics
 
 # ORMs
@@ -9,10 +9,12 @@ from sqlalchemy.orm import relationship
 class data_stage02_physiology_simulatedData(Base):
     __tablename__ = 'data_stage02_physiology_simulatedData'
     id = Column(Integer, Sequence('data_stage02_physiology_simulatedData_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    rxn_id = Column(String(100), primary_key=True)
+    simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    rxn_id = Column(String(100))
     fba_flux = Column(Float);
     fva_minimum = Column(Float);
     fva_maximum = Column(Float);
@@ -22,14 +24,22 @@ class data_stage02_physiology_simulatedData(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    def __init__(self,experiment_id_I,model_id_I,
-            sample_name_abbreviation_I,rxn_id_I,fba_flux_I,
+    __table_args__ = (
+            UniqueConstraint('simulation_id','rxn_id','simulation_dateAndTime'),
+            )
+
+    def __init__(self,simulation_id_I,
+        simulation_dateAndTime_I,
+                 #experiment_id_I,model_id_I,
+                 #sample_name_abbreviation_I,
+                 rxn_id_I,fba_flux_I,
                  fva_minimum_I,fva_maximum_I,flux_units_I,
                  sra_gr_I,sra_gr_ratio_I,
                  used__I,comment__I):
-        self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.simulation_id=simulation_id_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
         self.rxn_id=rxn_id_I
         self.fba_flux=fba_flux_I
         self.fva_minimum=fva_minimum_I
@@ -41,9 +51,10 @@ class data_stage02_physiology_simulatedData(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
-                'model_id':self.model_id,
-            'sample_name_abbreviation':self.sample_name_abbreviation,
+        return {'simulation_id':self.simulation_id,
+            #    'experiment_id':self.experiment_id,
+            #    'model_id':self.model_id,
+            #'sample_name_abbreviation':self.sample_name_abbreviation,
                 'rxn_id':self.rxn_id,
                 'fba_flux':self.fba_flux,
                 'fva_minimum':self.fva_minimum,
@@ -60,32 +71,45 @@ class data_stage02_physiology_simulatedData(Base):
 class data_stage02_physiology_simulation(Base):
     __tablename__ = 'data_stage02_physiology_simulation'
     id = Column(Integer, Sequence('data_stage02_physiology_simulation_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    #time_point = Column(String(10), primary_key=True)
+    simulation_id = Column(String(500))
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    #time_point = Column(String(10))
+    simulation_type = Column(String); # sampling, fva, sra, fba, fba-loopless, pfba, etc.
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    def __init__(self,experiment_id_I,
+    __table_args__ = (
+            UniqueConstraint('experiment_id','model_id','sample_name_abbreviation'),
+            #UniqueConstraint('experiment_id','model_id','sample_name_abbreviation','time_point'),
+            UniqueConstraint('simulation_id'),
+            )
+
+    def __init__(self,simulation_id_I,
+                 experiment_id_I,
             model_id_I,
             sample_name_abbreviation_I,
             #time_point_I,
+            simulation_type_I,
             used__I,
             comment__I):
+        self.simulation_id=simulation_id_I
         self.experiment_id=experiment_id_I
         self.model_id=model_id_I
         self.sample_name_abbreviation=sample_name_abbreviation_I
         #self.time_point=time_point_I
+        self.simulation_type=simulation_type_I
         self.used_=used__I
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {
+        return {'simulation_id':self.simulation_id,
             'experiment_id':self.experiment_id,
             'model_id':self.model_id,
             'sample_name_abbreviation':self.sample_name_abbreviation,
-            #'time_point':self.time_point,
+            'time_point':self.time_point,
+            'simulation_type':self.simulation_type,
             'used_':self.used_,
             'comment_':self.comment_}
     
@@ -95,12 +119,16 @@ class data_stage02_physiology_simulation(Base):
 class data_stage02_physiology_models(Base):
     __tablename__ = 'data_stage02_physiology_models'
     id = Column(Integer, Sequence('data_stage02_physiology_models_id_seq'), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
+    model_id = Column(String(50))
     model_name = Column(String(100))
     model_description = Column(String(100))
     model_file = Column(Text)
     file_type = Column(String(50))
     date = Column(DateTime)
+
+    __table_args__ = (
+            UniqueConstraint('model_id'),
+            )
 
     def __init__(self,model_id_I,
             model_name_I,
@@ -129,8 +157,8 @@ class data_stage02_physiology_models(Base):
 class data_stage02_physiology_modelReactions(Base):
     __tablename__ = 'data_stage02_physiology_modelReactions'
     id = Column(Integer, Sequence('data_stage02_physiology_modelReactions_id_seq'), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    rxn_id = Column(String(50), primary_key=True)
+    model_id = Column(String(50))
+    rxn_id = Column(String(50))
     rxn_name = Column(String(255))
     equation = Column(String(4000));
     subsystem = Column(String(255));
@@ -147,6 +175,10 @@ class data_stage02_physiology_modelReactions(Base):
     reversibility = Column(Boolean)
     used_ = Column(Boolean)
     comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('model_id','rxn_id'),
+            )
 
     def __init__(self,model_id_I,
             rxn_id_I,
@@ -210,9 +242,9 @@ class data_stage02_physiology_modelReactions(Base):
 class data_stage02_physiology_modelMetabolites(Base):
     __tablename__ = 'data_stage02_physiology_modelMetabolites'
     id = Column(Integer, Sequence('data_stage02_physiology_modelMetabolites_id_seq'), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
+    model_id = Column(String(50))
     met_name = Column(String(500))
-    met_id = Column(String(50), primary_key=True)
+    met_id = Column(String(50))
     formula = Column(String(100))
     charge = Column(Integer)
     compartment = Column(String(50))
@@ -220,6 +252,10 @@ class data_stage02_physiology_modelMetabolites(Base):
     constraint_sense = Column(String(5))
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('model_id','met_id'),
+            )
 
     def __init__(self,model_id_I,
             met_name_I,
@@ -260,11 +296,11 @@ class data_stage02_physiology_modelMetabolites(Base):
 class data_stage02_physiology_measuredFluxes(Base):
     __tablename__ = 'data_stage02_physiology_measuredFluxes'
     id = Column(Integer, Sequence('data_stage02_physiology_measuredFluxes_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
+    experiment_id = Column(String(50))
     model_id = Column(String(50))
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    #time_point = Column(String(10), primary_key=True)
-    rxn_id = Column(String(100), primary_key=True)
+    sample_name_abbreviation = Column(String(100))
+    #time_point = Column(String(10))
+    rxn_id = Column(String(100))
     flux_average = Column(Float);
     flux_stdev = Column(Float);
     flux_lb = Column(Float); # based on 95% CI
@@ -272,6 +308,10 @@ class data_stage02_physiology_measuredFluxes(Base):
     flux_units = Column(String(50));
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('experiment_id','sample_name_abbreviation','rxn_id','model_id'),
+            )
 
     def __init__(self,experiment_id_I,
             model_id_I,
@@ -318,10 +358,12 @@ class data_stage02_physiology_measuredFluxes(Base):
 class data_stage02_physiology_sampledPoints(Base):
     __tablename__ = 'data_stage02_physiology_sampledPoints'
     id = Column(Integer, Sequence('data_stage02_physiology_sampledPoints_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    rxn_id = Column(String(100), primary_key=True)
+    simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    rxn_id = Column(String(100))
     flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1');
     mixed_fraction = Column(Float); #
     sampling_points = Column(postgresql.ARRAY(Float)); #
@@ -329,13 +371,22 @@ class data_stage02_physiology_sampledPoints(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    def __init__(self,experiment_id_I,model_id_I,
-            sample_name_abbreviation_I,rxn_id_I,flux_units_I,
+    __table_args__ = (
+            UniqueConstraint('simulation_id','rxn_id','simulation_dateAndTime'),
+            )
+
+    def __init__(self,simulation_id_I,
+        simulation_dateAndTime_I,
+        #experiment_id_I,model_id_I,
+        #    sample_name_abbreviation_I,
+            rxn_id_I,flux_units_I,
             mixed_fraction_I,sampling_points_I,data_dir_I,
                  used__I,comment__I):
-        self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
         self.rxn_id=rxn_id_I
         self.flux_units=flux_units_I
         self.mixed_fraction=mixed_fraction_I
@@ -345,9 +396,11 @@ class data_stage02_physiology_sampledPoints(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
-                'model_id':self.model_id,
-            'sample_name_abbreviation':self.sample_name_abbreviation,
+        return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
+        #'experiment_id':self.experiment_id,
+        #        'model_id':self.model_id,
+        #    'sample_name_abbreviation':self.sample_name_abbreviation,
                 'rxn_id':self.rxn_id,
                 'flux_units':self.flux_units,
                 'sampling_points':self.sampling_points,
@@ -360,10 +413,12 @@ class data_stage02_physiology_sampledPoints(Base):
 class data_stage02_physiology_sampledData(Base):
     __tablename__ = 'data_stage02_physiology_sampledData'
     id = Column(Integer, Sequence('data_stage02_physiology_sampledData_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    rxn_id = Column(String(100), primary_key=True)
+    simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    rxn_id = Column(String(100))
     flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1');
     sampling_ave = Column(Float);
     sampling_var = Column(Float);
@@ -372,13 +427,22 @@ class data_stage02_physiology_sampledData(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    def __init__(self,experiment_id_I,model_id_I,
-            sample_name_abbreviation_I,rxn_id_I,flux_units_I,
+    __table_args__ = (
+            UniqueConstraint('simulation_id','rxn_id','simulation_dateAndTime'),
+            )
+
+    def __init__(self,simulation_id_I,
+        simulation_dateAndTime_I,
+        #experiment_id_I,model_id_I,
+        #    sample_name_abbreviation_I,
+            rxn_id_I,flux_units_I,
                  sampling_ave_I,sampling_var_I,sampling_lb_I,sampling_ub_I,
                  used__I,comment__I):
-        self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
         self.rxn_id=rxn_id_I
         self.flux_units=flux_units_I
         self.sampling_ave=sampling_ave_I
@@ -389,9 +453,11 @@ class data_stage02_physiology_sampledData(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
-                'model_id':self.model_id,
-            'sample_name_abbreviation':self.sample_name_abbreviation,
+        return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
+        #'experiment_id':self.experiment_id,
+        #        'model_id':self.model_id,
+        #    'sample_name_abbreviation':self.sample_name_abbreviation,
                 'rxn_id':self.rxn_id,
                 'flux_units':self.flux_units,
                 'sampling_ave':self.sampling_ave,
@@ -403,3 +469,368 @@ class data_stage02_physiology_sampledData(Base):
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
+
+class data_stage02_physiology_simulationParameters(Base):
+    __tablename__ = 'data_stage02_physiology_simulationParameters'
+    id = Column(Integer, Sequence('data_stage02_physiology_simulationParameters_id_seq'), primary_key=True)
+    simulation_id = Column(String(500))
+    #simulation_dateAndTime = Column(DateTime);
+    solver_id = Column(String);
+    n_points = Column(Integer); # sampling-specific
+    n_steps = Column(Integer); # sampling-specific
+    max_time = Column(Float); # sampling-specific
+    sampler_id = Column(String); # sampling-specific; gpSampler (Matlab) opGpSampler (Python)
+    #solve_time = Column(Float);
+    #solve_time_units = Column(String);
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('simulation_id'),
+            )
+
+    def __init__(self,
+                 simulation_id_I,
+        #simulation_dateAndTime_I,
+        solver_id_I,
+        n_points_I,
+        n_steps_I,
+        max_time_I,
+        sampler_id_I,
+        #solve_time_I,
+        #solve_time_units_I,
+        used__I,comment__I):
+        self.simulation_id=simulation_id_I
+        #self.simulation_dateAndTime=simulation_dateAndTime_I
+        self.solver_id=solver_id_I
+        self.n_points=n_points_I
+        self.n_steps=n_steps_I
+        self.max_time=max_time_I
+        self.sampler_id=sampler_id_I
+        #self.solve_time=solve_time_I
+        #self.solve_time_units=solve_time_units_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id':self.simulation_id,
+            #'simulation_dateAndTime':self.simulation_dateAndTime,
+            'solver_id':self.solver_id,
+            'n_points':self.n_points,
+            'n_steps':self.n_steps,
+            'max_time':self.max_time,
+            'sampler_id':self.sampler_id,
+            #'solve_time':self.solve_time,
+            #'solve_time_units':self.solve_time_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+#TODO:
+class data_stage02_physiology_sampledPoints_pairWiseTest(Base):
+    __tablename__ = 'data_stage02_physiology_sampledPoints_pairWiseTest'
+    id = Column(Integer, Sequence('data_stage02_physiology_sampledPoints_pairWiseTest_id_seq'), primary_key=True)
+    simulation_id_1 = Column(String(500))
+    simulation_id_2 = Column(String(500))
+    #simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    rxn_id = Column(String(100))
+    flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1');
+    test_stat = Column(Float)
+    test_description = Column(String(50));
+    pvalue = Column(Float)
+    pvalue_corrected = Column(Float)
+    pvalue_corrected_description = Column(String(500))
+    mean = Column(Float)
+    ci_lb = Column(Float)
+    ci_ub = Column(Float)
+    ci_level = Column(Float)
+    fold_change = Column(Float)
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('simulation_id_1','simulation_id_2','rxn_id'),
+            )
+
+    def __init__(self,simulation_id_1_I,simulation_id_2_I,
+        #simulation_dateAndTime_I,
+        #experiment_id_I,model_id_I,
+        #    sample_name_abbreviation_I,
+            rxn_id_I,flux_units_I,
+                 mean_I, test_stat_I, test_description_I,
+                 pvalue_I, pvalue_corrected_I, pvalue_corrected_description_I,
+                 ci_lb_I, ci_ub_I, ci_level_I,
+                 fold_change_I,
+                 used__I,comment__I):
+        self.simulation_id_1=simulation_id_1_I
+        self.simulation_id_2=simulation_id_2_I
+        #self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.rxn_id=rxn_id_I
+        self.flux_units=flux_units_I
+        self.mean=mean_I;
+        self.test_stat=test_stat_I;
+        self.test_description=test_description_I;
+        self.pvalue=pvalue_I;
+        self.pvalue_corrected=pvalue_corrected_I;
+        self.pvalue_corrected_description=pvalue_corrected_description_I;
+        self.ci_lb=ci_lb_I;
+        self.ci_ub=ci_ub_I;
+        self.ci_level=ci_level_I;
+        self.fold_change=fold_change_I;
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id_1':self.simulation_id_1,
+                'simulation_id_2':self.simulation_id_2,
+        #       'simulation_dateAndTime':self.simulation_dateAndTime,
+        #       'experiment_id':self.experiment_id,
+        #        'model_id':self.model_id,
+        #       'sample_name_abbreviation':self.sample_name_abbreviation,
+                'rxn_id':self.rxn_id,
+                'flux_units':self.flux_units,
+                'sampling_delta_ave':self.sampling_delta_ave,
+                'sampling_delta_var':self.sampling_delta_var,
+                'sampling_delta_lb':self.sampling_delta_lb,
+                'sampling_delta_ub':self.sampling_delta_ub,
+                'z_delta':self.z_delta,
+                'pvalue_delta':self.pvalue_delta,
+                'used_':self.used_,
+                'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+class data_stage02_physiology_sampledPoints_reporterMetabolites(Base):
+    __tablename__ = 'data_stage02_physiology_sampledPoints_reporterMetabolites'
+    id = Column(Integer, Sequence('data_stage02_physiology_sampledPoints_reporterMetabolites_id_seq'), primary_key=True)
+    simulation_id_1 = Column(String(500))
+    simulation_id_2 = Column(String(500))
+    #simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    met_id = Column(String(100))
+    flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1');
+    test_stat = Column(Float)
+    test_description = Column(String(50));
+    pvalue = Column(Float)
+    pvalue_corrected = Column(Float)
+    pvalue_corrected_description = Column(String(500))
+    mean = Column(Float)
+    ci_lb = Column(Float)
+    ci_ub = Column(Float)
+    ci_level = Column(Float)
+    fold_change = Column(Float)
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('simulation_id_1','simulation_id_2','met_id'),
+            )
+
+    def __init__(self,simulation_id_1_I,simulation_id_2_I,
+        #simulation_dateAndTime_I,
+        #experiment_id_I,model_id_I,
+        #    sample_name_abbreviation_I,
+            met_id_I,flux_units_I,
+                 mean_I, test_stat_I, test_description_I,
+                 pvalue_I, pvalue_corrected_I, pvalue_corrected_description_I,
+                 ci_lb_I, ci_ub_I, ci_level_I,
+                 fold_change_I,
+                 used__I,comment__I):
+        self.simulation_id_1=simulation_id_1_I
+        self.simulation_id_2=simulation_id_2_I
+        #self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.met_id=met_id_I
+        self.flux_units=flux_units_I
+        self.mean=mean_I;
+        self.test_stat=test_stat_I;
+        self.test_description=test_description_I;
+        self.pvalue=pvalue_I;
+        self.pvalue_corrected=pvalue_corrected_I;
+        self.pvalue_corrected_description=pvalue_corrected_description_I;
+        self.ci_lb=ci_lb_I;
+        self.ci_ub=ci_ub_I;
+        self.ci_level=ci_level_I;
+        self.fold_change=fold_change_I;
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id_1':self.simulation_id_1,
+                'simulation_id_2':self.simulation_id_2,
+        #'simulation_dateAndTime':self.simulation_dateAndTime,
+        #'experiment_id':self.experiment_id,
+        #        'model_id':self.model_id,
+        #    'sample_name_abbreviation':self.sample_name_abbreviation,
+                'met_id':self.met_id,
+                'flux_units':self.flux_units,
+                'sampling_delta_ave':self.sampling_delta_ave,
+                'sampling_delta_var':self.sampling_delta_var,
+                'sampling_delta_lb':self.sampling_delta_lb,
+                'sampling_delta_ub':self.sampling_delta_ub,
+                'z_delta':self.z_delta,
+                'pvalue_delta':self.pvalue_delta,
+                'used_':self.used_,
+                'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+class data_stage02_physiology_sampledPoints_reporterSubsystems(Base):
+    __tablename__ = 'data_stage02_physiology_sampledPoints_reporterSubsystemss'
+    id = Column(Integer, Sequence('data_stage02_physiology_sampledPoints_reporterSubsystems_id_seq'), primary_key=True)
+    simulation_id_1 = Column(String(500))
+    simulation_id_2 = Column(String(500))
+    #simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    subsystem_id = Column(String(100))
+    flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1');
+    test_stat = Column(Float)
+    test_description = Column(String(50));
+    pvalue = Column(Float)
+    pvalue_corrected = Column(Float)
+    pvalue_corrected_description = Column(String(500))
+    mean = Column(Float)
+    ci_lb = Column(Float)
+    ci_ub = Column(Float)
+    ci_level = Column(Float)
+    fold_change = Column(Float)
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('simulation_id_1','simulation_id_2','subsystem_id'),
+            )
+
+    def __init__(self,simulation_id_1_I,simulation_id_2_I,
+        #simulation_dateAndTime_I,
+        #experiment_id_I,model_id_I,
+        #    sample_name_abbreviation_I,
+            subsystem_id_I,flux_units_I,
+                 mean_I, test_stat_I, test_description_I,
+                 pvalue_I, pvalue_corrected_I, pvalue_corrected_description_I,
+                 ci_lb_I, ci_ub_I, ci_level_I,
+                 fold_change_I,
+                 used__I,comment__I):
+        self.simulation_id_1=simulation_id_1_I
+        self.simulation_id_2=simulation_id_2_I
+        #self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.subsystem_id=subsystem_id_I
+        self.flux_units=flux_units_I
+        self.mean=mean_I;
+        self.test_stat=test_stat_I;
+        self.test_description=test_description_I;
+        self.pvalue=pvalue_I;
+        self.pvalue_corrected=pvalue_corrected_I;
+        self.pvalue_corrected_description=pvalue_corrected_description_I;
+        self.ci_lb=ci_lb_I;
+        self.ci_ub=ci_ub_I;
+        self.ci_level=ci_level_I;
+        self.fold_change=fold_change_I;
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id_1':self.simulation_id_1,
+                'simulation_id_2':self.simulation_id_2,
+        #'simulation_dateAndTime':self.simulation_dateAndTime,
+        #'experiment_id':self.experiment_id,
+        #        'model_id':self.model_id,
+        #    'sample_name_abbreviation':self.sample_name_abbreviation,
+                'subsystem_id':self.subsystem_id,
+                'flux_units':self.flux_units,
+                'sampling_delta_ave':self.sampling_delta_ave,
+                'sampling_delta_var':self.sampling_delta_var,
+                'sampling_delta_lb':self.sampling_delta_lb,
+                'sampling_delta_ub':self.sampling_delta_ub,
+                'z_delta':self.z_delta,
+                'pvalue_delta':self.pvalue_delta,
+                'used_':self.used_,
+                'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+#TODO: data_stage02_physiology_sampledPoints_svd
+
+class data_stage02_physiology_pca_scores(Base):
+    __tablename__ = 'data_stage02_physiology_pca_scores'
+    id = Column(Integer, Sequence('data_stage02_physiology_pca_scores_id_seq'), primary_key=True)
+    simulation_id = Column(String(500))
+    score = Column(Float);
+    axis = Column(Integer);
+    var_proportion = Column(Float);
+    var_cumulative = Column(Float);
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    def __init__(self, simulation_id_I,
+                 score_I, axis_I,
+                 var_proportion_I, var_cumulative_I,
+                 used_I, comment_I):
+        self.simulation_id_id = simulation_id_id_I;
+        self.score=score_I
+        self.axis=axis_I
+        self.var_proportion=var_proportion_I
+        self.var_cumulative=var_cumulative_I
+        self.used_ = used_I;
+        self.comment_ = comment_I;
+
+    def __repr__dict__(self): # not complete!
+        return {'simulation_id_I':self.experiment_id,
+                #...
+                'used_I':self.used_,
+                'comments_I':self.comments_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+class data_stage02_physiology_pca_loadings(Base):
+    __tablename__ = 'data_stage02_physiology_pca_loadings'
+    id = Column(Integer, Sequence('data_stage02_physiology_pca_loadings_id_seq'), primary_key=True)
+    simulation_id = Column(String(500))
+    time_point = Column(String(10))
+    rxn_id = Column(String(100))
+    loadings = Column(Float);
+    axis = Column(Integer)
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    def __init__(self, simulation_id_I,
+                 rxn_id_I,
+                 loadings_I, axis_I,  
+                 used_I, comment_I):
+        self.simulation_id = simulation_id_I;
+        self.rxn_id = rxn_id_I;
+        self.loadings=loadings_I
+        self.axis=axis_I
+        self.used_ = used_I;
+        self.comment_ = comment_I;
+
+    def __repr__dict__(self): # not complete!
+        return {'simulation_id_I':self.simulation_id,
+                #...
+                'used_I':self.used_,
+                'comments_I':self.comments_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
