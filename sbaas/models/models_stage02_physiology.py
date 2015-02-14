@@ -357,41 +357,36 @@ class data_stage02_physiology_measuredFluxes(Base):
 
 class data_stage02_physiology_sampledPoints(Base):
     __tablename__ = 'data_stage02_physiology_sampledPoints'
-    id = Column(Integer, Sequence('data_stage02_physiology_sampledPoints_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('data_stage02_physiology_sampledData_id_seq'), primary_key=True)
     simulation_id = Column(String(500))
     simulation_dateAndTime = Column(DateTime);
     #experiment_id = Column(String(50))
     #model_id = Column(String(50))
     #sample_name_abbreviation = Column(String(100))
-    rxn_id = Column(String(100))
-    flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1');
-    mixed_fraction = Column(Float); #
-    sampling_points = Column(postgresql.ARRAY(Float)); #
+    mixed_fraction = Column(Float);
     data_dir = Column(String(500)); #
+    infeasible_loops = Column(postgresql.ARRAY(String));
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
     __table_args__ = (
-            UniqueConstraint('simulation_id','rxn_id','simulation_dateAndTime'),
+            UniqueConstraint('simulation_id','simulation_dateAndTime'),
             )
 
     def __init__(self,simulation_id_I,
         simulation_dateAndTime_I,
         #experiment_id_I,model_id_I,
         #    sample_name_abbreviation_I,
-            rxn_id_I,flux_units_I,
-            mixed_fraction_I,sampling_points_I,data_dir_I,
+            mixed_fraction_I,data_dir_I,infeasible_loops_I,
                  used__I,comment__I):
         self.simulation_id=simulation_id_I
         self.simulation_dateAndTime=simulation_dateAndTime_I
         #self.experiment_id=experiment_id_I
         #self.model_id=model_id_I
         #self.sample_name_abbreviation=sample_name_abbreviation_I
-        self.rxn_id=rxn_id_I
-        self.flux_units=flux_units_I
         self.mixed_fraction=mixed_fraction_I
-        self.sampling_points=sampling_points_I
         self.data_dir=data_dir_I
+        self.infeasible_loops=infeasible_loops_I
         self.used_=used__I
         self.comment_=comment__I
 
@@ -401,9 +396,8 @@ class data_stage02_physiology_sampledPoints(Base):
         #'experiment_id':self.experiment_id,
         #        'model_id':self.model_id,
         #    'sample_name_abbreviation':self.sample_name_abbreviation,
-                'rxn_id':self.rxn_id,
-                'flux_units':self.flux_units,
-                'sampling_points':self.sampling_points,
+                'data_dir':self.data_dir,
+                'infeasible_loops':self.infeasible_loops,
                 'used_':self.used_,
                 'comment_':self.comment_}
     
@@ -420,10 +414,16 @@ class data_stage02_physiology_sampledData(Base):
     #sample_name_abbreviation = Column(String(100))
     rxn_id = Column(String(100))
     flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1');
+    sampling_points = Column(postgresql.ARRAY(Float)); #
     sampling_ave = Column(Float);
     sampling_var = Column(Float);
     sampling_lb = Column(Float);
     sampling_ub = Column(Float);
+    sampling_min = Column(Float);
+    sampling_max = Column(Float);
+    sampling_median = Column(Float);
+    sampling_iq_1 = Column(Float);
+    sampling_iq_3 = Column(Float);
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
@@ -435,8 +435,10 @@ class data_stage02_physiology_sampledData(Base):
         simulation_dateAndTime_I,
         #experiment_id_I,model_id_I,
         #    sample_name_abbreviation_I,
-            rxn_id_I,flux_units_I,
+            rxn_id_I,flux_units_I,sampling_points_I,
                  sampling_ave_I,sampling_var_I,sampling_lb_I,sampling_ub_I,
+                 sampling_min_I,sampling_max_I,sampling_median_I,
+                 sampling_iq_1_I,sampling_iq_3_I,
                  used__I,comment__I):
         self.simulation_id=simulation_id_I
         self.simulation_dateAndTime=simulation_dateAndTime_I
@@ -445,10 +447,16 @@ class data_stage02_physiology_sampledData(Base):
         #self.sample_name_abbreviation=sample_name_abbreviation_I
         self.rxn_id=rxn_id_I
         self.flux_units=flux_units_I
+        self.sampling_points=sampling_points_I
         self.sampling_ave=sampling_ave_I
         self.sampling_var=sampling_var_I
         self.sampling_lb=sampling_lb_I
         self.sampling_ub=sampling_ub_I
+        self.sampling_min=sampling_min_I
+        self.sampling_max=sampling_max_I
+        self.sampling_median=sampling_median_I
+        self.sampling_iq_1=sampling_iq_1_I
+        self.sampling_iq_3=sampling_iq_3_I
         self.used_=used__I
         self.comment_=comment__I
 
@@ -460,10 +468,16 @@ class data_stage02_physiology_sampledData(Base):
         #    'sample_name_abbreviation':self.sample_name_abbreviation,
                 'rxn_id':self.rxn_id,
                 'flux_units':self.flux_units,
+                'sampling_points':self.sampling_points,
                 'sampling_ave':self.sampling_ave,
                 'sampling_var':self.sampling_var,
                 'sampling_lb':self.sampling_lb,
                 'sampling_ub':self.sampling_ub,
+                'sampling_max':self.sampling_max,
+                'sampling_min':self.sampling_min,
+                'sampling_median':self.sampling_median,
+                'sampling_iq_1':self.sampling_iq_1,
+                'sampling_iq_3':self.sampling_iq_3,
                 'used_':self.used_,
                 'comment_':self.comment_}
     
@@ -529,9 +543,9 @@ class data_stage02_physiology_simulationParameters(Base):
         return json.dumps(self.__repr__dict__())
 
 #TODO:
-class data_stage02_physiology_sampledPoints_pairWiseTest(Base):
-    __tablename__ = 'data_stage02_physiology_sampledPoints_pairWiseTest'
-    id = Column(Integer, Sequence('data_stage02_physiology_sampledPoints_pairWiseTest_id_seq'), primary_key=True)
+class data_stage02_physiology_pairWiseTest(Base):
+    __tablename__ = 'data_stage02_physiology_pairWiseTest'
+    id = Column(Integer, Sequence('data_stage02_physiology_pairWiseTest_id_seq'), primary_key=True)
     simulation_id_1 = Column(String(500))
     simulation_id_2 = Column(String(500))
     #simulation_dateAndTime = Column(DateTime);
@@ -609,9 +623,9 @@ class data_stage02_physiology_sampledPoints_pairWiseTest(Base):
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
 
-class data_stage02_physiology_sampledPoints_reporterMetabolites(Base):
-    __tablename__ = 'data_stage02_physiology_sampledPoints_reporterMetabolites'
-    id = Column(Integer, Sequence('data_stage02_physiology_sampledPoints_reporterMetabolites_id_seq'), primary_key=True)
+class data_stage02_physiology_pairWiseTestMetabolites(Base):
+    __tablename__ = 'data_stage02_physiology_pairWiseTestMetabolites'
+    id = Column(Integer, Sequence('data_stage02_physiology_pairWiseTestMetabolites_id_seq'), primary_key=True)
     simulation_id_1 = Column(String(500))
     simulation_id_2 = Column(String(500))
     #simulation_dateAndTime = Column(DateTime);
@@ -689,9 +703,9 @@ class data_stage02_physiology_sampledPoints_reporterMetabolites(Base):
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
 
-class data_stage02_physiology_sampledPoints_reporterSubsystems(Base):
-    __tablename__ = 'data_stage02_physiology_sampledPoints_reporterSubsystemss'
-    id = Column(Integer, Sequence('data_stage02_physiology_sampledPoints_reporterSubsystems_id_seq'), primary_key=True)
+class data_stage02_physiology_pairWiseTestSubsystems(Base):
+    __tablename__ = 'data_stage02_physiology_pairWiseTestSubsystems'
+    id = Column(Integer, Sequence('data_stage02_physiology_pairWiseTestSubsystems_id_seq'), primary_key=True)
     simulation_id_1 = Column(String(500))
     simulation_id_2 = Column(String(500))
     #simulation_dateAndTime = Column(DateTime);
@@ -769,11 +783,12 @@ class data_stage02_physiology_sampledPoints_reporterSubsystems(Base):
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
 
-#TODO: data_stage02_physiology_sampledPoints_svd
+#TODO: data_stage02_physiology_sampledData_svd
 
 class data_stage02_physiology_pca_scores(Base):
     __tablename__ = 'data_stage02_physiology_pca_scores'
     id = Column(Integer, Sequence('data_stage02_physiology_pca_scores_id_seq'), primary_key=True)
+    simulation_group_id = Column(String(50))
     simulation_id = Column(String(500))
     score = Column(Float);
     axis = Column(Integer);
@@ -782,11 +797,13 @@ class data_stage02_physiology_pca_scores(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    def __init__(self, simulation_id_I,
+    def __init__(self, simulation_group_id_I,
+                 simulation_id_I,
                  score_I, axis_I,
                  var_proportion_I, var_cumulative_I,
                  used_I, comment_I):
-        self.simulation_id_id = simulation_id_id_I;
+        self.simulation_group_id = simulation_group_id_I;
+        self.simulation_id = simulation_id_I;
         self.score=score_I
         self.axis=axis_I
         self.var_proportion=var_proportion_I
@@ -806,18 +823,19 @@ class data_stage02_physiology_pca_scores(Base):
 class data_stage02_physiology_pca_loadings(Base):
     __tablename__ = 'data_stage02_physiology_pca_loadings'
     id = Column(Integer, Sequence('data_stage02_physiology_pca_loadings_id_seq'), primary_key=True)
-    simulation_id = Column(String(500))
-    time_point = Column(String(10))
+    simulation_group_id = Column(String(50))
     rxn_id = Column(String(100))
     loadings = Column(Float);
     axis = Column(Integer)
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    def __init__(self, simulation_id_I,
+    def __init__(self, simulation_group_id_I,
+                 simulation_id_I,
                  rxn_id_I,
                  loadings_I, axis_I,  
                  used_I, comment_I):
+        self.simulation_group_id = simulation_group_id_I;
         self.simulation_id = simulation_id_I;
         self.rxn_id = rxn_id_I;
         self.loadings=loadings_I

@@ -65,7 +65,6 @@ class matplot():
 
         plt.show()
     def volcanoPlot(self,title_I,xlabel_I,ylabel_I,x_data_I,y_data_I,text_labels_I):
-        #TODO: Test
         # Create a Figure object.
         fig = plt.figure()
         # Create an Axes object.
@@ -386,5 +385,12 @@ class matplot():
             #ax.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
             ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
+        plt.show()
+    def histogram(self,data_I,title_I=None,label_I=None,bins_I=50,range_I=None):
+        '''Generate a histogram using matplotlib'''
+
+        plt.figure()
+        n, bins, patches = plt.hist(data_I,bins_I,label = label_I)
+        plt.legend()
         plt.show()
         

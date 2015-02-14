@@ -7,6 +7,7 @@ import matplotlib.pyplot as pp
 from scipy import linspace, sin
 from scipy.interpolate import splrep, splev
 import numpy
+import numpy.random as npr
 import json
 
 from scipy.spatial.distance import pdist, squareform
@@ -20,7 +21,7 @@ from Bio.Statistics import lowess
 
 class base_calculate(base_analysis):
     def __init__(self):
-        self.session = Session();
+        self.data=[];
 
     # calculations
     # biomass normalization
@@ -60,6 +61,7 @@ class base_calculate(base_analysis):
         cultureDensity_units_O = conversion_units_I.replace('*OD600-1','');
         return cultureDensity_O, cultureDensity_units_O;
 
+    # statistical analysis
     # calculate the geometric mean and variance:
     def calculate_ave_var_geometric(self,data_I):
         # calculate the geometric average and var of data
@@ -122,6 +124,63 @@ class base_calculate(base_analysis):
         except Exception as e:
             print(e);
             exit(-1);
+    # calculate the confidence intervals
+    def calculate_ciFromPoints(self,data_I, alpha=0.05):
+        """Calculate the confidence intervals from sampled points"""
+        data_sorted = numpy.sort(data_I)
+        n = len(data_sorted)
+        lb = data_sorted[int((alpha/2.0)*n)]
+        ub = data_sorted[int((1-alpha/2.0)*n)]
+        return lb,ub
+    def bootstrap(self,data, num_samples=100000, statistic=numpy.mean, alpha=0.05):
+        """Returns bootstrap estimate of 100.0*(1-alpha) CI for statistic."""
+        n = len(data)
+        idx = npr.randint(0, n, (num_samples, n))
+        samples = data[idx]
+        stat = numpy.sort(statistic(samples, 1))
+        return (stat[int((alpha/2.0)*num_samples)],
+                stat[int((1-alpha/2.0)*num_samples)])
+    # calculate the p-value difference
+    def permutation_resampling(self,case, control, num_samples=50, statistic=numpy.mean):
+        '''calculate the pvalue of two data sets using a resampling approach'''
+
+        observed_diff = abs(statistic(case) - statistic(control))
+        num_case = len(case)
+
+        combined = numpy.concatenate([case, control])
+        diffs = []
+        for i in range(num_samples):
+            xs = npr.permutation(combined)
+            diff = numpy.mean(xs[:num_case]) - numpy.mean(xs[num_case:])
+            diffs.append(diff)
+
+        pval = (numpy.sum(diffs > observed_diff) +
+                numpy.sum(diffs < -observed_diff))/float(num_samples)
+        return pval, observed_diff, diffs
+    def calculate_pvalue_permutation(self,data_1_I,data_2_I,n_permutations=50):    
+        '''calculate the pvalue of two data sets using a permutation test'''
+    
+        vals = []
+        for i in range(0,n_permutations):
+            cond1 = numpy.random.permutation(data_1_I)
+            cond2 = numpy.random.permutation(data_2_I)
+            z = cond1 - cond2
+            x = len(z[z>0]) + 1
+            y = len(z[z<0]) + 1
+            k = min(x,y)
+            vals.append(k)
+        p = numpy.mean(vals)/len(data_1_I)*2
+        return p;
+    # calculate the interquartiles
+    def calculate_interquartiles(self,data_I,iq_range_I = [25,75]):
+        '''compute the interquartiles and return the min, max, median, iq1 and iq3'''
+
+        min_O = numpy.min(data_I);
+        max_O = numpy.max(data_I);
+        iq_1_O, iq_2_O = numpy.percentile(data_I, iq_range_I)
+        median_O = numpy.median(data_I);
+
+        return min_O, max_O, median_O, iq_1_O, iq_2_O;
 
     # linear regression
     def calculate_regressionParameters(self,concentrations_I,ratios_I,dilution_factors_I,fit_I,weighting_I,use_area_I):

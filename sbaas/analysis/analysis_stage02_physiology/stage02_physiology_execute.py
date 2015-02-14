@@ -2,16 +2,17 @@ from analysis.analysis_base import *
 from stage02_physiology_query import *
 from stage02_physiology_io import *
 import datetime
-from resources.matlab import matlab_sampling
+from resources.sampling import cobra_sampling,cobra_sampling_n
 
 class stage02_physiology_execute():
     '''class for physiological analysis analysis'''
-    def __init__(self):
+    def __init__(self,data_dir_I=None):
         self.session = Session();
         self.stage02_physiology_query = stage02_physiology_query();
         self.calculate = base_calculate();
         self.models = {};
-        self.sampling = matlab_sampling(matlab_path_I = 'C:/Users/dmccloskey-sbrg/Documents/MATLAB/sampling_physiology');
+        if data_dir_I: self.data_dir = data_dir_I;
+        else: self.data_dir = 'C:/Users/dmccloskey-sbrg/Documents/MATLAB/sampling_physiology'
 
     #analyses:
     def execute_makeModel(self,experiment_id_I,model_id_I=None,model_id_O=None,date_I=None,model_file_name_I=None,ko_list=[],flux_dict={},description=None):
@@ -412,11 +413,12 @@ class stage02_physiology_execute():
             cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).upper_bound = rxn['flux_ub'];
         # Test model
         if self.test_model(cobra_model_I=cobra_model_copy):
+            sampling = cobra_sampling(data_dir_I = self.data_dir);
             if simulation_parameters['sampler_id']=='gpSampler':
                 filename_model = simulation_id_I + '.mat';
                 filename_script = simulation_id_I + '.m';
                 filename_points = simulation_id_I + '_points' + '.mat';
-                self.sampling.export_sampling_matlab(cobra_model=cobra_model_copy,filename_model=filename_model,filename_script=filename_script,filename_points=filename_points,\
+                sampling.export_sampling_matlab(cobra_model=cobra_model_copy,filename_model=filename_model,filename_script=filename_script,filename_points=filename_points,\
                     solver_id_I = simulation_parameters['solver_id'],\
                     n_points_I = simulation_parameters['n_points'],\
                     n_steps_I = simulation_parameters['n_steps'],\
@@ -463,52 +465,49 @@ class stage02_physiology_execute():
             cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).upper_bound = rxn['flux_ub'];
         # Test each model
         if self.test_model(cobra_model_I=cobra_model_copy):
-            # load the results of sampling
-            filename_points = simulation_id_I + '_points' + '.mat';
-            self.sampling.get_points_matlab(filename_points,'sampler_out');
-            # check if the model contains loops
-            #loops_bool = self.sampling.check_loops();
-            self.sampling.simulate_loops(data_fva=settings.workspace_data + '/loops_fva_tmp.json');
-            self.sampling.find_loops(data_fva=settings.workspace_data + '/loops_fva_tmp.json');
-            self.sampling.remove_loopsFromPoints();
+            sampling = cobra_sampling(data_dir_I = self.data_dir);
+            if simulation_parameters['sampler_id']=='gpSampler':
+                # load the results of sampling
+                filename_points = simulation_id_I + '_points' + '.mat';
+                sampling.get_points_matlab(filename_points,'sampler_out');
+                # check if the model contains loops
+                #loops_bool = self.sampling.check_loops();
+                sampling.simulate_loops(data_fva=settings.workspace_data + '/loops_fva_tmp.json');
+                sampling.find_loops(data_fva=settings.workspace_data + '/loops_fva_tmp.json');
+                sampling.remove_loopsFromPoints();
+                sampling.descriptive_statistics();
+            elif simulation_parameters['sampler_id']=='optGpSampler':
+                return;
+            else:
+                print 'sampler_id not recognized';
             # add data to the database
-            for k,v in self.sampling.points.iteritems():
-                data_tmp = {'simulation_id':simulation_id_I,
-                    'rxn_id':k,
-                    'flux_units':'mmol*gDW-1*hr-1',
-                    'sampling_ave':v['ave'],
-                    'sampling_var':v['var'],
-                    'sampling_lb':v['lb'],
-                    'sampling_ub':v['ub'],
-                    'mixed_fraction':self.sampling.mixed_fraction,
-                    'sampling_points':v['points'],
-                    'data_dir':self.sampling.matlab_path+'/'+filename_points,
-                    'simulation_dateAndTime':self.sampling.simulation_dateAndTime,
-                    'used_':True,
-                    'comment_':None};
-                row = None;
-                row = data_stage02_physiology_sampledPoints(
-                    simulation_id_I,
-                    self.sampling.simulation_dateAndTime,
-                    k,
-                    'mmol*gDW-1*hr-1',
-                    self.sampling.mixed_fraction,
-                    #v['points'],
-                    None,
-                    self.sampling.matlab_path+'/'+filename_points,
-                    True,
-                    None);
-                self.session.add(row);
+            row = None;
+            row = data_stage02_physiology_sampledPoints(
+                simulation_id_I,
+                sampling.simulation_dateAndTime,
+                sampling.mixed_fraction,
+                sampling.matlab_path+'/'+filename_points,
+                sampling.loops,
+                True,
+                None);
+            self.session.add(row);
+            for k,v in self.sampling.points_statistics.iteritems():
                 row = None;
                 row = data_stage02_physiology_sampledData(
                     simulation_id_I,
-                    self.sampling.simulation_dateAndTime,
+                    sampling.simulation_dateAndTime,
                     k,
                     'mmol*gDW-1*hr-1',
+                    None, #v['points'],
                     v['ave'],
                     v['var'],
                     v['lb'],
                     v['ub'],
+                    v['min'],
+                    v['max'],
+                    v['median'],
+                    v['iq_1'],
+                    v['iq_3'],
                     True,
                     None);
                 self.session.add(row);
@@ -602,6 +601,9 @@ class stage02_physiology_execute():
             data_stage02_physiology_sampledPoints.__table__.drop(engine,True);
             data_stage02_physiology_sampledData.__table__.drop(engine,True);
             data_stage02_physiology_simulationParameters.__table__.drop(engine,True);
+            data_stage02_physiology_pairWiseTest.__table__.drop(engine,True);
+            data_stage02_physiology_pairWiseTestMetabolites.__table__.drop(engine,True);
+            data_stage02_physiology_pairWiseTestSubsystems.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_dataStage02(self,experiment_id_I = None,simulation_id_I=None):
@@ -632,6 +634,9 @@ class stage02_physiology_execute():
                 reset = self.session.query(data_stage02_physiology_modelReactions).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_physiology_modelMetabolites).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_physiology_simulationParameters).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTest).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTestMetabolites).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTestSubsystems).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -646,28 +651,155 @@ class stage02_physiology_execute():
             data_stage02_physiology_modelReactions.__table__.create(engine,True);
             data_stage02_physiology_modelMetabolites.__table__.create(engine,True);
             data_stage02_physiology_simulationParameters.__table__.create(engine,True);
+            data_stage02_physiology_pairWiseTest.__table__.create(engine,True);
+            data_stage02_physiology_pairWiseTestMetabolites.__table__.create(engine,True);
+            data_stage02_physiology_pairWiseTestSubsystems.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
+    def reset_dataStage02_pairWiseTests(self,simulation_id_I=None):   
+        try:         
+            if simulation_group_id_I:
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTest).filter(data_stage02_physiology_sampledData_pairWiseTest.simulation_id_1.like(simulation_id_1_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTestMetabolites).filter(data_stage02_physiology_sampledData_pairWiseTestMetabolites.simulation_id_1.like(simulation_id_1_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTestSubsystems).filter(data_stage02_physiology_sampledData_pairWiseTestSubsystems.simulation_id_1.like(simulation_id_1_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTest).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTestMetabolites).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_physiology_sampledData_pairWiseTestSubsystems).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    #def reset_dataStage02_nTests(self,simulation_group_id_I=None):   
+    #    try:         
+    #        if simulation_group_id_I:
+    #            reset = self.session.query(data_stage02_physiology_pca_scores).filter(data_stage02_physiology_pca_scores.simulation_group_id.like(simulation_group_id_I)).delete(synchronize_session=False);
+    #            reset = self.session.query(data_stage02_physiology_pca_loadings).filter(data_stage02_physiology_pca_loadings.simulation_group_id.like(simulation_group_id_I)).delete(synchronize_session=False);
+    #        else:
+    #            reset = self.session.query(data_stage02_physiology_sampledData_pca_scores).delete(synchronize_session=False);
+    #            reset = self.session.query(data_stage02_physiology_sampledData_pca_loadings).delete(synchronize_session=False);
+    #        self.session.commit();
+    #    except SQLAlchemyError as e:
+    #        print(e);
     #TODO:
-    def execute_analyzeSamplingDifference(self,simulation_id_1_I,simulation_id_2_I):
-        '''z-score calculation based on doi:10.1186/1752-0509-3-37
-        1. z-score calculated for reaction flux delta
-        2. z-score calculated for reporter metabolites
-        3. z-score calculated for reporter subsystems'''
+    def execute_samplingPairWiseTests(self,simulation_ids_I=[],control_I=False):
+        '''calculate the p-value and mean difference between sampling distributions
+        '''
+        #Input:
+        #   simulation_ids_I = list of simulation ids
+        #   control_I = True: simulation_ids_I[0]=control,simulation_ids_I[1:]=perturbation
+        #               False: pairwise test is performed on all
 
         # get simulation information
-        simulation_info_1_all = [];
-        simulation_info_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id_1_I);
-        if not simulation_1_info_all:
-            print 'simulation not found!'
-            return;
-        simulation_1_info = simulation_1_info_all[0]; # unique constraint guarantees only 1 row will be returned
-        # get simulation information
-        simulation_info_2_all = [];
-        simulation_info_2_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id_2_I);
-        if not simulation_2_info_all:
-            print 'simulation not found!'
-            return;
-        simulation_2_info = simulation_2_info_all[0]; # unique constraint guarantees only 1 row will be returned
-
-        # get simulation data
+        simulation_info_all = [];
+        for simulation_id in simulation_ids_I:
+            simulation_info_1_all = [];
+            simulation_info_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id);
+            if not simulation_info_1_all:
+                print 'simulation not found!'
+                return;
+            simulation_1_info = simulation_info_1_all[0]; # unique constraint guarantees only 1 row will be returned
+            simulation_info_all.append(simulation_1_info);
+        # get sampled_data
+        sampledPoints_all = [];
+        for simulation_id in simulation_ids_I:
+            sampledPoints_1_all = [];
+            sampledPoints_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySampledPoints(simulation_id);
+            if not sampledPoints_1_all:
+                print 'simulation not found!'
+                return;
+            simulation_1_info = sampledPoints_1_all[0]; # unique constraint guarantees only 1 row will be returned
+            sampledPoints_all.append(simulation_1_info);
+        # get simulation parameters
+        simulation_parameters_all = [];
+        for simulation_id in simulation_ids_I:
+            simulation_parameters_1_all = [];
+            simulation_parameters_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulationParameters(simulation_id);
+            if not simulation_parameters_1_all:
+                print 'simulation not found!'
+                return;
+            simulation_1_parameters = simulation_parameters_1_all[0]; # unique constraint guarantees only 1 row will be returned
+            simulation_parameters_all.append(simulation_1_parameters);
+        # check that all models are the same
+        model_ids_all = [x['model_id'] for x in simulation_info_all]
+        model_ids_unique = list(set(model_ids_all));
+        if len(model_ids_unique) != 1:
+            print 'more than 1 model_id found'
+            return
+        else:
+            model_id = model_ids_unique[0];
+        # get the base cobra model
+        cobra_model = self.models[model_id];
+        # extract out the data directories and simulation_ids
+        data_dirs = [x['data_dir'] for x in sampledPoints_all]
+        simulation_ids = [x['simulation_id'] for x in sampledPoints_all]
+        infeasible_loops = [x['infeasible_loops'] for x in sampledPoints_all]
+        # extract out sampling parameters
+        sampler_ids = [x['sampler_id'] for x in simulation_parameters_all]
+        # make filename points
+        filename_points = [s + '_points' + '.mat' for s in simulation_ids_I];
+        # perform the analysis
+        sampling_n = cobra_sampling_n(data_dir_I=self.data_dir,
+                                      model_I = cobra_model,
+                                      loops_I = infeasible_loops,
+                                      sample_ids_I = simulation_ids,
+                                      samplers_I = sampler_ids,
+                                      control_I = control_I);
+        sampling_n.get_points(filename_points);
+        #pairwisetest
+        sampling_n.calculate_pairWiseTest();
+        # load data into the database
+        for d in sampling_n.data:
+            row = None;
+            row = data_stage02_physiology_pairWiseTest(
+                d['sample_id_1'],
+                d['sample_id_2'],
+                d['rxn_id'],
+                'mmol*gDW-1*hr-1',
+                d['mean_difference'],
+                d['test_stat'],
+                d['test_description'],
+                d['pvalue'],
+                None,None,None,None,None,
+                d['fold_change'],
+                True,None
+                )
+            self.session.add(row);
+        #pairwisetest_metabolites
+        sampling_n.calculate_pairWiseTest_metabolites();
+        # load data into the database
+        for d in sampling_n.data:
+            row = None;
+            row = data_stage02_physiology_pairWiseTestMetabolites(
+                d['sample_id_1'],
+                d['sample_id_2'],
+                d['met_id'],
+                'mmol*gDW-1*hr-1',
+                d['mean_difference'],
+                d['test_stat'],
+                d['test_description'],
+                d['pvalue'],
+                None,None,None,None,None,
+                d['fold_change'],
+                True,None
+                )
+            self.session.add(row);
+        #pairwisetest_subsystems
+        sampling_n.calculate_pairWiseTest_subsystems();
+        # load data into the database
+        for d in sampling_n.data:
+            row = None;
+            row = data_stage02_physiology_pairWiseTestSubsystems(
+                d['sample_id_1'],
+                d['sample_id_2'],
+                d['subsystem_id'],
+                'mmol*gDW-1*hr-1',
+                d['mean_difference'],
+                d['test_stat'],
+                d['test_description'],
+                d['pvalue'],
+                None,None,None,None,None,
+                d['fold_change'],
+                True,None
+                )
+            self.session.add(row);
+        self.session.commit();

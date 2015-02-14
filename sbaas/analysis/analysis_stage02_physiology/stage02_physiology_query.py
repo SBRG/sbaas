@@ -382,3 +382,26 @@ class stage02_physiology_query(stage01_physiology_query):
         except SQLAlchemyError as e:
             print(e);
 
+    ##  Query from data_stage02_physiology_sampledPoints
+    # query rows from data_stage02_physiology_sampledPoints
+    def get_rows_simulationID_dataStage02PhysiologySampledPoints(self,simulation_id_I):
+        '''Querry rows that are used from sampledPoints'''
+        try:
+            data = self.session.query(data_stage02_physiology_sampledPoints).filter(
+                    data_stage02_physiology_sampledPoints.simulation_id.like(simulation_id_I),
+                    data_stage02_physiology_sampledPoints.used_.is_(True)).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    rows_O.append({
+                            'simulation_id':d.simulation_id,
+                            'simulation_dateAndTime':d.simulation_dateAndTime,
+                            'mixed_fraction':d.mixed_fraction,
+                            'data_dir':d.data_dir,
+                            'infeasible_loops':d.infeasible_loops,
+                            'used_':d.used_,
+                            'comment_':d.comment_});
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+
