@@ -19,7 +19,6 @@ class stage00_execute():
     def execute_correctMassesFromFormula(self):
         '''Replace the q1_mass, q3_mass, and ms3_mass with the monoisotopic mass from formula'''
         return
-
     def execute_13CFluxMRM(self,met_ids_I):
         '''generate the MRMs for each compound for m + 0 to m + # carbons in the precursor
         and product formula'''
@@ -85,32 +84,7 @@ class stage00_execute():
 
                     mrms_O.append(trans13C);
         
-        stage_io.add_MSComponents(mrms_O);
-        
-    def make_13CEnsemble(self,formula_str_I):
-        '''Make formula for m + 0 to m + # carbons'''
-        # input:
-        #       formula_str_I = string of formula
-        # output:
-        #       mass_ensemble_O = ensemble of distributions
-        formula_str = re.sub('[+-]', '', formula_str_I) # remove '-' or '+' 
-
-        formula = Formula(formula_str);
-        mass_ensemble_O = {};
-        if 'C' in formula._elements:
-            nC = formula._elements['C'][0]; # count the number of carbon;
-            for c in range(nC+1):
-                tmp = Formula(formula_str);
-                if c==0:tmp._elements['C'] = {0:nC-c};
-                elif nC-c==0:tmp._elements['C'] = {13:c};
-                else:tmp._elements['C'] = {0:nC-c, 13:c};
-                mass_ensemble_O[c] = Formula(tmp.formula);
-            return mass_ensemble_O;
-        else: 
-            nC = 0;
-            mass_ensemble_O = {0:formula};
-            return mass_ensemble_O
-
+        stage_io.add_MSComponents(mrms_O);       
     def execute_scheduledMRMPro_quant(self,met_ids_I):
         '''generate the MRMs for each compound for the scheduled MRM pro acquisition method'''
         # input: 
@@ -176,7 +150,6 @@ class stage00_execute():
             mrms_O.append(transUC13);
         
         stage_io.add_MSComponents(mrms_O);
-
     def execute_importStructureFile(self,data_I):
         '''import structure files for a list of metabolites and
         update metabolomics standards table
@@ -205,7 +178,6 @@ class stage00_execute():
         # update standards table
         io = stage00_io();
         io.update_standards_structureFile(data_O);
-
     def execute_updateFormulaAndMassFromStructure(self, met_ids_I):
         '''update the molecular formula and exact mass of
         standards from imported structure file'''
@@ -238,7 +210,6 @@ class stage00_execute():
         # update standards table
         io = stage00_io();
         io.update_standards_formulaAndMass(data_O);
-
     def execute_updatePrecursorFormulaAndMass(self, met_ids_I):
         '''update the precusor formula and exact mass of
         ms_components from imported structure file'''
@@ -299,31 +270,16 @@ class stage00_execute():
         # update ms_components table
         io.update_MSComponents_precursorFormulaAndMass(data_O);
 
-    def execute_MSComponents_consistencyCheck(self):
-        '''
-        All method types:
-        check that q1 mass matches precursor formula
-        check that q3 mas matches product formula
-        check that precursor_exactmass matches precursor formula
-        check that product_exactmass matches product formula
-        Quantification:
-        check that the component_name matches the priority
-        check that no components have the same q1_mass
-        '''
         return
-
     def update_componentNames(self):
         '''update component names for quant and isotopomer methods'''
         return
-
     def execute_checkPrecursorFormulaAndMass(self, met_ids_I):
         '''check that the formula, q1_mass and precursor_exactmass are consistent'''
         return
-
     def execute_makeBatchFileCalibrators(self, experiment_id_I, DateAcquisition_I, batch_fileName_I):
         '''Generate the acqusition batch file for the calibrators'''
         return;
-
     def execute_makeExperimentFromSampleFile(self, sample_fileName_I, nTechReps_I, dil_levels_I):
         '''Populate experiment, samples, sample_physiologicalparameters, sample_description, and sample_storage tables
         NOTE: the sample_file should only contain samples for 1 experiment_id and 1 exp_type if multiple technical replicates
@@ -364,7 +320,6 @@ class stage00_execute():
             io.add_sampleStorage(sampleStorage_data);
             io.add_sample(sample_data);
             io.add_experiment(experiment_data);
-
     def execute_makeBatchFile(self, experiment_id_I, DateAcquisition_I, batch_fileName_I, experiment_type_I=4):
         '''generate the acqusition batch file for the experiment'''
 
@@ -383,245 +338,99 @@ class stage00_execute():
         batchFile_header = [];
         batchFile_data,batchFile_header = self.make_batchFile(DateAcquisition_I,data_unknown,data_qc);
         io.export_batchFile(batchFile_data, batchFile_header, batch_fileName_I); #analyst cannot read in csv files for some reason, only txt files
+    def execute_deleteSamplesFromExperiment(self,experiment_id_I, sample_ids_I):
+        '''remove specific samples from an experiment by their sample ID'''
 
-    def make_techRepsAndDils(self,nTechReps_I, dil_levels_I,
-                             sampleDescription_data_I, samplePhysiologicalParameters_data_I, sampleStorage_data_I,
-                             sample_data_I,experiment_data_I):
-        '''expand experiment and sample tables
-        to include technical replicates and dilutions'''
+        # NOTES: DELETE statement appears to be broken
 
-        sampleDescription_data_O = [];
-        samplePhysiologicalParameters_data_O = [];
-        sampleStorage_data_O = [];
-        sample_data_O = [];
-        experiment_data_O = [];
+        # remove samples from
+        # 1. experiment
+        # 2. sample
+        # 3. sample_description, sample_storage, sample_physiologicalparameters
 
-        # get the different metabolomics experiment ids:
-        experiment_ids = [v['id'] for v in experiment_data_I];
-        experiment_ids_unique = list(set(experiment_ids));
-        exp_types = [v['exp_type_id'] for v in experiment_data_I];
-        exp_types_unique = list(set(exp_types));
-        for experiment_id in experiment_ids_unique:
-            for exp_type in exp_types_unique:
-                # get the bioRep sample names for the experiment
-                sample_names = [v['sample_name'] for v in experiment_data_I];
-                ## query the maximum number of technical reps based on the experiment id
-                #nMaxBioReps = self.stage00_query.get_nMaxBioReps_sampleDescription(experiment_id); # breaks when the number of bio reps is not the same for all samples in an experiment
-                for row in sampleDescription_data_I:
-                    # query the maximum number of technical reps based on the experiment id and sample name
-                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleID(experiment_id,row['sample_id']);
-                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
-                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
-                    for rep in range(1,nTechReps_I+1):
-                        # add techReps to sample Description
-                        # copy sample description fields to techReps
-                        sample_id_new = '';
-                        sample_id_list = row['sample_id'].split('-');
-                        sample_dil = None #check for something else besides the replicate number
-                        if any(let.isalpha() for let in sample_id_list[len(sample_id_list)-1]): 
-                            sample_dil = sample_id_list[len(sample_id_list)-1]
-                            sample_id_list = sample_id_list[:-1]
-                        for l in range(len(sample_id_list)-1):  sample_id_new += sample_id_list[l] + '-';
-                        replicate_number = int(sample_id_list[len(sample_id_list)-1]);
-                        sample_id_new += str(nMaxBioReps*rep + replicate_number);
-                        if sample_dil: sample_id_new += '-' + sample_dil;
-                        sample_name_short_new = '';
-                        sample_name_short_list = row['sample_name_short'].split('-');
-                        sample_dil = None #check for something else besides the replicate number
-                        if any(let.isalpha() for let in sample_name_short_list[len(sample_name_short_list)-1]): 
-                            sample_dil = sample_name_short_list[len(sample_name_short_list)-1]
-                            sample_name_short_list = sample_name_short_list[:-1]
-                        for l in range(len(sample_name_short_list)-1):  sample_name_short_new += sample_name_short_list[l] + '-';
-                        sample_name_short_new += str(nMaxBioReps*rep + replicate_number);
-                        if sample_dil: sample_name_short_new += '-' + sample_dil;
-                        sampleDescription_data_O.append({'sample_id':sample_id_new, #change sample_id
-                                                'sample_name_short':sample_name_short_new, #change sample_name_short
-                                                'sample_name_abbreviation':row['sample_name_abbreviation'],
-                                                'sample_date':row['sample_date'],
-                                                'time_point':row['time_point'],
-                                                'sample_condition':row['sample_condition'],
-                                                'extraction_method_id':row['extraction_method_id'],
-                                                'biological_material':row['biological_material'],
-                                                'sample_description':row['sample_description'],
-                                                'sample_replicate':nMaxBioReps*rep + replicate_number,# modify sample_replicate_biological
-                                                'is_added':row['is_added'],
-                                                'is_added_units':row['is_added_units'],
-                                                'reconstitution_volume':row['reconstitution_volume'],
-                                                'reconstitution_volume_units':row['reconstitution_volume_units'],
-                                                'sample_replicate_biological':row['sample_replicate_biological'],
-                                                'istechnical':True,
-                                                'notes':row['notes']});# modify istech (True)
-                for row in samplePhysiologicalParameters_data_I:
-                    # query the maximum number of technical reps based on the experiment id and sample name
-                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleID(experiment_id,row['sample_id']);
-                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
-                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
-                    for rep in range(1,nTechReps_I+1):
-                        # add techReps to physiological parameters
-                        # copy physiological parameters fields to techReps
-                        sample_id_new = '';
-                        sample_id_list = row['sample_id'].split('-');
-                        sample_dil = None #check for something else besides the replicate number
-                        if any(let.isalpha() for let in sample_id_list[len(sample_id_list)-1]): 
-                            sample_dil = sample_id_list[len(sample_id_list)-1]
-                            sample_id_list = sample_id_list[:-1]
-                        for l in range(len(sample_id_list)-1):  sample_id_new += sample_id_list[l] + '-';
-                        replicate_number = int(sample_id_list[len(sample_id_list)-1]);
-                        sample_id_new += str(nMaxBioReps*rep + replicate_number);
-                        if sample_dil: sample_id_new += '-' + sample_dil;
-                        samplePhysiologicalParameters_data_O.append({'sample_id':sample_id_new,
-                                            'growth_condition_short':row['growth_condition_short'],
-                                            'growth_condition_long':row['growth_condition_long'],
-                                            'media_short':row['media_short'],
-                                            'media_long':row['media_long'],
-                                            'isoxic':row['isoxic'],
-                                            'temperature':row['temperature'],
-                                            'supplementation':row['supplementation'],
-                                            'od600':row['od600'],
-                                            'vcd':row['vcd'],
-                                            'culture_density':row['culture_density'],
-                                            'culture_volume_sampled':row['culture_volume_sampled'],
-                                            'cells':row['cells'],
-                                            'dcw':row['dcw'],
-                                            'wcw':row['wcw'],
-                                            'vcd_units':row['vcd_units'],
-                                            'culture_density_units':row['culture_density_units'],
-                                            'culture_volume_sampled_units':row['culture_volume_sampled_units'],
-                                            'dcw_units':row['dcw_units'],
-                                            'wcw_units':row['wcw_units']});
-                for row in sampleStorage_data_I:
-                    # query the maximum number of technical reps based on the experiment id and sample name
-                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleID(experiment_id,row['sample_id']);
-                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
-                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
-                    for rep in range(1,nTechReps_I+1):
-                        # add techReps to storage
-                        # copy storage parameter fields to techReps
-                        # modify box/pos (point back to the biological replicate)
-                        sample_id_new = '';
-                        sample_id_list = row['sample_id'].split('-');
-                        sample_dil = None #check for something else besides the replicate number
-                        if any(let.isalpha() for let in sample_id_list[len(sample_id_list)-1]): 
-                            sample_dil = sample_id_list[len(sample_id_list)-1]
-                            sample_id_list = sample_id_list[:-1]
-                        for l in range(len(sample_id_list)-1):  sample_id_new += sample_id_list[l] + '-';
-                        replicate_number = int(sample_id_list[len(sample_id_list)-1]);
-                        sample_id_new += str(nMaxBioReps*rep + replicate_number);
-                        if sample_dil: sample_id_new += '-' + sample_dil;
-                        sampleStorage_data_O.append({'sample_id':sample_id_new,
-                                            'sample_label':row['sample_label'],
-                                            'ph':row['ph'],
-                                            'box':row['box'],
-                                            'pos':row['pos']});
-                for row in sample_data_I:
-                    # add techReps to sample
-                    # copy sample fields to techReps
-                    # add dilutions to sample
-                    # copy sample fields for bio/techReps to dilutions
-                    # modify sample_dilution field to reflect the dilution factor
+        dataListDelete = [];
+        for si in sample_ids_I:
+            dataListDelete.append({'experiment_id':experiment_id_I,
+                                   'sample_id':si});
+        # remove samples in order
+        self.stage00_query.delete_sample_experimentIDAndSampleID_experiment(dataListDelete);
+        self.stage00_query.delete_sample_experimentIDAndSampleID_sample(dataListDelete);
+        self.stage00_query.delete_sample_experimentIDAndSampleID_sampleDescription(dataListDelete);
+        self.stage00_query.delete_sample_experimentIDAndSampleID_sampleStorage(dataListDelete);
+        self.stage00_query.delete_sample_experimentIDAndSampleID_samplePhysiologicalParameters(dataListDelete);
+    def execute_makeExperimentFromCalibrationFile(self, calibration_fileName_I):
+        '''Populate experiment and samples'''
 
-                    # query the maximum number of technical reps based on the experiment id and sample name
-                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleName(experiment_id,row['sample_name']);
-                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
-                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
-                    for dil in dil_levels_I:
-                        sample_name_new_dil = copy(row['sample_name']);
-                        sample_name_new_dil += '-' + str(dil) + 'x';
-                        sample_data_O.append({'sample_name':sample_name_new_dil,
-                                        'sample_type':row['sample_type'],
-                                        'calibrator_id':None,
-                                        'calibrator_level':None,
-                                        'sample_id':row['sample_id'],
-                                        'sample_dilution':dil});
-                    for rep in range(1,nTechReps_I+1):
-                        sample_id_new = '';
-                        sample_id_list = row['sample_id'].split('-');
-                        sample_dil = None #check for something else besides the replicate number
-                        if any(let.isalpha() for let in sample_id_list[len(sample_id_list)-1]): 
-                            sample_dil = sample_id_list[len(sample_id_list)-1]
-                            sample_id_list = sample_id_list[:-1]
-                        for l in range(len(sample_id_list)-1):  sample_id_new += sample_id_list[l] + '-';
-                        replicate_number = int(sample_id_list[len(sample_id_list)-1]);
-                        sample_id_new += str(nMaxBioReps*rep + replicate_number);
-                        if sample_dil: sample_id_new += '-' + sample_dil;
-                        sample_name_new = '';
-                        sample_name_list = row['sample_name'].split('-');
-                        sample_dil = None #check for something else besides the replicate number
-                        if any(let.isalpha() for let in sample_name_list[len(sample_name_list)-1]): 
-                            sample_dil = sample_name_list[len(sample_name_list)-1]
-                            sample_name_list = sample_name_list[:-1]
-                        for l in range(len(sample_name_list)-1):  sample_name_new += sample_name_list[l] + '-';
-                        sample_name_new += str(nMaxBioReps*rep + replicate_number);
-                        if sample_dil: sample_name_new += '-' + sample_dil;
-                        sample_data_O.append({'sample_name':sample_name_new,
-                                            'sample_type':row['sample_type'],
-                                            'calibrator_id':None,
-                                            'calibrator_level':None,
-                                            'sample_id':sample_id_new,
-                                            'sample_dilution':row['sample_dilution']});
-                        for dil in dil_levels_I:
-                            sample_name_new_dil = copy(sample_name_new);
-                            sample_name_new_dil += '-' + str(dil) + 'x';
-                            sample_data_O.append({'sample_name':sample_name_new_dil,
-                                            'sample_type':row['sample_type'],
-                                            'calibrator_id':None,
-                                            'calibrator_level':None,
-                                            'sample_id':sample_id_new,
-                                            'sample_dilution':dil});
-                        
-                for row in experiment_data_I:
-                    # query the maximum number of technical reps based on the experiment id and sample name
-                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleName(experiment_id,row['sample_name']);
-                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
-                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
-                    # add techReps and dilutions to experiment
-                    # copy experiment fields to techReps and dilutions
-                    for dil in dil_levels_I:
-                        sample_name_new_dil = copy(row['sample_name']);
-                        sample_name_new_dil += '-' + str(dil) + 'x';
-                        experiment_data_O.append({'exp_type_id':row['exp_type_id'],
-                                            'id':row['id'],
-                                            'sample_name':sample_name_new_dil,
-                                            'experimentor_id':row['experimentor_id'],
-                                            'extraction_method_id':row['extraction_method_id'],
-                                            'acquisition_method_id':row['acquisition_method_id'],
-                                            'quantitation_method_id':row['quantitation_method_id'],
-                                            'internal_standard_id':row['internal_standard_id']});
+        # Input:
+        #   calibration_fileName_I = name of the .csv file with calibrator information
 
-                    for rep in range(1,nTechReps_I+1):
-                        sample_name_new = '';
-                        sample_name_list = row['sample_name'].split('-');
-                        sample_dil = None #check for something else besides the replicate number
-                        if any(let.isalpha() for let in sample_name_list[len(sample_name_list)-1]): 
-                            sample_dil = sample_name_list[len(sample_name_list)-1]
-                            sample_name_list = sample_name_list[:-1]
-                        for l in range(len(sample_name_list)-1):  sample_name_new += sample_name_list[l] + '-';
-                        replicate_number = int(sample_name_list[len(sample_name_list)-1]);
-                        sample_name_new += str(nMaxBioReps*rep + replicate_number);
-                        if sample_dil: sample_name_new += '-' + sample_dil;
-                        experiment_data_O.append({'exp_type_id':row['exp_type_id'],
-                                            'id':row['id'],
-                                            'sample_name':sample_name_new,
-                                            'experimentor_id':row['experimentor_id'],
-                                            'extraction_method_id':row['extraction_method_id'],
-                                            'acquisition_method_id':row['acquisition_method_id'],
-                                            'quantitation_method_id':row['quantitation_method_id'],
-                                            'internal_standard_id':row['internal_standard_id']});
+        io = stage00_io();
+        #import sample file and split into respective tables
+        io.import_calibrationFile_add(calibration_fileName_I);
+    def execute_exportCalibrationConcentrations(self, sampleAndComponent_fileName_I, concentrations_fileName_O):
+        '''export calibrator concentrations for "cut&paste" into Actual Concentration column in MultiQuant
+        when filtering Analytes only'''
 
-                        for dil in dil_levels_I:
-                            sample_name_new_dil = copy(sample_name_new);
-                            sample_name_new_dil += '-' + str(dil) + 'x';
-                            experiment_data_O.append({'exp_type_id':row['exp_type_id'],
-                                            'id':row['id'],
-                                            'sample_name':sample_name_new_dil,
-                                            'experimentor_id':row['experimentor_id'],
-                                            'extraction_method_id':row['extraction_method_id'],
-                                            'acquisition_method_id':row['acquisition_method_id'],
-                                            'quantitation_method_id':row['quantitation_method_id'],
-                                            'internal_standard_id':row['internal_standard_id']});
+        #Input:
+        #   sampleAndComponent_fileName_I = .csv file specifying sample_name, sample_type, and component_group_name
+        #Output:
+        #   concentrations_fileName_O = .csv file specifying sample_name, sample_type, component_group_name, and actual_concentration
+        
+        io = stage00_io();
+        concentrations_O = [];
+        met_id_conv_dict = {'Hexose_Pool_fru_glc-D':'glc-D',
+                            'Pool_2pg_3pg':'3pg'};
+        #import sampleAndComponents
+        samplesComponents = [];
+        samplesComponents = io.import_calibration_sampleAndComponents(sampleAndComponent_fileName_I);
+        for sc in samplesComponents:
+            # if met_id is a pool of metabolites, convert to the metabolite
+            # that is logged in calibrator tables and standards tables
+            if sc['met_id'] in met_id_conv_dict.keys():
+                met_id_conv = met_id_conv_dict[sc['met_id']];
+            else:
+                met_id_conv = sc['met_id'];
+            #query calibrator_id and calibrator_level from sample
+            calibrator_id,calibrator_level = None,None;
+            calibrator_id,calibrator_level = self.stage00_query.get_calibratorIDAndLevel_sampleNameAndSampleType_sample(sc['sample_name'],sc['sample_type']);
+            #query calibrator_concentration from calibrator_concentrations
+            calibrator_concentration, concentration_units = 'N/A', None;
+            if calibrator_id and calibrator_level:
+                calibrator_concentration, concentration_units = self.stage00_query.get_calibratorConcentrationAndUnit_metIDAndCalibratorIDAndLevel_calibratorConcentrations(met_id_conv,calibrator_id,calibrator_level);
+            concentrations_O.append({'sample_name':sc['sample_name'], 'sample_type':sc['sample_type'],'component_group_name':sc['met_id'], 'actual_concentration':calibrator_concentration});
+        io.export_calibrationConcentrations(concentrations_O, concentrations_fileName_O)
+    def execute_exportAcqusitionMethod(self,lc_method_I,ms_mode_I,ms_methodtype_I,filename_I):
+        '''export the current acqusition method'''
+        io = stage00_io();
+        # get the data
+        amethod = [];
+        amethod = self.stage00_query.get_acqusitionMethod(lc_method_I,ms_mode_I,ms_methodtype_I);
+        # export the data to csv
+        io.export_acquisitionMethod(amethod, filename_I);
+    def execute_deleteExperiments(self,experiment_ids_I):
+        '''remove an experiment'''
 
-        return sampleDescription_data_O, samplePhysiologicalParameters_data_O, sampleStorage_data_O, sample_data_O,experiment_data_O;
+        # NOTES: DELETE statement appears to be broken
 
+        # remove samples from
+        # 1. experiment
+        # 2. sample
+        # 3. sample_description, sample_storage, sample_physiologicalparameters
+
+        dataListDelete = [];
+        for experiment_id_I in experiment_ids_I:
+            #query the sample IDs in the experiment
+            sample_ids = self.stage00_query.get_sampleIDs_experimentID_experiment(experiment_id_I);
+            for si in sample_ids:
+                dataListDelete.append({'experiment_id':experiment_id_I,
+                                   'sample_id':si});
+        # remove samples in order
+        self.stage00_query.delete_sample_experimentIDAndSampleID_experiment(dataListDelete);
+        self.stage00_query.delete_sample_experimentIDAndSampleID_sample(dataListDelete);
+        self.stage00_query.delete_sample_experimentIDAndSampleID_sampleDescription(dataListDelete);
+        self.stage00_query.delete_sample_experimentIDAndSampleID_sampleStorage(dataListDelete);
+        self.stage00_query.delete_sample_experimentIDAndSampleID_samplePhysiologicalParameters(dataListDelete);
+    #internal functions
     def make_batchFile(self,DateAcquisition_I,data_unknown_I,data_qc_I):
         '''make an acquisition batch file from sample_description'''
         batchFile_data_O = [];
@@ -873,100 +682,448 @@ class stage00_execute():
         cnt_blank_inj+=1;
 
         return batchFile_data_O, batchFile_header_O;
+    def make_techRepsAndDils(self,nTechReps_I, dil_levels_I,
+                             sampleDescription_data_I, samplePhysiologicalParameters_data_I, sampleStorage_data_I,
+                             sample_data_I,experiment_data_I):
+        '''expand experiment and sample tables
+        to include technical replicates and dilutions'''
 
-    def execute_deleteSamplesFromExperiment(self,experiment_id_I, sample_ids_I):
-        '''remove specific samples from an experiment by their sample ID'''
+        sampleDescription_data_O = [];
+        samplePhysiologicalParameters_data_O = [];
+        sampleStorage_data_O = [];
+        sample_data_O = [];
+        experiment_data_O = [];
 
-        # NOTES: DELETE statement appears to be broken
+        # get the different metabolomics experiment ids:
+        experiment_ids = [v['id'] for v in experiment_data_I];
+        experiment_ids_unique = list(set(experiment_ids));
+        exp_types = [v['exp_type_id'] for v in experiment_data_I];
+        exp_types_unique = list(set(exp_types));
+        for experiment_id in experiment_ids_unique:
+            for exp_type in exp_types_unique:
+                # get the bioRep sample names for the experiment
+                sample_names = [v['sample_name'] for v in experiment_data_I];
+                ## query the maximum number of technical reps based on the experiment id
+                #nMaxBioReps = self.stage00_query.get_nMaxBioReps_sampleDescription(experiment_id); # breaks when the number of bio reps is not the same for all samples in an experiment
+                for row in sampleDescription_data_I:
+                    # query the maximum number of technical reps based on the experiment id and sample name
+                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleID(experiment_id,row['sample_id']);
+                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
+                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
+                    for rep in range(1,nTechReps_I+1):
+                        # add techReps to sample Description
+                        # copy sample description fields to techReps
+                        sample_id_new = '';
+                        sample_id_list = row['sample_id'].split('-');
+                        sample_dil = None #check for something else besides the replicate number
+                        if any(let.isalpha() for let in sample_id_list[len(sample_id_list)-1]): 
+                            sample_dil = sample_id_list[len(sample_id_list)-1]
+                            sample_id_list = sample_id_list[:-1]
+                        for l in range(len(sample_id_list)-1):  sample_id_new += sample_id_list[l] + '-';
+                        replicate_number = int(sample_id_list[len(sample_id_list)-1]);
+                        sample_id_new += str(nMaxBioReps*rep + replicate_number);
+                        if sample_dil: sample_id_new += '-' + sample_dil;
+                        sample_name_short_new = '';
+                        sample_name_short_list = row['sample_name_short'].split('-');
+                        sample_dil = None #check for something else besides the replicate number
+                        if any(let.isalpha() for let in sample_name_short_list[len(sample_name_short_list)-1]): 
+                            sample_dil = sample_name_short_list[len(sample_name_short_list)-1]
+                            sample_name_short_list = sample_name_short_list[:-1]
+                        for l in range(len(sample_name_short_list)-1):  sample_name_short_new += sample_name_short_list[l] + '-';
+                        sample_name_short_new += str(nMaxBioReps*rep + replicate_number);
+                        if sample_dil: sample_name_short_new += '-' + sample_dil;
+                        sampleDescription_data_O.append({'sample_id':sample_id_new, #change sample_id
+                                                'sample_name_short':sample_name_short_new, #change sample_name_short
+                                                'sample_name_abbreviation':row['sample_name_abbreviation'],
+                                                'sample_date':row['sample_date'],
+                                                'time_point':row['time_point'],
+                                                'sample_condition':row['sample_condition'],
+                                                'extraction_method_id':row['extraction_method_id'],
+                                                'biological_material':row['biological_material'],
+                                                'sample_description':row['sample_description'],
+                                                'sample_replicate':nMaxBioReps*rep + replicate_number,# modify sample_replicate_biological
+                                                'is_added':row['is_added'],
+                                                'is_added_units':row['is_added_units'],
+                                                'reconstitution_volume':row['reconstitution_volume'],
+                                                'reconstitution_volume_units':row['reconstitution_volume_units'],
+                                                'sample_replicate_biological':row['sample_replicate_biological'],
+                                                'istechnical':True,
+                                                'notes':row['notes']});# modify istech (True)
+                for row in samplePhysiologicalParameters_data_I:
+                    # query the maximum number of technical reps based on the experiment id and sample name
+                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleID(experiment_id,row['sample_id']);
+                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
+                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
+                    for rep in range(1,nTechReps_I+1):
+                        # add techReps to physiological parameters
+                        # copy physiological parameters fields to techReps
+                        sample_id_new = '';
+                        sample_id_list = row['sample_id'].split('-');
+                        sample_dil = None #check for something else besides the replicate number
+                        if any(let.isalpha() for let in sample_id_list[len(sample_id_list)-1]): 
+                            sample_dil = sample_id_list[len(sample_id_list)-1]
+                            sample_id_list = sample_id_list[:-1]
+                        for l in range(len(sample_id_list)-1):  sample_id_new += sample_id_list[l] + '-';
+                        replicate_number = int(sample_id_list[len(sample_id_list)-1]);
+                        sample_id_new += str(nMaxBioReps*rep + replicate_number);
+                        if sample_dil: sample_id_new += '-' + sample_dil;
+                        samplePhysiologicalParameters_data_O.append({'sample_id':sample_id_new,
+                                            'growth_condition_short':row['growth_condition_short'],
+                                            'growth_condition_long':row['growth_condition_long'],
+                                            'media_short':row['media_short'],
+                                            'media_long':row['media_long'],
+                                            'isoxic':row['isoxic'],
+                                            'temperature':row['temperature'],
+                                            'supplementation':row['supplementation'],
+                                            'od600':row['od600'],
+                                            'vcd':row['vcd'],
+                                            'culture_density':row['culture_density'],
+                                            'culture_volume_sampled':row['culture_volume_sampled'],
+                                            'cells':row['cells'],
+                                            'dcw':row['dcw'],
+                                            'wcw':row['wcw'],
+                                            'vcd_units':row['vcd_units'],
+                                            'culture_density_units':row['culture_density_units'],
+                                            'culture_volume_sampled_units':row['culture_volume_sampled_units'],
+                                            'dcw_units':row['dcw_units'],
+                                            'wcw_units':row['wcw_units']});
+                for row in sampleStorage_data_I:
+                    # query the maximum number of technical reps based on the experiment id and sample name
+                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleID(experiment_id,row['sample_id']);
+                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
+                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
+                    for rep in range(1,nTechReps_I+1):
+                        # add techReps to storage
+                        # copy storage parameter fields to techReps
+                        # modify box/pos (point back to the biological replicate)
+                        sample_id_new = '';
+                        sample_id_list = row['sample_id'].split('-');
+                        sample_dil = None #check for something else besides the replicate number
+                        if any(let.isalpha() for let in sample_id_list[len(sample_id_list)-1]): 
+                            sample_dil = sample_id_list[len(sample_id_list)-1]
+                            sample_id_list = sample_id_list[:-1]
+                        for l in range(len(sample_id_list)-1):  sample_id_new += sample_id_list[l] + '-';
+                        replicate_number = int(sample_id_list[len(sample_id_list)-1]);
+                        sample_id_new += str(nMaxBioReps*rep + replicate_number);
+                        if sample_dil: sample_id_new += '-' + sample_dil;
+                        sampleStorage_data_O.append({'sample_id':sample_id_new,
+                                            'sample_label':row['sample_label'],
+                                            'ph':row['ph'],
+                                            'box':row['box'],
+                                            'pos':row['pos']});
+                for row in sample_data_I:
+                    # add techReps to sample
+                    # copy sample fields to techReps
+                    # add dilutions to sample
+                    # copy sample fields for bio/techReps to dilutions
+                    # modify sample_dilution field to reflect the dilution factor
 
-        # remove samples from
-        # 1. experiment
-        # 2. sample
-        # 3. sample_description, sample_storage, sample_physiologicalparameters
+                    # query the maximum number of technical reps based on the experiment id and sample name
+                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleName(experiment_id,row['sample_name']);
+                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
+                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
+                    for dil in dil_levels_I:
+                        sample_name_new_dil = copy(row['sample_name']);
+                        sample_name_new_dil += '-' + str(dil) + 'x';
+                        sample_data_O.append({'sample_name':sample_name_new_dil,
+                                        'sample_type':row['sample_type'],
+                                        'calibrator_id':None,
+                                        'calibrator_level':None,
+                                        'sample_id':row['sample_id'],
+                                        'sample_dilution':dil});
+                    for rep in range(1,nTechReps_I+1):
+                        sample_id_new = '';
+                        sample_id_list = row['sample_id'].split('-');
+                        sample_dil = None #check for something else besides the replicate number
+                        if any(let.isalpha() for let in sample_id_list[len(sample_id_list)-1]): 
+                            sample_dil = sample_id_list[len(sample_id_list)-1]
+                            sample_id_list = sample_id_list[:-1]
+                        for l in range(len(sample_id_list)-1):  sample_id_new += sample_id_list[l] + '-';
+                        replicate_number = int(sample_id_list[len(sample_id_list)-1]);
+                        sample_id_new += str(nMaxBioReps*rep + replicate_number);
+                        if sample_dil: sample_id_new += '-' + sample_dil;
+                        sample_name_new = '';
+                        sample_name_list = row['sample_name'].split('-');
+                        sample_dil = None #check for something else besides the replicate number
+                        if any(let.isalpha() for let in sample_name_list[len(sample_name_list)-1]): 
+                            sample_dil = sample_name_list[len(sample_name_list)-1]
+                            sample_name_list = sample_name_list[:-1]
+                        for l in range(len(sample_name_list)-1):  sample_name_new += sample_name_list[l] + '-';
+                        sample_name_new += str(nMaxBioReps*rep + replicate_number);
+                        if sample_dil: sample_name_new += '-' + sample_dil;
+                        sample_data_O.append({'sample_name':sample_name_new,
+                                            'sample_type':row['sample_type'],
+                                            'calibrator_id':None,
+                                            'calibrator_level':None,
+                                            'sample_id':sample_id_new,
+                                            'sample_dilution':row['sample_dilution']});
+                        for dil in dil_levels_I:
+                            sample_name_new_dil = copy(sample_name_new);
+                            sample_name_new_dil += '-' + str(dil) + 'x';
+                            sample_data_O.append({'sample_name':sample_name_new_dil,
+                                            'sample_type':row['sample_type'],
+                                            'calibrator_id':None,
+                                            'calibrator_level':None,
+                                            'sample_id':sample_id_new,
+                                            'sample_dilution':dil});
+                        
+                for row in experiment_data_I:
+                    # query the maximum number of technical reps based on the experiment id and sample name
+                    sample_name_abbreviation = self.stage00_query.get_sampleNameAbbreviation_experimentIDAndSampleName(experiment_id,row['sample_name']);
+                    #nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviation_sampleDescription(experiment_id,sample_name_abbreviation); # does not take into account exp_type
+                    nMaxBioReps = self.stage00_query.get_nMaxBioReps_experimentIDAndSampleNameAbbreviationAndExpType_sampleDescription(experiment_id,sample_name_abbreviation,exp_type);
+                    # add techReps and dilutions to experiment
+                    # copy experiment fields to techReps and dilutions
+                    for dil in dil_levels_I:
+                        sample_name_new_dil = copy(row['sample_name']);
+                        sample_name_new_dil += '-' + str(dil) + 'x';
+                        experiment_data_O.append({'exp_type_id':row['exp_type_id'],
+                                            'id':row['id'],
+                                            'sample_name':sample_name_new_dil,
+                                            'experimentor_id':row['experimentor_id'],
+                                            'extraction_method_id':row['extraction_method_id'],
+                                            'acquisition_method_id':row['acquisition_method_id'],
+                                            'quantitation_method_id':row['quantitation_method_id'],
+                                            'internal_standard_id':row['internal_standard_id']});
 
-        dataListDelete = [];
-        for si in sample_ids_I:
-            dataListDelete.append({'experiment_id':experiment_id_I,
-                                   'sample_id':si});
-        # remove samples in order
-        self.stage00_query.delete_sample_experimentIDAndSampleID_experiment(dataListDelete);
-        self.stage00_query.delete_sample_experimentIDAndSampleID_sample(dataListDelete);
-        self.stage00_query.delete_sample_experimentIDAndSampleID_sampleDescription(dataListDelete);
-        self.stage00_query.delete_sample_experimentIDAndSampleID_sampleStorage(dataListDelete);
-        self.stage00_query.delete_sample_experimentIDAndSampleID_samplePhysiologicalParameters(dataListDelete);
+                    for rep in range(1,nTechReps_I+1):
+                        sample_name_new = '';
+                        sample_name_list = row['sample_name'].split('-');
+                        sample_dil = None #check for something else besides the replicate number
+                        if any(let.isalpha() for let in sample_name_list[len(sample_name_list)-1]): 
+                            sample_dil = sample_name_list[len(sample_name_list)-1]
+                            sample_name_list = sample_name_list[:-1]
+                        for l in range(len(sample_name_list)-1):  sample_name_new += sample_name_list[l] + '-';
+                        replicate_number = int(sample_name_list[len(sample_name_list)-1]);
+                        sample_name_new += str(nMaxBioReps*rep + replicate_number);
+                        if sample_dil: sample_name_new += '-' + sample_dil;
+                        experiment_data_O.append({'exp_type_id':row['exp_type_id'],
+                                            'id':row['id'],
+                                            'sample_name':sample_name_new,
+                                            'experimentor_id':row['experimentor_id'],
+                                            'extraction_method_id':row['extraction_method_id'],
+                                            'acquisition_method_id':row['acquisition_method_id'],
+                                            'quantitation_method_id':row['quantitation_method_id'],
+                                            'internal_standard_id':row['internal_standard_id']});
 
-    def execute_makeExperimentFromCalibrationFile(self, calibration_fileName_I):
-        '''Populate experiment and samples'''
+                        for dil in dil_levels_I:
+                            sample_name_new_dil = copy(sample_name_new);
+                            sample_name_new_dil += '-' + str(dil) + 'x';
+                            experiment_data_O.append({'exp_type_id':row['exp_type_id'],
+                                            'id':row['id'],
+                                            'sample_name':sample_name_new_dil,
+                                            'experimentor_id':row['experimentor_id'],
+                                            'extraction_method_id':row['extraction_method_id'],
+                                            'acquisition_method_id':row['acquisition_method_id'],
+                                            'quantitation_method_id':row['quantitation_method_id'],
+                                            'internal_standard_id':row['internal_standard_id']});
 
-        # Input:
-        #   calibration_fileName_I = name of the .csv file with calibrator information
+        return sampleDescription_data_O, samplePhysiologicalParameters_data_O, sampleStorage_data_O, sample_data_O,experiment_data_O;
+    def make_13CEnsemble(self,formula_str_I):
+        '''Make formula for m + 0 to m + # carbons'''
+        # input:
+        #       formula_str_I = string of formula
+        # output:
+        #       mass_ensemble_O = ensemble of distributions
+        formula_str = re.sub('[+-]', '', formula_str_I) # remove '-' or '+' 
 
-        io = stage00_io();
-        #import sample file and split into respective tables
-        io.import_calibrationFile_add(calibration_fileName_I);
+        formula = Formula(formula_str);
+        mass_ensemble_O = {};
+        if 'C' in formula._elements:
+            nC = formula._elements['C'][0]; # count the number of carbon;
+            for c in range(nC+1):
+                tmp = Formula(formula_str);
+                if c==0:tmp._elements['C'] = {0:nC-c};
+                elif nC-c==0:tmp._elements['C'] = {13:c};
+                else:tmp._elements['C'] = {0:nC-c, 13:c};
+                mass_ensemble_O[c] = Formula(tmp.formula);
+            return mass_ensemble_O;
+        else: 
+            nC = 0;
+            mass_ensemble_O = {0:formula};
+            return mass_ensemble_O
 
-    def execute_exportCalibrationConcentrations(self, sampleAndComponent_fileName_I, concentrations_fileName_O):
-        '''export calibrator concentrations for "cut&paste" into Actual Concentration column in MultiQuant
-        when filtering Analytes only'''
+    #TODO:
+    def execute_MSComponents_consistencyCheck(self):
+        '''
+        All method types:
+        check that q1 mass matches precursor formula
+        check that q3 mas matches product formula
+        check that precursor_exactmass matches precursor formula
+        check that product_exactmass matches product formula
+        Quantification:
+        check that the component_name matches the priority
+        check that no components have the same q1_mass
+        '''
 
-        #Input:
-        #   sampleAndComponent_fileName_I = .csv file specifying sample_name, sample_type, and component_group_name
-        #Output:
-        #   concentrations_fileName_O = .csv file specifying sample_name, sample_type, component_group_name, and actual_concentration
-        
-        io = stage00_io();
-        concentrations_O = [];
-        met_id_conv_dict = {'Hexose_Pool_fru_glc-D':'glc-D',
-                            'Pool_2pg_3pg':'3pg'};
-        #import sampleAndComponents
-        samplesComponents = [];
-        samplesComponents = io.import_calibration_sampleAndComponents(sampleAndComponent_fileName_I);
-        for sc in samplesComponents:
-            # if met_id is a pool of metabolites, convert to the metabolite
-            # that is logged in calibrator tables and standards tables
-            if sc['met_id'] in met_id_conv_dict.keys():
-                met_id_conv = met_id_conv_dict[sc['met_id']];
-            else:
-                met_id_conv = sc['met_id'];
-            #query calibrator_id and calibrator_level from sample
-            calibrator_id,calibrator_level = None,None;
-            calibrator_id,calibrator_level = self.stage00_query.get_calibratorIDAndLevel_sampleNameAndSampleType_sample(sc['sample_name'],sc['sample_type']);
-            #query calibrator_concentration from calibrator_concentrations
-            calibrator_concentration, concentration_units = 'N/A', None;
-            if calibrator_id and calibrator_level:
-                calibrator_concentration, concentration_units = self.stage00_query.get_calibratorConcentrationAndUnit_metIDAndCalibratorIDAndLevel_calibratorConcentrations(met_id_conv,calibrator_id,calibrator_level);
-            concentrations_O.append({'sample_name':sc['sample_name'], 'sample_type':sc['sample_type'],'component_group_name':sc['met_id'], 'actual_concentration':calibrator_concentration});
-        io.export_calibrationConcentrations(concentrations_O, concentrations_fileName_O);
+    #table initializations:
+    def drop_dataStage01(self):
+        try:
+            experimentor_id2name.__table__.drop(engine,True);
+            experimentor.__table__.drop(engine,True);
+            experimentor_list.__table__.drop(engine,True);
+            extraction_method.__table__.drop(engine,True);
+            standards.__table__.drop(engine,True);
+            standards_ordering.__table__.drop(engine,True);
+            standards2material.__table__.drop(engine,True);
+            standards_storage.__table__.drop(engine,True);
+            mix_storage.__table__.drop(engine,True);
+            mix_description.__table__.drop(engine,True);
+            mix_parameters.__table__.drop(engine,True);
+            calibrator_met_parameters.__table__.drop(engine,True);
+            calibrator2mix.__table__.drop(engine,True);
+            mix2met_id.__table__.drop(engine,True);
+            calibrator.__table__.drop(engine,True);
+            calibrator_concentrations.__table__.drop(engine,True);
+            calibrator_calculations.__table__.drop(engine,True);
+            calibrator_met2mix_calculations.__table__.drop(engine,True);
+            mix_calculations.__table__.drop(engine,True);
+            calibrator_levels.__table__.drop(engine,True);
+            MS_components.__table__.drop(engine,True);
+            MS_sourceParameters.__table__.drop(engine,True);
+            MS_information.__table__.drop(engine,True);
+            MS_method.__table__.drop(engine,True);
+            MS_component_list.__table__.drop(engine,True);
+            autosampler_parameters.__table__.drop(engine,True);
+            autosampler_information.__table__.drop(engine,True);
+            autosampler_method.__table__.drop(engine,True);
+            lc_information.__table__.drop(engine,True);
+            lc_gradient.__table__.drop(engine,True);
+            lc_parameters.__table__.drop(engine,True);
+            lc_method.__table__.drop(engine,True);
+            lc_elution.__table__.drop(engine,True);
+            acquisition_method.__table__.drop(engine,True);
+            quantitation_method.__table__.drop(engine,True);
+            quantitation_method_list.__table__.drop(engine,True);
+            sample.__table__.drop(engine,True);
+            sample_storage.__table__.drop(engine,True);
+            sample_physiologicalParameters.__table__.drop(engine,True);
+            sample_description.__table__.drop(engine,True);
+            sample_massVolumeConversion.__table__.drop(engine,True);
+            internal_standard.__table__.drop(engine,True);
+            internal_standard_storage.__table__.drop(engine,True);
+            experiment_types.__table__.drop(engine,True);
+            experiment.__table__.drop(engine,True);
+            data_versions.__table__.drop(engine,True);
+            biologicalMaterial_storage.__table__.drop(engine,True);
+            biologicalMaterial_description.__table__.drop(engine,True);
+            biologicalMaterial_geneReferences.__table__.drop(engine,True);
+            oligos_description.__table__.drop(engine,True);
+            oligos_storage.__table__.drop(engine,True);
 
-    def execute_exportAcqusitionMethod(self,lc_method_I,ms_mode_I,ms_methodtype_I,filename_I):
-        '''export the current acqusition method'''
-        io = stage00_io();
-        # get the data
-        amethod = [];
-        amethod = self.stage00_query.get_acqusitionMethod(lc_method_I,ms_mode_I,ms_methodtype_I);
-        # export the data to csv
-        io.export_acquisitionMethod(amethod, filename_I);
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_dataStage01(self,experiment_id_I = None):
+        try:
+            reset = self.session.query(experimentor_id2name).delete(synchronize_session=False);
+            reset = self.session.query(experimentor).delete(synchronize_session=False);
+            reset = self.session.query(experimentor_list).delete(synchronize_session=False);
+            reset = self.session.query(extraction_method).delete(synchronize_session=False);
+            reset = self.session.query(standards).delete(synchronize_session=False);
+            reset = self.session.query(standards_ordering).delete(synchronize_session=False);
+            reset = self.session.query(standards2material).delete(synchronize_session=False);
+            reset = self.session.query(standards_storage).delete(synchronize_session=False);
+            reset = self.session.query(mix_storage).delete(synchronize_session=False);
+            reset = self.session.query(mix_description).delete(synchronize_session=False);
+            reset = self.session.query(mix_parameters).delete(synchronize_session=False);
+            reset = self.session.query(calibrator_met_parameters).delete(synchronize_session=False);
+            reset = self.session.query(calibrator2mix).delete(synchronize_session=False);
+            reset = self.session.query(mix2met_id).delete(synchronize_session=False);
+            reset = self.session.query(calibrator).delete(synchronize_session=False);
+            reset = self.session.query(calibrator_concentrations).delete(synchronize_session=False);
+            reset = self.session.query(calibrator_calculations).delete(synchronize_session=False);
+            reset = self.session.query(calibrator_met2mix_calculations).delete(synchronize_session=False);
+            reset = self.session.query(mix_calculations).delete(synchronize_session=False);
+            reset = self.session.query(calibrator_levels).delete(synchronize_session=False);
+            reset = self.session.query(MS_components).delete(synchronize_session=False);
+            reset = self.session.query(MS_sourceParameters).delete(synchronize_session=False);
+            reset = self.session.query(MS_information).delete(synchronize_session=False);
+            reset = self.session.query(MS_method).delete(synchronize_session=False);
+            reset = self.session.query(MS_component_list).delete(synchronize_session=False);
+            reset = self.session.query(autosampler_parameters).delete(synchronize_session=False);
+            reset = self.session.query(autosampler_information).delete(synchronize_session=False);
+            reset = self.session.query(autosampler_method).delete(synchronize_session=False);
+            reset = self.session.query(lc_information).delete(synchronize_session=False);
+            reset = self.session.query(lc_gradient).delete(synchronize_session=False);
+            reset = self.session.query(lc_parameters).delete(synchronize_session=False);
+            reset = self.session.query(lc_method).delete(synchronize_session=False);
+            reset = self.session.query(lc_elution).delete(synchronize_session=False);
+            reset = self.session.query(acquisition_method).delete(synchronize_session=False);
+            reset = self.session.query(quantitation_method).delete(synchronize_session=False);
+            reset = self.session.query(quantitation_method_list).delete(synchronize_session=False);
+            reset = self.session.query(sample).delete(synchronize_session=False);
+            reset = self.session.query(sample_storage).delete(synchronize_session=False);
+            reset = self.session.query(sample_physiologicalParameters).delete(synchronize_session=False);
+            reset = self.session.query(sample_description).delete(synchronize_session=False);
+            reset = self.session.query(sample_massVolumeConversion).delete(synchronize_session=False);
+            reset = self.session.query(internal_standard).delete(synchronize_session=False);
+            reset = self.session.query(internal_standard_storage).delete(synchronize_session=False);
+            reset = self.session.query(experiment_types).delete(synchronize_session=False);
+            reset = self.session.query(experiment).delete(synchronize_session=False);
+            reset = self.session.query(data_versions).delete(synchronize_session=False);
+            reset = self.session.query(biologicalMaterial_storage).delete(synchronize_session=False);
+            reset = self.session.query(biologicalMaterial_description).delete(synchronize_session=False);
+            reset = self.session.query(biologicalMaterial_geneReferences).delete(synchronize_session=False);
+            reset = self.session.query(oligos_description).delete(synchronize_session=False);
+            reset = self.session.query(oligos_storage).delete(synchronize_session=False);
 
-    def execute_deleteExperiments(self,experiment_ids_I):
-        '''remove an experiment'''
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def initialize_dataStage01(self):
+        try:
+            experimentor_id2name.__table__.create(engine,True);
+            experimentor.__table__.create(engine,True);
+            experimentor_list.__table__.create(engine,True);
+            extraction_method.__table__.create(engine,True);
+            standards.__table__.create(engine,True);
+            standards_ordering.__table__.create(engine,True);
+            standards2material.__table__.create(engine,True);
+            standards_storage.__table__.create(engine,True);
+            mix_storage.__table__.create(engine,True);
+            mix_description.__table__.create(engine,True);
+            mix_parameters.__table__.create(engine,True);
+            calibrator_met_parameters.__table__.create(engine,True);
+            calibrator2mix.__table__.create(engine,True);
+            mix2met_id.__table__.create(engine,True);
+            calibrator.__table__.create(engine,True);
+            calibrator_concentrations.__table__.create(engine,True);
+            calibrator_calculations.__table__.create(engine,True);
+            calibrator_met2mix_calculations.__table__.create(engine,True);
+            mix_calculations.__table__.create(engine,True);
+            calibrator_levels.__table__.create(engine,True);
+            MS_components.__table__.create(engine,True);
+            MS_sourceParameters.__table__.create(engine,True);
+            MS_information.__table__.create(engine,True);
+            MS_method.__table__.create(engine,True);
+            MS_component_list.__table__.create(engine,True);
+            autosampler_parameters.__table__.create(engine,True);
+            autosampler_information.__table__.create(engine,True);
+            autosampler_method.__table__.create(engine,True);
+            lc_information.__table__.create(engine,True);
+            lc_gradient.__table__.create(engine,True);
+            lc_parameters.__table__.create(engine,True);
+            lc_method.__table__.create(engine,True);
+            lc_elution.__table__.create(engine,True);
+            acquisition_method.__table__.create(engine,True);
+            quantitation_method.__table__.create(engine,True);
+            quantitation_method_list.__table__.create(engine,True);
+            sample.__table__.create(engine,True);
+            sample_storage.__table__.create(engine,True);
+            sample_physiologicalParameters.__table__.create(engine,True);
+            sample_description.__table__.create(engine,True);
+            sample_massVolumeConversion.__table__.create(engine,True);
+            internal_standard.__table__.create(engine,True);
+            internal_standard_storage.__table__.create(engine,True);
+            experiment_types.__table__.create(engine,True);
+            experiment.__table__.create(engine,True);
+            data_versions.__table__.create(engine,True);
+            material.__table__.create(engine,True);
+            biologicalMaterial_storage.__table__.create(engine,True);
+            biologicalMaterial_description.__table__.create(engine,True);
+            biologicalMaterial_geneReferences.__table__.create(engine,True);
+            oligos_description.__table__.create(engine,True);
+            oligos_storage.__table__.create(engine,True);
 
-        # NOTES: DELETE statement appears to be broken
-
-        # remove samples from
-        # 1. experiment
-        # 2. sample
-        # 3. sample_description, sample_storage, sample_physiologicalparameters
-
-        dataListDelete = [];
-        for experiment_id_I in experiment_ids_I:
-            #query the sample IDs in the experiment
-            sample_ids = self.stage00_query.get_sampleIDs_experimentID_experiment(experiment_id_I);
-            for si in sample_ids:
-                dataListDelete.append({'experiment_id':experiment_id_I,
-                                   'sample_id':si});
-        # remove samples in order
-        self.stage00_query.delete_sample_experimentIDAndSampleID_experiment(dataListDelete);
-        self.stage00_query.delete_sample_experimentIDAndSampleID_sample(dataListDelete);
-        self.stage00_query.delete_sample_experimentIDAndSampleID_sampleDescription(dataListDelete);
-        self.stage00_query.delete_sample_experimentIDAndSampleID_sampleStorage(dataListDelete);
-        self.stage00_query.delete_sample_experimentIDAndSampleID_samplePhysiologicalParameters(dataListDelete);
+        except SQLAlchemyError as e:
+            print(e);

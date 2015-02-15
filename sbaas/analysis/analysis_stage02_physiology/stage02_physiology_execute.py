@@ -764,42 +764,44 @@ class stage02_physiology_execute():
                 True,None
                 )
             self.session.add(row);
-        #pairwisetest_metabolites
-        sampling_n.calculate_pairWiseTest_metabolites();
-        # load data into the database
-        for d in sampling_n.data:
-            row = None;
-            row = data_stage02_physiology_pairWiseTestMetabolites(
-                d['sample_id_1'],
-                d['sample_id_2'],
-                d['met_id'],
-                'mmol*gDW-1*hr-1',
-                d['mean_difference'],
-                d['test_stat'],
-                d['test_description'],
-                d['pvalue'],
-                None,None,None,None,None,
-                d['fold_change'],
-                True,None
-                )
-            self.session.add(row);
-        #pairwisetest_subsystems
-        sampling_n.calculate_pairWiseTest_subsystems();
-        # load data into the database
-        for d in sampling_n.data:
-            row = None;
-            row = data_stage02_physiology_pairWiseTestSubsystems(
-                d['sample_id_1'],
-                d['sample_id_2'],
-                d['subsystem_id'],
-                'mmol*gDW-1*hr-1',
-                d['mean_difference'],
-                d['test_stat'],
-                d['test_description'],
-                d['pvalue'],
-                None,None,None,None,None,
-                d['fold_change'],
-                True,None
-                )
-            self.session.add(row);
         self.session.commit();
+        ##pairwisetest_metabolites
+        #sampling_n.calculate_pairWiseTest_metabolites();
+        ## load data into the database
+        #for d in sampling_n.data:
+        #    row = None;
+        #    row = data_stage02_physiology_pairWiseTestMetabolites(
+        #        d['sample_id_1'],
+        #        d['sample_id_2'],
+        #        d['met_id'],
+        #        'mmol*gDW-1*hr-1',
+        #        d['mean_difference'],
+        #        d['test_stat'],
+        #        d['test_description'],
+        #        d['pvalue'],
+        #        None,None,None,None,None,
+        #        d['fold_change'],
+        #        True,None
+        #        )
+        #    self.session.add(row);
+        #self.session.commit();
+        ##pairwisetest_subsystems
+        #sampling_n.calculate_pairWiseTest_subsystems();
+        ## load data into the database
+        #for d in sampling_n.data:
+        #    row = None;
+        #    row = data_stage02_physiology_pairWiseTestSubsystems(
+        #        d['sample_id_1'],
+        #        d['sample_id_2'],
+        #        d['subsystem_id'],
+        #        'mmol*gDW-1*hr-1',
+        #        d['mean_difference'],
+        #        d['test_stat'],
+        #        d['test_description'],
+        #        d['pvalue'],
+        #        None,None,None,None,None,
+        #        d['fold_change'],
+        #        True,None
+        #        )
+        #    self.session.add(row);
+        #self.session.commit();

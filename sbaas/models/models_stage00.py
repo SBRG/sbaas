@@ -5,7 +5,15 @@ from sqlalchemy.orm import relationship
 #Experimentor
 #experimentor_id2name
 class experimentor_id2name(Base):
-    __table__ = make_table('experimentor_id2name')
+    #__table__ = make_table('experimentor_id2name')
+    __tablename__ = 'experimentor_id2name'
+    experimentor_id = Column(String(50), nullable = False);
+    experimentor_name = Column(String(100), nullable = False);
+    experimentor_role = Column(String(500), nullable = False)
+
+    __table_args__ = (ForeignKeyConstraint('experimentor_id','experimentor_list.experimentor_id', onupdate="CASCADE"),
+                ForeignKeyConstraint('experimentor_name','experimentor.experimentor_name'),
+            )
 
     def __repr__(self):
         return "experimentor_id2name: %s, %s, %s" % (self.experimentor_id,self.experimentor_name,self.experimentor_role)
@@ -17,7 +25,13 @@ class experimentor_id2name(Base):
         return json.dumps(self.__repr__dict__())
 #experimentor
 class experimentor(Base):
-    __table__ = make_table('experimentor')
+    #__table__ = make_table('experimentor')
+    __tablename__ = 'experimentor'
+    experimentor_name = Column(String(100), nullable = False);
+    contact_information = Column(String(100))
+    __table_args__ = (PrimaryKeyConstraint('experimentor_name'),
+            )
+
     #define relations
     experimentor_id2name = relationship(experimentor_id2name);
 
@@ -33,7 +47,12 @@ class experimentor(Base):
         return json.dumps(self.__repr__dict__())
 #experimentor_list
 class experimentor_list(Base):
-    __table__ = make_table('experimentor_list')
+    #__table__ = make_table('experimentor_list')
+    __tablename__ = 'experimentor_list'
+    experimentor_id = Column(String(50), nullable = False)
+
+    __table_args__ = (PrimaryKeyConstraint('experimentor_id'),
+            )
     #define relations
     experimentor_id2name = relationship(experimentor_id2name);
 
@@ -51,7 +70,14 @@ class experimentor_list(Base):
 #Extraction Method
 #extraction_method
 class extraction_method(Base):
-    __table__ = make_table('extraction_method')
+    #__table__ = make_table('extraction_method')
+    __tablename__ = 'extraction_method'
+    id = Column(String(500), nullable = False);
+    extraction_method_reference = Column(String(100), nullable = False);
+    notes = Column(Text)
+    
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            )
     #TODO:
     #define relations
 
@@ -69,7 +95,23 @@ class extraction_method(Base):
 #Standards
 #standards
 class standards(Base):
-    __table__ = make_table('standards')
+    #__table__ = make_table('standards')
+    
+    __tablename__ = 'standards'
+    met_id = Column(String(50), nullable = False);
+    met_name = Column(String(500), nullable = False);
+    formula = Column(String(100));
+    hmdb = Column(String(500));
+    solubility = Column(Float);
+    solubility_units = Column(String(10));
+    mass = Column(Float);
+    cas_number = Column(String(100));
+    keggid = Column(String(100));
+    structure_file = Column(Text);
+    structure_file_extention = Column(String(10));
+    exactmass = Column(Float)
+    __table_args__ = (PrimaryKeyConstraint('met_id'),
+            )
 
     def __init__(self,met_id_I,met_name_I,formula_I,hmdb_I,
                 solubility_I,solubility_units_I,mass_I,cas_number_I,
@@ -103,7 +145,26 @@ class standards(Base):
         return json.dumps(self.__repr__dict__())
 #standards_ordering
 class standards_ordering(Base):
-    __table__ = make_table('standards_ordering')
+    #__table__ = make_table('standards_ordering')
+    __tablename__ = 'standards_ordering'
+    met_id = Column(String(50), nullable = False);
+    met_name = Column(String(100), nullable = False);
+    hillcrest = Column(Boolean);
+    provider = Column(String(100), nullable = False);
+    provider_reference = Column(String(100), nullable = False);
+    price = Column(Float);
+    amount = Column(Float);
+    amount_units = Column(String(10));
+    purity = Column(Float);
+    mw = Column(Float);
+    notes = Column(String(500));
+    powderdate_received= Column(Date);
+    powderdate_opened= Column(Date);
+    order_standard = Column(Boolean);
+    standards_storage = Column(Float);
+    purchase = Column(Boolean)
+    __table_args__ = (PrimaryKeyConstraint('met_id','provider','provider_reference'),
+            )
 
     def __init__(self,met_id_I,met_name_I,hillcrest_I,
                  provider_I,provider_reference_I,price_I,
@@ -142,19 +203,79 @@ class standards_ordering(Base):
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
 #standards2material
+class standards2material(Base):
+    __tablename__ = 'standards2material'
+    met_id = Column(String(50), nullable = False);
+    provider = Column(String(100), nullable = False);
+    provider_reference = Column(String(100), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('met_id','provider','provider_reference'),
+                      ForeignKeyConstraint('met_id','standards.met_id'),
+                      ForeignKeyConstraint(['met_id','provider','provider_reference'],['standards_ordering.met_id','standards_ordering.provider','standards_ordering.provider_reference']),
+            )
 #standards_storage
+class standards_storage(Base):
+    __tablename__ = 'standards_storage'
+    met_id = Column(String(50), nullable = False);
+    met_name = Column(String(500), nullable = False);
+    provider = Column(String(100), nullable = False);
+    provider_reference = Column(String(50), nullable = False);
+    powderdate= Column(Date);
+    stockdate= Column(Date, nullable = False);
+    concentration = Column(Float);
+    concentration_units = Column(String(10));
+    aliquots = Column(Integer);
+    solvent = Column(String(100));
+    ph = Column(Float);
+    box = Column(Integer);
+    posstart = Column(Integer);
+    posend = Column(Integer)
+    __table_args__ = (UniqueConstraint('met_id','stockdate'),
+            PrimaryKeyConstraint('met_id','provider','provider_reference','stockdate'),
+            ForeignKeyConstraint(['met_id','provider','provider_reference'],['standards2material.met_id','standards2material.provider','standards2material.provider_reference']),
+            )
  
 #Calibrators and mixes
 #mix_storage
+class mix_storage(Base):
+    __tablename__ = 'mix_storage'
+    mix_id = Column(String(25), nullable = False);
+    mixdate= Column(Date);
+    box = Column(postgresql.ARRAY(Integer));
+    posstart = Column(postgresql.ARRAY(Integer));
+    posend = Column(postgresql.ARRAY(Integer))
+    __table_args__ = (PrimaryKeyConstraint('mix_id'),
+            )
 #mix_description
+class mix_description(Base):
+    __tablename__ = 'mix_description'
+    mix_id = Column(String(25), nullable = False);
+    mix_description = Column(Text, nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('mix_id'),
+            )
 #mix_parameters
+class mix_parameters(Base):
+    __tablename__ = 'mix_parameters'
+    mix_id = Column(String(25), nullable = False);
+    number_of_aliquots = Column(Float, nullable = False);
+    mix_volume = Column(Float, nullable = False);
+    number_of_aliquiots = Column(Integer, nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('mix_id'),
+            )
 #calibrator_met_parameters
+class calibrator_met_parameters(Base):
+    __tablename__ = 'calibrator_met_parameters'
+    met_id = Column(String(50), nullable = False);
+    dilution = Column(Integer, nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('met_id'),
+            )
 #calibrator2mix
 class calibrator2mix(Base):
     #__table__ = make_table('calibrator2mix')
     __tablename__ = 'calibrator2mix'
-    calibrator_id = Column(Integer)
-    mix_id = Column(String(25), primary_key=True)
+    calibrator_id = Column(Integer, nullable = False);
+    mix_id = Column(String(25), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('mix_id'),
+            )
 
     def __init__(self,calibrator_id_I,mix_id_I):
         self.calibrator_id=calibrator_id_I
@@ -163,24 +284,43 @@ class calibrator2mix(Base):
 class mix2met_id(Base):
     #__table__ = make_table('mix2met_id')
     __tablename__ = 'mix2met_id'
-    mix_id = Column(String(25), primary_key=True)
-    met_id = Column(String(50), primary_key=True)
-    met_name = Column(String(500))
-
+    mix_id = Column(String(25), nullable = False);
+    met_id = Column(String(50), nullable = False);
+    met_name = Column(String(500), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('met_id','mix_id'),
+            ForeignKeyConstraint('mix_id','mix_storage.mix_id'),
+            ForeignKeyConstraint('mix_id','calibrator2mix.mix_id'),
+            ForeignKeyConstraint('mix_id','mix_description.mix_id'),
+            )
+    
     def __init__(self,mix_id_I,met_id_I,met_name_I):
         self.mix_id=mix_id_I
         self.met_id=met_id_I
         self.met_name=met_name_I
 #calibrator
+class calibrator(Base):
+    __tablename__ = 'calibrator'
+    met_id = Column(String(50), nullable = False);
+    lloq = Column(Float);
+    uloq = Column(Float);
+    uloq_working = Column(Float);
+    concentration_units = Column(String(25));
+    stockdate= Column(Date)
+    __table_args__ = (UniqueConstraint('met_id','stockdate'),
+            PrimaryKeyConstraint('met_id'),
+            ForeignKeyConstraint('met_id','stockdate','standards_storage.met_id','stockdate'),
+            )
 #calibrator_concentrations
 class calibrator_concentrations(Base):
     #__table__ = make_table('calibrator_concentrations')
     __tablename__ = 'calibrator_concentrations'
-    met_id = Column(String(50), primary_key=True)
-    calibrator_level = Column(Integer, primary_key=True)
-    dilution_factor = Column(Float)
-    calibrator_concentration = Column(Float)
+    met_id = Column(String(50), nullable = False);
+    calibrator_level = Column(Integer, nullable = False);
+    dilution_factor = Column(Float);
+    calibrator_concentration = Column(Float);
     concentration_units = Column(String(25))
+    __table_args__ = (PrimaryKeyConstraint('met_id','calibrator_level'),
+            )
 
     def __init__(self,met_id_I,calibrator_level_I,dilution_factor_I,
                  calibrator_concentration_I,concentration_units_I):
@@ -191,58 +331,105 @@ class calibrator_concentrations(Base):
         self.concentration_units=concentration_units_I
 
 #calibrator_calculations
+class calibrator_calculations(Base):
+    __tablename__ = 'calibrator_calculations'
+    met_id = Column(String(50), nullable = False);
+    calcstart_concentration = Column(Float);
+    start_concentration = Column(Float)
+    
+    __table_args__ = (PrimaryKeyConstraint('met_id'),
+            ForeignKeyConstraint('met_id','calibrator(met_id'),
+            )
 #calibrator_met2mix_calculations
+class calibrator_met2mix_calculations(Base):
+    __tablename__ = 'calibrator_met2mix_calculations'
+    met_id = Column(String(50), nullable = False);
+    mix_id = Column(String(25), nullable = False);
+    working_concentration = Column(Float);
+    total_volume = Column(Float);
+    add_volume = Column(Float)
+    __table_args__ = (PrimaryKeyConstraint('met_id'),
+            ForeignKeyConstraint('met_id','calibrator_met_parameters.met_id'),
+            ForeignKeyConstraint('met_id','calibrator_calculations.met_id'),
+            ForeignKeyConstraint('mix_id','mix_calculations.mix_id'),
+            ForeignKeyConstraint('mix_id','mix_parameters.mix_id'),
+            )
 #mix_calculations
+class mix_calculations(Base):
+    __tablename__ = 'mix_calculations'
+    mix_id = Column(String(25), nullable = False);
+    number_of_compounds = Column(Integer);
+    total_volume_actual = Column(Float);
+    aliquot_volume = Column(Float);
+    add_to_make_aliquot_volume_even = Column(Float);
+    corrected_aliquot_volume = Column(Float);
+    volume_units = Column(String(25))
+    __table_args__ = (PrimaryKeyConstraint('mix_id'),
+            ForeignKeyConstraint('mix_id','mix_parameters.mix_id'),
+            )
 #calibrator_levels
-
-#Batch
+class calibrator_levels(Base):
+    __tablename__ = 'calibrator_levels'
+    calibrator_level = Column(Integer, nullable = False);
+    dilution = Column(Float, nullable = False);
+    injectionvolume = Column(Float);
+    workingvolume = Column(Float);
+    dilution_factor_from_the_previous_level = Column(Float);
+    amount_from_previous_level = Column(Float);
+    balance_h2o = Column(Float);
+    dilution_concentration = Column(Float)
+    __table_args__ = (PrimaryKeyConstraint('calibrator_level'),
+            )
 #MS_components
 class MS_components(Base):
     #__table__ = make_table('ms_components')
     __tablename__ = 'ms_components'
     id = Column(Integer, Sequence('ms_components_id_seq'))
-    q1_mass = Column(Float, primary_key=True)
-    q3_mass = Column(Float, primary_key=True)
-    ms3_mass = Column(Float)
-    met_name = Column(Text)
-    dp = Column(Float)
-    ep = Column(Float)
-    ce = Column(Float)
-    cxp = Column(Float)
-    af = Column(Float)
-    quantifier = Column(Integer)
-    ms_mode = Column(String(1))
-    ion_intensity_rank = Column(Integer)
-    ion_abundance = Column(Float)
-    precursor_formula = Column(Text)
-    product_ion_reference = Column(Text)
-    product_formula = Column(Text)
-    production_ion_notes = Column(Text)
-    met_id = Column(String(50), primary_key=True)
-    external_reference = Column(Text)
-    q1_mass_units = Column(String(20))
-    q3_mass_units = Column(String(20))
-    ms3_mass_units = Column(String(20))
-    threshold_units = Column(String(20))
-    dp_units = Column(String(20))
-    ep_units = Column(String(20))
-    ce_units = Column(String(20))
-    cxp_units = Column(String(20))
-    af_units = Column(String(20))
-    ms_group = Column(String(100))
+    q1_mass = Column(Float, nullable = False);
+    q3_mass = Column(Float, nullable = False);
+    ms3_mass = Column(Float);
+    met_name = Column(Text);
+    dp = Column(Float);
+    ep = Column(Float);
+    ce = Column(Float);
+    cxp = Column(Float);
+    af = Column(Float);
+    quantifier = Column(Integer);
+    ms_mode = Column(String(1));
+    ion_intensity_rank = Column(Integer);
+    ion_abundance = Column(Float);
+    precursor_formula = Column(Text);
+    product_ion_reference = Column(Text);
+    product_formula = Column(Text);
+    production_ion_notes = Column(Text);
+    met_id = Column(String(50), nullable = False);
+    external_reference = Column(Text);
+    q1_mass_units = Column(String(20));
+    q3_mass_units = Column(String(20));
+    ms3_mass_units = Column(String(20));
+    threshold_units = Column(String(20));
+    dp_units = Column(String(20));
+    ep_units = Column(String(20));
+    ce_units = Column(String(20));
+    cxp_units = Column(String(20));
+    af_units = Column(String(20));
+    ms_group = Column(String(100));
     threshold = Column(Float, default = 5000)
-    dwell_weight = Column(Float, default = 1.0)
-    component_name = Column(String(500),unique=True)
-    ms_include = Column(Boolean, default = False)
-    ms_is = Column(Boolean, default = False)
+    dwell_weight = Column(Float, default = 1)
+    component_name = Column(String(500));
+    ms_include = Column(Boolean, default = false);
+    ms_is = Column(Boolean, default = false);
     precursor_fragment = Column(postgresql.ARRAY(Boolean))
     product_fragment = Column(postgresql.ARRAY(Boolean))
-    precursor_exactmass = Column(Float)
-    product_exactmass = Column(Float)
-    ms_methodtype = Column(String(20))
+    precursor_exactmass = Column(Float);
+    product_exactmass = Column(Float);
+    ms_methodtype = Column(String(20), default = 'tuning')
     precursor_fragment_elements = Column(postgresql.ARRAY(String(3)))
     product_fragment_elements = Column(postgresql.ARRAY(String(3)))
 
+    __table_args__ = (UniqueConstraint('component_name','ms_include'),
+                      PrimaryKeyConstraint('met_id','q1_mass','q3_mass','ms_methodtype'),
+            )
     def __init__(self,q1_mass_I,q3_mass_I,ms3_mass_I,
                  met_name_I,dp_I,ep_I,ce_I,cxp_I,af_I,
                  quantifier_I,ms_mode_I,ion_intensity_rank_I,
@@ -299,40 +486,60 @@ class MS_components(Base):
         self.ms_methodtype = ms_methodtype_I
         self.precursor_fragment_elements = precursor_fragment_elements_I
         self.product_fragment_elements = product_fragment_elements_I
-
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "MS_analytes %s" % ()
-
-    #TODO:
-    #JSON representation
 #MS_sourceParameters
+class MS_sourceParameters(Base):
+    #__table__ = make_table('ms_sourceParameters')
+    __tablename__ = 'ms_sourceparameters'
+    id = Column(String(50), nullable = False);
+    ms_cur = Column(Float, nullable = False);
+    ms_cad = Column(String(10), nullable = False)
+    ms_is = Column(Float, nullable = False);
+    ms_tem = Column(Float, nullable = False);
+    ms_gs1 = Column(Float, nullable = False);
+    ms_gs2 = Column(Float, nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            )
 #MS_information
+class MS_information(Base):
+    #__table__ = make_table('ms_information')
+    __tablename__ = 'ms_information'
+    manufacturer = Column(String(100), nullable = False);
+    id = Column(String(100), nullable = False);
+    serial_number = Column(String(100), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            )
 #MS_method
 class MS_method(Base):
-    __table__ = make_table('ms_method')
+    #__table__ = make_table('ms_method')
+    __tablename__ = 'ms_method'
+    id = Column(String(50), nullable = False);
+    ms_sourceparameters_id = Column(String(50), nullable = False);
+    ms_information_id = Column(String(50), nullable = False);
+    ms_experiment_id = Column(String(50))
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            ForeignKeyConstraint('ms_information_id','ms_information.id', onupdate="CASCADE", ondelete="CASCADE"),
+            ForeignKeyConstraint('ms_sourceparameters_id','ms_sourceparameters.id', onupdate="CASCADE", ondelete="CASCADE"),
+            )
 
     def __init__(self,id_I, ms_sourceparameters_id_I,ms_information_id_I,ms_experiment_id_I):
         self.id = id_I;
         self.ms_sourceparameters_id = ms_sourceparameters_id_I;
         self.ms_information_id = ms_information_id_I;
         self.ms_experiment_id = ms_experiment_id_I;
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "MS_method %s" % ()
-
-    #TODO:
-    #JSON representation
 #MS_component_list
 class MS_component_list(Base):
-    __table__ = make_table('ms_component_list')
-
+    #__table__ = make_table('ms_component_list')
+    __tablename__ = 'ms_component_list'
+    ms_method_id = Column(String(50), nullable = False);
+    q1_mass = Column(Float);
+    q3_mass = Column(Float);
+    met_id = Column(String(50));
+    component_name = Column(String(500), nullable = False);
+    ms_methodtype = Column(String(20), default = 'quantification')
+    __table_args__ = (PrimaryKeyConstraint('ms_method_id','component_name'),
+            ForeignKeyConstraint('ms_method_id','ms_method.id', onupdate="CASCADE"),
+            )
+    
     def __init__(self,ms_method_id_I,q1_mass_I,q3_mass_I,
                  met_id_I,component_name_I,ms_methodtype_I):
         self.ms_method_id=ms_method_id_I
@@ -341,53 +548,105 @@ class MS_component_list(Base):
         self.met_id=met_id_I
         self.component_name=component_name_I
         self.ms_methodtype=ms_methodtype_I
-    #TODO:
-    #define relations
 
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "MS_component_list %s" % ()
-
-    #TODO:
-    #JSON representation
 #Autosampler_parameters
+class autosampler_parameters(Base):
+    __tablename__ = 'autosampler_parameters'
+    id = Column(String(50), nullable = False);
+    injvolume_ul = Column(Float);
+    washsolvent1 = Column(String(500));
+    washsolvent2 = Column(String(500))
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            )
 #Autosampler_information
+class autosampler_information(Base):
+    __tablename__ = 'autosampler_information'
+    manufacturer = Column(String(100), nullable = False);
+    id = Column(String(100), nullable = False);
+    serial_number = Column(String(100), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            )
 #Autosampler_method
+class autosampler_method(Base):
+    __tablename__ = 'autosampler_method'
+    id = Column(String(50), nullable = False);
+    autosampler_parameters_id = Column(String(50), nullable = False);
+    autosampler_information_id = Column(String(50), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            ForeignKeyConstraint('autosampler_method_id','autosampler_method.id', onupdate="CASCADE"),
+            ForeignKeyConstraint('autosampler_information_id','autosampler_information.id', onupdate="CASCADE"),
+            ForeignKeyConstraint('autosampler_parameters_id','autosampler_parameters.id', onupdate="CASCADE"),
+            )
+
 #LC_information
+class lc_information(Base):
+    __tablename__ = 'lc_information'
+    manufacturer = Column(String(100), nullable = False);
+    id = Column(String(100), nullable = False);
+    serial_number = Column(String(100), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            )
 #LC_gradient
+class lc_gradient(Base):
+    __tablename__ = 'lc_gradient'
+    id = Column(String(50), nullable = False);
+    lc_event = Column(postgresql.ARRAY(Integer), nullable = False);
+    lc_time = Column(postgresql.ARRAY(Float), nullable = False);
+    percent_b = Column(postgresql.ARRAY(Float), nullable = False);
+    flow_rate = Column(postgresql.ARRAY(Float), nullable = False);
+    lc_time_units = Column(String(25), nullable = False);
+    flow_rate_units = Column(String(25), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            ForeignKeyConstraint('lc_gradient_id','lc_gradient.id', onupdate="CASCADE"),
+            )
 #LC_parameters
+class lc_parameters(Base):
+    __tablename__ = 'lc_parameters'
+    id = Column(String(50), nullable = False);
+    column_name = Column(String(100), nullable = False);
+    dimensions_and_particle_size = Column(String(100), nullable = False);
+    mobile_phase_a = Column(String(100), nullable = False);
+    mobile_phase_b = Column(String(100), nullable = False);
+    oven_temperature = Column(String(100), nullable = False);
+    notes = Column(Text)
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            )
 #LC_method
+class lc_method(Base):
+    __tablename__ = 'lc_method'
+    id = Column(String(50), nullable = False);
+    lc_information_id = Column(String(100), nullable = False);
+    lc_gradient_id = Column(String(50), nullable = False);
+    lc_parameters_id = Column(String(50), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            ForeignKeyConstraint('lc_information_id','lc_information.id', onupdate="CASCADE"),
+            ForeignKeyConstraint('lc_parameters_id','lc_parameters.id', onupdate="CASCADE"),
+            )
 #LC_elution
 class lc_elution(Base):
     __tablename__ = 'lc_elution'
-
     lc_method_id=Column(String(length=50), nullable = False, primary_key=True)
     met_id=Column(String(length=50), nullable = False)
     rt=Column(Float, default = 0.0)
     ms_window=Column(Float, default = 60.0)
     rt_units=Column(String(length=20))
     window_units=Column(String(length=20))
-
-    #TODO:
-    #def __init__(self,lc_method_id_I):
-    #    self.lc_method_id=lc_method_id_I;
-
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "sample %s" % ()
-
-    #TODO:
-    #JSON representation
-
-
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            ForeignKeyConstraint('lc_method_id','lc_method.id', onupdate="CASCADE"),
+            )
+    
 #acquisition_method
 class acquisition_method(Base):
-    __table__ = make_table('acquisition_method')
+    #__table__ = make_table('acquisition_method')
+    __tablename__ = 'acquisition_method'
+    id = Column(String(50), nullable = False);
+    ms_method_id = Column(String(50));
+    autosampler_method_id = Column(String(50));
+    lc_method_id = Column(String(50))
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            ForeignKeyConstraint('lc_method_id','lc_method.id', onupdate="CASCADE"),
+            ForeignKeyConstraint('ms_method_id','ms_method.id', onupdate="CASCADE"),
+            )
 
     def __init__(self,id_I, ms_method_id_I,autosampler_method_id_I,lc_method_id_I):
         self.id = id_I;
@@ -395,17 +654,28 @@ class acquisition_method(Base):
         self.autosampler_method_id = autosampler_method_id_I;
         self.lc_method_id = lc_method_id_I;
 
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "acquisition_method %s" % ()
-
-    #TODO:
-    #JSON representation
-
 #quantitation_method
 class quantitation_method(Base):
-    __table__ = make_table('quantitation_method')
+    #__table__ = make_table('quantitation_method')
+    __tablename__ = 'quantitation_method'
+    id = Column(String(50), nullable = False);
+    q1_mass = Column(Float);
+    q3_mass = Column(Float);
+    met_id = Column(String(50));
+    component_name = Column(String(100), nullable = False);
+    is_name = Column(String(100))
+    fit = Column(String(20));
+    weighting = Column(String(20));
+    intercept = Column(Float);
+    slope = Column(Float);
+    correlation = Column(Float);
+    use_area = Column(Boolean, default = false)
+    lloq = Column(Float);
+    uloq = Column(Float);
+    points = Column(Integer)
+    __table_args__ = (PrimaryKeyConstraint('id','component_name'),
+            ForeignKeyConstraint('id','quantitation_method_list.quantitation_method_id', ondelete="CASCADE"),
+            )
 
     def __init__(self,id_I, q1_mass_I,q3_mass_I,met_id_I,component_name_I,is_name_I,fit_I,
                  weighting_I,intercept_I,slope_I,correlation_I,use_area_I,lloq_I,uloq_I,
@@ -425,45 +695,31 @@ class quantitation_method(Base):
         self.lloq = lloq_I;
         self.uloq = uloq_I;
         self.points = points_I;
-
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "quantitation_method %s" % ()
-
-    #TODO:
-    #JSON representation
 #quantitation_method_list
 class quantitation_method_list(Base):
-    __table__ = make_table('quantitation_method_list')
-
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "quantitation_method_list %s" % ()
-
-    #TODO:
-    #JSON representation
+    #__table__ = make_table('quantitation_method_list')
+    __tablename__ = 'quantitation_method_list'
+    quantitation_method_id = Column(String(50), nullable = False)
+    __table_args__ = (PrimaryKeyConstraint('quantitation_method_id'),
+            )
 
 #Samples
 #sample
 class sample(Base):
     #__table__ = make_table('sample')
     __tablename__ = 'sample'
-
-    sample_name=Column(String(length=500), nullable = False, primary_key=True)
-    sample_type=Column(String(length=100), nullable = False)
-    calibrator_id=Column(Integer)
-    calibrator_level=Column(Integer)
-    sample_id=Column(String(length=500))
-    sample_dilution=Column(Float, default = 1.0)
-
+    sample_name = Column(String(500), nullable = False);
+    sample_type = Column(String(100), nullable = False);
+    calibrator_id = Column(Integer);
+    calibrator_level = Column(Integer);
+    sample_id = Column(String(500));
+    sample_dilution = Column(Float, default = 1.0)
+    
+    __table_args__ = (PrimaryKeyConstraint('sample_name'),
+            ForeignKeyConstraint('sample_id','sample_storage.sample_id'),
+            ForeignKeyConstraint('sample_id','sample_physiologicalparameters.sample_id'),
+            ForeignKeyConstraint('sample_id','sample_description.sample_id'),
+            )
 
     def __init__(self,sample_name_I,sample_type_I,calibrator_id_I,calibrator_level_I,sample_id_I,sample_dilution_I):
         self.sample_name=sample_name_I;
@@ -472,43 +728,26 @@ class sample(Base):
         self.calibrator_level=calibrator_level_I;
         self.sample_id=sample_id_I;
         self.sample_dilution=sample_dilution_I;
-
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "sample %s" % ()
-
-    #TODO:
-    #JSON representation
 #sample_storage
 class sample_storage(Base):
     #__table__ = make_table('sample_storage')
     __tablename__ = 'sample_storage'
     sample_id=Column(String(500),nullable=False, primary_key=True)
-    sample_label=Column(String(50))
+    sample_label=Column(String(50), nullable = False)
+    #sample_dateAndTime=Column(DateTime)
     ph=Column(Float)
     box=Column(Integer)
     pos=Column(Integer)
 
-    def __init__(self,sample_id_I,sample_label_I,ph_I,box_I,pos_I):
+    def __init__(self,sample_id_I,
+                 #sample_dateAndTime_I,
+                 sample_label_I,ph_I,box_I,pos_I):
         self.sample_id = sample_id_I
         self.sample_label = sample_label_I
+        #self.sample_dateAndTime = sample_dateAndTime_I
         self.ph = ph_I
         self.box = box_I
         self.pos = pos_I
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "sample_storage %s" % ()
-
-    #TODO:
-    #JSON representation
 #sample_physiologicalParameters
 class sample_physiologicalParameters(Base):
     #__table__ = make_table('sample_physiologicalparameters')
@@ -558,16 +797,6 @@ class sample_physiologicalParameters(Base):
         self.culture_volume_sampled_units = culture_volume_sampled_units_I
         self.dcw_units = dcw_units_I
         self.wcw_units = wcw_units_I
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "sample_physiologicalParameters %s" % ()
-
-    #TODO:
-    #JSON representation
 #sample_description
 class sample_description(Base):
     #__table__ = make_table('sample_description')
@@ -612,16 +841,6 @@ class sample_description(Base):
         self.sample_replicate_biological=sample_replicate_biological_I
         self.istechnical=istechnical_I
         self.notes=notes_I
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "sample_storage %s" % ()
-
-    #TODO:
-    #JSON representation
 #sample_massVolumeConversion
 class sample_massVolumeConversion(Base):
     #__table__ = make_table('sample_massvolumeconversion')
@@ -631,36 +850,71 @@ class sample_massVolumeConversion(Base):
     conversion_factor=Column(Float);
     conversion_units=Column(String(50),nullable=False);
     conversion_reference=Column(String(500),nullable=False);
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "sample_storage %s" % ()
-
-    #TODO:
-    #JSON representation
 
 #IS
 #internal_standard
+class internal_standard(Base):
+    #__table__ = make_table('internal_standard')
+    __tablename__ = 'internal_standard'
+    is_id = Column(Integer, nullable = False);
+    is_date = Column(DateTime, nullable = False);
+    experimentor_id = Column(String(50), nullable = False);
+    extraction_method_id = Column(String(50))
+    __table_args__ = (PrimaryKeyConstraint('is_id'),
+            ForeignKeyConstraint('is_id','internal_standard_storage.is_id'),
+            )
 #internal_standard_storage
+class internal_standard_storage(Base):
+    #__table__ = make_table('internal_standard_storage')
+    __tablename__ = 'internal_standard_storage'
+    is_id = Column(Integer, nullable = False);
+    concentration = Column(Float);
+    concentration_units = Column(String(10));
+    aliquots = Column(Integer);
+    aliquot_volume = Column(Float);
+    aliquot_volume_units = Column(String(10));
+    solvent = Column(String(100));
+    ph = Column(Float);
+    box = Column(Integer);
+    posstart = Column(Integer);
+    posend = Column(Integer)
+    __table_args__ = (PrimaryKeyConstraint('is_id'),
+            )
 
 #experiments
 #experiment_types
+class experiment_types(Base):
+    #__table__ = make_table('experiment_types')
+    __tablename__ = 'experiment_types'
+    id = Column(Integer, nullable = False);
+    experiment_name = Column(String(100))
+    __table_args__ = (PrimaryKeyConstraint('id'),
+            )
 #experiment
 class experiment(Base):
     #__table__ = make_table('experiment')
     __tablename__ = 'experiment'
-    wid = Column(Integer, Sequence('wids'), primary_key=True,nullable=False,)
+    wid = Column(Integer, Sequence('wids'),nullable=False,)
     exp_type_id=Column(Integer);
-    id=Column(String(50),nullable=False, primary_key=True);
-    sample_name=Column(String(500),nullable=False, primary_key=True);
+    id=Column(String(50),nullable=False);
+    sample_name=Column(String(500),nullable=False);
     experimentor_id=Column(String(50));
     extraction_method_id=Column(String(50));
     acquisition_method_id=Column(String(50),nullable=False);
     quantitation_method_id=Column(String(50));
     internal_standard_id=Column(Integer);
+    
+    __table_args__ = (
+            PrimaryKeyConstraint('id','sample_name'),
+            ForeignKeyConstraint(['acquisition_method_id'], ['acquisition_method.id'], onupdate="CASCADE"),
+            ForeignKeyConstraint(['exp_type_id'], ['experiment_types.id'], ondelete="CASCADE"),
+            ForeignKeyConstraint(['experimentor_id'], ['experimentor_list.experimentor_id']),
+            ForeignKeyConstraint(['extraction_method_id'], ['extraction_method.id']),
+            ForeignKeyConstraint(['internal_standard_id'], ['internal_standard.is_id']),
+            ForeignKeyConstraint(['quantitation_method_id'], ['quantitation_method_list.quantitation_method_id']),
+            ForeignKeyConstraint(['sample_name'], ['sample.sample_name']),
+            UniqueConstraint('wid'),
+            )
 
     def __init__(self,exp_type_id_I,id_I,sample_name_I,
                  experimentor_id_I,extraction_method_id_I,
@@ -696,10 +950,24 @@ class experiment(Base):
 
 #data_versions
 class data_versions(Base):
-    __table__ = make_table('data_versions')
-    #TODO:
-    #define relations
-
+    __tablename__ = 'data_versions'
+    experiment_id = Column(String(50), nullable = False);
+    sample_name = Column(String(500), nullable = False);
+    component_name = Column(String(500), nullable = False);
+    acquisition_date_and_time = Column(DateTime, nullable = False);
+    concentration_before = Column(Float);
+    concentration_after = Column(Float);
+    concentration_units_before = Column(String(20));
+    concentration_units_after = Column(String(20));
+    used_before = Column(Boolean);
+    used_after = Column(Boolean);
+    data_stage_before = Column(Integer);
+    data_stage_after = Column(Integer);
+    data_stage_modtime = Column(DateTime, default=datetime.datetime.utcnow, nullable = False);
+    __table_args__ = (PrimaryKeyConstraint('experiment_id','sample_name','component_name','data_stage_modtime'),
+            ForeignKeyConstraint(['experiment_id','sample_name'],['experiment.id','experiment.sample_name']),
+            ForeignKeyConstraint(['sample_name','component_name','acquisition_date_and_time'],['data_stage01_quantification_mqresultstable.sample_name','data_stage01_quantification_mqresultstable.component_name','data_stage01_quantification_mqresultstable.acquisition_date_and_time']),
+            )
     #define representation
     def __repr__(self):
         return "data_versions %s" % (self.experiment_id, self.sample_name,self.component_name, self.acquisition_date_and_time)
@@ -723,16 +991,6 @@ class biologicalMaterial_storage(Base):
         self.biologicalmaterial_posstart = biologicalmaterial_posstart_I
         self.biologicalmaterial_posend = biologicalmaterial_posend_I
         self.biologicalmaterial_date = biologicalmaterial_date_I
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "biologicalmaterial_storage %s" % ()
-
-    #TODO:
-    #JSON representation
 #biologicalmaterial_description
 class biologicalMaterial_description(Base):
     __tablename__ = 'biologicalmaterial_description'
@@ -747,17 +1005,6 @@ class biologicalMaterial_description(Base):
         self.biologicalmaterial_strain = biologicalmaterial_strain_I
         self.biologicalmaterial_description = biologicalmaterial_description_I
         self.biologicalmaterial_notes = biologicalmaterial_notes_I
-
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "biologicalmaterial_description %s" % ()
-
-    #TODO:
-    #JSON representation
 #biologicalmaterial_description
 class biologicalMaterial_geneReferences(Base):
     __tablename__ = 'biologicalmaterial_genereferences'
@@ -818,17 +1065,6 @@ class oligos_description(Base):
         self.oligos_purification = oligos_purification_I
         self.oligos_description = oligos_description_I
         self.oligos_notes = oligos_notes_I
-
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "oligos_description %s" % ()
-
-    #TODO:
-    #JSON representation
 #oligos_storage
 class oligos_storage(Base):
     __tablename__ = 'oligos_storage'
@@ -855,75 +1091,8 @@ class oligos_storage(Base):
         self.oligos_storagebuffer = oligos_storagebuffer_I
         self.oligos_concentration = oligos_concentration_I
         self.oligos_concentration_units = oligos_concentration_units_I
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "oligos_storage %s" % ()
-
-    #TODO:
-    #JSON representation
 
 # Models
-# metabolomics_models
-class metabolomics_models(Base):
-    __tablename__ = 'metabolomics_models'
-    model_id = Column(String(100), primary_key=True)
-    model_date = Column(DateTime)
-    model_file = Column(Text)
-    model_file_extension = Column(String(10), default = '.xml')
-
-    def __init__(self,model_id_I, model_date_I, model_file_I, model_file_extension_I):
-        self.model_id = model_id_I
-        self.model_date = model_date_I
-        self.model_file = model_file_I
-        self.model_file_extension = model_file_exntension_I
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "oligos_storage %s" % ()
-
-    #TODO:
-    #JSON representation
-
-# models_atomMapping
-class models_atomMapping(Base):
-    __tablename__ = 'models_atomMapping'
-    mapping_id = Column(String(100), primary_key=True)
-    mapping_date = Column(DateTime)
-    mapping_description = Column(String(100), default = '13CFlux')
-    rxn_id_old = Column(String(100))
-    rxn_id = Column(String(100))
-    ctrack = Column(String(500))
-    mapping = Column(String(500))
-    notes = Column(String(500))
-
-    def __init__(self,mapping_id_I,mapping_date_I,mapping_description_I,rxn_id_old_I,rxn_id_I,ctrack_I,mapping_I,notes_I):
-        self.mapping_id=mapping_id_I
-        self.mapping_date=mapping_date_I
-        self.mapping_description=mapping_description_I
-        self.rxn_id_old=rxn_id_old_I
-        self.rxn_id=rxn_id_I
-        self.ctrack=ctrack_I
-        self.mapping=mapping_I
-        self.notes=notes_I
-
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "oligos_storage %s" % ()
-
-    #TODO:
-    #JSON representation
-
 # models_lumpedRxns
 class models_lumpedRxns(Base):
     __tablename__ = 'lumpedRxns'
@@ -942,396 +1111,3 @@ class models_lumpedRxns(Base):
         self.reactions=reactions_I
         self.stoichiometry=stoichiometry_I
 
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "oligos_storage %s" % ()
-
-    #TODO:
-    #JSON representation
-
-# Characterization
-# metabolomics_characterization
-class metabolomics_characterization(Base):
-    __tablename__ = 'metabolomics_characterization'
-    experiment_id = Column(String(50), primary_key=True)
-    experiment_type=Column(Integer, primary_key=True);
-    sample_name_short = Column(String(100), primary_key=True)
-    sample_label = Column(String(50))
-    time_point = Column(String(10))
-    date_and_time = Column(DateTime, primary_key=True)
-    data_raw = Column(Float)
-    data_corrected = Column(Float)
-    data_type = Column(String(100), primary_key=True)
-    data_type_units = Column(String(100))
-    data_type_reference = Column(String(500), primary_key=True)
-    used_ = Column(Boolean);
-    comment_ = Column(Text);
-
-    def __init__(self, experiment_id_I,experiment_type_I,sample_name_short_I,
-                 sample_label_I,time_point_I,date_and_time_I,data_raw_I,data_corrected_I,
-                 data_type_I,data_type_units_I,data_type_reference_I,used__I,comment__I,):
-        self.experiment_id=experiment_id_I
-        self.experiment_type=experiment_type_I
-        self.sample_name_short=sample_name_short_I
-        self.sample_label=sample_label_I
-        self.time_point=time_point_I
-        self.date_and_time=date_and_time_I
-        self.data_raw=data_raw_I
-        self.data_corrected=data_corrected_I
-        self.data_type=data_type_I
-        self.data_type_units=data_type_units_I
-        self.data_type_reference=data_type_reference_I
-        self.used_=used__I
-        self.comment_=comment__I
-
-    def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
-                'experiment_type':self.experiment_type,
-                'sample_name_short':self.sample_name_short,
-                'sample_label':self.sample_label,
-                'time_point':self.time_point,
-                'time':self.time,
-                'data_raw':self.data_raw,
-                'data_corrected':self.data_corrected,
-                'data_type_name':self.data_type_name,
-                'data_type_reference':self.data_type_reference,
-                'used_':self.used_,
-                'comment_':self.comment_}
-    
-    def __repr__json__(self):
-        return json.dumps(self.__repr__dict__())
-
-'''
-class standards(Base):
-    __table__ = make_table('standards')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "standards %s" % ()
-
-    #TODO:
-    #JSON representation
-class standards_ordering(Base):
-    __table__ = make_table('standards_ordering')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "standards_ordering %s" % ()
-
-    #TODO:
-    #JSON representation
-class standards2material(Base):
-    __table__ = make_table('standards2material')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "standards2material %s" % ()
-
-    #TODO:
-    #JSON representation
-class standards_storage(Base):
-    __table__ = make_table('standards_storage')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "standards_storage %s" % ()
-
-    #TODO:
-    #JSON representation
-class mix_storage(Base):
-    __table__ = make_table('mix_storage')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "mix_storage %s" % ()
-
-    #TODO:
-    #JSON representation
-class mix_description(Base):
-    __table__ = make_table('mix_description')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "mix_description %s" % ()
-
-    #TODO:
-    #JSON representation
-class mix_parameters(Base):
-    __table__ = make_table('mix_parameters')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "mix_parameters %s" % ()
-
-    #TODO:
-    #JSON representation
-class calibrator_met_parameters(Base):
-    __table__ = make_table('calibrator_met_parameters')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "calibrator_met_parameters %s" % ()
-
-    #TODO:
-    #JSON representation
-class calibrator2mix(Base):
-    __table__ = make_table('calibrator2mix')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "calibrator2mix %s" % ()
-
-    #TODO:
-    #JSON representation
-class mix2met_ID(Base):
-    __table__ = make_table('mix2met_ID')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "mix2met_ID %s" % ()
-
-    #TODO:
-    #JSON representation
-class calibrator(Base):
-    __table__ = make_table('calibrator')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "calibrator %s" % ()
-
-    #TODO:
-    #JSON representation
-class calibrator_calculations(Base):
-    __table__ = make_table('calibrator_calculations')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "calibrator_calculations %s" % ()
-
-    #TODO:
-    #JSON representation
-class calibrator_met2mix_calculations(Base):
-    __table__ = make_table('calibrator_met2mix_calculations')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "calibrator_met2mix_calculations %s" % ()
-
-    #TODO:
-    #JSON representation
-class mix_calculations(Base):
-    __table__ = make_table('mix_calculations')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "mix_calculations %s" % ()
-
-    #TODO:
-    #JSON representation
-class calibrator_levels(Base):
-    __table__ = make_table('calibrator_levels')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "calibrator_levels %s" % ()
-
-    #TODO:
-    #JSON representation
-
-class MS_sourceParameters(Base):
-    __table__ = make_table('MS_sourceParameters')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "MS_sourceParameters %s" % ()
-
-    #TODO:
-    #JSON representation
-class MS_information(Base):
-    __table__ = make_table('MS_information')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "MS_information %s" % ()
-
-    #TODO:
-    #JSON representation
-
-class Autosampler_parameters(Base):
-    __table__ = make_table('Autosampler_parameters')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "Autosampler_parameters %s" % ()
-
-    #TODO:
-    #JSON representation
-class Autosampler_information(Base):
-    __table__ = make_table('Autosampler_information')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "Autosampler_information %s" % ()
-
-    #TODO:
-    #JSON representation
-class Autosampler_method(Base):
-    __table__ = make_table('Autosampler_method')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "Autosampler_method %s" % ()
-
-    #TODO:
-    #JSON representation
-class LC_information(Base):
-    __table__ = make_table('LC_information')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "LC_information %s" % ()
-
-    #TODO:
-    #JSON representation
-class LC_gradient(Base):
-    __table__ = make_table('LC_gradient')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "LC_gradient %s" % ()
-
-    #TODO:
-    #JSON representation
-class LC_parameters(Base):
-    __table__ = make_table('LC_parameters')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "LC_parameters %s" % ()
-
-    #TODO:
-    #JSON representation
-class LC_method(Base):
-    __table__ = make_table('LC_method')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "LC_method %s" % ()
-
-    #TODO:
-    #JSON representation
-
-class batch_information(Base):
-    __table__ = make_table('batch_information')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "batch_information %s" % ()
-
-    #TODO:
-    #JSON representation
-
-class experiments(Base):
-    __table__ = make_table('experiments')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "experiments %s" % ()
-
-    #TODO:
-    #JSON representation
-class experiment_types(Base):
-    __table__ = make_table('experiment_types')
-    #TODO:
-    #define relations
-
-    #TODO:
-    #define representation
-    #def __repr__(self):
-        #return "experiment_types %s" % ()
-
-    #TODO:
-    #JSON representation
-'''
