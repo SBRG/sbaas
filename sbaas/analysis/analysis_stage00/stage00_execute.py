@@ -942,7 +942,6 @@ class stage00_execute():
             nC = 0;
             mass_ensemble_O = {0:formula};
             return mass_ensemble_O
-
     #TODO:
     def execute_MSComponents_consistencyCheck(self):
         '''
@@ -955,7 +954,6 @@ class stage00_execute():
         check that the component_name matches the priority
         check that no components have the same q1_mass
         '''
-
     #table initializations:
     def drop_dataStage01(self):
         try:
