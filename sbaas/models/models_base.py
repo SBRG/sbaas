@@ -58,7 +58,7 @@ class _Session(_SA_Session):
         #self.search_by_synonym = MethodType(search_by_synonym, self)
 
     def __repr__(self):
-        return "Metabolomics session %d" % (self.__hash__())
+        return "SBaaS session %d" % (self.__hash__())
 
 
 def get_or_create(session, class_type, **kwargs):

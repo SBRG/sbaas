@@ -12,8 +12,9 @@ class experimentor_id2name(Base):
     experimentor_name = Column(String(100), nullable = False);
     experimentor_role = Column(String(500), nullable = False)
 
-    __table_args__ = (ForeignKeyConstraint('experimentor_id','experimentor_list.experimentor_id', onupdate="CASCADE"),
-                ForeignKeyConstraint('experimentor_name','experimentor.experimentor_name'),
+    __table_args__ = (ForeignKeyConstraint(['experimentor_id'],['experimentor_list.experimentor_id'], onupdate="CASCADE"),
+                ForeignKeyConstraint(['experimentor_name'],['experimentor.experimentor_name']),
+                PrimaryKeyConstraint('experimentor_id','experimentor_name','experimentor_role'),
             )
 
     def __repr__(self):
@@ -210,7 +211,7 @@ class standards2material(Base):
     provider = Column(String(100), nullable = False);
     provider_reference = Column(String(100), nullable = False)
     __table_args__ = (PrimaryKeyConstraint('met_id','provider','provider_reference'),
-                      ForeignKeyConstraint('met_id','standards.met_id'),
+                      ForeignKeyConstraint(['met_id'],['standards.met_id']),
                       ForeignKeyConstraint(['met_id','provider','provider_reference'],['standards_ordering.met_id','standards_ordering.provider','standards_ordering.provider_reference']),
             )
 #standards_storage
@@ -289,9 +290,9 @@ class mix2met_id(Base):
     met_id = Column(String(50), nullable = False);
     met_name = Column(String(500), nullable = False)
     __table_args__ = (PrimaryKeyConstraint('met_id','mix_id'),
-            ForeignKeyConstraint('mix_id','mix_storage.mix_id'),
-            ForeignKeyConstraint('mix_id','calibrator2mix.mix_id'),
-            ForeignKeyConstraint('mix_id','mix_description.mix_id'),
+            ForeignKeyConstraint(['mix_id'],['mix_storage.mix_id']),
+            ForeignKeyConstraint(['mix_id'],['calibrator2mix.mix_id']),
+            ForeignKeyConstraint(['mix_id'],['mix_description.mix_id']),
             )
     
     def __init__(self,mix_id_I,met_id_I,met_name_I):
@@ -309,7 +310,7 @@ class calibrator(Base):
     stockdate= Column(Date)
     __table_args__ = (UniqueConstraint('met_id','stockdate'),
             PrimaryKeyConstraint('met_id'),
-            ForeignKeyConstraint('met_id','stockdate','standards_storage.met_id','stockdate'),
+            ForeignKeyConstraint(['met_id','stockdate'],['standards_storage.met_id','standards_storage.stockdate']),
             )
 #calibrator_concentrations
 class calibrator_concentrations(Base):
@@ -339,7 +340,7 @@ class calibrator_calculations(Base):
     start_concentration = Column(Float)
     
     __table_args__ = (PrimaryKeyConstraint('met_id'),
-            ForeignKeyConstraint('met_id','calibrator(met_id'),
+            ForeignKeyConstraint(['met_id'],['calibrator.met_id']),
             )
 #calibrator_met2mix_calculations
 class calibrator_met2mix_calculations(Base):
@@ -350,10 +351,10 @@ class calibrator_met2mix_calculations(Base):
     total_volume = Column(Float);
     add_volume = Column(Float)
     __table_args__ = (PrimaryKeyConstraint('met_id'),
-            ForeignKeyConstraint('met_id','calibrator_met_parameters.met_id'),
-            ForeignKeyConstraint('met_id','calibrator_calculations.met_id'),
-            ForeignKeyConstraint('mix_id','mix_calculations.mix_id'),
-            ForeignKeyConstraint('mix_id','mix_parameters.mix_id'),
+            ForeignKeyConstraint(['met_id'],['calibrator_met_parameters.met_id']),
+            ForeignKeyConstraint(['met_id'],['calibrator_calculations.met_id']),
+            ForeignKeyConstraint(['mix_id'],['mix_calculations.mix_id']),
+            ForeignKeyConstraint(['mix_id'],['mix_parameters.mix_id']),
             )
 #mix_calculations
 class mix_calculations(Base):
@@ -366,7 +367,7 @@ class mix_calculations(Base):
     corrected_aliquot_volume = Column(Float);
     volume_units = Column(String(25))
     __table_args__ = (PrimaryKeyConstraint('mix_id'),
-            ForeignKeyConstraint('mix_id','mix_parameters.mix_id'),
+            ForeignKeyConstraint(['mix_id'],['mix_parameters.mix_id']),
             )
 #calibrator_levels
 class calibrator_levels(Base):
@@ -418,8 +419,8 @@ class MS_components(Base):
     threshold = Column(Float, default = 5000)
     dwell_weight = Column(Float, default = 1)
     component_name = Column(String(500));
-    ms_include = Column(Boolean, default = false);
-    ms_is = Column(Boolean, default = false);
+    ms_include = Column(Boolean, default = False);
+    ms_is = Column(Boolean, default = False);
     precursor_fragment = Column(postgresql.ARRAY(Boolean))
     product_fragment = Column(postgresql.ARRAY(Boolean))
     precursor_exactmass = Column(Float);
@@ -518,8 +519,8 @@ class MS_method(Base):
     ms_information_id = Column(String(50), nullable = False);
     ms_experiment_id = Column(String(50))
     __table_args__ = (PrimaryKeyConstraint('id'),
-            ForeignKeyConstraint('ms_information_id','ms_information.id', onupdate="CASCADE", ondelete="CASCADE"),
-            ForeignKeyConstraint('ms_sourceparameters_id','ms_sourceparameters.id', onupdate="CASCADE", ondelete="CASCADE"),
+            ForeignKeyConstraint(['ms_information_id'],['ms_information.id'], onupdate="CASCADE", ondelete="CASCADE"),
+            ForeignKeyConstraint(['ms_sourceparameters_id'],['ms_sourceparameters.id'], onupdate="CASCADE", ondelete="CASCADE"),
             )
 
     def __init__(self,id_I, ms_sourceparameters_id_I,ms_information_id_I,ms_experiment_id_I):
@@ -538,7 +539,7 @@ class MS_component_list(Base):
     component_name = Column(String(500), nullable = False);
     ms_methodtype = Column(String(20), default = 'quantification')
     __table_args__ = (PrimaryKeyConstraint('ms_method_id','component_name'),
-            ForeignKeyConstraint('ms_method_id','ms_method.id', onupdate="CASCADE"),
+            ForeignKeyConstraint(['ms_method_id'],['ms_method.id'], onupdate="CASCADE"),
             )
     
     def __init__(self,ms_method_id_I,q1_mass_I,q3_mass_I,
@@ -574,9 +575,9 @@ class autosampler_method(Base):
     autosampler_parameters_id = Column(String(50), nullable = False);
     autosampler_information_id = Column(String(50), nullable = False)
     __table_args__ = (PrimaryKeyConstraint('id'),
-            ForeignKeyConstraint('autosampler_method_id','autosampler_method.id', onupdate="CASCADE"),
-            ForeignKeyConstraint('autosampler_information_id','autosampler_information.id', onupdate="CASCADE"),
-            ForeignKeyConstraint('autosampler_parameters_id','autosampler_parameters.id', onupdate="CASCADE"),
+            ForeignKeyConstraint(['id'],['autosampler_method.id'], onupdate="CASCADE"),
+            ForeignKeyConstraint(['autosampler_information_id'],['autosampler_information.id'], onupdate="CASCADE"),
+            ForeignKeyConstraint(['autosampler_parameters_id'],['autosampler_parameters.id'], onupdate="CASCADE"),
             )
 
 #LC_information
@@ -598,7 +599,7 @@ class lc_gradient(Base):
     lc_time_units = Column(String(25), nullable = False);
     flow_rate_units = Column(String(25), nullable = False)
     __table_args__ = (PrimaryKeyConstraint('id'),
-            ForeignKeyConstraint('lc_gradient_id','lc_gradient.id', onupdate="CASCADE"),
+            ForeignKeyConstraint(['id'],['lc_gradient.id'], onupdate="CASCADE"),
             )
 #LC_parameters
 class lc_parameters(Base):
@@ -620,20 +621,20 @@ class lc_method(Base):
     lc_gradient_id = Column(String(50), nullable = False);
     lc_parameters_id = Column(String(50), nullable = False)
     __table_args__ = (PrimaryKeyConstraint('id'),
-            ForeignKeyConstraint('lc_information_id','lc_information.id', onupdate="CASCADE"),
-            ForeignKeyConstraint('lc_parameters_id','lc_parameters.id', onupdate="CASCADE"),
+            ForeignKeyConstraint(['lc_information_id'],['lc_information.id'], onupdate="CASCADE"),
+            ForeignKeyConstraint(['lc_parameters_id'],['lc_parameters.id'], onupdate="CASCADE"),
             )
 #LC_elution
 class lc_elution(Base):
     __tablename__ = 'lc_elution'
-    lc_method_id=Column(String(length=50), nullable = False, primary_key=True)
+    id=Column(String(length=50), nullable = False, primary_key=True)
     met_id=Column(String(length=50), nullable = False)
     rt=Column(Float, default = 0.0)
     ms_window=Column(Float, default = 60.0)
     rt_units=Column(String(length=20))
     window_units=Column(String(length=20))
     __table_args__ = (PrimaryKeyConstraint('id'),
-            ForeignKeyConstraint('lc_method_id','lc_method.id', onupdate="CASCADE"),
+            ForeignKeyConstraint(['id'],['lc_method.id'], onupdate="CASCADE"),
             )
     
 #acquisition_method
@@ -645,8 +646,8 @@ class acquisition_method(Base):
     autosampler_method_id = Column(String(50));
     lc_method_id = Column(String(50))
     __table_args__ = (PrimaryKeyConstraint('id'),
-            ForeignKeyConstraint('lc_method_id','lc_method.id', onupdate="CASCADE"),
-            ForeignKeyConstraint('ms_method_id','ms_method.id', onupdate="CASCADE"),
+            ForeignKeyConstraint(['lc_method_id'],['lc_method.id'], onupdate="CASCADE"),
+            ForeignKeyConstraint(['ms_method_id'],['ms_method.id'], onupdate="CASCADE"),
             )
 
     def __init__(self,id_I, ms_method_id_I,autosampler_method_id_I,lc_method_id_I):
@@ -670,12 +671,12 @@ class quantitation_method(Base):
     intercept = Column(Float);
     slope = Column(Float);
     correlation = Column(Float);
-    use_area = Column(Boolean, default = false)
+    use_area = Column(Boolean, default = False)
     lloq = Column(Float);
     uloq = Column(Float);
     points = Column(Integer)
     __table_args__ = (PrimaryKeyConstraint('id','component_name'),
-            ForeignKeyConstraint('id','quantitation_method_list.quantitation_method_id', ondelete="CASCADE"),
+            ForeignKeyConstraint(['id'],['quantitation_method_list.quantitation_method_id'], ondelete="CASCADE"),
             )
 
     def __init__(self,id_I, q1_mass_I,q3_mass_I,met_id_I,component_name_I,is_name_I,fit_I,
@@ -717,9 +718,9 @@ class sample(Base):
     sample_dilution = Column(Float, default = 1.0)
     
     __table_args__ = (PrimaryKeyConstraint('sample_name'),
-            ForeignKeyConstraint('sample_id','sample_storage.sample_id'),
-            ForeignKeyConstraint('sample_id','sample_physiologicalparameters.sample_id'),
-            ForeignKeyConstraint('sample_id','sample_description.sample_id'),
+            ForeignKeyConstraint(['sample_id'],['sample_storage.sample_id']),
+            ForeignKeyConstraint(['sample_id'],['sample_physiologicalparameters.sample_id']),
+            ForeignKeyConstraint(['sample_id'],['sample_description.sample_id']),
             )
 
     def __init__(self,sample_name_I,sample_type_I,calibrator_id_I,calibrator_level_I,sample_id_I,sample_dilution_I):
@@ -862,7 +863,7 @@ class internal_standard(Base):
     experimentor_id = Column(String(50), nullable = False);
     extraction_method_id = Column(String(50))
     __table_args__ = (PrimaryKeyConstraint('is_id'),
-            ForeignKeyConstraint('is_id','internal_standard_storage.is_id'),
+            ForeignKeyConstraint(['is_id'],['internal_standard_storage.is_id']),
             )
 #internal_standard_storage
 class internal_standard_storage(Base):
