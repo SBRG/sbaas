@@ -275,6 +275,20 @@ class cobra_sampling(base_calculate):
 
         #return points_loopless_mean;
         self.points = points_loopless;
+    def remove_noFluxReactionsFromPoints(self):
+        '''remove reactions that carry 0 flux'''
+
+        points_flux = {};
+        for k,v in self.points.iteritems():
+            # determine the max/min of the data
+            max_point = max(v);
+            min_point = min(v);
+            if max_point == 0.0 and min_point == 0.0: continue;
+            else: 
+                points_flux[k] = v;
+
+        self.points = points_flux;
+        return
     # analyses
     def descriptive_statistics(self):
         '''calculate the following:
@@ -713,7 +727,7 @@ class cobra_sampling_n(base_calculate):
     def calculate_pca(self):
         return
 
-    def get_points(self,data_points_I=[]):
+    def get_points(self,data_points_I=[],remove_loops_I=True,remove_no_flux_I=True,normalize_I=True):
         '''Get multiple points from sampling'''
         sampling = cobra_sampling();
         for i,sample_id in enumerate(self.sample_ids):
@@ -722,8 +736,9 @@ class cobra_sampling_n(base_calculate):
                 sampling.get_points_matlab(data_points_I[i]);
             elif self.samplers[i]=='optGpSampler':
                 sampling.get_points_numpy(data_points_I[i])
-            sampling.remove_loopsFromPoints();
-            sampling.normalize_points2Total();
+            if remove_loops_I: sampling.remove_loopsFromPoints();
+            if remove_no_flux_I: sampling.remove_noFluxReactionsFromPoints();
+            if normalize_I: sampling.normalize_points2Total();
             #sampling.convert_points2MetabolitePoints();
             #sampling.convert_points2SubsystemPoints()
             self.points.append(sampling.points);

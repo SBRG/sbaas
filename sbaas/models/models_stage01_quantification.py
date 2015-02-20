@@ -100,6 +100,22 @@ class data_stage01_quantification_normalized(Base):
         self.calculated_concentration = calculated_concentration_I;
         self.calculated_concentration_units = calculated_concentration_units_I;
         self.used_ = used_I;
+
+    def __repr__dict__(self):
+        return {
+            'experiment_id':self.experiment_id,
+            'sample_name':self.sample_name,
+            'sample_id':self.sample_id,
+            'component_group_name':self.component_group_name,
+            'component_name':self.component_name,
+            'calculated_concentration':self.calculated_concentration,
+            'calculated_concentration_units':self.calculated_concentration_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
 class data_stage01_quantification_replicates(Base):
     __tablename__ = 'data_stage01_quantification_replicates'
     id = Column(Integer, Sequence('data_stage01_quantification_replicates_id_seq'), primary_key=True)

@@ -149,11 +149,26 @@ class stage02_physiology_query(stage01_physiology_query):
             print(e);
     # query simulation_id
     def get_simulationID_experimentIDAndSampleNameAbbreviationsAndModelID_dataStage02PhysiologySimulation(self,experiment_id_I,sample_name_abbreviation_I,model_id_I):
-        '''Querry model_ids for the sample_name_abbreviation that are used from the experiment'''
+        '''Querry simulation_ids for the sample_name_abbreviation that are used from the experiment'''
         try:
             data = self.session.query(data_stage02_physiology_simulation.simulation_id).filter(
                     data_stage02_physiology_simulation.model_id.like(model_id_I),
                     data_stage02_physiology_simulation.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage02_physiology_simulation.experiment_id.like(experiment_id_I),
+                    data_stage02_physiology_simulation.used_.is_(True)).group_by(
+                    data_stage02_physiology_simulation.simulation_id).order_by(
+                    data_stage02_physiology_simulation.simulation_id.asc()).all();
+            simulation_ids_O = [];
+            if data: 
+                for d in data:
+                    simulation_ids_O.append(d.simulation_id);
+            return simulation_ids_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_simulationID_experimentID_dataStage02PhysiologySimulation(self,experiment_id_I):
+        '''Querry simulation_ids that are used from the experiment'''
+        try:
+            data = self.session.query(data_stage02_physiology_simulation.simulation_id).filter(
                     data_stage02_physiology_simulation.experiment_id.like(experiment_id_I),
                     data_stage02_physiology_simulation.used_.is_(True)).group_by(
                     data_stage02_physiology_simulation.simulation_id).order_by(
@@ -402,6 +417,70 @@ class stage02_physiology_query(stage01_physiology_query):
                             'used_':d.used_,
                             'comment_':d.comment_});
             return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+
+    ## Query from data_stage02_physiology_pairWiseTest
+    
+    # Query data from data_stage02_physiology_pairWiseTest
+    def get_RDataList_simulationIDs_dataStage02PhysiologyPairWiseTest(self,simulation_id_1_I,simulation_id_2_I):
+        """get data from simulation_ids 1 and 2"""
+        #Tested
+        try:
+            data = self.session.query(
+                    data_stage02_physiology_pairWiseTest.simulation_id_1,
+                    data_stage02_physiology_pairWiseTest.simulation_id_2,
+                    data_stage02_physiology_pairWiseTest.rxn_id,
+                    data_stage02_physiology_pairWiseTest.test_stat,
+                    data_stage02_physiology_pairWiseTest.test_description,
+                    data_stage02_physiology_pairWiseTest.pvalue,
+                    data_stage02_physiology_pairWiseTest.pvalue_corrected,
+                    data_stage02_physiology_pairWiseTest.pvalue_corrected_description,
+                    data_stage02_physiology_pairWiseTest.mean,
+                    data_stage02_physiology_pairWiseTest.ci_lb,
+                    data_stage02_physiology_pairWiseTest.ci_ub,
+                    data_stage02_physiology_pairWiseTest.ci_level,
+                    data_stage02_physiology_pairWiseTest.fold_change).filter(
+                    data_stage02_physiology_pairWiseTest.simulation_id_1.like(simulation_id_1_I),
+                    data_stage02_physiology_pairWiseTest.simulation_id_2.like(simulation_id_2_I),
+                    data_stage02_physiology_pairWiseTest.used_.is_(True)).group_by(
+                    data_stage02_physiology_pairWiseTest.simulation_id_1,
+                    data_stage02_physiology_pairWiseTest.simulation_id_2,
+                    data_stage02_physiology_pairWiseTest.rxn_id,
+                    data_stage02_physiology_pairWiseTest.test_stat,
+                    data_stage02_physiology_pairWiseTest.test_description,
+                    data_stage02_physiology_pairWiseTest.pvalue,
+                    data_stage02_physiology_pairWiseTest.pvalue_corrected,
+                    data_stage02_physiology_pairWiseTest.pvalue_corrected_description,
+                    data_stage02_physiology_pairWiseTest.mean,
+                    data_stage02_physiology_pairWiseTest.ci_lb,
+                    data_stage02_physiology_pairWiseTest.ci_ub,
+                    data_stage02_physiology_pairWiseTest.ci_level,
+                    data_stage02_physiology_pairWiseTest.fold_change).order_by(
+                    data_stage02_physiology_pairWiseTest.simulation_id_2.asc(),
+                    data_stage02_physiology_pairWiseTest.rxn_id.asc()).all();
+            data_O = [];
+            for d in data: 
+                data_1 = {};
+                data_1['simulation_id_1'] = d.simulation_id_1;
+                data_1['simulation_id_2'] = d.simulation_id_2;
+                data_1['rxn_id'] = d.rxn_id;
+                data_1['test_stat'] = d.test_stat;
+                data_1['test_description'] = d.test_description;
+                data_1['pvalue_negLog10'] = None;
+                data_1['pvalue_corrected_description'] = None
+                if d.pvalue_corrected:
+                    data_1['pvalue_corrected_negLog10'] = -log(d.pvalue_corrected,10);
+                if d.pvalue:
+                    data_1['pvalue_negLog10'] = -log(d.pvalue,10);
+                data_1['pvalue_corrected_description'] = d.pvalue_corrected_description;
+                data_1['mean'] = d.mean;
+                data_1['ci_lb'] = d.ci_lb;
+                data_1['ci_ub'] = d.ci_ub;
+                data_1['ci_level'] = d.ci_level;
+                data_1['fold_change'] = d.fold_change;
+                data_O.append(data_1);
+            return data_O;
         except SQLAlchemyError as e:
             print(e);
 

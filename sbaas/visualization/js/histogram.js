@@ -7,12 +7,13 @@
     d3.select("svg")
        .remove();
 
-    var data = data_I.data; // data = [{x_data:float,samples:string},{},{},...]
+    var data = data_I.data; // data = [{x_data:float,dx_data:float,y_data:float,samples:string},{},{},...]
     var data_fitted = data_I.data_fitted; // data_fitted = [{samples:string,x_data_fitted:float,y_data_fitted:float},{},{},...]
     var options = data_I.options; //options = {x_axis_I=[],y_axis_I=[],x_axis_label=None,y_axis_label=None,feature_name=None,
-                //histogram-specific options: numHistBins_I=10, number of bins for the histogram
+                //histogram-specific options: numHistBins=10, number of bins for the histogram
                                             //calcHistBinsAutomatically=true, calculate bins automatically? 
-                                            //showKDP=true, bandwith (i.e., smoothing constant) h of the kernal density estimator
+                                            //showKDP=true, show the kernal density plot?
+                                            //bandwith=4 (i.e., smoothing constant) h of the kernal density estimator
                                             //}
 
     // generate the initial filter object
@@ -42,10 +43,12 @@
 
         var xAxis = d3.svg.axis()
             .scale(x)
+            .tickFormat(d3.format(".1e"))
             .orient("bottom");
 
         var yAxis = d3.svg.axis()
             .scale(y)
+            .tickFormat(d3.format(".1e"))
             .orient("left");
 
         var xAxis2 = d3.svg.axis()
@@ -55,6 +58,15 @@
         var yAxis2 = d3.svg.axis()
             .scale(y)
             .orient("right");
+
+        // set the domain of the plot
+        x.domain(d3.extent(data_fitted, function (d) { return d.x_data_fitted; }));
+        y.domain(d3.extent(data_fitted, function (d) { return d.y_data_fitted; }));
+
+        //line
+        var line = d3.svg.line()
+            .x(function (d) { return x(d.x_data_fitted); })
+            .y(function (d) { return y(d.y_data_fitted); });
 
         var svgElem = d3.select("#" + chart_I).selectAll('svg')
                 .data([data]);
@@ -131,12 +143,14 @@
             .attr('class', 'line')
             .style("stroke", function (d) {
                 return color(d.name);
-            });
+            })
+            //.style("fill",'#FFEBCD');
 
         interp.select("path.line")
             .style("stroke", function (d) {
                 return color(d.name);
             })
+            //.style("fill",'#FFEBCD')
             .transition()
             .attr("d", function (d) {
                 return line(d.value);
@@ -150,7 +164,7 @@
                     .style("left", (d3.event.pageX + 10) + "px")
                     .style("top", (d3.event.pageY - 10) + "px")
                     .select("#value")
-                    .text(options.feature_name + ": " + d.name);
+                    .text(options.feature_name + ": " + d.name + " x: " + d.value[i].x_data_fitted.toExponential(2) + " y: " + d.value[i].y_data_fitted.toExponential(2));
                 //Show the tooltip
                 d3.select("#tooltip").classed("hidden", false);
             })
@@ -164,105 +178,91 @@
                 redraw(data, data_fitted, options, features_filter);
             });
 
-        interpEnter.append('text')
-            .attr("x", 3)
-            .attr("dy", ".35em");
+        //interpEnter.append('text')
+        //    .attr("x", 3)
+        //    .attr("dy", ".35em");
 
-        interp.select("text")
-            .datum(function (d) {
-                return {
-                    value: d.value[d.value.length - 1]
-                };
-            })
-            .attr("transform", function (d) {
-                return "translate(" + x(d.value.x_data_fitted) + "," + y(d.value.y_data_fitted) + ")";
-            })
-            .text(function (d) {
-                return d.name;
-            });
+        //interp.select("text")
+        //    .datum(function (d) {
+        //        return {
+        //            value: d.value[d.value.length - 1]
+        //        };
+        //    })
+        //    .attr("transform", function (d) {
+        //        return "translate(" + x(d.value.x_data_fitted) + "," + y(d.value.y_data_fitted) + ")";
+        //    })
+        //    .text(function (d) {
+        //        return d.name;
+        //    });
 
         interp.exit()
           .remove();
 
-        //points
-        var points = svg.selectAll(".dot")
-            .data(data);
+        ////bars
+        //var bars = svg.selectALL(".bar")
+        //    .data(data);
 
-        var pointsEnter = points.enter().append("circle")
-            .attr("class", "dot")
+        //var barsEnter = bars.enter()
+        //    .insert("rect", ".axis")
+        //    .attr("class", "bar");
 
-        points.transition()
-            .attr("cx", function (d) { return x(d.x_data); })
-            .attr("cy", function (d) { return y(d.y_data); })
-            .style("fill", function (d) { return color(d.samples); });
+        //bars.transition()
+        //    .attr("class", "bar")
+        //    .attr("x", function (d) { return x(d.x_data) + 1; })
+        //    .attr("y", function (d) { return y(d.y_data); })
+        //    .attr("width", function (d) { return x(d.dx_data + d.x_data) - x(d.x_data) - 1;})
+        //    .attr("height", function (d) { return height - y(d.y_data); })
+        //    .style("fill", function (d) { return color(d.samples); })
+        //    .style("stroke", function (d) { return color(d.samples); });
 
-        pointsEnter.attr("r", 3.5)
-            .style("fill", function (d) { return color(d.samples); })
-            .attr("cx", function (d) { return x(d.x_data); })
-            .attr("cy", function (d) { return y(d.y_data); });
+        //barsEnter.on("mouseover", function (d) {
+        //    d3.select(this).style('fill', 'red');
+        //    //Update the tooltip position and value
+        //    d3.select("#tooltip")
+        //        .style("left", (d3.event.pageX + 10) + "px")
+        //        .style("top", (d3.event.pageY - 10) + "px")
+        //        .select("#value")
+        //        .text(options.feature_name + ": " + d.samples + ', ' + options.y_axis_label + ": " + d.y_data.toFixed(2));
+        //    //Show the tooltip
+        //    d3.select("#tooltip").classed("hidden", false);
+        //})
+        //    .on("mouseout", function (d) {
+        //        d3.select(this).style("fill", color(d.samples));
+        //        d3.select("#tooltip").classed("hidden", true)
+        //    });
 
-        pointsEnter.on("mouseover", function (d) {
-                d3.select(this).style('fill', 'red');
-                //Update the tooltip position and value
-                d3.select("#tooltip")
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY - 10) + "px")
-                    .select("#value")
-                    .text(options.feature_name + ": " + d.samples + ', ' + options.x_axis_label + ": " + d.x_data.toFixed(2) + ', ' + options.y_axis_label + ": " + d.y_data.toFixed(2));
-                //Show the tooltip
-                d3.select("#tooltip").classed("hidden", false);
-            })
-            .on("mouseout", function (d) {
-                d3.select(this).style("fill", color(d.samples));
-                d3.select("#tooltip").classed("hidden", true)
-            });
+        //bars.exit().remove();
 
-        points.exit().remove();
+        //// histogram
+        //// calculate the number of histogram bins
+        //if (calcHistBinsAutomatic == true) {
+        //    numHistBins = Math.ceil(Math.sqrt(data.length));  // global variable
+        //}
+        //// the histogram function
+        //histogram = d3.layout.histogram()
+        //  .frequency(false)
+        //  .bins(numHistBins);
 
-        //line
-        //var line = d3.svg.line()
-        //    .interpolate(options.fit_function)
-        //    .x(function (d) { return x(d.x_data_fitted); })
-        //    .y(function (d) { return y(d.y_data_fitted); });
+        //var histogram_data = histogram(data);
+        //var kde = kernelDensityEstimator(epanechnikovKernel(bandwith), x.ticks(100));
 
-        //original
-        var line = d3.svg.line()
-            .x(function (d) { return x(d[0]); })
-            .y(function (d) { return y(d[1]); });
+        //svg.selectAll(".bar")
+        //    .data(histogram_data)
+        //  .enter().insert("rect", ".axis")
+        //    .attr("class", "bar")
+        //    .attr("x", function (d) { return x(d.x) + 1; })
+        //    .attr("y", function (d) { return y(d.y); })
+        //    .attr("width", x(data[0].dx + data[0].x) - x(data[0].x) - 1)
+        //    .attr("height", function (d) { return height - y(d.y); });
 
-        x.domain(d3.extent(data, function (d) { return d.x_data; })).nice();
-        y.domain(d3.extent(data, function (d) { return d.y_data; })).nice();
-
-        // histogram
-        // calculate the number of histogram bins
-        if (calcHistBinsAutomatic == true) {
-            numHistBins = Math.ceil(Math.sqrt(data.length));  // global variable
-        }
-        // the histogram function
-        histogram = d3.layout.histogram()
-          .frequency(false)
-          .bins(numHistBins);
-
-        var histogram_data = histogram(data);
-        var kde = kernelDensityEstimator(epanechnikovKernel(bandwith), x.ticks(100));
-
-        svg.selectAll(".bar")
-            .data(histogram_data)
-          .enter().insert("rect", ".axis")
-            .attr("class", "bar")
-            .attr("x", function (d) { return x(d.x) + 1; })
-            .attr("y", function (d) { return y(d.y); })
-            .attr("width", x(data[0].dx + data[0].x) - x(data[0].x) - 1)
-            .attr("height", function (d) { return height - y(d.y); });
-
-        // kde
-        // show the kernel density plot
-        if (showKDP == true) {
-            svg.append("path")
-              .datum(kde(data))
-              .attr("class", "line")
-              .attr("d", line);
-        }
+        //// kde
+        //// show the kernel density plot
+        //if (showKDP == true) {
+        //    svg.append("path")
+        //      .datum(kde(data))
+        //      .attr("class", "line")
+        //      .attr("d", line);
+        //}
 
         // legend
         var legend = svg.selectAll('g.legend')
@@ -328,11 +328,6 @@
             .style({
                 'fill': 'none', 'stroke': '#000',
                 'shape-rendering': 'crispEdges'
-            });
-
-        svg.selectAll('.dot')
-            .style({
-                'stroke': 'none'
             });
 
         svg.selectAll('.line')

@@ -179,9 +179,12 @@ class VisualizationHandler(BaseHandler):
         # make the export filename
         filename = '_'.join(arguments);
         # build up the data directory
-        #boxandwhiskers
+        #boxandwhiskers and histogram
         if visualization_kwargs.has_key('feature_name'):
-            filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['feature_name'] + '.js';
+            if visualization_kwargs.has_key('time_point_name'):
+                filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['feature_name'] + '.js';
+            else:
+                filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['feature_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
                 with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
@@ -225,6 +228,15 @@ class VisualizationHandler(BaseHandler):
                     data_json = file.read();
             except:
                 data_json = '';
+        #pcaplot
+        elif visualization_kwargs.has_key('sample_name'):
+            filename_data_id = visualization_kwargs['data_name'] + '/' + visualization_kwargs['sample_name'] + '.js';
+            data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
+            try:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                    data_json = file.read();
+            except:
+                data_json = '';
         else:
             filename_data_id = visualization_kwargs['data_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
@@ -241,7 +253,8 @@ class VisualizationHandler(BaseHandler):
         except IOError as e:
             data_index = None;
         # get the index directory if it exists
-        filename_index = visualization_kwargs['template_name'] + '_' + visualization_kwargs['data_name'] + '_index' + '_js';
+        filename_index = visualization_kwargs['template_name'] + '_' + visualization_kwargs['experiment_type_name'] + '_' + visualization_kwargs['data_name'] + '_index' + '_js';
+        #filename_index = visualization_kwargs['template_name'] + '_' + visualization_kwargs['data_name'] + '_index' + '_js';
         if data_index:
             filename_index = url.get_url(filename_index, source)
         else:
