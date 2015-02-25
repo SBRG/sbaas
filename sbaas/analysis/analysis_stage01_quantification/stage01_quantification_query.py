@@ -855,15 +855,15 @@ class stage01_quantification_query(base_analysis):
             return  check_O;
         except SQLAlchemyError as e:
             print(e);
-    def get_checkCVAndExtracellular_averages(self,experiment_id_I):
+    def get_checkCVAndExtracellular_averages(self,experiment_id_I,cv_threshold_I=20,extracellular_threshold_I=50):
         '''query to populate the "checkCVAndExtracellular_averages" view'''
         cv_threshold = 20;
         extracellular_threshold = 50;
         try:
             check = self.session.query(data_stage01_quantification_averages).filter(
                         data_stage01_quantification_averages.experiment_id.like(experiment_id_I),
-                        or_(data_stage01_quantification_averages.calculated_concentration_cv > cv_threshold,
-                        data_stage01_quantification_averages.extracellular_percent > extracellular_threshold)).all();
+                        or_(data_stage01_quantification_averages.calculated_concentration_cv > cv_threshold_I,
+                        data_stage01_quantification_averages.extracellular_percent > extracellular_threshold_I)).all();
             check_O = [];
             for c in check: 
                 check_1 = {};

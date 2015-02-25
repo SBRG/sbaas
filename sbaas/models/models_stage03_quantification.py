@@ -9,11 +9,11 @@ from sqlalchemy.orm import relationship
 class data_stage03_quantification_simulatedData(Base):
     __tablename__ = 'data_stage03_quantification_simulatedData'
     id = Column(Integer, Sequence('data_stage03_quantification_simulatedData_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    #sample_name_abbreviation = Column(String(100), primary_key=True)
-    #time_point = Column(String(10), primary_key=True)
-    rxn_id = Column(String(100), primary_key=True)
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    #time_point = Column(String(10))
+    rxn_id = Column(String(100))
     fba_flux = Column(Float);
     fva_minimum = Column(Float);
     fva_maximum = Column(Float);
@@ -22,6 +22,9 @@ class data_stage03_quantification_simulatedData(Base):
     sra_gr_ratio = Column(Float);
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','model_id','rxn_id'),
+            )
 
     def __init__(self,experiment_id_I,model_id_I,
                  #sample_name_abbreviation_I,
@@ -64,10 +67,10 @@ class data_stage03_quantification_simulatedData(Base):
 class data_stage03_quantification_otherData(Base):
     __tablename__ = 'data_stage03_quantification_otherData'
     id = Column(Integer, Sequence('data_stage03_quantification_otherData_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    compartment_id = Column(String(25), primary_key=True)
+    experiment_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    compartment_id = Column(String(25))
     pH = Column(Float);
     temperature = Column(Float);
     temperature_units = Column(String(50));
@@ -75,6 +78,9 @@ class data_stage03_quantification_otherData(Base):
     ionic_strength_units = Column(String(50));
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','compartment_id'),
+            )
 
     def __init__(self,experiment_id_I,sample_name_abbreviation_I,
                  time_point_I,compartment_id_I,pH_I,
@@ -111,11 +117,11 @@ class data_stage03_quantification_otherData(Base):
 class data_stage03_quantification_dG0_r(Base):
     __tablename__ = 'data_stage03_quantification_dG0_r'
     id = Column(Integer, Sequence('data_stage03_quantification_dG0_r_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    rxn_id = Column(String(100), primary_key=True)
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    rxn_id = Column(String(100))
     Keq_lb = Column(Float)
     Keq_ub = Column(Float)
     dG0_r = Column(Float);
@@ -125,6 +131,9 @@ class data_stage03_quantification_dG0_r(Base):
     dG0_r_ub = Column(Float);
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','model_id','sample_name_abbreviation','time_point','rxn_id'),
+            )
 
     def __init__(self,experiment_id_I,model_id_I,sample_name_abbreviation_I,
                  time_point_I,rxn_id_I,Keq_lb_I,Keq_ub_I,
@@ -168,11 +177,11 @@ class data_stage03_quantification_dG0_r(Base):
 class data_stage03_quantification_dG_r(Base):
     __tablename__ = 'data_stage03_quantification_dG_r'
     id = Column(Integer, Sequence('data_stage03_quantification_dG_r_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    rxn_id = Column(String(100), primary_key=True)
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    rxn_id = Column(String(100))
     Keq_lb = Column(Float)
     Keq_ub = Column(Float)
     dG_r = Column(Float);
@@ -186,6 +195,9 @@ class data_stage03_quantification_dG_r(Base):
     Q_ub = Column(Float);
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','model_id','sample_name_abbreviation','time_point','rxn_id'),
+            )
 
     def __init__(self,experiment_id_I,
                     model_id_I,
@@ -250,11 +262,11 @@ class data_stage03_quantification_dG_r(Base):
 class data_stage03_quantification_dG0_f(Base):
     __tablename__ = 'data_stage03_quantification_dG0_f'
     id = Column(Integer, Sequence('data_stage03_quantification_dG0_f_id_seq'), primary_key=True)
-    reference_id = Column(String(100), primary_key=True)
+    reference_id = Column(String(100))
     met_name = Column(String(500))
     met_id = Column(String(100))
-    KEGG_id = Column(String(20), primary_key=True)
-    priority = Column(Integer, primary_key=True);
+    KEGG_id = Column(String(20))
+    priority = Column(Integer);
     dG0_f = Column(Float);
     dG0_f_var = Column(Float);
     dG0_f_units = Column(String(50));
@@ -266,6 +278,9 @@ class data_stage03_quantification_dG0_f(Base):
     pH_units = Column(String(50));
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('reference_id','KEGG_id','priority'),
+            )
 
     def __init__(self, reference_id_I, met_name_I, met_id_I, KEGG_id_I, priority_I,
                  dG0_f_I, dG0_f_var_I, dG0_f_units_I, temperature_I, temperature_units_I, ionic_strength_I, ionic_strength_units_I,
@@ -311,12 +326,12 @@ class data_stage03_quantification_dG0_f(Base):
 class data_stage03_quantification_dG_f(Base):
     __tablename__ = 'data_stage03_quantification_dG_f'
     id = Column(Integer, Sequence('data_stage03_quantification_dG_f_id_seq'), primary_key=True)
-    experiment_id = Column(String(100), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
+    experiment_id = Column(String(100))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
     met_name = Column(String(500))
-    met_id = Column(String(100), primary_key=True)
+    met_id = Column(String(100))
     dG_f = Column(Float);
     dG_f_var = Column(Float);
     dG_f_units = Column(String(50));
@@ -331,6 +346,9 @@ class data_stage03_quantification_dG_f(Base):
     measured = Column(Boolean);
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','model_id','sample_name_abbreviation','time_point','met_id'),
+            )
 
     def __init__(self, experiment_id_I,model_id_I,sample_name_abbreviation_I,
                  time_point_I, met_name_I, met_id_I,
@@ -387,10 +405,10 @@ class data_stage03_quantification_dG_f(Base):
 class data_stage03_quantification_metabolomicsData(Base):
     __tablename__ = 'data_stage03_quantification_metabolomicsData'
     id = Column(Integer, Sequence('data_stage03_quantification_metabolomicsData_id_seq'), primary_key=True)
-    experiment_id = Column(String(100), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    met_id = Column(String(100), primary_key=True)
+    experiment_id = Column(String(100))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    met_id = Column(String(100))
     concentration = Column(Float);
     concentration_var = Column(Float);
     concentration_units = Column(String(50));
@@ -399,6 +417,9 @@ class data_stage03_quantification_metabolomicsData(Base):
     measured = Column(Boolean);
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','met_id'),
+            )
 
     def __init__(self, experiment_id_I, sample_name_abbreviation_I,
                  time_point_I, met_id_I,
@@ -438,11 +459,11 @@ class data_stage03_quantification_metabolomicsData(Base):
 class data_stage03_quantification_tcc(Base):
     __tablename__ = 'data_stage03_quantification_tcc'
     id = Column(Integer, Sequence('data_stage03_quantification_tcc_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    rxn_id = Column(String(100), primary_key=True)
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    rxn_id = Column(String(100))
     feasible = Column(Boolean);
     measured_concentration_coverage_criteria = Column(Float, default = 0.5);
     measured_dG_f_coverage_criteria = Column(Float, default = 0.99);
@@ -450,6 +471,9 @@ class data_stage03_quantification_tcc(Base):
     measured_dG_f_coverage = Column(Float);
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','rxn_id'),
+            )
 
     def __init__(self,experiment_id_I, model_id_I,sample_name_abbreviation_I,
                 time_point_I,rxn_id_I,feasible_I,
@@ -489,11 +513,11 @@ class data_stage03_quantification_tcc(Base):
 class data_stage03_quantification_dG_p(Base):
     __tablename__ = 'data_stage03_quantification_dG_p'
     id = Column(Integer, Sequence('data_stage03_quantification_dG_p_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    pathway_id = Column(String(100), primary_key=True)
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    pathway_id = Column(String(100))
     dG_p = Column(Float);
     dG_p_var = Column(Float);
     dG_p_units = Column(String(50));
@@ -501,6 +525,9 @@ class data_stage03_quantification_dG_p(Base):
     dG_p_ub = Column(Float);
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','pathway_id'),
+            )
 
     def __init__(self,experiment_id_I,model_id_I,sample_name_abbreviation_I,
                  time_point_I,pathway_id_I,
@@ -539,11 +566,11 @@ class data_stage03_quantification_dG_p(Base):
 class data_stage03_quantification_dG0_p(Base):
     __tablename__ = 'data_stage03_quantification_dG0_p'
     id = Column(Integer, Sequence('data_stage03_quantification_dG0_p_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    pathway_id = Column(String(100), primary_key=True)
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    pathway_id = Column(String(100))
     dG0_p = Column(Float);
     dG0_p_var = Column(Float);
     dG0_p_units = Column(String(50));
@@ -551,6 +578,9 @@ class data_stage03_quantification_dG0_p(Base):
     dG0_p_ub = Column(Float);
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','pathway_id'),
+            )
 
     def __init__(self,experiment_id_I,model_id_I,sample_name_abbreviation_I,
                  time_point_I,pathway_id_I,
@@ -588,11 +618,14 @@ class data_stage03_quantification_dG0_p(Base):
     
 class data_stage03_quantification_metid2keggid(Base):
     __tablename__ = 'data_stage03_quantification_metid2keggid'
-    id = Column(Integer, Sequence('data_stage03_quantification_metid2keggid_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('data_stage03_quantification_metid2keggid_id_seq'))
     met_id = Column(String(100))
     KEGG_id = Column(String(20), primary_key=True)
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('id'),
+            )
 
     def __init__(self, met_id_I, KEGG_id_I, used_I, comment_I):
         self.met_id = met_id_I;
@@ -609,50 +642,18 @@ class data_stage03_quantification_metid2keggid(Base):
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
-
-class data_stage03_quantification_simulation(Base):
-    __tablename__ = 'data_stage03_quantification_simulation'
-    id = Column(Integer, Sequence('data_stage03_quantification_simulation_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    model_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    used_ = Column(Boolean);
-    comment_ = Column(Text);
-
-    def __init__(self,experiment_id_I,
-            model_id_I,
-            sample_name_abbreviation_I,
-            time_point_I,
-            used__I,
-            comment__I):
-        self.experiment_id=experiment_id_I
-        self.model_id=model_id_I
-        self.sample_name_abbreviation=sample_name_abbreviation_I
-        self.time_point=time_point_I
-        self.used_=used__I
-        self.comment_=comment__I
-
-    def __repr__dict__(self):
-        return {
-            'experiment_id':self.experiment_id,
-            'model_id':self.model_id,
-            'sample_name_abbreviation':self.sample_name_abbreviation,
-            'time_point':self.time_point,
-            'used_':self.used_,
-            'comment_':self.comment_}
-    
-    def __repr__json__(self):
-        return json.dumps(self.__repr__dict__())
     
 class data_stage03_quantification_models(Base):
     __tablename__ = 'data_stage03_quantification_models'
-    id = Column(Integer, Sequence('data_stage03_quantification_models_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('data_stage03_quantification_models_id_seq'))
     model_id = Column(String(50), primary_key=True)
     model_name = Column(String(100))
     model_description = Column(String(100))
     sbml_file = Column(Text)
     date = Column(DateTime)
+
+    __table_args__ = (UniqueConstraint('id'),
+            )
 
     def __init__(self,model_id_I,
             model_name_I,
@@ -677,7 +678,7 @@ class data_stage03_quantification_models(Base):
 
 class data_stage03_quantification_modelReactions(Base):
     __tablename__ = 'data_stage03_quantification_modelReactions'
-    id = Column(Integer, Sequence('data_stage03_quantification_modelReactions_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('data_stage03_quantification_modelReactions_id_seq'))
     model_id = Column(String(50), primary_key=True)
     rxn_id = Column(String(50), primary_key=True)
     rxn_name = Column(String(255))
@@ -696,6 +697,9 @@ class data_stage03_quantification_modelReactions(Base):
     reversibility = Column(Boolean)
     used_ = Column(Boolean)
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('id'),
+            )
 
     def __init__(self,model_id_I,
             rxn_id_I,
@@ -758,7 +762,7 @@ class data_stage03_quantification_modelReactions(Base):
     
 class data_stage03_quantification_modelMetabolites(Base):
     __tablename__ = 'data_stage03_quantification_modelMetabolites'
-    id = Column(Integer, Sequence('data_stage03_quantification_modelMetabolites_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('data_stage03_quantification_modelMetabolites_id_seq'))
     model_id = Column(String(50), primary_key=True)
     met_name = Column(String(500))
     met_id = Column(String(50), primary_key=True)
@@ -769,6 +773,9 @@ class data_stage03_quantification_modelMetabolites(Base):
     constraint_sense = Column(String(5))
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('id'),
+            )
 
     def __init__(self,model_id_I,
             met_name_I,
@@ -808,13 +815,16 @@ class data_stage03_quantification_modelMetabolites(Base):
 
 class data_stage03_quantification_modelPathways(Base):
     __tablename__ = 'data_stage03_quantification_modelPathways'
-    id = Column(Integer, Sequence('data_stage03_quantification_modelPathways_id_seq'), primary_key=True)
+    id = Column(Integer, Sequence('data_stage03_quantification_modelPathways_id_seq'))
     model_id = Column(String(50), primary_key=True)
     pathway_id = Column(String(100), primary_key=True)
     reactions = Column(postgresql.ARRAY(String(100)))
     stoichiometry = Column(postgresql.ARRAY(Float))
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('id'),
+            )
 
     def __init__(self,model_id_I,pathway_id_I,
                  reactions_I,stoichiometry_I,used_I,comment_I,):
@@ -831,6 +841,312 @@ class data_stage03_quantification_modelPathways(Base):
                 'pathway_id':self.pathway_id,
                 'reactions':self.reactions,
                 'stoichiometry':self.stoichiometry,
+                'used_':self.used_,
+                'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+#TODO: add simulation_id and simulation_type
+class data_stage03_quantification_simulation(Base):
+    __tablename__ = 'data_stage03_quantification_simulation'
+    id = Column(Integer, Sequence('data_stage03_quantification_simulation_id_seq'), primary_key=True)
+    simulation_id = Column(String(500))
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    simulation_type = Column(String(100)); # sampling, fva, sra, fba, fba-loopless, pfba, etc.
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('experiment_id','model_id','sample_name_abbreviation','time_point','simulation_type'),
+            UniqueConstraint('simulation_id'),
+            )
+
+    def __init__(self,simulation_id_I,
+                 experiment_id_I,
+            model_id_I,
+            sample_name_abbreviation_I,
+            time_point_I,
+            simulation_type_I,
+            used__I,
+            comment__I):
+        self.simulation_id=simulation_id_I
+        self.experiment_id=experiment_id_I
+        self.model_id=model_id_I
+        self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.time_point=time_point_I
+        self.simulation_type=simulation_type_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id':self.simulation_id,
+            'experiment_id':self.experiment_id,
+            'model_id':self.model_id,
+            'sample_name_abbreviation':self.sample_name_abbreviation,
+            'time_point':self.time_point,
+            'simulation_type':self.simulation_type,
+            'used_':self.used_,
+            'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+#TODO: add table
+class data_stage03_quantification_simulationParameters(Base):
+    __tablename__ = 'data_stage03_quantification_simulationParameters'
+    id = Column(Integer, Sequence('data_stage03_quantification_simulationParameters_id_seq'), primary_key=True)
+    simulation_id = Column(String(500))
+    #simulation_dateAndTime = Column(DateTime);
+    solver_id = Column(String);
+    n_points = Column(Integer); # sampling-specific
+    n_steps = Column(Integer); # sampling-specific
+    max_time = Column(Float); # sampling-specific
+    sampler_id = Column(String); # sampling-specific; gpSampler (Matlab) opGpSampler (Python)
+    #solve_time = Column(Float);
+    #solve_time_units = Column(String);
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('simulation_id'),
+            )
+
+    def __init__(self,
+                 simulation_id_I,
+        #simulation_dateAndTime_I,
+        solver_id_I,
+        n_points_I,
+        n_steps_I,
+        max_time_I,
+        sampler_id_I,
+        #solve_time_I,
+        #solve_time_units_I,
+        used__I,comment__I):
+        self.simulation_id=simulation_id_I
+        #self.simulation_dateAndTime=simulation_dateAndTime_I
+        self.solver_id=solver_id_I
+        self.n_points=n_points_I
+        self.n_steps=n_steps_I
+        self.max_time=max_time_I
+        self.sampler_id=sampler_id_I
+        #self.solve_time=solve_time_I
+        #self.solve_time_units=solve_time_units_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id':self.simulation_id,
+            #'simulation_dateAndTime':self.simulation_dateAndTime,
+            'solver_id':self.solver_id,
+            'n_points':self.n_points,
+            'n_steps':self.n_steps,
+            'max_time':self.max_time,
+            'sampler_id':self.sampler_id,
+            #'solve_time':self.solve_time,
+            #'solve_time_units':self.solve_time_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+class data_stage03_quantification_measuredFluxes(Base):
+    __tablename__ = 'data_stage03_quantification_measuredFluxes'
+    id = Column(Integer, Sequence('data_stage03_quantification_measuredFluxes_id_seq'), primary_key=True)
+    experiment_id = Column(String(50))
+    model_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    #time_point = Column(String(10))
+    rxn_id = Column(String(100))
+    flux_average = Column(Float);
+    flux_stdev = Column(Float);
+    flux_lb = Column(Float); # based on 95% CI
+    flux_ub = Column(Float);
+    flux_units = Column(String(50));
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('experiment_id','sample_name_abbreviation','rxn_id','model_id'),
+            )
+
+    def __init__(self,experiment_id_I,
+            model_id_I,
+            sample_name_abbreviation_I,
+            #time_point_I,
+            rxn_id_I,
+            flux_average_I,
+            flux_stdev_I,
+            flux_lb_I,
+            flux_ub_I,
+            flux_units_I,
+            used__I,
+            comment__I):
+        self.experiment_id=experiment_id_I
+        self.model_id=model_id_I
+        self.sample_name_abbreviation=sample_name_abbreviation_I
+        #self.time_point=time_point_I
+        self.rxn_id=rxn_id_I
+        self.flux_average=flux_average_I
+        self.flux_stdev=flux_stdev_I
+        self.flux_lb=flux_lb_I
+        self.flux_ub=flux_ub_I
+        self.flux_units=flux_units_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'experiment_id':self.experiment_id,
+                    'model_id':self.model_id,
+                    'sample_name_abbreviation':self.sample_name_abbreviation,
+                    #'time_point':self.time_point,
+                    'rxn_id':self.rxn_id,
+                    'flux_average':self.flux_average,
+                    'flux_stdev':self.flux_stdev,
+                    'flux_lb':self.flux_lb,
+                    'flux_ub':self.flux_ub,
+                    'flux_units':self.flux_units,
+                    'used_':self.used_,
+                    'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+class data_stage03_quantification_sampledPoints(Base):
+    __tablename__ = 'data_stage03_quantification_sampledPoints'
+    id = Column(Integer, Sequence('data_stage03_quantification_sampledData_id_seq'), primary_key=True)
+    simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    mixed_fraction = Column(Float);
+    data_dir = Column(String(500)); #
+    infeasible_loops = Column(postgresql.ARRAY(String));
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('simulation_id','simulation_dateAndTime'),
+            )
+
+    def __init__(self,simulation_id_I,
+        simulation_dateAndTime_I,
+        #experiment_id_I,model_id_I,
+        #    sample_name_abbreviation_I,
+            mixed_fraction_I,data_dir_I,infeasible_loops_I,
+                 used__I,comment__I):
+        self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.mixed_fraction=mixed_fraction_I
+        self.data_dir=data_dir_I
+        self.infeasible_loops=infeasible_loops_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
+        #'experiment_id':self.experiment_id,
+        #        'model_id':self.model_id,
+        #    'sample_name_abbreviation':self.sample_name_abbreviation,
+                'data_dir':self.data_dir,
+                'infeasible_loops':self.infeasible_loops,
+                'used_':self.used_,
+                'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+class data_stage02_physiology_sampledData(Base):
+    __tablename__ = 'data_stage03_quantification_sampledData'
+    id = Column(Integer, Sequence('data_stage03_quantification_sampledData_id_seq'), primary_key=True)
+    simulation_id = Column(String(500))
+    simulation_dateAndTime = Column(DateTime);
+    #experiment_id = Column(String(50))
+    #model_id = Column(String(50))
+    #sample_name_abbreviation = Column(String(100))
+    variable_id = Column(String(100))
+    variable_type = Column(String(50)) # e.g., flux, concentration, dG_r
+    variable_units = Column(String(50), default = 'mmol*gDW-1*hr-1'); 
+    sampling_points = Column(postgresql.ARRAY(Float)); #
+    sampling_ave = Column(Float);
+    sampling_var = Column(Float);
+    sampling_lb = Column(Float);
+    sampling_ub = Column(Float);
+    sampling_ci = Column(Float, default = 0.95);
+    sampling_min = Column(Float);
+    sampling_max = Column(Float);
+    sampling_median = Column(Float);
+    sampling_iq_1 = Column(Float);
+    sampling_iq_3 = Column(Float);
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('simulation_id','variable_id','variable_type'),
+            )
+
+    def __init__(self,simulation_id_I,
+        simulation_dateAndTime_I,
+        #experiment_id_I,model_id_I,
+        #    sample_name_abbreviation_I,
+            variable_id_I,variable_type_I,variable_units_I,
+            sampling_points_I,
+                 sampling_ave_I,sampling_var_I,sampling_lb_I,sampling_ub_I,
+                 sampling_ci_I,
+                 sampling_min_I,sampling_max_I,sampling_median_I,
+                 sampling_iq_1_I,sampling_iq_3_I,
+                 used__I,comment__I):
+        self.simulation_id=simulation_id_I
+        self.simulation_dateAndTime=simulation_dateAndTime_I
+        #self.experiment_id=experiment_id_I
+        #self.model_id=model_id_I
+        #self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.variable_id=variable_id_I
+        self.variable_type=variable_type_I
+        self.variable_units=variable_units_I
+        self.sampling_points=sampling_points_I
+        self.sampling_ave=sampling_ave_I
+        self.sampling_var=sampling_var_I
+        self.sampling_lb=sampling_lb_I
+        self.sampling_ub=sampling_ub_I
+        self.sampling_ci=sampling_ci_I
+        self.sampling_min=sampling_min_I
+        self.sampling_max=sampling_max_I
+        self.sampling_median=sampling_median_I
+        self.sampling_iq_1=sampling_iq_1_I
+        self.sampling_iq_3=sampling_iq_3_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'simulation_id':self.simulation_id,
+        'simulation_dateAndTime':self.simulation_dateAndTime,
+        #'experiment_id':self.experiment_id,
+        #        'model_id':self.model_id,
+        #    'sample_name_abbreviation':self.sample_name_abbreviation,
+                'variable_id':self.variable_id,
+                'variable_type':self.variable_type,
+                'variable_units':self.variable_units,
+                'sampling_points':self.sampling_points,
+                'sampling_ave':self.sampling_ave,
+                'sampling_var':self.sampling_var,
+                'sampling_lb':self.sampling_lb,
+                'sampling_ub':self.sampling_ub,
+                'sampling_ci':self.sampling_ci,
+                'sampling_max':self.sampling_max,
+                'sampling_min':self.sampling_min,
+                'sampling_median':self.sampling_median,
+                'sampling_iq_1':self.sampling_iq_1,
+                'sampling_iq_3':self.sampling_iq_3,
                 'used_':self.used_,
                 'comment_':self.comment_}
     

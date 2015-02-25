@@ -345,6 +345,11 @@ class data_stage02_quantification_descriptiveStats(Base):
     ci_lb = Column(Float)
     ci_ub = Column(Float)
     ci_level = Column(Float)
+    #min = Column(Float)
+    #max = Column(Float)
+    #median = Column(Float)
+    #iq_1 = Column(Float)
+    #iq_3 = Column(Float)
     calculated_concentration_units = Column(String(50))
     used_ = Column(Boolean);
     comment_ = Column(Text);

@@ -76,13 +76,13 @@ class data_stage02_physiology_simulation(Base):
     model_id = Column(String(50))
     sample_name_abbreviation = Column(String(100))
     #time_point = Column(String(10))
-    simulation_type = Column(String); # sampling, fva, sra, fba, fba-loopless, pfba, etc.
+    simulation_type = Column(String(50)); # sampling, fva, sra, fba, fba-loopless, pfba, etc.
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
     __table_args__ = (
-            UniqueConstraint('experiment_id','model_id','sample_name_abbreviation'),
-            #UniqueConstraint('experiment_id','model_id','sample_name_abbreviation','time_point'),
+            UniqueConstraint('experiment_id','model_id','sample_name_abbreviation','simulation_type'),
+            #UniqueConstraint('experiment_id','model_id','sample_name_abbreviation','time_point','simulation_type'),
             UniqueConstraint('simulation_id'),
             )
 
@@ -412,13 +412,14 @@ class data_stage02_physiology_sampledData(Base):
     #experiment_id = Column(String(50))
     #model_id = Column(String(50))
     #sample_name_abbreviation = Column(String(100))
-    rxn_id = Column(String(100))
-    flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1');
+    rxn_id = Column(String(100)) #TODO: change name to variable_id and add column for variable_type (e.g. met,rxn)
+    flux_units = Column(String(50), default = 'mmol*gDW-1*hr-1'); #TODO: change to variable_units
     sampling_points = Column(postgresql.ARRAY(Float)); #
     sampling_ave = Column(Float);
     sampling_var = Column(Float);
     sampling_lb = Column(Float);
     sampling_ub = Column(Float);
+    #sampling_ci = Column(Float, default = 0.95);
     sampling_min = Column(Float);
     sampling_max = Column(Float);
     sampling_median = Column(Float);
@@ -437,6 +438,7 @@ class data_stage02_physiology_sampledData(Base):
         #    sample_name_abbreviation_I,
             rxn_id_I,flux_units_I,sampling_points_I,
                  sampling_ave_I,sampling_var_I,sampling_lb_I,sampling_ub_I,
+                 #sampling_ci_I,
                  sampling_min_I,sampling_max_I,sampling_median_I,
                  sampling_iq_1_I,sampling_iq_3_I,
                  used__I,comment__I):
@@ -452,6 +454,7 @@ class data_stage02_physiology_sampledData(Base):
         self.sampling_var=sampling_var_I
         self.sampling_lb=sampling_lb_I
         self.sampling_ub=sampling_ub_I
+        #self.sampling_ci=sampling_ci_I
         self.sampling_min=sampling_min_I
         self.sampling_max=sampling_max_I
         self.sampling_median=sampling_median_I
@@ -473,6 +476,7 @@ class data_stage02_physiology_sampledData(Base):
                 'sampling_var':self.sampling_var,
                 'sampling_lb':self.sampling_lb,
                 'sampling_ub':self.sampling_ub,
+                #'sampling_ci':self.sampling_ci,
                 'sampling_max':self.sampling_max,
                 'sampling_min':self.sampling_min,
                 'sampling_median':self.sampling_median,

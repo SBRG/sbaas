@@ -433,197 +433,7 @@ class stage03_quantification_execute():
                             print e;
                             print "Press any key to continue"
                             a=raw_input();
-                    self.session.commit();                    
-    # data_stage01_quantification initializations
-    def drop_dataStage03_quantification(self):
-        try:
-            data_stage03_quantification_simulatedData.__table__.drop(engine,True);
-            data_stage03_quantification_otherData.__table__.drop(engine,True);
-            data_stage03_quantification_dG0_r.__table__.drop(engine,True);
-            data_stage03_quantification_dG_r.__table__.drop(engine,True);
-            data_stage03_quantification_dG0_f.__table__.drop(engine,True);
-            data_stage03_quantification_dG_f.__table__.drop(engine,True);
-            data_stage03_quantification_metabolomicsData.__table__.drop(engine,True);
-            data_stage03_quantification_tcc.__table__.drop(engine,True);
-            data_stage03_quantification_dG0_p.__table__.drop(engine,True);
-            data_stage03_quantification_modelPathways.__table__.drop(engine,True);
-            data_stage03_quantification_dG_p.__table__.drop(engine,True);
-            data_stage03_quantification_metid2keggid.__table__.drop(engine,True);
-            data_stage03_quantification_models.__table__.drop(engine,True);
-            data_stage03_quantification_modelReactions.__table__.drop(engine,True);
-            data_stage03_quantification_modelMetabolites.__table__.drop(engine,True);
-            data_stage03_quantification_simulation.__table__.drop(engine,True);
-        except SQLAlchemyError as e:
-            print(e);
-    def reset_dataStage03_quantification(self,experiment_id_I = None):
-        try:
-            if experiment_id_I:
-                reset = self.session.query(data_stage03_quantification_simulatedData).filter(data_stage03_quantification_simulatedData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_otherData).filter(data_stage03_quantification_otherData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_r).filter(data_stage03_quantification_dG0_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_f).filter(data_stage03_quantification_dG0_f.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_f).filter(data_stage03_quantification_dG_f.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_metabolomicsData).filter(data_stage03_quantification_metabolomicsData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_r).filter(data_stage03_quantification_dG_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_tcc).filter(data_stage03_quantification_tcc.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_p).filter(data_stage03_quantification_dG0_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_modelPathways).filter(data_stage03_quantification_modelPathways.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_p).filter(data_stage03_quantification_dG_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_metid2keggid).filter(data_stage03_quantification_metid2keggid.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_models).filter(data_stage03_quantification_models.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_modelReactions).filter(data_stage03_quantification_modelReactions.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_modelMetabolites).filter(data_stage03_quantification_modelMetabolites.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_simulation).filter(data_stage03_quantification_simulation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-            else:
-                reset = self.session.query(data_stage03_quantification_simulatedData).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_otherData).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_r).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_f).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_metabolomicsData).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_f).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_r).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_p).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_metid2keggid).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_models).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_modelReactions).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_modelMetabolites).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_simulation).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_tcc).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_p).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_modelPathways).delete(synchronize_session=False);
-            self.session.commit();
-        except SQLAlchemyError as e:
-            print(e);
-    def initialize_dataStage03_quantification(self):
-        try:
-            data_stage03_quantification_simulatedData.__table__.create(engine,True);
-            data_stage03_quantification_otherData.__table__.create(engine,True);
-            data_stage03_quantification_dG0_r.__table__.create(engine,True);
-            data_stage03_quantification_dG_r.__table__.create(engine,True);
-            data_stage03_quantification_dG0_f.__table__.create(engine,True);
-            data_stage03_quantification_dG_f.__table__.create(engine,True);
-            data_stage03_quantification_metabolomicsData.__table__.create(engine,True);
-            data_stage03_quantification_tcc.__table__.create(engine,True);
-            data_stage03_quantification_dG0_p.__table__.create(engine,True);
-            data_stage03_quantification_modelPathways.__table__.create(engine,True);
-            data_stage03_quantification_dG_p.__table__.create(engine,True);
-            data_stage03_quantification_metid2keggid.__table__.create(engine,True);
-            data_stage03_quantification_models.__table__.create(engine,True);
-            data_stage03_quantification_modelReactions.__table__.create(engine,True);
-            data_stage03_quantification_modelMetabolites.__table__.create(engine,True);
-            data_stage03_quantification_simulation.__table__.create(engine,True);
-        except SQLAlchemyError as e:
-            print(e);
-    def reset_dataStage03_quantification_dG_r(self,experiment_id_I = None):
-        try:
-            if experiment_id_I:
-                reset = self.session.query(data_stage03_quantification_dG0_r).filter(data_stage03_quantification_dG0_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_r).filter(data_stage03_quantification_dG_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_tcc).filter(data_stage03_quantification_tcc.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_p).filter(data_stage03_quantification_dG0_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_p).filter(data_stage03_quantification_dG_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                
-            else:
-                reset = self.session.query(data_stage03_quantification_dG0_r).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_r).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_tcc).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_p).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_p).delete(synchronize_session=False);
-            self.session.commit();
-        except SQLAlchemyError as e:
-            print(e);
-    def reset_dataStage03_quantification_thermodynamicAnalysis(self,experiment_id_I = None):
-        try:
-            if experiment_id_I:
-                #reset = self.session.query(data_stage03_quantification_simulatedData).filter(data_stage03_quantification_simulatedData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_otherData).filter(data_stage03_quantification_otherData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_r).filter(data_stage03_quantification_dG0_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_dG0_f).filter(data_stage03_quantification_dG0_f.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_f).filter(data_stage03_quantification_dG_f.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_metabolomicsData).filter(data_stage03_quantification_metabolomicsData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_r).filter(data_stage03_quantification_dG_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_tcc).filter(data_stage03_quantification_tcc.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_p).filter(data_stage03_quantification_dG0_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_modelPathways).filter(data_stage03_quantification_modelPathways.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_p).filter(data_stage03_quantification_dG_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_metid2keggid).filter(data_stage03_quantification_metid2keggid.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_models).filter(data_stage03_quantification_models.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_modelReactions).filter(data_stage03_quantification_modelReactions.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_modelMetabolites).filter(data_stage03_quantification_modelMetabolites.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_simulation).filter(data_stage03_quantification_simulation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-            else:
-                #reset = self.session.query(data_stage03_quantification_simulatedData).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_otherData).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_r).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_dG0_f).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_metabolomicsData).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_f).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_r).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG_p).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_metid2keggid).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_models).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_modelReactions).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_modelMetabolites).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_simulation).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_tcc).delete(synchronize_session=False);
-                reset = self.session.query(data_stage03_quantification_dG0_p).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage03_quantification_modelPathways).delete(synchronize_session=False);
-            self.session.commit();
-        except SQLAlchemyError as e:
-            print(e);
-    #internal functions:
-    def format_metid(self,met_id_I,compartment_id_I):
-        met_formatted = met_id_I
-        met_formatted = re.sub('-','_DASH_',met_formatted)
-        met_formatted = re.sub('[(]','_LPARANTHES_',met_formatted)
-        met_formatted = re.sub('[)]','_RPARANTHES_',met_formatted)
-        met_formatted +='_' + compartment_id_I;
-        return met_formatted;
-    def test_model(self,model_id_I,ko_list=[],flux_dict={},description=None):
-        '''simulate a cobra model'''
-
-        # get the xml model
-        model_xml = ''
-        model_xml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id_I);
-        # load the model
-        if model_xml:
-            with open('data/cobra_model_tmp.xml','wb') as file:
-                file.write(model_xml['sbml_file']);
-                file.close();
-            cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml');
-        # implement optimal KOs and flux constraints:
-        for ko in ko_list:
-            cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
-            cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
-        for rxn,flux in flux_dict.iteritems():
-            cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
-            cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
-        # change description, if any:
-        if description:
-            cobra_model.description = description;
-        # test for a solution:
-        cobra_model.optimize(solver='gurobi');
-        if not cobra_model.solution.f:
-            return False;
-        else: return True;
-    def load_models(self,experiment_id_I,model_ids_I=[]):
-        '''pre-load all models for the experiment_id'''
-        # get the model ids:
-        if model_ids_I:
-            model_ids = model_ids_I;
-        else:
-            model_ids = [];
-            model_ids = self.stage03_quantification_query.get_modelID_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
-        for model_id in model_ids:
-            # get the cobra model
-            cobra_model_sbml = None;
-            cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
-            # write the model to a temporary file
-            with open('data/cobra_model_tmp.xml','wb') as file:
-                file.write(cobra_model_sbml['sbml_file']);
-            cobra_model = None;
-            cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
-            self.models[model_id]=cobra_model;
+                    self.session.commit();    
     #TODO                
     def execute_calculate_dG_p(self,experiment_id_I,model_ids_I = [],
                                time_points_I=[],sample_name_abbreviations_I=[]):
@@ -724,47 +534,244 @@ class stage03_quantification_execute():
                             print e;
                             print "Press any key to continue"
                             a=raw_input();
-                    self.session.commit(); 
-    def execute_thermodynamicAnalysis(self,experiment_id_I,inconsistent_dG_f_I=[],inconsistent_concentrations_I=[]):
+                    self.session.commit();                 
+    # data_stage01_quantification initializations
+    def drop_dataStage03_quantification(self):
+        try:
+            data_stage03_quantification_simulatedData.__table__.drop(engine,True);
+            data_stage03_quantification_otherData.__table__.drop(engine,True);
+            data_stage03_quantification_dG0_r.__table__.drop(engine,True);
+            data_stage03_quantification_dG_r.__table__.drop(engine,True);
+            data_stage03_quantification_dG0_f.__table__.drop(engine,True);
+            data_stage03_quantification_dG_f.__table__.drop(engine,True);
+            data_stage03_quantification_metabolomicsData.__table__.drop(engine,True);
+            data_stage03_quantification_tcc.__table__.drop(engine,True);
+            data_stage03_quantification_dG0_p.__table__.drop(engine,True);
+            data_stage03_quantification_modelPathways.__table__.drop(engine,True);
+            data_stage03_quantification_dG_p.__table__.drop(engine,True);
+            data_stage03_quantification_metid2keggid.__table__.drop(engine,True);
+            data_stage03_quantification_models.__table__.drop(engine,True);
+            data_stage03_quantification_modelReactions.__table__.drop(engine,True);
+            data_stage03_quantification_modelMetabolites.__table__.drop(engine,True);
+            data_stage03_quantification_simulation.__table__.drop(engine,True);
+            data_stage03_quantification_measuredFluxes.__table__.drop(engine,True);
+            data_stage03_quantification_sampledPoints.__table__.drop(engine,True);
+            data_stage03_quantification_sampledData.__table__.drop(engine,True);
+            data_stage03_quantification_simulationParameters.__table__.drop(engine,True);
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_dataStage03_quantification(self,experiment_id_I = None,simulation_id_I=None):
+        try:
+            if experiment_id_I:
+                reset = self.session.query(data_stage03_quantification_simulatedData).filter(data_stage03_quantification_simulatedData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_otherData).filter(data_stage03_quantification_otherData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_r).filter(data_stage03_quantification_dG0_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_f).filter(data_stage03_quantification_dG0_f.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_f).filter(data_stage03_quantification_dG_f.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_metabolomicsData).filter(data_stage03_quantification_metabolomicsData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_r).filter(data_stage03_quantification_dG_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_tcc).filter(data_stage03_quantification_tcc.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_p).filter(data_stage03_quantification_dG0_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_modelPathways).filter(data_stage03_quantification_modelPathways.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_p).filter(data_stage03_quantification_dG_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_metid2keggid).filter(data_stage03_quantification_metid2keggid.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_models).filter(data_stage03_quantification_models.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_modelReactions).filter(data_stage03_quantification_modelReactions.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_modelMetabolites).filter(data_stage03_quantification_modelMetabolites.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_simulation).filter(data_stage03_quantification_simulation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_simulationParameters).filter(data_stage03_quantification_simulationParameters.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_measuredFluxes).delete(synchronize_session=False);
+            elif simulation_id_I:
+                reset = self.session.query(data_stage03_quantification_simulation).filter(data_stage03_quantification_simulation.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_sampledPoints).filter(data_stage03_quantification_sampledPoints.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_sampledData).filter(data_stage03_quantification_sampledData.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_simulationParameters).filter(data_stage03_quantification_simulationParameters.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage03_quantification_simulatedData).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_otherData).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_r).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_f).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_metabolomicsData).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_f).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_r).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_p).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_metid2keggid).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_models).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_modelReactions).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_modelMetabolites).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_simulation).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_tcc).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_p).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_modelPathways).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_measuredFluxes).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_sampledPoints).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_sampledData).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_simulationParameters).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def initialize_dataStage03_quantification(self):
+        try:
+            data_stage03_quantification_simulatedData.__table__.create(engine,True);
+            data_stage03_quantification_otherData.__table__.create(engine,True);
+            data_stage03_quantification_dG0_r.__table__.create(engine,True);
+            data_stage03_quantification_dG_r.__table__.create(engine,True);
+            data_stage03_quantification_dG0_f.__table__.create(engine,True);
+            data_stage03_quantification_dG_f.__table__.create(engine,True);
+            data_stage03_quantification_metabolomicsData.__table__.create(engine,True);
+            data_stage03_quantification_tcc.__table__.create(engine,True);
+            data_stage03_quantification_dG0_p.__table__.create(engine,True);
+            data_stage03_quantification_modelPathways.__table__.create(engine,True);
+            data_stage03_quantification_dG_p.__table__.create(engine,True);
+            data_stage03_quantification_metid2keggid.__table__.create(engine,True);
+            data_stage03_quantification_models.__table__.create(engine,True);
+            data_stage03_quantification_modelReactions.__table__.create(engine,True);
+            data_stage03_quantification_modelMetabolites.__table__.create(engine,True);
+            data_stage03_quantification_simulation.__table__.create(engine,True);
+            data_stage03_quantification_simulation.__table__.drop(engine,True);
+            data_stage03_quantification_measuredFluxes.__table__.drop(engine,True);
+            data_stage03_quantification_sampledPoints.__table__.drop(engine,True);
+            data_stage03_quantification_sampledData.__table__.drop(engine,True);
+            data_stage03_quantification_simulationParameters.__table__.drop(engine,True);
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_dataStage03_quantification_dG_r(self,experiment_id_I = None):
+        try:
+            if experiment_id_I:
+                reset = self.session.query(data_stage03_quantification_dG0_r).filter(data_stage03_quantification_dG0_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_r).filter(data_stage03_quantification_dG_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_tcc).filter(data_stage03_quantification_tcc.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_p).filter(data_stage03_quantification_dG0_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_p).filter(data_stage03_quantification_dG_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                
+            else:
+                reset = self.session.query(data_stage03_quantification_dG0_r).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_r).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_tcc).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_p).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_p).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_dataStage03_quantification_thermodynamicAnalysis(self,experiment_id_I = None):
+        try:
+            if experiment_id_I:
+                #reset = self.session.query(data_stage03_quantification_simulatedData).filter(data_stage03_quantification_simulatedData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_otherData).filter(data_stage03_quantification_otherData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_r).filter(data_stage03_quantification_dG0_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_dG0_f).filter(data_stage03_quantification_dG0_f.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_f).filter(data_stage03_quantification_dG_f.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_metabolomicsData).filter(data_stage03_quantification_metabolomicsData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_r).filter(data_stage03_quantification_dG_r.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_tcc).filter(data_stage03_quantification_tcc.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_p).filter(data_stage03_quantification_dG0_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_modelPathways).filter(data_stage03_quantification_modelPathways.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_p).filter(data_stage03_quantification_dG_p.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_metid2keggid).filter(data_stage03_quantification_metid2keggid.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_models).filter(data_stage03_quantification_models.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_modelReactions).filter(data_stage03_quantification_modelReactions.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_modelMetabolites).filter(data_stage03_quantification_modelMetabolites.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_simulation).filter(data_stage03_quantification_simulation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            else:
+                #reset = self.session.query(data_stage03_quantification_simulatedData).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_otherData).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_r).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_dG0_f).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_metabolomicsData).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_f).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_r).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG_p).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_metid2keggid).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_models).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_modelReactions).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_modelMetabolites).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_simulation).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_tcc).delete(synchronize_session=False);
+                reset = self.session.query(data_stage03_quantification_dG0_p).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage03_quantification_modelPathways).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    #internal functions:
+    def format_metid(self,met_id_I,compartment_id_I):
+        met_formatted = met_id_I
+        met_formatted = re.sub('-','_DASH_',met_formatted)
+        met_formatted = re.sub('[(]','_LPARANTHES_',met_formatted)
+        met_formatted = re.sub('[)]','_RPARANTHES_',met_formatted)
+        met_formatted +='_' + compartment_id_I;
+        return met_formatted;
+    def test_model(self,cobra_model_I=None,model_id_I=None,ko_list=[],flux_dict={},description=None):
+        '''simulate a cobra model'''
+
+        if model_id_I:
+            # get the xml model
+            model_xml = ''
+            model_xml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id_I);
+            # load the model
+            if cobra_model_sbml['file_type'] == 'sbml':
+                with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
+                    file.write(cobra_model_sbml['model_file']);
+                    file.close()
+                cobra_model = None;
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '/cobra_model_tmp.xml', print_time=True);
+            elif cobra_model_sbml['file_type'] == 'json':
+                with open(settings.workspace_data + '/cobra_model_tmp.json','wb') as file:
+                    file.write(cobra_model_sbml['model_file']);
+                    file.close()
+                cobra_model = None;
+                cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
+            else:
+                print 'file_type not supported'
+        elif cobra_model_I:
+            cobra_model = cobra_model_I;
+        # implement optimal KOs and flux constraints:
+        for ko in ko_list:
+            cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
+            cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
+        for rxn,flux in flux_dict.iteritems():
+            cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
+            cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
+        # change description, if any:
+        if description:
+            cobra_model.description = description;
+        # test for a solution:
+        cobra_model.optimize(solver='gurobi');
+        if not cobra_model.solution.f:
+            return False;
+        else:
+            print cobra_model.solution.f;
+            return True;
+    def load_models(self,experiment_id_I,model_ids_I=[]):
+        '''pre-load all models for the experiment_id'''
+        # get the model ids:
+        if model_ids_I:
+            model_ids = model_ids_I;
+        else:
+            model_ids = [];
+            model_ids = self.stage03_quantification_query.get_modelID_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
+        for model_id in model_ids:
+            # get the cobra model
+            cobra_model_sbml = None;
+            cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
+            # write the model to a temporary file
+            if cobra_model_sbml['file_type'] == 'sbml':
+                with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
+                    file.write(cobra_model_sbml['model_file']);
+                cobra_model = None;
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '/cobra_model_tmp.xml', print_time=True);
+            elif cobra_model_sbml['file_type'] == 'json':
+                with open(settings.workspace_data + '/cobra_model_tmp.json','wb') as file:
+                    file.write(cobra_model_sbml['model_file']);
+                cobra_model = None;
+                cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
+            else:
+                print 'file_type not supported'
+            self.models[model_id]=cobra_model;
+    def execute_thermodynamicSampling(self,simulation_ids_I=[]):
         '''execute a thermodynamic analysis using the thermodynamic
         module for cobrapy'''
 
-        print 'execute_thermodynamicsAnalysis...'
-        # load the model
-        cobra_model = None;
-        # load simulated data
-        fva_data = {};
-        #fva_data = self.stage03_quantification_query.get_
-        sra_data = {};
-        #sra_data = self.stage03_quantification_query.get_
-        simulated_data = thermodynamics_simulatedData(data_fva,data_srd);
-        simulated_data.check_data();
-        # query other data
-        pH,temperature,ionic_strength = {},{},{}
-        #pH,temperature,ionic_strength = self.stage03_quantification_query.get_
-        # load pH, ionic_strength, and temperature parameters
-        other_data = thermodynamics_otherData(pH_I=pH,temperature_I={},ionic_strength_I={});
-        other_data.load_defaultData();
-        other_data.check_data();
-        # query dGf data
-        id2kegg = {};
-        #id2kegg = self.stage03_quantification_query.get_
-        dG_f = {};
-        #dG_f = self.stage03_quantification_query.get_
-        # adjust dG0f to environmental conditions
-        dG_f_data = thermodynamics_dG_f_data(id2KEGGID_I=id2kegg,dG_f_I=dG_f);
-        dG_f_data.format_dG_f();
-        dG_f_data.generate_estimated_dG_f(cobra_model)
-        dG_f_data.check_data();
-        # remove an inconsistent dGf values
-        if dG_f_data: dG_f_data.remove_measured_dG_f(inconsistent_dG_f_I)
-        # query metabolomicsData
-        # remove an inconsistent concentration values
-        # calculate dG0r, dGr, displacements, and perform a thermodynamic consistency check based on model simulations
-        # upload dG0r, dGr, displacements, and results of tcc
-        # calculate dGp
-        # upload dG0r, dGr, and results of tcc
-        # perform tfba...
+        print 'execute_thermodynamicSmpling...'
 
     def execute_compareThermodynamicStates(self,experiment_id_I):
         '''perform a  pairwise comparison of thermodynamic states'''
@@ -775,4 +782,160 @@ class stage03_quantification_execute():
         '''exports thermodynamic data for visualization using escher'''
 
         print 'execute_visualizeThermodynamicStates'
+
+    #TODO:
+    def execute_addMeasuredFluxes(self,experiment_id_I, ko_list={}, flux_dict={}, model_ids_I=[], sample_name_abbreviations_I=[]):
+        '''Add flux data for physiological simulation'''
+        #Input:
+            #flux_dict = {};
+            #flux_dict['iJO1366'] = {};
+            #flux_dict['iJO1366'] = {};
+            #flux_dict['iJO1366']['sna'] = {};
+            #flux_dict['iJO1366']['sna']['Ec_biomass_iJO1366_WT_53p95M'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':0.704*0.9,'ub':0.704*1.1};
+            #flux_dict['iJO1366']['sna']['EX_ac_LPAREN_e_RPAREN_'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':2.13*0.9,'ub':2.13*1.1};
+            #flux_dict['iJO1366']['sna']['EX_o2_LPAREN_e_RPAREN__reverse'] = {'ave':None,'units':'mmol*gDCW-1*hr-1','stdev':None,'lb':0,'ub':16};
+            #flux_dict['iJO1366']['sna']['EX_glc_LPAREN_e_RPAREN_'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':-7.4*1.1,'ub':-7.4*0.9};
+
+        data_O = [];
+        # get the model ids:
+        if model_ids_I:
+            model_ids = model_ids_I;
+        else:
+            model_ids = [];
+            model_ids = self.stage03_quantification_query.get_modelID_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
+        for model_id in model_ids:
+            # get sample names and sample name abbreviations
+            if sample_name_abbreviations_I:
+                sample_name_abbreviations = sample_name_abbreviations_I;
+            else:
+                sample_name_abbreviations = [];
+                sample_name_abbreviations = self.stage03_quantification_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage03QuantificationSimulation(experiment_id_I,model_id);
+            for sna_cnt,sna in enumerate(sample_name_abbreviations):
+                print 'Adding experimental fluxes for sample name abbreviation ' + sna;
+                if flux_dict:
+                    for k,v in flux_dict[model_id][sna].iteritems():
+                        # record the data
+                        data_tmp = {'experiment_id':experiment_id_I,
+                                'model_id':model_id,
+                                'sample_name_abbreviation':sna,
+                                'rxn_id':k,
+                                'flux_average':v['ave'],
+                                'flux_stdev':v['stdev'],
+                                'flux_lb':v['lb'], 
+                                'flux_ub':v['ub'],
+                                'flux_units':v['units'],
+                                'used_':True,
+                                'comment_':None}
+                        data_O.append(data_tmp);
+                        #add data to the database
+                        row = [];
+                        row = data_stage03_quantification_measuredFluxes(
+                            experiment_id_I,
+                            model_id,
+                            sna,
+                            k,
+                            v['ave'],
+                            v['stdev'],
+                            v['lb'], 
+                            v['ub'],
+                            v['units'],
+                            True,
+                            None);
+                        self.session.add(row);
+                if ko_list:
+                    for k in ko_list[model_id][sna]:
+                        # record the data
+                        data_tmp = {'experiment_id':experiment_id_I,
+                                'model_id':model_id,
+                                'sample_name_abbreviation':sna,
+                                'rxn_id':k,
+                                'flux_average':0.0,
+                                'flux_stdev':0.0,
+                                'flux_lb':0.0, 
+                                'flux_ub':0.0,
+                                'flux_units':'mmol*gDCW-1*hr-1',
+                                'used_':True,
+                                'comment_':None}
+                        data_O.append(data_tmp);
+                        #add data to the database
+                        row = [];
+                        row = data_stage03_quantification_measuredFluxes(
+                            experiment_id_I,
+                            model_id,
+                            sna,
+                            k,
+                            0.0,
+                            0.0,
+                            0.0, 
+                            0.0,
+                            'mmol*gDCW-1*hr-1',
+                            True,
+                            None);
+                        self.session.add(row);
+        self.session.commit();
+    def execute_makeMeasuredFluxes(self,experiment_id_I, metID2RxnID_I = {}, sample_name_abbreviations_I = [], met_ids_I = []):
+        '''Collect and flux data from data_stage01_physiology_ratesAverages for physiological simulation'''
+        #Input:
+        #   metID2RxnID_I = e.g. {'glc-D':{'model_id':'140407_iDM2014','rxn_id':'EX_glc_LPAREN_e_RPAREN_'},
+        #                        {'ac':{'model_id':'140407_iDM2014','rxn_id':'EX_ac_LPAREN_e_RPAREN_'},
+        #                        {'succ':{'model_id':'140407_iDM2014','rxn_id':'EX_succ_LPAREN_e_RPAREN_'},
+        #                        {'lac-L':{'model_id':'140407_iDM2014','rxn_id':'EX_lac_DASH_L_LPAREN_e_RPAREN_'},
+        #                        {'biomass':{'model_id':'140407_iDM2014','rxn_id':'Ec_biomass_iJO1366_WT_53p95M'}};
+
+        data_O = [];
+        # get sample names and sample name abbreviations
+        if sample_name_abbreviations_I:
+            sample_name_abbreviations = sample_name_abbreviations_I;
+        else:
+            sample_name_abbreviations = [];
+            sample_name_abbreviations = self.stage03_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
+        for sna in sample_name_abbreviations:
+            print 'Collecting experimental fluxes for sample name abbreviation ' + sna;
+            # get met_ids
+            if not met_ids_I:
+                met_ids = [];
+                met_ids = self.stage03_quantification_query.get_metID_experimentIDAndSampleNameAbbreviation_dataStage01PhysiologyRatesAverages(experiment_id_I,sna);
+            else:
+                met_ids = met_ids_I;
+            if not(met_ids): continue #no component information was found
+            for met in met_ids:
+                print 'Collecting experimental fluxes for metabolite ' + met;
+                # get rateData
+                slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = None,None,None,None,None,None,None;
+                slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = self.stage03_quantification_query.get_rateData_experimentIDAndSampleNameAbbreviationAndMetID_dataStage01PhysiologyRatesAverages(experiment_id_I,sna,met);
+                rate_stdev = sqrt(rate_var);
+                model_id = metID2RxnID_I[met]['model_id'];
+                rxn_id = metID2RxnID_I[met]['rxn_id'];
+                # record the data
+                data_tmp = {'experiment_id':experiment_id_I,
+                        'model_id':model_id,
+                        'sample_name_abbreviation':sna,
+                        'rxn_id':rxn_id,
+                        'flux_average':rate_average,
+                        'flux_stdev':rate_stdev,
+                        'flux_lb':rate_lb, 
+                        'flux_ub':rate_ub,
+                        'flux_units':rate_units,
+                        'used_':True,
+                        'comment_':None}
+                data_O.append(data_tmp);
+                #add data to the database
+                row = [];
+                row = data_stage03_quantification_measuredFluxes(
+                    experiment_id_I,
+                    model_id,
+                    sna,
+                    rxn_id,
+                    rate_average,
+                    rate_stdev,
+                    rate_lb, 
+                    rate_ub,
+                    rate_units,
+                    True,
+                    None);
+                self.session.add(row);
+        self.session.commit();
+    def execute_makeEstimatedFluxes(self,experimentID2IsotopomerSimulationID_I = {},sample_name_abbreviations_I = [],snaIsotopomer2snaPhysiology_I={}):
+        '''Collect estimated flux data from data_stage02_istopomer_netFluxes for thermodynamic simulation'''
+        return
             

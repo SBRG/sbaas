@@ -951,15 +951,15 @@ class stage03_quantification_io(base_analysis):
                     print(e);
             self.session.commit();
 
-    def import_dataStage03Experiment_add(self, filename):
+    def import_dataStage03Simulation_add(self, filename):
         '''table adds'''
         data = base_importData();
         data.read_csv(filename);
         data.format_data();
-        self.add_dataStage03Experiment(data.data);
+        self.add_dataStage03Simulation(data.data);
         data.clear_data();
 
-    def add_dataStage03Experiment(self, data_I):
+    def add_dataStage03Simulation(self, data_I):
         '''add rows of data_stage03_quantification_simulation'''
         if data_I:
             for d in data_I:
@@ -975,15 +975,15 @@ class stage03_quantification_io(base_analysis):
                     print(e);
             self.session.commit();
 
-    def import_dataStage03Experiment_update(self, filename):
+    def import_dataStage03Simulation_update(self, filename):
         '''table adds'''
         data = base_importData();
         data.read_csv(filename);
         data.format_data();
-        self.update_dataStage03Experiment(data.data);
+        self.update_dataStage03Simulation(data.data);
         data.clear_data();
 
-    def update_dataStage03Experiment(self,data_I):
+    def update_dataStage03Simulation(self,data_I):
         '''update rows of data_stage03_quantification_simulation'''
         if data_I:
             for d in data_I:

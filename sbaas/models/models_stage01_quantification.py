@@ -90,6 +90,9 @@ class data_stage01_quantification_normalized(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name','component_name'),
+            )
+
     def __init__(self, experiment_id_I, sample_name_I, sample_id_I, component_group_name_I, component_name_I,
                     calculated_concentration_I, calculated_concentration_units_I, used_I):
         self.experiment_id = experiment_id_I;
@@ -119,14 +122,17 @@ class data_stage01_quantification_normalized(Base):
 class data_stage01_quantification_replicates(Base):
     __tablename__ = 'data_stage01_quantification_replicates'
     id = Column(Integer, Sequence('data_stage01_quantification_replicates_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    sample_name_short = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
+    experiment_id = Column(String(50))
+    sample_name_short = Column(String(100))
+    time_point = Column(String(10))
     component_group_name = Column(String(100))
-    component_name = Column(String(500), primary_key=True)
+    component_name = Column(String(500))
     calculated_concentration = Column(Float)
     calculated_concentration_units = Column(String(20))
     used_ = Column(Boolean);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_short','time_point','component_name'),
+            )
 
     def __init__(self, experiment_id_I, sample_name_short_I, time_point_I, component_group_name_I, component_name_I,
                     calculated_concentration_I,calculated_concentration_units_I, used_I):
@@ -154,14 +160,17 @@ class data_stage01_quantification_replicates(Base):
 class data_stage01_quantification_replicatesMI(Base):
     __tablename__ = 'data_stage01_quantification_replicatesmi'
     id = Column(Integer, Sequence('data_stage01_quantification_replicatesmi_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    sample_name_short = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
+    experiment_id = Column(String(50))
+    sample_name_short = Column(String(100))
+    time_point = Column(String(10))
     component_group_name = Column(String(100))
-    component_name = Column(String(500), primary_key=True)
+    component_name = Column(String(500))
     calculated_concentration = Column(Float)
     calculated_concentration_units = Column(String(20))
     used_ = Column(Boolean);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_short','time_point','component_name'),
+            )
 
     def __init__(self, experiment_id_I, sample_name_short_I, time_point_I, component_group_name_I, component_name_I,
                     calculated_concentration_I,calculated_concentration_units_I, used_I):
@@ -189,11 +198,11 @@ class data_stage01_quantification_replicatesMI(Base):
 class data_stage01_quantification_averages(Base):
     __tablename__ = 'data_stage01_quantification_averages'
     id = Column(Integer, Sequence('data_stage01_quantification_averages_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
+    experiment_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
     component_group_name = Column(String(100))
-    component_name = Column(String(500), primary_key=True)
+    component_name = Column(String(500))
     n_replicates_broth = Column(Integer)
     calculated_concentration_broth_average = Column(Float)
     calculated_concentration_broth_cv = Column(Float)
@@ -206,6 +215,9 @@ class data_stage01_quantification_averages(Base):
     calculated_concentration_units = Column(String(20))
     extracellular_percent = Column(Float)
     used_ = Column(Boolean);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','component_name'),
+            )
 
     def __init__(self, experiment_id_I, sample_name_abbreviation_I, time_point_I, component_group_name_I, component_name_I,
                     n_replicates_broth_I, calculated_concentration_broth_average_I, calculated_concentration_broth_cv_I,
@@ -232,16 +244,19 @@ class data_stage01_quantification_averages(Base):
 class data_stage01_quantification_averagesMI(Base):
     __tablename__ = 'data_stage01_quantification_averagesmi'
     id = Column(Integer, Sequence('data_stage01_quantification_averagesmi_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
+    experiment_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
     component_group_name = Column(String(100))
-    component_name = Column(String(500), primary_key=True)
+    component_name = Column(String(500))
     n_replicates = Column(Integer)
     calculated_concentration_average = Column(Float)
     calculated_concentration_cv = Column(Float)
     calculated_concentration_units = Column(String(20))
     used_ = Column(Boolean);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','component_name'),
+            )
 
     def __init__(self, experiment_id_I, sample_name_abbreviation_I, time_point_I, component_group_name_I, component_name_I,
                     n_replicates_I, calculated_concentration_average_I, calculated_concentration_cv_I,
@@ -273,11 +288,11 @@ class data_stage01_quantification_averagesMI(Base):
 class data_stage01_quantification_averagesMIgeo(Base):
     __tablename__ = 'data_stage01_quantification_averagesmigeo'
     id = Column(Integer, Sequence('data_stage01_quantification_averagesmigeo_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
+    experiment_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
     component_group_name = Column(String(100))
-    component_name = Column(String(500), primary_key=True)
+    component_name = Column(String(500))
     n_replicates = Column(Integer)
     calculated_concentration_average = Column(Float)
     calculated_concentration_var = Column(Float)
@@ -285,6 +300,9 @@ class data_stage01_quantification_averagesMIgeo(Base):
     calculated_concentration_ub = Column(Float)
     calculated_concentration_units = Column(String(20))
     used_ = Column(Boolean);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','component_name'),
+            )
 
     def __init__(self, experiment_id_I, sample_name_abbreviation_I, time_point_I, component_group_name_I, component_name_I,
                     n_replicates_I, calculated_concentration_average_I, calculated_concentration_var_I,
@@ -332,6 +350,9 @@ class data_stage01_quantification_physiologicalRatios_replicates(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_short','time_point','physiologicalratio_id'),
+            )
+
     def __init__(self, experiment_id_I,
                 sample_name_short_I,
                 time_point_I,
@@ -372,10 +393,10 @@ class data_stage01_quantification_physiologicalRatios_replicates(Base):
 class data_stage01_quantification_physiologicalRatios_averages(Base):
     __tablename__ = 'data_stage01_quantification_physiologicalRatios_averages'
     id = Column(Integer, Sequence('data_stage01_quantification_physiologicalRatios_averages_id_seq'), primary_key=True)
-    experiment_id = Column(String(50), primary_key=True)
-    sample_name_abbreviation = Column(String(100), primary_key=True)
-    time_point = Column(String(10), primary_key=True)
-    physiologicalratio_id = Column(String(50), primary_key=True)
+    experiment_id = Column(String(50))
+    sample_name_abbreviation = Column(String(100))
+    time_point = Column(String(10))
+    physiologicalratio_id = Column(String(50))
     physiologicalratio_name = Column(String(100))
     physiologicalratio_value_ave = Column(Float)
     physiologicalratio_value_cv = Column(Float)
@@ -384,6 +405,9 @@ class data_stage01_quantification_physiologicalRatios_averages(Base):
     physiologicalratio_description = Column(String(500))
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','physiologicalratio_id'),
+            )
 
     def __init__(self,experiment_id_I,
                 sample_name_abbreviation_I,
@@ -449,6 +473,9 @@ class data_stage01_quantification_peakInformation(Base):
     peakInfo_data = Column(postgresql.ARRAY(Float))
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','component_name','peakInfo_parameter'),
+            )
 
     def __init__(self,
                  experiment_id_I,
@@ -519,6 +546,9 @@ class data_stage01_quantification_peakResolution(Base):
     peakInfo_data = Column(postgresql.ARRAY(Float))
     used_ = Column(Boolean);
     comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('experiment_id','component_name_pair','peakInfo_parameter'),
+            )
 
     def __init__(self,
                  experiment_id_I,

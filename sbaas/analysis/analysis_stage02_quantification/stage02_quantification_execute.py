@@ -319,6 +319,9 @@ class stage02_quantification_execute():
                         # call R
                         data_TTest = {};
                         data_TTest = self.r_calc.calculate_oneSampleTTest(data_1, alternative_I = "two.sided", mu_I = 0, paired_I="FALSE", var_equal_I = "TRUE", ci_level_I = 0.95, padjusted_method_I = "bonferroni");
+                        #TODO:
+                        # calculate the interquartile range
+                        min_O, max_O, median_O, iq_1_O, iq_2_O=self.calculate.calculate_interquartiles(data_1);
                         # record data for plotting
                         data_plot_mean.append(data_TTest['mean']);
                         data_plot_var.append(data_TTest['var']);
