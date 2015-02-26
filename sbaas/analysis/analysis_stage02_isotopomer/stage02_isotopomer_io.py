@@ -2924,6 +2924,15 @@ class stage02_isotopomer_io(base_analysis):
                     flux_lbub = self.stage02_isotopomer_query.get_rowsEscherFluxLbUb_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
                     flux = {};
                     flux = self.stage02_isotopomer_query.get_rowsEscherFlux_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
+                    # break lumped reactions into individual reactions
+                    fluxes = {};
+                    for k,v in flux.iteritems():
+                        fluxes_O = {};
+                        fluxes_O = self.convert_netRxn2IndividualRxns(k,v);
+                        if fluxes_O:
+                            fluxes.update(fluxes_O);
+                        else:
+                            fluxes.update({k:v});
                     for map_id in [
                         'AlternateCarbonMetabolism',\
                         'AminoAcidMetabolism',\
@@ -2937,7 +2946,7 @@ class stage02_isotopomer_io(base_analysis):
                         print 'exporting fluxomics analysis for map_id ' + map_id;
                         # generate the map html using escher
                         map_json = json.load(open(settings.sbaas + '/data/escher_maps/' + map_id + '.json','rb'));
-                        map = Builder(map_json=json.dumps(map_json), reaction_data=flux);
+                        map = Builder(map_json=json.dumps(map_json), reaction_data=fluxes);
                         #html_file = map._get_html(scroll_behavior='zoom')
                         #html_file = map._get_html(menu='all',
                         #  # make the output a standalone HTML file
@@ -2957,4 +2966,40 @@ class stage02_isotopomer_io(base_analysis):
         filename_str = filename[0]+ '/' +experiment_id_I.replace('_','') + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'wb') as file:
             file.write(json_str);
+
+    def convert_netRxn2IndividualRxns(self,net_rxn_I,flux_I):
+        '''Convert a net rxn into individual rxns,
+        and update the direction of the flux for each individual reactions
+        accordingly'''
+
+        #Input:
+        #   net_rxn_I = string, rxn_id
+        #   flux_I = flux, float
+        #Output:
+        #   rxns_O = list, rxn_ids
+        #   fluxes_O = list, floats
+        #   fluxes_O_dict = dict, rxn_id:flux
+
+        from stage02_isotopomer_dependencies import isotopomer_rxns_net
+
+        rxns_O = [];
+        fluxes_O = [];
+        fluxes_O_dict = {};
+
+        if not flux_I:
+            #print 'reaction has no flux';
+            return fluxes_O_dict;
+        elif net_rxn_I in isotopomer_rxns_net.keys():
+            rxns_O = isotopomer_rxns_net[net_rxn_I]['reactions'];
+            stoichiometry = isotopomer_rxns_net[net_rxn_I]['stoichiometry'];
+            # change the direction of the fluxes according to the stoichiometry of the reactions
+            fluxes_O = [s*flux_I for s in stoichiometry];
+        else:
+            #print 'net reaction not found';
+            return fluxes_O_dict;
+
+        #return rxns_O,fluxes_O;
+        # wrap into a dictionary
+        fluxes_O_dict = dict(zip(rxns_O,fluxes_O));
+        return fluxes_O_dict;
     

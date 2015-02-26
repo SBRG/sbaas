@@ -2059,7 +2059,8 @@ class stage02_isotopomer_query(base_analysis):
         except SQLAlchemyError as e:
             print(e);
     def get_rowsEscherFlux_simulationID_dataStage02IsotopomerfittedNetFluxes(self,simulation_id_I):
-        '''Query rows that are used from the flux_average'''
+        '''Query rows that are used from the flux_average
+        output: dict, rxn_id:flux'''
         try:
             data = self.session.query(data_stage02_isotopomer_fittedNetFluxes).filter(
                     data_stage02_isotopomer_fittedNetFluxes.simulation_id.like(simulation_id_I),

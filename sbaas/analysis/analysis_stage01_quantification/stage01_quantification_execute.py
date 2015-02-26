@@ -1608,10 +1608,10 @@ class stage01_quantification_execute():
                     data_plot_sna.append(sna);
                     data_plot_component_names.append(cn);
                     data_plot_calculated_concentration_units.append(data['calculated_concentration_units']);
-                # visualize the stats:
-                data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
-                #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,se_I=data_plot_se,add_labels_I=False);
-                self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
+        # visualize the stats:
+        data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
+        #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,se_I=data_plot_se,add_labels_I=False);
+        self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
     def execute_barPlot_averages(self,experiment_id_I,sample_name_abbreviations_I=[],component_names_I=[]):
         '''generate a bar plot from averagesMIGeo table'''
 
