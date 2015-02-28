@@ -280,8 +280,8 @@ class data_stage02_isotopomer_modelReactions(Base):
     genes = Column(postgresql.ARRAY(String(50)));
     reactants_stoichiometry = Column(postgresql.ARRAY(Float)) # stoichiometry of metabolites
     products_stoichiometry = Column(postgresql.ARRAY(Float)) 
-    reactants_ids = Column(postgresql.ARRAY(String(50))) # list of met_ids that are in the reaction
-    products_ids = Column(postgresql.ARRAY(String(50))) 
+    reactants_ids = Column(postgresql.ARRAY(String(100))) # list of met_ids that are in the reaction
+    products_ids = Column(postgresql.ARRAY(String(100))) 
     lower_bound = Column(Float) #derived from experimentally measured values or estimations from simulations
     upper_bound = Column(Float) #derived from experimentally measured values or estimations from simulations
     objective_coefficient = Column(Float)
@@ -364,7 +364,7 @@ class data_stage02_isotopomer_modelMetabolites(Base):
     id = Column(Integer, Sequence('data_stage02_isotopomer_modelMetabolites_id_seq'), primary_key=True)
     model_id = Column(String(50), primary_key=True)
     met_name = Column(String(500))
-    met_id = Column(String(50), primary_key=True)
+    met_id = Column(String(100), primary_key=True)
     formula = Column(String(100))
     charge = Column(Integer)
     compartment = Column(String(50))
@@ -629,9 +629,9 @@ class data_stage02_isotopomer_atomMappingReactions(Base):
     products_elements_tracked = Column(postgresql.JSON)
     reactants_positions_tracked = Column(postgresql.JSON) # list of elements that are tracked (e.g. ['C','C'])
     products_positions_tracked = Column(postgresql.JSON)
-    reactants_mapping = Column(postgresql.ARRAY(String(5000))) # mappings of each atom for each met_id that are tracked (e.g. ['abc','de'])
-    products_mapping = Column(postgresql.ARRAY(String(5000)))
-    rxn_equation = Column(String(4000)) #formatted version of rxn_formula and rxn_mapping depending on the fluxomics software
+    reactants_mapping = Column(postgresql.ARRAY(String(20000))) # mappings of each atom for each met_id that are tracked (e.g. ['abc','de'])
+    products_mapping = Column(postgresql.ARRAY(String(20000)))
+    rxn_equation = Column(String(5000)) #formatted version of rxn_formula and rxn_mapping depending on the fluxomics software
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
@@ -910,7 +910,7 @@ class data_stage02_isotopomer_atomMappingMetabolites(Base):
     comment_ = Column(Text);
     met_mapping=Column(postgresql.JSON())
     #met_mapping=Column(postgresql.ARRAY(String(5000)))
-    base_met_ids=Column(postgresql.ARRAY(String(50)))
+    base_met_ids=Column(postgresql.ARRAY(String(100)))
     base_met_elements=Column(postgresql.JSON())
     #base_met_elements=Column(postgresql.ARRAY(String(3)))
     base_met_atompositions=Column(postgresql.JSON())

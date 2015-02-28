@@ -2129,23 +2129,54 @@ class stage02_isotopomer_io(base_analysis):
             #parse the reactants
             met_id_tmp = None;
             met_stoichiometry_tmp = None;
-            for rxn_token in model_INCA_reactants.replace('*',' ').split(' '):
+            model_INCA_reactants_list = model_INCA_reactants.replace('*',' ').split(' ')
+            rxn_mapping_bool = False;
+            rxn_mapping_str = '';
+            pos_cnt = 0;
+            positions = [];
+            elements = [];
+            for rxn_token in model_INCA_reactants_list:
                 #check for extra whitespace
                 if rxn_token == '' or rxn_token == ' ': continue;
                 #check for mapping
-                elif '(' in rxn_token or ')' in rxn_token:
-                    rxn_mapping = rxn_token.strip('(').strip(')');
+                elif ')' in rxn_token:
+                    rxn_mapping = rxn_token.strip(')');
                     #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
+                    if ':' in rxn_mapping:
+                        rxn_mapping = rxn_mapping.split(':')[1];
                     atomMappingReactions_row['reactants_ids_tracked'].append(met_id_tmp);
                     atomMappingReactions_row['reactants_stoichiometry_tracked'].append(met_stoichiometry_tmp);
-                    atomMappingReactions_row['reactants_mapping'].append(rxn_mapping);
-                    elements = [];
-                    positions = [];
-                    for pos,mapping in enumerate(rxn_mapping):
-                        positions.append(pos);
-                        elements.append(element_tracked_I);
+                    rxn_mapping_str+= '['+rxn_mapping+']';
+                    elements.append(element_tracked_I);
+                    positions.append(pos_cnt);
                     atomMappingReactions_row['reactants_positions_tracked'].append(positions)
                     atomMappingReactions_row['reactants_elements_tracked'].append(elements)
+                    rxn_mapping_bool = False;
+                    atomMappingReactions_row['reactants_mapping'].append(rxn_mapping_str);
+                    rxn_mapping_str='';
+                    pos_cnt=0;
+                elif rxn_mapping_bool:
+                    #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
+                    if ':' in rxn_mapping:
+                        rxn_mapping = rxn_mapping.split(':')[1];
+                    atomMappingReactions_row['reactants_ids_tracked'].append(met_id_tmp);
+                    atomMappingReactions_row['reactants_stoichiometry_tracked'].append(met_stoichiometry_tmp);
+                    rxn_mapping_str+= '['+rxn_mapping+']';
+                    elements.append(element_tracked_I);
+                    positions.append(pos_cnt);
+                    pos_cnt+=1;
+                elif '(' in rxn_token:
+                    rxn_mapping = rxn_token.strip('(');
+                    #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
+                    if ':' in rxn_mapping:
+                        rxn_mapping = rxn_mapping.split(':')[1];
+                    atomMappingReactions_row['reactants_ids_tracked'].append(met_id_tmp);
+                    atomMappingReactions_row['reactants_stoichiometry_tracked'].append(met_stoichiometry_tmp);
+                    rxn_mapping_str+= '['+rxn_mapping+']';
+                    elements.append(element_tracked_I);
+                    positions.append(pos_cnt);
+                    rxn_mapping_bool = True;
+                    pos_cnt+=1;
                 #check for stoichiometry
                 elif rxn_token.replace('.','').replace('-','').replace('E','').isdigit():
                     met_stoichiometry_tmp = -abs(float(rxn_token));
@@ -2166,23 +2197,54 @@ class stage02_isotopomer_io(base_analysis):
             #parse the products
             met_id_tmp = None;
             met_stoichiometry_tmp = None;
-            for rxn_token in model_INCA_products.replace('*',' ').split(' '):
+            model_INCA_products_list = model_INCA_products.replace('*',' ').split(' ')
+            rxn_mapping_bool = False;
+            rxn_mapping_str = '';
+            pos_cnt = 0;
+            positions = [];
+            elements = [];
+            for rxn_token in model_INCA_products_list:
                 #check for extra whitespace
                 if rxn_token == '' or rxn_token == ' ': continue;
                 #check for mapping
-                elif '(' in rxn_token or ')' in rxn_token:
-                    rxn_mapping = rxn_token.strip('(').strip(')');
-                    #TODO: will break on use cases such as '(C1:a,C2:b1,C3:c2)'
+                elif ')' in rxn_token:
+                    rxn_mapping = rxn_token.strip(')');
+                    #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
+                    if ':' in rxn_mapping:
+                        rxn_mapping = rxn_mapping.split(':')[1];
                     atomMappingReactions_row['products_ids_tracked'].append(met_id_tmp);
                     atomMappingReactions_row['products_stoichiometry_tracked'].append(met_stoichiometry_tmp);
-                    atomMappingReactions_row['products_mapping'].append(rxn_mapping);
-                    elements = [];
-                    positions = [];
-                    for pos,mapping in enumerate(rxn_mapping):
-                        positions.append(pos);
-                        elements.append(element_tracked_I);
+                    rxn_mapping_str+= '['+rxn_mapping+']';
+                    elements.append(element_tracked_I);
+                    positions.append(pos_cnt);
                     atomMappingReactions_row['products_positions_tracked'].append(positions)
                     atomMappingReactions_row['products_elements_tracked'].append(elements)
+                    rxn_mapping_bool = False;
+                    atomMappingReactions_row['products_mapping'].append(rxn_mapping_str);
+                    rxn_mapping_str='';
+                    pos_cnt=0;
+                elif rxn_mapping_bool:
+                    #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
+                    if ':' in rxn_mapping:
+                        rxn_mapping = rxn_mapping.split(':')[1];
+                    atomMappingReactions_row['products_ids_tracked'].append(met_id_tmp);
+                    atomMappingReactions_row['products_stoichiometry_tracked'].append(met_stoichiometry_tmp);
+                    rxn_mapping_str+= '['+rxn_mapping+']';
+                    elements.append(element_tracked_I);
+                    positions.append(pos_cnt);
+                    pos_cnt+=1;
+                elif '(' in rxn_token:
+                    rxn_mapping = rxn_token.strip('(');
+                    #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
+                    if ':' in rxn_mapping:
+                        rxn_mapping = rxn_mapping.split(':')[1];
+                    atomMappingReactions_row['products_ids_tracked'].append(met_id_tmp);
+                    atomMappingReactions_row['products_stoichiometry_tracked'].append(met_stoichiometry_tmp);
+                    rxn_mapping_str+= '['+rxn_mapping+']';
+                    elements.append(element_tracked_I);
+                    positions.append(pos_cnt);
+                    rxn_mapping_bool = True;
+                    pos_cnt+=1;
                 #check for stoichiometry
                 elif rxn_token.replace('.','').replace('-','').replace('E','').isdigit():
                     met_stoichiometry_tmp = abs(float(rxn_token));
@@ -2200,6 +2262,44 @@ class stage02_isotopomer_io(base_analysis):
                     if not met_stoichiometry_tmp: #implicit stoichiometry of 1
                         met_stoichiometry_tmp = 1.0;
                         modelReactions_row['products_stoichiometry'].append(met_stoichiometry_tmp);
+            #met_id_tmp = None;
+            #met_stoichiometry_tmp = None;
+            #for rxn_token in model_INCA_products.replace('*',' ').split(' '):
+            #    #check for extra whitespace
+            #    if rxn_token == '' or rxn_token == ' ': continue;
+            #    #check for mapping
+            #    elif '(' in rxn_token or ')' in rxn_token:
+            #        rxn_mapping = rxn_token.strip('(').strip(')');
+            #        #TODO: will break on use cases such as '(C1:a,C2:b1,C3:c2)'
+            #        if ':' in rxn_mapping:
+            #            rxn_mapping = rxn_mapping.split(':')[1];
+            #        atomMappingReactions_row['products_ids_tracked'].append(met_id_tmp);
+            #        atomMappingReactions_row['products_stoichiometry_tracked'].append(met_stoichiometry_tmp);
+            #        atomMappingReactions_row['products_mapping'].append(rxn_mapping);
+            #        elements = [];
+            #        positions = [];
+            #        for pos,mapping in enumerate(rxn_mapping):
+            #            positions.append(pos);
+            #            elements.append(element_tracked_I);
+            #        atomMappingReactions_row['products_positions_tracked'].append(positions)
+            #        atomMappingReactions_row['products_elements_tracked'].append(elements)
+            #    #check for stoichiometry
+            #    elif rxn_token.replace('.','').replace('-','').replace('E','').isdigit():
+            #        met_stoichiometry_tmp = abs(float(rxn_token));
+            #        modelReactions_row['products_stoichiometry'].append(met_stoichiometry_tmp)
+            #    #check for the next metabolite
+            #    elif '+' in rxn_token:
+            #        met_id_tmp = None;
+            #        met_stoichiometry_tmp = None;
+            #    #met_id
+            #    else:
+            #        if model_met_conversion_I: met_id_tmp = model_met_conversion[rxn_token.strip()];
+            #        else: met_id_tmp = rxn_token.strip();
+            #        modelReactions_row['products_ids'].append(met_id_tmp)
+            #        model_met_ids.append(met_id_tmp)
+            #        if not met_stoichiometry_tmp: #implicit stoichiometry of 1
+            #            met_stoichiometry_tmp = 1.0;
+            #            modelReactions_row['products_stoichiometry'].append(met_stoichiometry_tmp);
             #append to list
             modelReactions.append(modelReactions_row);
             atomMappingReactions.append(atomMappingReactions_row);
@@ -2250,12 +2350,13 @@ class stage02_isotopomer_io(base_analysis):
             if INCA_compartment:
                 modelMetabolites_row['balanced']=False;
                 modelMetabolites_row['met_id']=met_id + '.' + INCA_compartment;
+                modelMetabolites_row['compartment']=INCA_compartment;
             else:
                 modelMetabolites_row['balanced']=True;
                 modelMetabolites_row['met_id']=met_id
+                compartment = met_id.split('_')[-1]
+                modelMetabolites_row['compartment']=compartment;
             modelMetabolites_row['model_id']=model_id_I;
-            compartment = met_id.split('_')[-1]
-            modelMetabolites_row['compartment']=compartment;
             modelMetabolites.append(modelMetabolites_row);
 
         #create the model from modelReactions and modelMetabolites

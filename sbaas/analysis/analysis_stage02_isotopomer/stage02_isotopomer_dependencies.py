@@ -2616,7 +2616,7 @@ class stage02_isotopomer_metaboliteMapping():
         positions_O = [];
         elements_O = [];
         for elements_cnt in range(n_elements_I):
-            mapping = '[' + met_id_I + '_'  + element_I + str(elements_cnt) + ']';
+            mapping = '[' + met_id_I.replace('.','_') + '_'  + element_I + str(elements_cnt) + ']';
             mapping_O.append(mapping);
             positions_O.append(elements_cnt);
             elements_O.append(element_I);
@@ -2947,7 +2947,7 @@ class stage02_isotopomer_metaboliteMapping():
         for element in elements:
             element_cnt[element] = 0;
         for met_element in self.metaboliteMapping['met_elements']:
-            mapping = '[' + self.metaboliteMapping['met_id'] + '_'  + met_element + str(element_cnt[met_element]) + ']';
+            mapping = '[' + self.metaboliteMapping['met_id'].replace('.','_') + '_'  + met_element + str(element_cnt[met_element]) + ']';
             mapping_O.append(mapping);
             element_cnt[met_element]+=1
         return mapping_O
