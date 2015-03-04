@@ -350,7 +350,7 @@ class matplot():
             panel_rows = 3;
         elif len(panelLabels_I)>6:
             panel_rows = 4;
-        panel_columns = int(ceil(len(panelLabels_I)/panel_rows));
+        panel_columns = int(ceil(float(len(panelLabels_I))/float(panel_rows)));
         # Create a Figure object.
         fig = plt.figure();
         for panel_cnt,panel in enumerate(panelLabels_I):

@@ -1564,22 +1564,24 @@ class stage01_quantification_execute():
                 # visualize the stats:
                 #self.matplot.barPlot(data_plot_ratio_ids[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
                 self.matplot.boxAndWhiskersPlot(data_plot_ratio_ids[0],data_plot_sna,data_plot_ratio_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
-    def execute_boxAndWhiskersPlot_averages(self,experiment_id_I,sample_name_abbreviations_I=[],component_names_I=[]):
+    def execute_boxAndWhiskersPlot_averages(self,experiment_id_I,sample_name_abbreviations_I=[],component_names_I=[],time_points_I=[],time_course_I=False,show_95_ci_I=False):
         '''generate a boxAndWhiskers plot from averagesMIGeo table'''
 
         print 'execute_boxAndWhiskersPlot...'
-        # get time points
-        time_points = [];
-        time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01AveragesMIgeo(experiment_id_I);
-        for tp in time_points:
-            print 'generating boxAndWhiskersPlot for time_point ' + tp;
+        if time_course_I:
             if component_names_I:
                 component_names = component_names_I;
             else:
                 component_names = [];
-                component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndTimePoint_dataStage01AveragesMIgeo(experiment_id_I,tp);
+                component_names = self.stage01_quantification_query.get_componentNames_experimentID_dataStage01AveragesMIgeo(experiment_id_I);
             for cn in component_names:
                 print 'generating boxAndWhiskersPlot for component_name ' + cn; 
+                # get time points
+                if time_points_I:
+                    time_points = time_points_I;
+                else:
+                    time_points = [];
+                    time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,cn);
                 data_plot_mean = [];
                 data_plot_var = [];
                 data_plot_ci = [];
@@ -1587,31 +1589,95 @@ class stage01_quantification_execute():
                 data_plot_component_names = [];
                 data_plot_data = [];
                 data_plot_calculated_concentration_units = [];
-                # get sample_name_abbreviations
-                if sample_name_abbreviations_I:
-                    sample_name_abbreviations = sample_name_abbreviations_I;
+                for tp in time_points:
+                    print 'generating boxAndWhiskersPlot for time_point ' + tp;
+                    # get sample_name_abbreviations
+                    if sample_name_abbreviations_I:
+                        sample_name_abbreviations = sample_name_abbreviations_I;
+                    else:
+                        sample_name_abbreviations = [];
+                        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,tp,cn);
+                    for sna in sample_name_abbreviations:
+                        print 'generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna;
+                        # get the data 
+                        data = {};
+                        data = self.stage01_quantification_query.get_data_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,sna,tp,cn)
+                        if not data: continue;
+                        calculated_concentrations = [];
+                        calculated_concentrations = self.stage01_quantification_query.get_calculatedConcentrations_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id_I,sna,tp,cn)
+                        # record data for plotting
+                        data_plot_mean.append(data['calculated_concentration_average']);
+                        data_plot_var.append(data['calculated_concentration_var']);
+                        data_plot_ci.append([data['calculated_concentration_lb'],data['calculated_concentration_ub']]);
+                        data_plot_data.append(numpy.array(calculated_concentrations)*1e-3);
+                        data_plot_sna.append(sna);
+                        data_plot_component_names.append(cn);
+                        data_plot_calculated_concentration_units.append(data['calculated_concentration_units']);
+                # visualize the stats:
+                if show_95_ci_I:
+                    data_95 = []
+                    for i,d in enumerate(data_plot_mean):
+                        data_95.append([data_plot_ci[i][0],data_plot_ci[i][1],d])
+                    self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_95,data_plot_mean,data_plot_ci);
                 else:
-                    sample_name_abbreviations = [];
-                    sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,tp,cn);
-                for sna in sample_name_abbreviations:
-                    print 'generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna;
-                    # get the data 
-                    data = {};
-                    data = self.stage01_quantification_query.get_data_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,sna,tp,cn)
-                    calculated_concentrations = [];
-                    calculated_concentrations = self.stage01_quantification_query.get_calculatedConcentrations_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id_I,sna,tp,cn)
-                    # record data for plotting
-                    data_plot_mean.append(data['calculated_concentration_average']);
-                    data_plot_var.append(data['calculated_concentration_var']);
-                    data_plot_ci.append([data['calculated_concentration_lb'],data['calculated_concentration_ub']]);
-                    data_plot_data.append(numpy.array(calculated_concentrations)*1e-3);
-                    data_plot_sna.append(sna);
-                    data_plot_component_names.append(cn);
-                    data_plot_calculated_concentration_units.append(data['calculated_concentration_units']);
-        # visualize the stats:
-        data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
-        #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,se_I=data_plot_se,add_labels_I=False);
-        self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
+                    data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
+                    #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,se_I=data_plot_se,add_labels_I=False);
+                    self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
+        else:
+            # get time points
+            if time_points_I:
+                time_points = time_points_I;
+            else:
+                time_points = [];
+                time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01AveragesMIgeo(experiment_id_I);
+            for tp in time_points:
+                print 'generating boxAndWhiskersPlot for time_point ' + tp;
+                if component_names_I:
+                    component_names = component_names_I;
+                else:
+                    component_names = [];
+                    component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndTimePoint_dataStage01AveragesMIgeo(experiment_id_I,tp);
+                for cn in component_names:
+                    print 'generating boxAndWhiskersPlot for component_name ' + cn; 
+                    data_plot_mean = [];
+                    data_plot_var = [];
+                    data_plot_ci = [];
+                    data_plot_sna = [];
+                    data_plot_component_names = [];
+                    data_plot_data = [];
+                    data_plot_calculated_concentration_units = [];
+                    # get sample_name_abbreviations
+                    if sample_name_abbreviations_I:
+                        sample_name_abbreviations = sample_name_abbreviations_I;
+                    else:
+                        sample_name_abbreviations = [];
+                        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,tp,cn);
+                    for sna in sample_name_abbreviations:
+                        print 'generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna;
+                        # get the data 
+                        data = {};
+                        data = self.stage01_quantification_query.get_data_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,sna,tp,cn)
+                        if not data: continue;
+                        calculated_concentrations = [];
+                        calculated_concentrations = self.stage01_quantification_query.get_calculatedConcentrations_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id_I,sna,tp,cn)
+                        # record data for plotting
+                        data_plot_mean.append(data['calculated_concentration_average']);
+                        data_plot_var.append(data['calculated_concentration_var']);
+                        data_plot_ci.append([data['calculated_concentration_lb'],data['calculated_concentration_ub']]);
+                        data_plot_data.append(numpy.array(calculated_concentrations)*1e-3);
+                        data_plot_sna.append(sna);
+                        data_plot_component_names.append(cn);
+                        data_plot_calculated_concentration_units.append(data['calculated_concentration_units']);
+                    # visualize the stats:
+                    if show_95_ci_I:
+                        data_95 = []
+                        for i,d in enumerate(data_plot_mean):
+                            data_95.append([data_plot_ci[i][0],data_plot_ci[i][1],d])
+                        self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_95,data_plot_mean,data_plot_ci);
+                    else:
+                        data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
+                        #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,se_I=data_plot_se,add_labels_I=False);
+                        self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
     def execute_barPlot_averages(self,experiment_id_I,sample_name_abbreviations_I=[],component_names_I=[]):
         '''generate a bar plot from averagesMIGeo table'''
 

@@ -87,176 +87,6 @@ class stage01_quantification_io(base_analysis):
         with open(filename_I, 'wb') as outfile:
                 json.dump(data, outfile, indent=4);
 
-    def import_sample_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_sample(data.data);
-        data.clear_data();
-
-    def add_sample(self, data_I):
-        '''add rows of sample'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = sample(d['sample_name'],
-                            d['sample_type'],
-                            d['calibrator_id'],
-                            d['calibrator_level'],
-                            d['sample_id'],
-                            d['sample_dilution']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_sample_update(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.update_sample(data.data);
-        data.clear_data();
-
-    def update_sample(self,data_I):
-        '''update rows of sample'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_update = self.session.query(sample).filter(
-                            sample.sample_name.like(d['sample_name'])).update(
-                            {'sample_type':d['sample_type'],
-                            'calibrator_id':d['calibrator_id'],
-                            'calibrator_level':d['calibrator_level'],
-                            'sample_id':d['sample_id'],
-                            'sample_dilution':d['sample_dilution']},
-                            synchronize_session=False);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_sampleDescription_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_sampleDescription(data.data);
-        data.clear_data();
-
-    def add_sampleDescription(self, data_I):
-        '''add rows of sample_description'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = sample_description(d['sample_id'],
-                            d['sample_name_short'],
-                            d['sample_name_abbreviation'],
-                            d['sample_date'],
-                            d['time_point'],
-                            d['sample_condition'],
-                            d['extraction_method_id'],
-                            d['biological_material'],
-                            d['sample_description'],
-                            d['sample_replicate'],
-                            d['is_added'],
-                            d['is_added_units'],
-                            d['reconstitution_volume'],
-                            d['reconstitution_volume_units'],
-                            d['sample_replicate_biological'],
-                            d['istechnical']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_samplePhysiologicalParameters_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_samplePhysiologicalParameters(data.data);
-        data.clear_data();
-
-    def add_samplePhysiologicalParameters(self, data_I):
-        '''add rows of sample_physiologicalparameters'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = sample_physiologicalParameters(d['sample_id'],
-                            d['growth_condition_short'],
-                            d['growth_condition_long'],
-                            d['media_short'],
-                            d['media_long'],
-                            d['isoxic'],
-                            d['temperature'],
-                            d['supplementation'],
-                            d['od600'],
-                            d['vcd'],
-                            d['culture_density'],
-                            d['culture_volume_sampled'],
-                            d['cells'],
-                            d['dcw'],
-                            d['wcw'],
-                            d['vcd_units'],
-                            d['culture_density_units'],
-                            d['culture_volume_sampled_units'],
-                            d['dcw_units'],
-                            d['wcw_units']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_sampleStorage_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_sampleStorage(data.data);
-        data.clear_data();
-
-    def add_sampleStorage(self, data_I):
-        '''add rows of sample_storage'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = sample_storage(d['sample_id'],
-                            d['sample_label'],
-                            d['ph'],
-                            d['box'],
-                            d['pos']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_experiment_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_experiment(data.data);
-        data.clear_data();
-
-    def add_experiment(self, data_I):
-        '''add rows of experiment'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = experiment(d['exp_type_id'],
-                        d['id'],
-                        d['sample_name'],
-                        d['experimentor_id'],
-                        d['extraction_method_id'],
-                        d['acquisition_method_id'],
-                        d['quantitation_method_id'],
-                        d['internal_standard_id']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
     def import_quantitationMethod_add(self,QMethod_id_I, filename):
         '''table adds'''
         data = base_importData();
@@ -685,6 +515,7 @@ class stage01_quantification_io(base_analysis):
             self.session.commit();
 
     def export_dataStage01physiologicalRatios_d3(self, experiment_id,sample_name_abbreviations_I=[], time_points_I=[],ratios_I=[],
+                                                 time_course_I=False,
                                                  json_var_name='data',
                                                  filename=[settings.visualization_data,'/quantification/boxandwhiskers/','ratios/']):
         '''Export data for viewing using d3'''
@@ -694,196 +525,295 @@ class stage01_quantification_io(base_analysis):
         #   menu for sna, tp, ratio based on index menu
         
         print 'Exporting physiologicalRatios for d3 boxandwhiskers plot'
-        # get time points
-        time_points = [];
-        time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01PhysiologicalRatiosReplicates(experiment_id);
         data_all_O = [];
         filter_O = {};
         filter_O['time_point'] = [];
         filter_O['feature'] = [];
-        for tp in time_points:
-            print 'exporting physiologicalRatios from replicates for time_point ' + tp;
-            filter_tp_str = 'time_point/'+tp;
-            filter_O['time_point'].append(filter_tp_str);
+        if time_course_I:
             # get physiological ratio_ids
             ratios = {};
-            ratios = self.stage01_quantification_query.get_ratioIDs_experimentIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,tp);
+            ratios = self.stage01_quantification_query.get_ratioIDs_experimentID_dataStage01PhysiologicalRatiosReplicates(experiment_id);
+            record_tp=True;
             for k,v in ratios.iteritems():
-                filter_f_str = 'time_point/'+tp+'/feature/'+k;
-                filter_O['feature'].append(filter_f_str);
-                data_O = [];
                 print 'exporting physiologicalRatios from replicates for ratio ' + k;
-                # get sample_names
-                if sample_name_abbreviations_I:
-                    sample_name_abbreviations = sample_name_abbreviations_I;
+                # get time points
+                if time_points_I:
+                    time_points = time_points_I;
                 else:
-                    sample_name_abbreviations = [];
-                    sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndRatioID_dataStage01PhysiologicalRatiosAverages(experiment_id,tp,k);
-                for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                    print 'exporting physiologicalRatios from replicates for sample name abbreviation ' + sna;
-                    # get sample names short
-                    sample_names_short = [];
-                    sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndRatioIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,sna,k,tp);
-                    ratios = [];
-                    for sns_cnt,sns in enumerate(sample_names_short):
-                        # get ratios
-                        ratio = None;
-                        ratio = self.stage01_quantification_query.get_ratio_experimentIDAndSampleNameShortAndTimePointAndRatioID_dataStage01PhysiologicalRatiosReplicates(experiment_id,sns,tp,k);
-                        if not ratio: continue;
-                        data_tmp = {};
-                        data_tmp['condition'] = sna_cnt;
-                        data_tmp['replicate'] = sns_cnt;
-                        data_tmp['value'] = ratio;
-                        ratios.append(ratio);
-                        data_O.append(data_tmp)
-                    #n_replicates = len(ratios);
-                    #ratio_average = 0.0;
-                    #ratio_var = 0.0;
-                    #ratio_cv = 0.0;
-                    #ratio_lb = 0.0;
-                    #ratio_ub = 0.0;
-                    ## calculate average and CV of ratios
-                    #if (not(ratios)): 
-                    #    continue
-                    #elif n_replicates<2: 
-                    #    continue
-                    #else: 
-                    #    ratio_average,ratio_var,ratio_lb,ratio_ub = self.calculate.calculate_ave_var(ratios);
-                    #    if (ratio_average <= 0): ratio_cv = 0;
-                    #    else: ratio_cv = sqrt(ratio_var)/ratio_average*100; 
-                    #data_all_O.append({'sample_name_abbreviation':sna,
-                    #                'time_point':tp,
-                    #                'ratio_values':ratios,
-                    #                'ratio_average':ratio_average,
-                    #                'ratio_var':ratio_var,
-                    #                'ratio_cv':ratio_cv,
-                    #                'ratio_lb':ratio_lb,
-                    #                'ratio_ub':ratio_ub
-                    #                });
+                    time_points = [];
+                    time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndRatioID_dataStage01PhysiologicalRatiosReplicates(experiment_id,k);
+                data_O = [];
+                labels_O = {};
+                labels_O['labels']=[];
+                condition_cnt = 0;
+                for tp_cnt,tp in enumerate(time_points):
+                    print 'exporting physiologicalRatios from replicates for time_point ' + tp;
+                    # get sample_names
+                    if sample_name_abbreviations_I:
+                        sample_name_abbreviations = sample_name_abbreviations_I;
+                    else:
+                        sample_name_abbreviations = [];
+                        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndRatioID_dataStage01PhysiologicalRatiosAverages(experiment_id,tp,k);
+                    for sna_cnt,sna in enumerate(sample_name_abbreviations):
+                        print 'exporting physiologicalRatios from replicates for sample name abbreviation ' + sna;
+                        # get sample names short
+                        sample_names_short = [];
+                        sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndRatioIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,sna,k,tp);
+                        for sns_cnt,sns in enumerate(sample_names_short):
+                            # get ratios
+                            ratio = None;
+                            ratio = self.stage01_quantification_query.get_ratio_experimentIDAndSampleNameShortAndTimePointAndRatioID_dataStage01PhysiologicalRatiosReplicates(experiment_id,sns,tp,k);
+                            if not ratio: continue;
+                            data_tmp = {};
+                            data_tmp['condition'] = condition_cnt;
+                            data_tmp['replicate'] = sns_cnt;
+                            data_tmp['value'] = ratio;
+                            data_O.append(data_tmp);
+                        labels_O['labels'].append(sna);
+                        condition_cnt+=1;
+                if record_tp:
+                    filter_tp_str = 'time_point/'+','.join(time_points);
+                    filter_O['time_point'].append(filter_tp_str);
+                    record_tp=False;
+                filter_f_str = 'time_point/'+','.join(time_points)+'/feature/'+k;
+                filter_O['feature'].append(filter_f_str);
                 # initialize js variables
                 json_O = {};
                 options_O = {};
                 options_O['x_axis_label'] = 'ratio';
                 options_O['y_axis_label'] = 'sample';
                 options_O['value_label'] = 'ratio';
-                labels_O = {};
-                labels_O['labels']=sample_name_abbreviations;
-                # assiggn data to the js variables
+                # assign data to the js variables
                 json_O['data']=data_O;
                 json_O.update(labels_O);
                 json_O['options'] = options_O;
                 # dump the data to a json file
                 json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-                filename_str = filename[0] + '/' + experiment_id + filename[1] + filename[2] + tp + '_' + k + '.js';
+                filename_str = filename[0] + '/' + experiment_id + filename[1] + filename[2] + ','.join(time_points) + '_' + k + '.js';
                 with open(filename_str,'w') as file:
                     file.write(json_str);
-        # dump the filter data to a json file
-        json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2] + 'filter.js'
-        with open(filename_str,'w') as file:
-            file.write(json_str);
+            # dump the filter data to a json file
+            json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
+            filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2] + 'filter.js'
+            with open(filename_str,'w') as file:
+                file.write(json_str);
+        else:
+            # get time points
+            if time_points_I:
+                time_points = time_points_I;
+            else:
+                time_points = [];
+                time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01PhysiologicalRatiosReplicates(experiment_id);
+            for tp in time_points:
+                print 'exporting physiologicalRatios from replicates for time_point ' + tp;
+                filter_tp_str = 'time_point/'+tp;
+                filter_O['time_point'].append(filter_tp_str);
+                # get physiological ratio_ids
+                ratios = {};
+                ratios = self.stage01_quantification_query.get_ratioIDs_experimentIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,tp);
+                for k,v in ratios.iteritems():
+                    filter_f_str = 'time_point/'+tp+'/feature/'+k;
+                    filter_O['feature'].append(filter_f_str);
+                    data_O = [];
+                    print 'exporting physiologicalRatios from replicates for ratio ' + k;
+                    # get sample_names
+                    if sample_name_abbreviations_I:
+                        sample_name_abbreviations = sample_name_abbreviations_I;
+                    else:
+                        sample_name_abbreviations = [];
+                        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndRatioID_dataStage01PhysiologicalRatiosAverages(experiment_id,tp,k);
+                    for sna_cnt,sna in enumerate(sample_name_abbreviations):
+                        print 'exporting physiologicalRatios from replicates for sample name abbreviation ' + sna;
+                        # get sample names short
+                        sample_names_short = [];
+                        sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndRatioIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,sna,k,tp);
+                        for sns_cnt,sns in enumerate(sample_names_short):
+                            # get ratios
+                            ratio = None;
+                            ratio = self.stage01_quantification_query.get_ratio_experimentIDAndSampleNameShortAndTimePointAndRatioID_dataStage01PhysiologicalRatiosReplicates(experiment_id,sns,tp,k);
+                            if not ratio: continue;
+                            data_tmp = {};
+                            data_tmp['condition'] = sna_cnt;
+                            data_tmp['replicate'] = sns_cnt;
+                            data_tmp['value'] = ratio;
+                            data_O.append(data_tmp)
+                    # initialize js variables
+                    json_O = {};
+                    options_O = {};
+                    options_O['x_axis_label'] = 'ratio';
+                    options_O['y_axis_label'] = 'sample';
+                    options_O['value_label'] = 'ratio';
+                    labels_O = {};
+                    labels_O['labels']=sample_name_abbreviations;
+                    # assign data to the js variables
+                    json_O['data']=data_O;
+                    json_O.update(labels_O);
+                    json_O['options'] = options_O;
+                    # dump the data to a json file
+                    json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
+                    filename_str = filename[0] + '/' + experiment_id + filename[1] + filename[2] + tp + '_' + k + '.js';
+                    with open(filename_str,'w') as file:
+                        file.write(json_str);
+            # dump the filter data to a json file
+            json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
+            filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2] + 'filter.js'
+            with open(filename_str,'w') as file:
+                file.write(json_str);
 
     def export_dataStage01replicatesMI_d3(self, experiment_id,sample_name_abbreviations_I=[], time_points_I=[],component_names_I=[],
+                                                 time_course_I=False,
                                                  json_var_name='data',
                                                  filename=[settings.visualization_data,'/quantification/boxandwhiskers/','concentrations/']):
         '''Export data for viewing using d3'''
         
         print 'Exporting replicatesMI for d3 boxandwhiskers plot'
-        # get time points
-        time_points = [];
-        time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01ReplicatesMI(experiment_id);
         data_all_O = [];
         filter_O = {};
         filter_O['time_point'] = [];
         filter_O['feature'] = [];
-        for tp in time_points:
-            print 'exporting replicatesMI for time_point ' + tp;
-            filter_tp_str = 'time_point/'+tp;
-            filter_O['time_point'].append(filter_tp_str);
+        if time_course_I:
             # get component_names
             if component_names_I:
                 component_names = component_names_I;
             else:
                 component_names = [];
-                component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id,tp);
+                component_names = self.stage01_quantification_query.get_componentNames_experimentID_dataStage01ReplicatesMI(experiment_id);
+            record_tp=True;
             for cn in component_names:
-                filter_f_str = 'time_point/'+tp+'/feature/'+cn;
-                filter_O['feature'].append(filter_f_str);
-                data_O = [];
                 print 'exporting replicatesMI for component_name ' + cn;
-                # get sample_names
-                if sample_name_abbreviations_I:
-                    sample_name_abbreviations = sample_name_abbreviations_I;
+                # get time points
+                if time_points_I:
+                    time_points = time_points_I;
                 else:
-                    sample_name_abbreviations = [];
-                    sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id,tp,cn);
-                for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                    print 'exporting replicatesMI  for sample name abbreviation ' + sna;
-                    # get sample names short
-                    sample_names_short = [];
-                    sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndComponentNameAndTimePoint_dataStage01ReplicatesMI(experiment_id,sna,cn,tp);
-                    concentrations = [];
-                    for sns_cnt,sns in enumerate(sample_names_short):
-                        # get concentrations
-                        concentration, units = None, None;
-                        concentration, units = self.stage01_quantification_query.get_concAndConcUnits_experimentIDAndSampleNameShortAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id,sns,tp,cn);
-                        if not concentration: continue;
-                        data_tmp = {};
-                        data_tmp['condition'] = sna_cnt;
-                        data_tmp['replicate'] = sns_cnt;
-                        data_tmp['value'] = concentration;
-                        concentrations.append(concentration);
-                        data_O.append(data_tmp)
-                    #n_replicates = len(concentrations);
-                    #concentration_average = 0.0;
-                    #concentration_var = 0.0;
-                    #concentration_cv = 0.0;
-                    #concentration_lb = 0.0;
-                    #concentration_ub = 0.0;
-                    ## calculate average and CV of concentrations
-                    #if (not(concentrations)): 
-                    #    continue
-                    #elif n_replicates<2: 
-                    #    continue
-                    #else: 
-                    #    concentration_average,concentration_var,concentration_lb,concentration_ub = self.calculate.calculate_ave_var(concentrations);
-                    #    if (concentration_average <= 0): concentration_cv = 0;
-                    #    else: concentration_cv = sqrt(concentration_var)/concentration_average*100; 
-                    #data_all_O.append({'sample_name_abbreviation':sna,
-                    #                'time_point':tp,
-                    #                'concentration_values':concentrations,
-                    #                'concentration_average':concentration_average,
-                    #                'concentration_var':concentration_var,
-                    #                'concentration_cv':concentration_cv,
-                    #                'concentration_lb':concentration_lb,
-                    #                'concentration_ub':concentration_ub
-                    #                });
+                    time_points = [];
+                    time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndComponentName_dataStage01ReplicatesMI(experiment_id,cn);
+                data_O = [];
+                labels_O = {};
+                labels_O['labels']=[];
+                condition_cnt = 0;
+                for tp in time_points:
+                    print 'exporting replicatesMI for time_point ' + tp;
+                    # get sample_names
+                    if sample_name_abbreviations_I:
+                        sample_name_abbreviations = sample_name_abbreviations_I;
+                    else:
+                        sample_name_abbreviations = [];
+                        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id,tp,cn);
+                    for sna_cnt,sna in enumerate(sample_name_abbreviations):
+                        print 'exporting replicatesMI  for sample name abbreviation ' + sna;
+                        # get sample names short
+                        sample_names_short = [];
+                        sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndComponentNameAndTimePoint_dataStage01ReplicatesMI(experiment_id,sna,cn,tp);
+                        concentrations = [];
+                        for sns_cnt,sns in enumerate(sample_names_short):
+                            # get concentrations
+                            concentration, units = None, None;
+                            concentration, units = self.stage01_quantification_query.get_concAndConcUnits_experimentIDAndSampleNameShortAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id,sns,tp,cn);
+                            if not concentration: continue;
+                            data_tmp = {};
+                            data_tmp['condition'] = condition_cnt;
+                            data_tmp['replicate'] = sns_cnt;
+                            data_tmp['value'] = concentration;
+                            concentrations.append(concentration);
+                            data_O.append(data_tmp)
+                        condition_cnt+=1;
+                        labels_O['labels'].append(sna + ' ' + '[' + units + ']');
+                if record_tp:
+                    filter_tp_str = 'time_point/'+','.join(time_points);
+                    filter_O['time_point'].append(filter_tp_str);
+                    record_tp=False;
+                filter_f_str = 'time_point/'+','.join(time_points)+'/feature/'+cn;
+                filter_O['feature'].append(filter_f_str);
                 # initialize js variables
                 json_O = {};
                 options_O = {};
                 options_O['row_axis_label'] = 'concentration';
                 options_O['col_axis_label'] = 'sample';
                 options_O['value_label'] = units;
-                labels_O = {};
-                #labels_tmp = [sna + '\n' + '[' + units + ']' for sna in sample_name_abbreviations];
-                labels_tmp = [sna + ' ' + '[' + units + ']' for sna in sample_name_abbreviations];
-                labels_O['labels']=labels_tmp;
-                # assiggn data to the js variables
+                # assign data to the js variables
                 json_O['data']=data_O;
                 json_O.update(labels_O);
                 json_O['options'] = options_O;
                 # dump the data to a json file
                 json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-                filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2]+ tp + '_' + cn + '.js';
+                filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2]+ ','.join(time_points) + '_' + cn + '.js';
                 with open(filename_str,'w') as file:
                     file.write(json_str);
-        # dump the filter data to a json file
-        json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
-        filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2] + 'filter.js'
-        with open(filename_str,'w') as file:
-            file.write(json_str);
+            # dump the filter data to a json file
+            json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
+            filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2] + 'filter.js'
+            with open(filename_str,'w') as file:
+                file.write(json_str);
+        else:
+            # get time points
+            if time_points_I:
+                time_points = time_points_I;
+            else:
+                time_points = [];
+                time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01ReplicatesMI(experiment_id);
+            for tp in time_points:
+                print 'exporting replicatesMI for time_point ' + tp;
+                filter_tp_str = 'time_point/'+tp;
+                filter_O['time_point'].append(filter_tp_str);
+                # get component_names
+                if component_names_I:
+                    component_names = component_names_I;
+                else:
+                    component_names = [];
+                    component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id,tp);
+                for cn in component_names:
+                    filter_f_str = 'time_point/'+tp+'/feature/'+cn;
+                    filter_O['feature'].append(filter_f_str);
+                    data_O = [];
+                    print 'exporting replicatesMI for component_name ' + cn;
+                    # get sample_names
+                    if sample_name_abbreviations_I:
+                        sample_name_abbreviations = sample_name_abbreviations_I;
+                    else:
+                        sample_name_abbreviations = [];
+                        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id,tp,cn);
+                    for sna_cnt,sna in enumerate(sample_name_abbreviations):
+                        print 'exporting replicatesMI  for sample name abbreviation ' + sna;
+                        # get sample names short
+                        sample_names_short = [];
+                        sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndComponentNameAndTimePoint_dataStage01ReplicatesMI(experiment_id,sna,cn,tp);
+                        concentrations = [];
+                        for sns_cnt,sns in enumerate(sample_names_short):
+                            # get concentrations
+                            concentration, units = None, None;
+                            concentration, units = self.stage01_quantification_query.get_concAndConcUnits_experimentIDAndSampleNameShortAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id,sns,tp,cn);
+                            if not concentration: continue;
+                            data_tmp = {};
+                            data_tmp['condition'] = sna_cnt;
+                            data_tmp['replicate'] = sns_cnt;
+                            data_tmp['value'] = concentration;
+                            concentrations.append(concentration);
+                            data_O.append(data_tmp)
+                    # initialize js variables
+                    json_O = {};
+                    options_O = {};
+                    options_O['row_axis_label'] = 'concentration';
+                    options_O['col_axis_label'] = 'sample';
+                    options_O['value_label'] = units;
+                    labels_O = {};
+                    #labels_tmp = [sna + '\n' + '[' + units + ']' for sna in sample_name_abbreviations];
+                    labels_tmp = [sna + ' ' + '[' + units + ']' for sna in sample_name_abbreviations];
+                    labels_O['labels']=labels_tmp;
+                    # assiggn data to the js variables
+                    json_O['data']=data_O;
+                    json_O.update(labels_O);
+                    json_O['options'] = options_O;
+                    # dump the data to a json file
+                    json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
+                    filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2]+ tp + '_' + cn + '.js';
+                    with open(filename_str,'w') as file:
+                        file.write(json_str);
+            # dump the filter data to a json file
+            json_str = 'var ' + 'data_filter' + ' = ' + json.dumps(filter_O);
+            filename_str = filename[0]  + '/' + experiment_id + filename[1] + filename[2] + 'filter.js'
+            with open(filename_str,'w') as file:
+                file.write(json_str);
             
-
     def export_dataStage01physiologicalRatios2_d3(self, experiment_id,sample_name_abbreviations_I=[], time_points_I=[],ratios_I=[],
                                                  json_var_name='data',
                                                  filename=['visualization/data/','/quantification/scatterplot/','ratios/']):

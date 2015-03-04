@@ -315,7 +315,7 @@ class stage01_isotopomer_execute():
                                                                              precursorPeakSpectrum_measured[precursor_formulas_unique[i]][k],'cps',
                                                                              precursorPeakSpectrum_corrected[precursor_formulas_unique[i]][k],'cps',
                                                                              precursorPeakSpectrum_normalized[precursor_formulas_unique[i]][k],'normMax',
-                                                                             v,peakSpectrum_stats_O[precursor_formulas_unique[i]][k]['absDev'],'MRM',True);
+                                                                             v,peakSpectrum_stats_O[precursor_formulas_unique[i]][k]['absDev'],'MRM',True,None);
                                     self.session.add(row1);
 
                             # generate normalized spectrum for the product:
@@ -331,7 +331,7 @@ class stage01_isotopomer_execute():
                                                                              productPeakSpectrum_measured[product_formulas_unique[i]][k],'cps',
                                                                              productPeakSpectrum_corrected[product_formulas_unique[i]][k],'cps',
                                                                              productPeakSpectrum_normalized[product_formulas_unique[i]][k],'normMax',
-                                                                             v,peakSpectrum_stats_O[product_formulas_unique[i]][k]['absDev'],'MRM',True);
+                                                                             v,peakSpectrum_stats_O[product_formulas_unique[i]][k]['absDev'],'MRM',True,None);
                                     self.session.add(row2);
 
                         met_all_cnt = met_cnt
@@ -979,7 +979,7 @@ class stage01_isotopomer_execute():
                                                                                          met,frag,int(numpy.round(k)),
                                                                                          None,'cps',None,'cps',
                                                                                          peakSpectrum_normalized[frag][k],'normMax',
-                                                                                         v,peakSpectrum_stats[frag][k]['absDev'],scantype,True);
+                                                                                         v,peakSpectrum_stats[frag][k]['absDev'],scantype,True,None);
                                             self.session.add(row);
         self.session.commit();
     def execute_normalizeSpectrumFromReference_v1(self,experiment_id_I,sample_name_abbreviations_I = None,use_mrm_ref = True):
@@ -2899,11 +2899,13 @@ class stage01_isotopomer_execute():
                             peakData_I = {};
                             peakData_I = self.stage01_isotopomer_query.get_dataNormalized_experimentIDAndSampleAbbreviationAndTimePointAndScanTypeAndMetIDAndReplicateNumber_dataStage01Normalized( \
                                 experiment_id_I,sna,tp,scan_type,met,rep);
-                            fragment_formulas = peakData_I.keys();
-                            fragment_formulas_lst.extend(fragment_formulas)
-                            peakSpectrum_corrected, peakSpectrum_normalized = self.extract_peakList_normMax(\
-                                peakData_I, fragment_formulas, True);
-                            peakSpectrum_normalized_lst.append(peakSpectrum_normalized);
+                            if peakData_I:
+                                fragment_formulas = peakData_I.keys();
+                                fragment_formulas_lst.extend(fragment_formulas)
+                                peakSpectrum_corrected, peakSpectrum_normalized = self.extract_peakList_normMax(\
+                                    peakData_I, fragment_formulas, True);
+                                peakSpectrum_normalized_lst.append(peakSpectrum_normalized);
+                                
                         # plot spectrum data for all replicates and fragments
                         fragment_formulas_unique = list(set(fragment_formulas_lst));
                         for fragment in fragment_formulas_unique:
@@ -3095,3 +3097,22 @@ class stage01_isotopomer_execute():
                                 data_stdev.append(stdev);
                             title = met+'_'+frag;
                             plot.barPlot(title,data_masses,'intensity','m/z',data_mat,var_I=None,se_I=data_stdev,add_labels_I=True)
+    # data_stage01_isotopomer deletes
+    def execute_deleteExperimentFromMQResultsTable(self,experiment_id_I,sample_types_I = ['Quality Control','Unknown']):
+        '''delete rows in data_stage01_MQResultsTable by sample name and sample type 
+        (default = Quality Control and Unknown) from the experiment'''
+        
+        print 'deleting rows in data_stage01_MQResultsTable by sample_name and sample_type...';
+        dataDeletes = [];
+        # get sample_names
+        sample_names = [];
+        for st in sample_types_I:
+            sample_names_tmp = [];
+            sample_names_tmp = self.stage01_isotopomer_query.get_allSampleNames_experimentIDAndSampleType(experiment_id_I,st);
+            sample_names.extend(sample_names_tmp);
+        for sn in sample_names:
+            # format into a dictionary list
+            print 'deleting sample_name ' + sn;
+            dataDeletes.append({'sample_name':sn});
+        # delete rows based on sample_names
+        self.stage01_isotopomer_query.delete_row_sampleName(dataDeletes);

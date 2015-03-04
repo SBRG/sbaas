@@ -1194,10 +1194,11 @@ class stage01_quantification_query(base_analysis):
                     experiment.id.like(experiment_id_I),
                     sample_description.sample_id.like(sample.sample_id),
                     experiment.sample_name.like(sample.sample_name),
+                    sample.sample_id.like(sample_description.sample_id),
                     data_stage01_quantification_replicates.experiment_id.like(experiment_id_I),
-                    sample_description.sample_description.like('Broth')
-                    #data_stage01_quantification_replicates.used_.is_(True),
-                    #data_stage01_quantification_replicates.sample_name_short.like(sample_description.sample_name_short)
+                    sample_description.sample_description.like('Broth'),
+                    data_stage01_quantification_replicates.used_.is_(True),
+                    data_stage01_quantification_replicates.sample_name_short.like(sample_description.sample_name_short)
                     ).group_by(
                     sample_description.sample_name_short).order_by(
                     sample_description.sample_name_short.asc()).all();
@@ -1216,6 +1217,7 @@ class stage01_quantification_query(base_analysis):
                     experiment.exp_type_id == exp_type_I,
                     experiment.id.like(experiment_id_I),
                     experiment.sample_name.like(sample.sample_name),
+                    sample.sample_id.like(sample_description.sample_id),
                     data_stage01_quantification_replicates.used_.is_(True),
                     data_stage01_quantification_replicates.sample_name_short.like(sample_description.sample_name_short)).group_by(
                     sample_description.time_point).order_by(
@@ -1489,6 +1491,20 @@ class stage01_quantification_query(base_analysis):
             return time_points_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_timePoint_experimentIDAndComponentName_dataStage01ReplicatesMI(self,experiment_id_I,component_name_I):
+        '''Querry time points that are used from the experiment'''
+        try:
+            time_points = self.session.query(data_stage01_quantification_replicatesMI.time_point).filter(
+                    data_stage01_quantification_replicatesMI.component_name.like(component_name_I),
+                    data_stage01_quantification_replicatesMI.experiment_id.like(experiment_id_I),
+                    data_stage01_quantification_replicatesMI.used_.is_(True)).group_by(
+                    data_stage01_quantification_replicatesMI.time_point).order_by(
+                    data_stage01_quantification_replicatesMI.time_point.asc()).all();
+            time_points_O = [];
+            for tp in time_points: time_points_O.append(tp.time_point);
+            return time_points_O;
+        except SQLAlchemyError as e:
+            print(e);
     # Query data from data_stage01_quantification_replicatesMI:
     def get_data_experimentID_dataStage01ReplicatesMI(self, experiment_id_I):
         """get data from experiment ID"""
@@ -1711,6 +1727,20 @@ class stage01_quantification_query(base_analysis):
             return time_points_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_timePoint_experimentIDAndComponentName_dataStage01AveragesMIgeo(self,experiment_id_I,component_name_I):
+        '''Querry time points that are used from the experiment'''
+        try:
+            time_points = self.session.query(data_stage01_quantification_averagesMIgeo.time_point).filter(
+                    data_stage01_quantification_averagesMIgeo.experiment_id.like(experiment_id_I),
+                    data_stage01_quantification_averagesMIgeo.component_name.like(component_name_I),
+                    data_stage01_quantification_averagesMIgeo.used_.is_(True)).group_by(
+                    data_stage01_quantification_averagesMIgeo.time_point).order_by(
+                    data_stage01_quantification_averagesMIgeo.time_point.asc()).all();
+            time_points_O = [];
+            for tp in time_points: time_points_O.append(tp.time_point);
+            return time_points_O;
+        except SQLAlchemyError as e:
+            print(e);
     # Query component names from data_stage01_quantification_averagesMIgeo:
     def get_componentNames_experimentIDAndTimePoint_dataStage01AveragesMIgeo(self,experiment_id_I,time_point_I):
         '''Querry component Names that are used from the experiment'''
@@ -1718,6 +1748,19 @@ class stage01_quantification_query(base_analysis):
             component_names = self.session.query(data_stage01_quantification_averagesMIgeo.component_name).filter(
                     data_stage01_quantification_averagesMIgeo.experiment_id.like(experiment_id_I),
                     data_stage01_quantification_averagesMIgeo.time_point.like(time_point_I),
+                    data_stage01_quantification_averagesMIgeo.used_.is_(True)).group_by(
+                    data_stage01_quantification_averagesMIgeo.component_name).order_by(
+                    data_stage01_quantification_averagesMIgeo.component_name.asc()).all();
+            component_names_O = [];
+            for cn in component_names: component_names_O.append(cn.component_name);
+            return component_names_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_componentNames_experimentID_dataStage01AveragesMIgeo(self,experiment_id_I):
+        '''Querry component Names that are used from the experiment'''
+        try:
+            component_names = self.session.query(data_stage01_quantification_averagesMIgeo.component_name).filter(
+                    data_stage01_quantification_averagesMIgeo.experiment_id.like(experiment_id_I),
                     data_stage01_quantification_averagesMIgeo.used_.is_(True)).group_by(
                     data_stage01_quantification_averagesMIgeo.component_name).order_by(
                     data_stage01_quantification_averagesMIgeo.component_name.asc()).all();
@@ -1818,6 +1861,20 @@ class stage01_quantification_query(base_analysis):
             return time_points_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_timePoint_experimentIDAndRatioID_dataStage01PhysiologicalRatiosReplicates(self,experiment_id_I,physiologicalratio_id_I):
+        '''Querry time points that are used from the experiment'''
+        try:
+            time_points = self.session.query(data_stage01_quantification_physiologicalRatios_replicates.time_point).filter(
+                    data_stage01_quantification_physiologicalRatios_replicates.experiment_id.like(experiment_id_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_id.like(physiologicalratio_id_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.used_.is_(True)).group_by(
+                    data_stage01_quantification_physiologicalRatios_replicates.time_point).order_by(
+                    data_stage01_quantification_physiologicalRatios_replicates.time_point.asc()).all();
+            time_points_O = [];
+            for tp in time_points: time_points_O.append(tp.time_point);
+            return time_points_O;
+        except SQLAlchemyError as e:
+            print(e);
     # Query data from data_stage01_quantification_physiologicalRatios_replicates
     def get_ratio_experimentIDAndSampleNameShortAndTimePointAndRatioID_dataStage01PhysiologicalRatiosReplicates(self, experiment_id_I, sample_name_short_I, time_point_I, physiologicalratio_id_I):
         """Query calculated ratios"""
@@ -1861,12 +1918,31 @@ class stage01_quantification_query(base_analysis):
             print(e);
     # Query ratio_id information from data_stage01_quantificaton_physiologicalRatios_replicates
     def get_ratioIDs_experimentIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(self,experiment_id_I,time_point_I):
-        '''Querry sample names that are used from the experiment by sample name abbreviation and sample description'''
+        '''Query physiologicalRatio_ids that are used from the experiment by time_point'''
         try:
             ratios = self.session.query(data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_id,
                     data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_name,
                     data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_description).filter(
                     data_stage01_quantification_physiologicalRatios_replicates.time_point.like(time_point_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.experiment_id.like(experiment_id_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.used_.is_(True)).group_by(
+                    data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_id,
+                    data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_name,
+                    data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_description).order_by(
+                    data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_id.asc()).all();
+            ratios_O = {};
+            for r in ratios:
+                ratios_O[r.physiologicalratio_id] = {'name':r.physiologicalratio_name,
+                                                     'description':r.physiologicalratio_description};
+            return ratios_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_ratioIDs_experimentID_dataStage01PhysiologicalRatiosReplicates(self,experiment_id_I):
+        '''Query physiologicalRatio_ids that are used from the experiment'''
+        try:
+            ratios = self.session.query(data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_id,
+                    data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_name,
+                    data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_description).filter(
                     data_stage01_quantification_physiologicalRatios_replicates.experiment_id.like(experiment_id_I),
                     data_stage01_quantification_physiologicalRatios_replicates.used_.is_(True)).group_by(
                     data_stage01_quantification_physiologicalRatios_replicates.physiologicalratio_id,

@@ -259,6 +259,95 @@ class stage02_isotopomer_execute():
                                     None);
                             self.session.add(row);
         self.session.commit();
+    def execute_addMeasuredFluxes(self,experiment_id_I, ko_list={}, flux_dict={}, model_ids_I=[], sample_name_abbreviations_I=[]):
+        '''Add flux data for physiological simulation'''
+        #Input:
+            #flux_dict = {};
+            #flux_dict['iJO1366'] = {};
+            #flux_dict['iJO1366'] = {};
+            #flux_dict['iJO1366']['sna'] = {};
+            #flux_dict['iJO1366']['sna']['Ec_biomass_iJO1366_WT_53p95M'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':0.704*0.9,'ub':0.704*1.1};
+            #flux_dict['iJO1366']['sna']['EX_ac_LPAREN_e_RPAREN_'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':2.13*0.9,'ub':2.13*1.1};
+            #flux_dict['iJO1366']['sna']['EX_o2_LPAREN_e_RPAREN__reverse'] = {'ave':None,'units':'mmol*gDCW-1*hr-1','stdev':None,'lb':0,'ub':16};
+            #flux_dict['iJO1366']['sna']['EX_glc_LPAREN_e_RPAREN_'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':-7.4*1.1,'ub':-7.4*0.9};
+
+        data_O = [];
+        # get the model ids:
+        if model_ids_I:
+            model_ids = model_ids_I;
+        else:
+            model_ids = [];
+            model_ids = self.stage02_isotopomer_query.get_modelID_experimentID_dataStage02IstopomerSimulation(experiment_id_I);
+        for model_id in model_ids:
+            # get sample names and sample name abbreviations
+            if sample_name_abbreviations_I:
+                sample_name_abbreviations = sample_name_abbreviations_I;
+            else:
+                sample_name_abbreviations = [];
+                sample_name_abbreviations = self.stage02_isotopomer_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage02IstopomerSimulation(experiment_id_I,model_id);
+            for sna_cnt,sna in enumerate(sample_name_abbreviations):
+                print 'Adding experimental fluxes for sample name abbreviation ' + sna;
+                if flux_dict:
+                    for k,v in flux_dict[model_id][sna].iteritems():
+                        # record the data
+                        data_tmp = {'experiment_id':experiment_id_I,
+                                'model_id':model_id,
+                                'sample_name_abbreviation':sna,
+                                'rxn_id':k,
+                                'flux_average':v['ave'],
+                                'flux_stdev':v['stdev'],
+                                'flux_lb':v['lb'], 
+                                'flux_ub':v['ub'],
+                                'flux_units':v['units'],
+                                'used_':True,
+                                'comment_':None}
+                        data_O.append(data_tmp);
+                        #add data to the database
+                        row = [];
+                        row = data_stage02_isotopomer_measuredFluxes(
+                            experiment_id_I,
+                            model_id,
+                            sna,
+                            k,
+                            v['ave'],
+                            v['stdev'],
+                            v['lb'], 
+                            v['ub'],
+                            v['units'],
+                            True,
+                            None);
+                        self.session.add(row);
+                if ko_list:
+                    for k in ko_list[model_id][sna]:
+                        # record the data
+                        data_tmp = {'experiment_id':experiment_id_I,
+                                'model_id':model_id,
+                                'sample_name_abbreviation':sna,
+                                'rxn_id':k,
+                                'flux_average':0.0,
+                                'flux_stdev':0.0,
+                                'flux_lb':0.0, 
+                                'flux_ub':0.0,
+                                'flux_units':'mmol*gDCW-1*hr-1',
+                                'used_':True,
+                                'comment_':None}
+                        data_O.append(data_tmp);
+                        #add data to the database
+                        row = [];
+                        row = data_stage02_isotopomer_measuredFluxes(
+                            experiment_id_I,
+                            model_id,
+                            sna,
+                            k,
+                            0.0,
+                            0.0,
+                            0.0, 
+                            0.0,
+                            'mmol*gDCW-1*hr-1',
+                            True,
+                            None);
+                        self.session.add(row);
+        self.session.commit();
     def execute_makeMeasuredFluxes(self,experiment_id_I, metID2RxnID_I = {}, sample_name_abbreviations_I = [], met_ids_I = [],snaIsotopomer2snaPhysiology_I={}):
         '''Collect and flux data from data_stage01_physiology_ratesAverages for fluxomics simulation'''
         #Input:
