@@ -645,32 +645,37 @@ class data_stage03_quantification_metid2keggid(Base):
     
 class data_stage03_quantification_models(Base):
     __tablename__ = 'data_stage03_quantification_models'
-    id = Column(Integer, Sequence('data_stage03_quantification_models_id_seq'))
-    model_id = Column(String(50), primary_key=True)
+    id = Column(Integer, Sequence('data_stage03_quantification_models_id_seq'),primary_key=True)
+    model_id = Column(String(50))
     model_name = Column(String(100))
     model_description = Column(String(100))
-    sbml_file = Column(Text)
+    model_file = Column(Text)
+    file_type = Column(String(50))
     date = Column(DateTime)
 
-    __table_args__ = (UniqueConstraint('id'),
+    __table_args__ = (
+            UniqueConstraint('model_id'),
             )
 
     def __init__(self,model_id_I,
             model_name_I,
             model_description_I,
-            sbml_file_I,
+            model_file_I,
+            file_type_I,
             date_I):
         self.model_id=model_id_I
         self.model_name=model_name_I
         self.model_description=model_description_I
-        self.sbml_file=sbml_file_I
+        self.model_file=model_file_I
+        self.file_type=file_type_I
         self.date=date_I
 
     def __repr__dict__(self):
         return {'model_id':self.model_id,
                 'model_name':self.model_name,
                 'model_description':self.model_description,
-                'sbml_file':self.sbml_file,
+                'model_file':self.model_file,
+                'file_type':self.file_type,
                 'date':self.date}
     
     def __repr__json__(self):
@@ -1065,7 +1070,7 @@ class data_stage03_quantification_sampledPoints(Base):
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
 
-class data_stage02_physiology_sampledData(Base):
+class data_stage03_quantification_sampledData(Base):
     __tablename__ = 'data_stage03_quantification_sampledData'
     id = Column(Integer, Sequence('data_stage03_quantification_sampledData_id_seq'), primary_key=True)
     simulation_id = Column(String(500))

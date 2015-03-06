@@ -3,6 +3,12 @@ from stage02_physiology_query import *
 from stage02_physiology_io import *
 import datetime
 from resources.sampling import cobra_sampling,cobra_sampling_n
+# Dependencies from cobra
+from cobra.io.sbml import create_cobra_model_from_sbml_file, write_cobra_model_to_sbml_file
+from cobra.flux_analysis.variability import flux_variability_analysis
+from cobra.flux_analysis.parsimonious import optimize_minimal_flux
+from cobra.flux_analysis import flux_variability_analysis
+from cobra.manipulation.modify import convert_to_irreversible
 
 class stage02_physiology_execute():
     '''class for physiological analysis analysis'''
@@ -15,7 +21,7 @@ class stage02_physiology_execute():
         else: self.data_dir = 'C:/Users/dmccloskey-sbrg/Documents/MATLAB/sampling_physiology'
 
     #analyses:
-    def execute_makeModel(self,experiment_id_I,model_id_I=None,model_id_O=None,date_I=None,model_file_name_I=None,ko_list=[],flux_dict={},description=None):
+    def execute_makeModel(self,experiment_id_I,model_id_I=None,model_id_O=None,date_I=None,model_file_name_I=None,ko_list=[],flux_dict={},description=None,convert2irreversible_I=False):
         '''make the model'''
 
         qio02 = stage02_physiology_io();
@@ -36,6 +42,7 @@ class stage02_physiology_execute():
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
                 print 'file_type not supported'
+            if convert2irreversible_I: convert_to_irreversible(cobra_model);
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
@@ -54,9 +61,10 @@ class stage02_physiology_execute():
                     file.write(cobra_model);
                 # upload the model to the database
                 qio02.import_dataStage02PhysiologyModel_sbml(model_id_I, date_I, settings.workspace_data + '/cobra_model_tmp.xml');
-        elif model_file_name_I and model_id_O: #modify an existing model in not in the database
+        elif model_file_name_I and model_id_O: #modify an existing model not in the database
             # Read in the sbml file and define the model conditions
             cobra_model = create_cobra_model_from_sbml_file(model_file_name_I, print_time=True);
+            if convert2irreversible_I: convert_to_irreversible(cobra_model);
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;

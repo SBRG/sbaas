@@ -710,7 +710,8 @@ class stage03_quantification_io(base_analysis):
         model_data_tmp['date'] = date_I;
         model_data_tmp['model_description'] = cobra_model.description;
         with open(filename_I, 'r') as f:
-            model_data_tmp['sbml_file'] = f.read();
+            model_data_tmp['model_file'] = f.read();
+        model_data_tmp['file_type'] = 'sbml'
         model_data.append(model_data_tmp)
         reaction_data = [];
         # parse out reaction data
@@ -785,7 +786,8 @@ class stage03_quantification_io(base_analysis):
                     data_add = data_stage03_quantification_models(d['model_id'],
                         d['model_name'],
                         d['model_description'],
-                        d['sbml_file'],
+                            d['model_file'],
+                            d['file_type'],
                         d['date']);
                     self.session.add(data_add);
                 except SQLAlchemyError as e:
@@ -811,7 +813,8 @@ class stage03_quantification_io(base_analysis):
                             {'model_id':d['model_id'],
                             'model_name':d['model_name'],
                             'model_description':d['model_description'],
-                            'sbml_file':d['sbml_file'],
+                            'file':d['model_file'],
+                            'file_type':d['file_type'],
                             'date':d['date']},
                             synchronize_session=False);
                 except SQLAlchemyError as e:
@@ -964,10 +967,13 @@ class stage03_quantification_io(base_analysis):
         if data_I:
             for d in data_I:
                 try:
-                    data_add = data_stage03_quantification_simulation(d['experiment_id'],
+                    data_add = data_stage03_quantification_simulation(
+                        d['simulation_id'],
+                        d['experiment_id'],
                         d['model_id'],
                         d['sample_name_abbreviation'],
                         d['time_point'],
+                        d['simulation_type'],
                         d['used_'],
                         d['comment_']);
                     self.session.add(data_add);
@@ -990,16 +996,74 @@ class stage03_quantification_io(base_analysis):
                 try:
                     data_update = self.session.query(data_stage03_quantification_simulation).filter(
                             data_stage03_quantification_simulation.id.like(d['id'])).update(
-                            {'experiment_id':d['experiment_id'],
+                            {
+                            'simulation_id':d['simulation_id'],
+                            'experiment_id':d['experiment_id'],
                             'model_id':d['model_id'],
                             'sample_name_abbreviation':d['sample_name_abbreviation'],
                             'time_point':d['time_point'],
-                            'compartment_id':d['compartment_id'],
-                            'pH':d['pH'],
-                            'temperature':d['temperature'],
-                            'temperature_units':d['temperature_units'],
-                            'ionic_strength':d['ionic_strength'],
-                            'ionic_strength_units':d['ionic_strength_units'],
+                            'simulation_type':d['simulation_type'],
+                            'used_':d['used_'],
+                            'comment_I':d['comment_I']},
+                            synchronize_session=False);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
+
+    def import_dataStage03SimulationParameters_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_dataStage03SimulationParameters(data.data);
+        data.clear_data();
+
+    def add_dataStage03SimulationParameters(self, data_I):
+        '''add rows of data_stage03_quantification_simulationParameters'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = data_stage03_quantification_simulationParameters(
+                        d['simulation_id'],
+                        #None, #d['simulation_dateAndTime'],
+                        d['solver_id'],
+                        d['n_points'],
+                        d['n_steps'],
+                        d['max_time'],
+                        d['sampler_id'],
+                        #None,
+                        #None,
+                        d['used_'],
+                        d['comment_']);
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
+
+    def import_dataStage03SimulationParameters_update(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.update_dataStage03SimulationParameters(data.data);
+        data.clear_data();
+
+    def update_dataStage03SimulationParameters(self,data_I):
+        '''update rows of data_stage03_quantification_simulationParameters'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_update = self.session.query(data_stage03_quantification_simulationParameters).filter(
+                            data_stage03_quantification_simulationParameters.id.like(d['id'])).update(
+                            {'simulation_id':d['simulation_id'],
+                             #'simulation_dateAndTime':d['simulation_dateAndTime'],
+                            'solver_id':d['solver_id'],
+                            'n_points':d['n_points'],
+                            'n_steps':d['n_steps'],
+                             'max_time':d['max_time'],
+                             'sampler_id':d['sampler_id'],
+                             #'solve_time':d['solve_time'],
+                             #'solve_time_units':d['solve_time_units'],
                             'used_':d['used_'],
                             'comment_I':d['comment_I']},
                             synchronize_session=False);
@@ -1097,7 +1161,7 @@ class stage03_quantification_io(base_analysis):
                 cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
                 # write the model to a temporary file
                 with open('data/cobra_model_tmp.xml','wb') as file:
-                    file.write(cobra_model_sbml['sbml_file']);
+                    file.write(cobra_model_sbml['model_file']);
                 # Read in the sbml file and define the model conditions
                 cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get the time-points
@@ -1187,7 +1251,7 @@ class stage03_quantification_io(base_analysis):
                 cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
                 # write the model to a temporary file
                 with open('data/cobra_model_tmp.xml','wb') as file:
-                    file.write(cobra_model_sbml['sbml_file']);
+                    file.write(cobra_model_sbml['model_file']);
                 # Read in the sbml file and define the model conditions
                 cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get the time-points
@@ -1283,7 +1347,7 @@ class stage03_quantification_io(base_analysis):
                 cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id);
                 # write the model to a temporary file
                 with open('data/cobra_model_tmp.xml','wb') as file:
-                    file.write(cobra_model_sbml['sbml_file']);
+                    file.write(cobra_model_sbml['model_file']);
                 # Read in the sbml file and define the model conditions
                 cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
             # get the time-points

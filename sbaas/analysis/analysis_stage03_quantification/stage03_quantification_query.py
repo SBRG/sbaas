@@ -127,6 +127,28 @@ class stage03_quantification_query(base_analysis):
             return model_ids_O;
         except SQLAlchemyError as e:
             print(e);
+    # query rows from data_stage03_quantification_simulation
+    def get_rows_simulationID_dataStage03QuantificationSimulation(self,simulation_id_I):
+        '''Querry rows that are used from the simulation'''
+        try:
+            data = self.session.query(data_stage03_quantification_simulation).filter(
+                    data_stage03_quantification_simulation.simulation_id.like(simulation_id_I),
+                    data_stage03_quantification_simulation.used_.is_(True)).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    rows_O.append({
+                            'simulation_id':d.simulation_id,
+                            'experiment_id':d.experiment_id,
+                            'model_id':d.model_id,
+                            'sample_name_abbreviation':d.sample_name_abbreviation,
+                            'time_point':d.time_point,
+                            'simulation_type':d.simulation_type,
+                            'used_':d.used_,
+                            'comment_':d.comment_});
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
             
     ## Query from data_stage03_quantification_models
     # query row from data_stage03_quantification_models
@@ -144,9 +166,37 @@ class stage03_quantification_query(base_analysis):
                     row_tmp = {'model_id':d.model_id,
                                 'model_name':d.model_name,
                                 'model_description':d.model_description,
-                                'sbml_file':d.sbml_file,
+                                'model_file':d.model_file,
+                                'file_type':d.file_type,
                                 'date':d.date};
                     rows_O.update(row_tmp);
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+
+    ##  Query from data_stage03_quantification_simulationParameters
+    # query rows from data_stage03_quantification_simulation
+    def get_rows_simulationID_dataStage03QuantificationSimulationParameters(self,simulation_id_I):
+        '''Querry rows that are used from the simulationParameters'''
+        try:
+            data = self.session.query(data_stage03_quantification_simulationParameters).filter(
+                    data_stage03_quantification_simulationParameters.simulation_id.like(simulation_id_I),
+                    data_stage03_quantification_simulationParameters.used_.is_(True)).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    rows_O.append({
+                            'simulation_id':d.simulation_id,
+                            #'simulation_dateAndTime':d.simulation_dateAndTime,
+                            'solver_id':d.solver_id,
+                            'n_points':d.n_points,
+                            'n_steps':d.n_steps,
+                            'max_time':d.max_time,
+                            'sampler_id':d.sampler_id,
+                            #'solve_time':d.solve_time,
+                            #'solve_time_units':d.solve_time_units,
+                            'used_':d.used_,
+                            'comment_':d.comment_});
             return rows_O;
         except SQLAlchemyError as e:
             print(e);
@@ -865,6 +915,45 @@ class stage03_quantification_query(base_analysis):
                     rows_O.update(data_tmp);
             return rows_O;
         except SQLAlchemyError as e:
+            print(e);  
+    def get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationTCC(self,experiment_id_I,
+                                                                                                           model_id_I,
+                                                                                                           time_point_I,
+                                                                                                           sample_name_abbreviation_I,
+                                                                                                 measured_concentration_coverage_criteria_I=0.5,
+                                                                                                 measured_dG_f_coverage_criteria_I=0.99):
+        '''Query rows that are used from the tcc'''
+        try:
+            data = self.session.query(data_stage03_quantification_tcc.rxn_id,
+                    data_stage03_quantification_tcc.measured_concentration_coverage,
+                    data_stage03_quantification_tcc.measured_dG_f_coverage,
+                    data_stage03_quantification_tcc.feasible).filter(
+                    data_stage03_quantification_tcc.model_id.like(model_id_I),
+                    data_stage03_quantification_tcc.time_point.like(time_point_I),
+                    data_stage03_quantification_tcc.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage03_quantification_tcc.experiment_id.like(experiment_id_I),
+                    data_stage03_quantification_tcc.measured_concentration_coverage>measured_concentration_coverage_criteria_I,
+                    data_stage03_quantification_tcc.measured_dG_f_coverage>measured_dG_f_coverage_criteria_I,
+                    data_stage03_quantification_tcc.used_.is_(True)).all();
+            measured_concentration_coverage_O = {};
+            measured_dG_f_coverage_O = {};
+            feasible_O = {};
+            if data: 
+                for d in data:
+                    if measured_concentration_coverage_O.has_key(d.rxn_id):
+                        print 'duplicate rxn_id found!';
+                    else:
+                        measured_concentration_coverage_O[d.rxn_id]={
+                        'measured_concentration_coverage':d.measured_concentration_coverage
+                        };
+                        measured_dG_f_coverage_O[d.rxn_id]={
+                        'measured_dG_f_coverage':d.measured_dG_f_coverage
+                        };
+                        feasible_O[d.rxn_id]={
+                        'feasible':d.feasible
+                        };
+            return measured_concentration_coverage_O,measured_dG_f_coverage_O,feasible_O;
+        except SQLAlchemyError as e:
             print(e);    
     # update rows of data_stage03_quantification_tcc  
     def update_dataStage03Tcc(self,data_I):
@@ -918,3 +1007,171 @@ class stage03_quantification_query(base_analysis):
         met_formatted = re.sub('_LPARANTHES_','__',met_formatted)
         met_formatted = re.sub('_RPARANTHES_','__',met_formatted)
         return met_formatted;
+
+    #TODO:
+            
+    ## Query from data_stage03_quantification_measuredFluxes
+    # query rows from data_stage03_quantification_measuredFluxes
+    def get_rows_experimentIDAndSampleNameAbbreviation_dataStage03QuantificationMeasuredFluxes(self,experiment_id_I,sample_name_abbreviation_I):
+        '''Querry rows by model_id that are used'''
+        try:
+            data = self.session.query(data_stage03_quantification_measuredFluxes).filter(
+                    data_stage03_quantification_measuredFluxes.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage03_quantification_measuredFluxes.experiment_id.like(experiment_id_I),
+                    data_stage03_quantification_measuredFluxes.used_.is_(True)).order_by(
+                    data_stage03_quantification_measuredFluxes.model_id.asc(),
+                    data_stage03_quantification_measuredFluxes.rxn_id.asc()).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    row_tmp = {'experiment_id':d.experiment_id,
+                    'model_id':d.model_id,
+                    'sample_name_abbreviation':d.sample_name_abbreviation,
+                    #'time_point':d.time_point,
+                    'rxn_id':d.rxn_id,
+                    'flux_average':d.flux_average,
+                    'flux_stdev':d.flux_stdev,
+                    'flux_lb':d.flux_lb,
+                    'flux_ub':d.flux_ub,
+                    'flux_units':d.flux_units,
+                    'used_':d.used_,
+                    'comment_':d.comment_};
+                    rows_O.append(row_tmp);
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_rows_experimentIDAndModelIDAndSampleNameAbbreviation_dataStage03QuantificationMeasuredFluxes(self,experiment_id_I,model_id_I,sample_name_abbreviation_I):
+        '''Querry rows by model_id that are used'''
+        try:
+            data = self.session.query(data_stage03_quantification_measuredFluxes).filter(
+                    data_stage03_quantification_measuredFluxes.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage03_quantification_measuredFluxes.model_id.like(model_id_I),
+                    data_stage03_quantification_measuredFluxes.experiment_id.like(experiment_id_I),
+                    data_stage03_quantification_measuredFluxes.used_.is_(True)).order_by(
+                    data_stage03_quantification_measuredFluxes.model_id.asc(),
+                    data_stage03_quantification_measuredFluxes.rxn_id.asc()).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    row_tmp = {'experiment_id':d.experiment_id,
+                    'model_id':d.model_id,
+                    'sample_name_abbreviation':d.sample_name_abbreviation,
+                    #'time_point':d.time_point,
+                    'rxn_id':d.rxn_id,
+                    'flux_average':d.flux_average,
+                    'flux_stdev':d.flux_stdev,
+                    'flux_lb':d.flux_lb,
+                    'flux_ub':d.flux_ub,
+                    'flux_units':d.flux_units,
+                    'used_':d.used_,
+                    'comment_':d.comment_};
+                    rows_O.append(row_tmp);
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+
+    ## Query from data_stage03_quantification_sampledData
+    # query rows from data_stage03_quantification_sampledData    
+    def get_rows_experimentIDAndModelIDAndSampleNameAbbreviations_dataStage03QuantificationSampledData(self,experiment_id_I,model_id_I,sample_name_abbreviation_I):
+        '''Query rows that are used from the sampledData'''
+        try:
+            data = self.session.query(data_stage03_quantification_sampledData).filter(
+                    data_stage03_quantification_sampledData.model_id.like(model_id_I),
+                    data_stage03_quantification_sampledData.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage03_quantification_sampledData.experiment_id.like(experiment_id_I),
+                    data_stage03_quantification_sampledData.used_.is_(True)).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    data_tmp = {'experiment_id':d.experiment_id,
+                'model_id':d.model_id,
+                'sample_name_abbreviation':d.sample_name_abbreviation,
+                'rxn_id':d.rxn_id,
+                'flux_units':d.flux_units,
+                'sampling_ave':d.sampling_ave,
+                'sampling_var':d.sampling_var,
+                'sampling_lb':d.sampling_lb,
+                'sampling_ub':d.sampling_ub,
+                'used_':d.used_,
+                'comment_':d.comment_};
+                    rows_O.append(data_tmp);
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);   
+    def get_rowsDict_experimentIDAndModelIDAndSampleNameAbbreviations_dataStage03QuantificationSampledData(self,experiment_id_I,model_id_I,sample_name_abbreviation_I):
+        '''Query rows that are used from the sampledData'''
+        try:
+            data = self.session.query(data_stage03_quantification_sampledData).filter(
+                    data_stage03_quantification_sampledData.model_id.like(model_id_I),
+                    data_stage03_quantification_sampledData.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage03_quantification_sampledData.experiment_id.like(experiment_id_I),
+                    data_stage03_quantification_sampledData.used_.is_(True)).all();
+            rows_O = {};
+            if data: 
+                for d in data:
+                    if rows_O.has_key(d.rxn_id):
+                        print 'duplicate rxn_ids found!';
+                    else:
+                        rows_O[d.rxn_id]={'sampling_ave':d.sampling_ave,
+                'sampling_var':d.sampling_var,
+                'sampling_lb':d.sampling_lb,
+                'sampling_ub':d.sampling_ub};
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_rowsEscherLbUb_experimentIDAndModelIDAndSampleNameAbbreviations_dataStage03QuantificationSampledData(self,experiment_id_I,model_id_I,sample_name_abbreviation_I):
+        '''Query rows that are used from the sampledData'''
+        try:
+            data = self.session.query(data_stage03_quantification_sampledData).filter(
+                    data_stage03_quantification_sampledData.model_id.like(model_id_I),
+                    data_stage03_quantification_sampledData.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage03_quantification_sampledData.experiment_id.like(experiment_id_I),
+                    data_stage03_quantification_sampledData.used_.is_(True)).all();
+            rows_O = [None,None];
+            rows_O[0] = {};
+            rows_O[1] = {}
+            if data: 
+                for d in data:
+                    rows_O[0][d.rxn_id]=d.sampling_lb;
+                    rows_O[1][d.rxn_id]=d.sampling_ub;
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_rowsEscher_experimentIDAndModelIDAndSampleNameAbbreviations_dataStage03QuantificationSampledData(self,experiment_id_I,model_id_I,sample_name_abbreviation_I):
+        '''Query rows that are used from the sampledData'''
+        try:
+            data = self.session.query(data_stage03_quantification_sampledData).filter(
+                    data_stage03_quantification_sampledData.model_id.like(model_id_I),
+                    data_stage03_quantification_sampledData.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage03_quantification_sampledData.experiment_id.like(experiment_id_I),
+                    data_stage03_quantification_sampledData.used_.is_(True)).all();
+            rows_O = {}
+            if data: 
+                for d in data:
+                    rows_O[d.rxn_id]=d.sampling_ave;
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+
+    ##  Query from data_stage03_quantification_sampledPoints
+    # query rows from data_stage03_quantification_sampledPoints
+    def get_rows_simulationID_dataStage03QuantificationSampledPoints(self,simulation_id_I):
+        '''Querry rows that are used from sampledPoints'''
+        try:
+            data = self.session.query(data_stage03_quantification_sampledPoints).filter(
+                    data_stage03_quantification_sampledPoints.simulation_id.like(simulation_id_I),
+                    data_stage03_quantification_sampledPoints.used_.is_(True)).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    rows_O.append({
+                            'simulation_id':d.simulation_id,
+                            'simulation_dateAndTime':d.simulation_dateAndTime,
+                            'mixed_fraction':d.mixed_fraction,
+                            'data_dir':d.data_dir,
+                            'infeasible_loops':d.infeasible_loops,
+                            'used_':d.used_,
+                            'comment_':d.comment_});
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);

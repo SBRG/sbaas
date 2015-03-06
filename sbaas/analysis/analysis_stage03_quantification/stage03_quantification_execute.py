@@ -19,6 +19,9 @@ from cobra.io.sbml import create_cobra_model_from_sbml_file, write_cobra_model_t
 from cobra.flux_analysis.variability import flux_variability_analysis
 from cobra.flux_analysis.parsimonious import optimize_minimal_flux
 from cobra.flux_analysis import flux_variability_analysis
+from cobra.manipulation.modify import convert_to_irreversible
+# Dependencies from resources
+from resources.sampling import cobra_sampling,cobra_sampling_n
 
 class stage03_quantification_execute():
     '''class for quantitative metabolomics analysis'''
@@ -66,7 +69,7 @@ class stage03_quantification_execute():
                     None);
             self.session.add(row);
         self.session.commit();
-    def execute_makeModel(self,experiment_id_I,model_id_I=None,model_id_O=None,date_I=None,model_file_name_I=None,ko_list=[],flux_dict={},description=None):
+    def execute_makeModel(self,experiment_id_I,model_id_I=None,model_id_O=None,date_I=None,model_file_name_I=None,ko_list=[],flux_dict={},description=None,convert2irreversible_I=False):
         '''make the thermodynamic model'''
 
         qio03 = stage03_quantification_io();
@@ -75,10 +78,19 @@ class stage03_quantification_execute():
             cobra_model_sbml = None;
             cobra_model_sbml = self.stage03_quantification_query.get_row_modelID_dataStage03QuantificationModels(model_id_I);
             # write the model to a temporary file
-            with open('data/cobra_model_tmp.xml','wb') as file:
-                file.write(cobra_model_sbml['sbml_file']);
-            # Read in the sbml file and define the model conditions
-            cobra_model = create_cobra_model_from_sbml_file('data/cobra_model_tmp.xml', print_time=True);
+            if cobra_model_sbml['file_type'] == 'sbml':
+                with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
+                    file.write(cobra_model_sbml['model_file']);
+                cobra_model = None;
+                cobra_model = create_cobra_model_from_sbml_file(settings.workspace_data + '/cobra_model_tmp.xml', print_time=True);
+            elif cobra_model_sbml['file_type'] == 'json':
+                with open(settings.workspace_data + '/cobra_model_tmp.json','wb') as file:
+                    file.write(cobra_model_sbml['model_file']);
+                cobra_model = None;
+                cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
+            else:
+                print 'file_type not supported'
+            if convert2irreversible_I: convert_to_irreversible(cobra_model);
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
@@ -100,6 +112,7 @@ class stage03_quantification_execute():
         elif model_file_name_I and model_id_O: #modify an existing model in not in the database
             # Read in the sbml file and define the model conditions
             cobra_model = create_cobra_model_from_sbml_file(model_file_name_I, print_time=True);
+            if convert2irreversible_I: convert_to_irreversible(cobra_model);
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
@@ -628,11 +641,10 @@ class stage03_quantification_execute():
             data_stage03_quantification_modelReactions.__table__.create(engine,True);
             data_stage03_quantification_modelMetabolites.__table__.create(engine,True);
             data_stage03_quantification_simulation.__table__.create(engine,True);
-            data_stage03_quantification_simulation.__table__.drop(engine,True);
-            data_stage03_quantification_measuredFluxes.__table__.drop(engine,True);
-            data_stage03_quantification_sampledPoints.__table__.drop(engine,True);
-            data_stage03_quantification_sampledData.__table__.drop(engine,True);
-            data_stage03_quantification_simulationParameters.__table__.drop(engine,True);
+            data_stage03_quantification_measuredFluxes.__table__.create(engine,True);
+            data_stage03_quantification_sampledPoints.__table__.create(engine,True);
+            data_stage03_quantification_sampledData.__table__.create(engine,True);
+            data_stage03_quantification_simulationParameters.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_dataStage03_quantification_dG_r(self,experiment_id_I = None):
@@ -767,11 +779,101 @@ class stage03_quantification_execute():
             else:
                 print 'file_type not supported'
             self.models[model_id]=cobra_model;
-    def execute_thermodynamicSampling(self,simulation_ids_I=[]):
+    def execute_thermodynamicSampling(self,simulation_id_I,rxn_ids_I=[],
+                    inconsistent_dG_f_I=[],inconsistent_concentrations_I=[],
+                    measured_concentration_coverage_criteria_I=0.5,
+                    measured_dG_f_coverage_criteria_I=0.99):
         '''execute a thermodynamic analysis using the thermodynamic
         module for cobrapy'''
 
-        print 'execute_thermodynamicSmpling...'
+        print 'execute_thermodynamicSampling...'
+        # get simulation information
+        simulation_info_all = [];
+        simulation_info_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulation(simulation_id_I);
+        if not simulation_info_all:
+            print 'simulation not found!'
+            return;
+        simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get simulation parameters
+        simulation_parameters_all = [];
+        simulation_parameters_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulationParameters(simulation_id_I);
+        if not simulation_parameters_all:
+            print 'simulation not found!'
+            return;
+        simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get the cobra model
+        cobra_model = self.models[simulation_info['model_id']];
+        # copy the model
+        cobra_model_copy = cobra_model.copy();
+        # get rxn_ids
+        if rxn_ids_I:
+            rxn_ids = rxn_ids_I;
+        else:
+            rxn_ids = [];
+            rxn_ids = self.stage03_quantification_query.get_rows_experimentIDAndModelIDAndSampleNameAbbreviation_dataStage03QuantificationMeasuredFluxes(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['sample_name_abbreviation']);
+        for rxn in rxn_ids:
+            # constrain the model
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).lower_bound = rxn['flux_lb'];
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).upper_bound = rxn['flux_ub'];
+        # make the model irreversible
+        convert_to_irreversible(cobra_model_copy);
+        # get otherData
+        pH,temperature,ionic_strength = {},{},{}
+        pH,temperature,ionic_strength = self.stage03_quantification_query.get_rowsFormatted_experimentIDAndTimePointAndSampleNameAbbreviation_dataStage03QuantificationOtherData(simulation_info['experiment_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        # load pH, ionic_strength, and temperature parameters
+        other_data = thermodynamics_otherData(pH_I=pH,temperature_I=temperature,ionic_strength_I=ionic_strength);
+        other_data.check_data();
+        # get dG_f data:
+        dG_f = {};
+        dG_f = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationDGf(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        dG_f_data = thermodynamics_dG_f_data(dG_f_I=dG_f);
+        dG_f_data.format_dG_f();
+        dG_f_data.generate_estimated_dG_f(cobra_model)
+        dG_f_data.check_data(); 
+        # remove an inconsistent dGf values
+        if inconsistent_dG_f_I: dG_f_data.remove_measured_dG_f(inconsistent_dG_f_I)
+        # query metabolomicsData
+        concentrations = [];
+        concentrations = self.stage03_quantification_query.get_rowsDict_experimentIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationMetabolomicsData(simulation_info['experiment_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        # load metabolomicsData
+        metabolomics_data = thermodynamics_metabolomicsData(measured_concentrations_I=concentrations);
+        metabolomics_data.generate_estimated_metabolomics_data(cobra_model);
+        # remove an inconsistent concentration values
+        if inconsistent_concentrations_I: metabolomics_data.remove_measured_concentrations(inconsistent_concentrations_I);
+        # get dG0r, dGr, and tcc data
+        dG0_r = {};
+        dG0_r = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationDG0r(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation'])
+        measured_concentration_coverage,measured_dG_f_coverage,feasible = {},{},{};
+        measured_concentration_coverage,measured_dG_f_coverage,feasible = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationTCC(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation'],0,0)
+        tcc = thermodynamics_dG_r_data(dG0_r_I = dG0_r,
+                 dG_r_coverage_I = measured_dG_f_coverage,
+                 metabolomics_coverage_I = measured_concentration_coverage,
+                 thermodynamic_consistency_check_I = feasible);
+        # apply tfba constraints
+        tfba = thermodynamics_tfba()
+        tfba.tsampling_conc_ln_matlab_export(cobra_model_copy, metabolomics_data.measured_concentrations, metabolomics_data.estimated_concentrations,
+                                             tcc.dG0_r, other_data.pH,other_data.temperature,tcc.metabolomics_coverage,
+                                             tcc.dG_r_coverage, tcc.thermodynamic_consistency_check,
+                                             measured_concentration_coverage_criteria_I, measured_dG_f_coverage_criteria_I,
+                                             use_measured_concentrations=True,use_measured_dG0_r=True, solver=simulation_parameters['solver_id']);
+        # Test model
+        if self.test_model(cobra_model_I=cobra_model_copy):
+            sampling = cobra_sampling(data_dir_I = self.data_dir);
+            if simulation_parameters['sampler_id']=='gpSampler':
+                filename_model = simulation_id_I + '.mat';
+                filename_script = simulation_id_I + '.m';
+                filename_points = simulation_id_I + '_points' + '.mat';
+                sampling.export_sampling_matlab(cobra_model=cobra_model_copy,filename_model=filename_model,filename_script=filename_script,filename_points=filename_points,\
+                    solver_id_I = simulation_parameters['solver_id'],\
+                    n_points_I = simulation_parameters['n_points'],\
+                    n_steps_I = simulation_parameters['n_steps'],\
+                    max_time_I = simulation_parameters['max_time']);
+            elif simulation_parameters['sampler_id']=='optGpSampler':
+                return;
+            else:
+                print 'sampler_id not recognized';
+        else:
+            print 'no solution found!';  
 
     def execute_compareThermodynamicStates(self,experiment_id_I):
         '''perform a  pairwise comparison of thermodynamic states'''

@@ -806,7 +806,7 @@ class stage01_quantification_execute():
         print 'execute_calculateAverages_replicates...'
         # get sample_name_abbreviations
         if sample_name_abbreviations_I:
-            sample_names_abbreviation = sample_name_abbreviations_I;
+            sample_name_abbreviations = sample_name_abbreviations_I;
         else:
             sample_name_abbreviations = [];
             sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01ReplicatesMI(experiment_id_I);
@@ -856,13 +856,16 @@ class stage01_quantification_execute():
                                                    n_replicates, conc_average, conc_cv, conc_units, True);   
                     self.session.add(row);
         self.session.commit(); 
-    def execute_calculateGeoAverages_replicates(self,experiment_id_I):
+    def execute_calculateGeoAverages_replicates(self,experiment_id_I,sample_name_abbreviations_I=[]):
         '''Calculate the averages from replicates MI in ln space'''
 
         print ' execute_calculateGeoAverages_replicates...'
         # get sample_name_abbreviations
-        sample_name_abbreviations = [];
-        sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01ReplicatesMI(experiment_id_I);
+        if sample_name_abbreviations_I:
+            sample_name_abbreviations = sample_name_abbreviations_I;
+        else:
+            sample_name_abbreviations = [];
+            sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01ReplicatesMI(experiment_id_I);
         for sna in sample_name_abbreviations:
             print 'calculating the geometric average from replicates for sample_name_abbreviation ' + sna;
             # get component names

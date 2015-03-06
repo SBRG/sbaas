@@ -146,7 +146,7 @@ class stage02_isotopomer_dependencies():
                 'ASTPathway':{'reactions':['AST','SADH','SGDS','SGSAD','SOTA'],'stoichiometry':[1,1,1,1,1]}
                 };
     #model reduction functions
-    def load_ALEWt(self,anoxic = False):
+    def load_ALEWt(self,anoxic = False, oxic = True, update_ampms2 = True, convert2irreversible = False):
         '''load iJO1366 with the following changes:
 	    1. update to AMPMS2 to account for carbon monoxide
 	    2. changes to uptake bounds for glucose M9 media
@@ -155,41 +155,42 @@ class stage02_isotopomer_dependencies():
 	    5. depending on oxygen availability, constrain the model to use the correct RNR enzymes
 	    6. depending on oxygen availability, constrain the model to use the correct Dihydroorotate dehydrogenase (PyrD) enzymes
 	    7. constrain fatty acid biosynthesis to use the physiologically preferred enzymes'''
-        ijo1366_sbml = "data/iJO1366.xml"
+        ijo1366_sbml = settings.workspace_data+"/models/iJO1366.xml"
         # Read in the sbml file and define the model conditions
         cobra_model = create_cobra_model_from_sbml_file(ijo1366_sbml, print_time=True)
-        # Update AMPMS2
-        coc = Metabolite('co_c','CO','carbon monoxide','c');
-        cop = Metabolite('co_p','CO','carbon monoxide','p');
-        coe = Metabolite('co_e','CO','carbon monoxide','e');
-        cobra_model.add_metabolites([coc,cop,coe])
-        ampms2_mets = {};
-        ampms2_mets[cobra_model.metabolites.get_by_id('air_c')] = -1;
-        ampms2_mets[cobra_model.metabolites.get_by_id('amet_c')] = -1;
-        ampms2_mets[cobra_model.metabolites.get_by_id('dad_DASH_5_c')] = 1;
-        ampms2_mets[cobra_model.metabolites.get_by_id('met_DASH_L_c')] = 1;
-        ampms2_mets[cobra_model.metabolites.get_by_id('4ampm_c')] = 1;
-        ampms2_mets[cobra_model.metabolites.get_by_id('h_c')] = 3;
-        ampms2_mets[cobra_model.metabolites.get_by_id('for_c')] = 1;
-        ampms2_mets[cobra_model.metabolites.get_by_id('co_c')] = 1;
-        ampms2 = Reaction('AMPMS3');
-        ampms2.add_metabolites(ampms2_mets);
-        copp_mets = {};
-        copp_mets[cobra_model.metabolites.get_by_id('co_c')] = -1;
-        copp_mets[cobra_model.metabolites.get_by_id('co_p')] = 1;
-        copp = Reaction('COtpp');
-        copp.add_metabolites(copp_mets);
-        coex_mets = {};
-        coex_mets[cobra_model.metabolites.get_by_id('co_p')] = -1;
-        coex_mets[cobra_model.metabolites.get_by_id('co_e')] = 1;
-        coex = Reaction('COtex');
-        coex.add_metabolites(coex_mets);
-        cotrans_mets = {};
-        cotrans_mets[cobra_model.metabolites.get_by_id('co_e')] = -1;
-        cotrans = Reaction('EX_co_LPAREN_e_RPAREN_');
-        cotrans.add_metabolites(cotrans_mets);
-        cobra_model.add_reactions([ampms2,copp,coex,cotrans]);
-        cobra_model.remove_reactions(['AMPMS2']);
+        if update_ampms2:
+            # Update AMPMS2
+            coc = Metabolite('co_c','CO','carbon monoxide','c');
+            cop = Metabolite('co_p','CO','carbon monoxide','p');
+            coe = Metabolite('co_e','CO','carbon monoxide','e');
+            cobra_model.add_metabolites([coc,cop,coe])
+            ampms2_mets = {};
+            ampms2_mets[cobra_model.metabolites.get_by_id('air_c')] = -1;
+            ampms2_mets[cobra_model.metabolites.get_by_id('amet_c')] = -1;
+            ampms2_mets[cobra_model.metabolites.get_by_id('dad_DASH_5_c')] = 1;
+            ampms2_mets[cobra_model.metabolites.get_by_id('met_DASH_L_c')] = 1;
+            ampms2_mets[cobra_model.metabolites.get_by_id('4ampm_c')] = 1;
+            ampms2_mets[cobra_model.metabolites.get_by_id('h_c')] = 3;
+            ampms2_mets[cobra_model.metabolites.get_by_id('for_c')] = 1;
+            ampms2_mets[cobra_model.metabolites.get_by_id('co_c')] = 1;
+            ampms2 = Reaction('AMPMS3');
+            ampms2.add_metabolites(ampms2_mets);
+            copp_mets = {};
+            copp_mets[cobra_model.metabolites.get_by_id('co_c')] = -1;
+            copp_mets[cobra_model.metabolites.get_by_id('co_p')] = 1;
+            copp = Reaction('COtpp');
+            copp.add_metabolites(copp_mets);
+            coex_mets = {};
+            coex_mets[cobra_model.metabolites.get_by_id('co_p')] = -1;
+            coex_mets[cobra_model.metabolites.get_by_id('co_e')] = 1;
+            coex = Reaction('COtex');
+            coex.add_metabolites(coex_mets);
+            cotrans_mets = {};
+            cotrans_mets[cobra_model.metabolites.get_by_id('co_e')] = -1;
+            cotrans = Reaction('EX_co_LPAREN_e_RPAREN_');
+            cotrans.add_metabolites(cotrans_mets);
+            cobra_model.add_reactions([ampms2,copp,coex,cotrans]);
+            cobra_model.remove_reactions(['AMPMS2']);
         # Define the model conditions:
         system_boundaries = [x.id for x in cobra_model.reactions if x.boundary == 'system_boundary'];
         for b in system_boundaries:
@@ -275,13 +276,18 @@ class stage02_isotopomer_dependencies():
         # Dihydroorotate dehydrogenase (PyrD) (DOI:10.1016/S0076-6879(78)51010-0, PMID: 199252, DOI:S0969212602008316 [pii])
         aerobic = ['RNDR1', 'RNDR2', 'RNDR3', 'RNDR4', 'DHORD2', 'ASPO6','LCARR','PFL','FRD2','FRD3']; # see DOI:10.1111/j.1365-2958.2011.07593.x; see DOI:10.1089/ars.2006.8.773 for a review
         anaerobic = ['RNTR1c2', 'RNTR2c2', 'RNTR3c2', 'RNTR4c2', 'DHORD5', 'ASPO5','PDH','SUCDi']; # see DOI:10.1074/jbc.274.44.31291, DOI:10.1128/JB.00440-07
-        if anaerobic:
+        if anoxic:
             rxnList = noFlux + ammoniaExcess + anaerobic;
             for rxn in rxnList:
                 cobra_model.reactions.get_by_id(rxn).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(rxn).upper_bound = 0.0;
-        else:
+        elif oxic:
             rxnList = noFlux + ammoniaExcess + aerobic;
+            for rxn in rxnList:
+                cobra_model.reactions.get_by_id(rxn).lower_bound = 0.0;
+                cobra_model.reactions.get_by_id(rxn).upper_bound = 0.0;
+        else:
+            rxnList = noFlux + ammoniaExcess;
             for rxn in rxnList:
                 cobra_model.reactions.get_by_id(rxn).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(rxn).upper_bound = 0.0;
@@ -294,6 +300,8 @@ class stage02_isotopomer_dependencies():
         for rxn in rxnList:
             cobra_model.reactions.get_by_id(rxn).lower_bound = 0.0;
             cobra_model.reactions.get_by_id(rxn).upper_bound = 1000.0;
+        # convert to irreversible
+        if convert2irreversible: convert_to_irreversible(cobra_model);
 
         return cobra_model;
     def reduce_model(self,cobra_model,cobra_model_outFileName=None):
