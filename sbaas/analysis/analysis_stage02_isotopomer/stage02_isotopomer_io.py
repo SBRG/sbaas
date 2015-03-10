@@ -2610,7 +2610,7 @@ class stage02_isotopomer_io(base_analysis):
         for d in f['mnt'][0][0][0]['id']:
             f_mnt_id.append(d[0]);
         for d in f['mnt'][0][0][0]['sres']:
-            f_mnt_sres.append(d[0][0]);
+            f_mnt_sres.append(float(d[0][0]));
         for d in f['mnt'][0][0][0]['expt']:
             f_mnt_expt.append(d[0]);
         for d in f['mnt'][0][0][0]['type']:
@@ -2672,11 +2672,11 @@ class stage02_isotopomer_io(base_analysis):
         #f_mnt_res_msens = [];
         f_mnt_res_peak = [];
         for d in f['mnt'][0][0][0]['res']: 
-            f_mnt_res_val.append(d[0][0]['val'][0][0]);
-            f_mnt_res_fit.append(d[0][0]['fit'][0][0]);
+            f_mnt_res_val.append(float(d[0][0]['val'][0][0]));
+            f_mnt_res_fit.append(float(d[0][0]['fit'][0][0]));
             f_mnt_res_type.append(d[0][0]['type'][0]);
             f_mnt_res_id.append(d[0][0]['id'][0]);
-            f_mnt_res_std.append(d[0][0]['std'][0][0]);
+            f_mnt_res_std.append(float(d[0][0]['std'][0][0]));
             #change default of time inf to 0
             if isinf(d[0][0]['time'][0][0]):
                 f_mnt_res_time.append('0');
@@ -2703,13 +2703,13 @@ class stage02_isotopomer_io(base_analysis):
                     'sample_name_abbreviation':simulation_info['sample_name_abbreviation'][0],
                     'time_point':f_mnt_res_time[cnt],
                     'rxn_id':f_mnt_res_id[cnt],
-                    'res_data':f_mnt_res_data[cnt],
+                    'res_data':float(f_mnt_res_data[cnt]),
                     #'res_esens':f_mnt_res_esens[cnt],
-                    'res_fit':f_mnt_res_fit[cnt],
+                    'res_fit':float(f_mnt_res_fit[cnt]),
                     #'res_msens':f_mnt_res_msens[cnt],
                     'res_peak':f_mnt_res_peak[cnt],
-                    'res_stdev':f_mnt_res_std[cnt],
-                    'res_val':f_mnt_res_val[cnt],
+                    'res_stdev':float(f_mnt_res_std[cnt]),
+                    'res_val':float(f_mnt_res_val[cnt]),
                     'res_msens':None,
                     'res_esens':None,
                     'used_':True,
@@ -2721,13 +2721,13 @@ class stage02_isotopomer_io(base_analysis):
                     'sample_name_abbreviation':f_mnt_res_expt[cnt],
                     'time_point':f_mnt_res_time[cnt],
                     'rxn_id':f_mnt_res_id[cnt],
-                    'res_data':f_mnt_res_data[cnt],
+                    'res_data':float(f_mnt_res_data[cnt]),
                     #'res_esens':f_mnt_res_esens[cnt],
-                    'res_fit':f_mnt_res_fit[cnt],
+                    'res_fit':float(f_mnt_res_fit[cnt]),
                     #'res_msens':f_mnt_res_msens[cnt],
                     'res_peak':f_mnt_res_peak[cnt],
-                    'res_stdev':f_mnt_res_std[cnt],
-                    'res_val':f_mnt_res_val[cnt],
+                    'res_stdev':float(f_mnt_res_std[cnt]),
+                    'res_val':float(f_mnt_res_val[cnt]),
                     'res_msens':None,
                     'res_esens':None,
                     'used_':True,
@@ -2754,13 +2754,13 @@ class stage02_isotopomer_io(base_analysis):
                     'time_point':f_mnt_res_time[cnt],
                     'fragment_id':fragment_id,
                     'fragment_mass':fragment_mass,
-                    'res_data':f_mnt_res_data[cnt],
+                    'res_data':float(f_mnt_res_data[cnt]),
                     #'res_esens':f_mnt_res_esens[cnt],
-                    'res_fit':f_mnt_res_fit[cnt],
+                    'res_fit':float(f_mnt_res_fit[cnt]),
                     #'res_msens':f_mnt_res_msens[cnt],
-                    'res_peak':f_mnt_res_peak[cnt],
-                    'res_stdev':f_mnt_res_std[cnt],
-                    'res_val':f_mnt_res_val[cnt],
+                    'res_peak':float(f_mnt_res_peak[cnt]),
+                    'res_stdev':float(f_mnt_res_std[cnt]),
+                    'res_val':float(f_mnt_res_val[cnt]),
                     'res_msens':None,
                     'res_esens':None,
                     'used_':True,
@@ -2773,13 +2773,13 @@ class stage02_isotopomer_io(base_analysis):
                     'time_point':f_mnt_res_time[cnt],
                     'fragment_id':fragment_id,
                     'fragment_mass':fragment_mass,
-                    'res_data':f_mnt_res_data[cnt],
+                    'res_data':float(f_mnt_res_data[cnt]),
                     #'res_esens':f_mnt_res_esens[cnt],
-                    'res_fit':f_mnt_res_fit[cnt],
+                    'res_fit':float(f_mnt_res_fit[cnt]),
                     #'res_msens':f_mnt_res_msens[cnt],
                     'res_peak':f_mnt_res_peak[cnt],
-                    'res_stdev':f_mnt_res_std[cnt],
-                    'res_val':f_mnt_res_val[cnt],
+                    'res_stdev':float(f_mnt_res_std[cnt]),
+                    'res_val':float(f_mnt_res_val[cnt]),
                     'res_msens':None,
                     'res_esens':None,
                     'used_':True,
@@ -2821,7 +2821,7 @@ class stage02_isotopomer_io(base_analysis):
             elif isnan(d[0][0]):
                 f_par_val.append(0.0)
             else:
-                f_par_std.append(d[0][0])
+                f_par_std.append(float(d[0][0]))
         for d in f['par'][0][0][0]['type']:
             f_par_type.append(d[0])
         #adjust the lb and ub to [0,1000];
@@ -2847,7 +2847,7 @@ class stage02_isotopomer_io(base_analysis):
             else:
                 f_par_unit.append(d[0])
         for d in f['par'][0][0][0]['alf']:
-            f_par_alf.append(d[0][0])
+            f_par_alf.append(float(d[0][0]))
         for d in f['par'][0][0][0]['chi2s']:
             f_par_chi2s.append(d)
         for d in f['par'][0][0][0]['cor']:

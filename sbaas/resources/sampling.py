@@ -2,7 +2,9 @@ from sys import exit
 from math import log, sqrt, exp
 import operator, json, csv
 from analysis.analysis_base.base_calculate import base_calculate
+from copy import copy
 # Dependencies from 3rd party
+import h5py
 import scipy.io
 import numpy
 from numpy import histogram, mean, std, loadtxt, savetxt
@@ -11,6 +13,7 @@ import matplotlib.pyplot as plt
 from resources.molmass import Formula
 # Dependencies from cobra
 from cobra.io.mat import load_matlab_model,save_matlab_model
+#from cobra.mlab import matlab_cobra_struct_to_python_cobra_object
 from cobra.io.sbml import create_cobra_model_from_sbml_file
 from cobra.flux_analysis import flux_variability_analysis, single_deletion
 from cobra.flux_analysis.parsimonious import optimize_minimal_flux
@@ -83,11 +86,23 @@ class cobra_sampling(base_calculate):
             simulation_dateAndTime = datetime.fromtimestamp(time.mktime(simulation_dateAndTime_struct))
 
         # load model from MATLAB file
-        model = load_matlab_model(self.data_dir + '/' + matlab_data,sampler_model_name);
+        try:
+            model = load_matlab_model(self.data_dir + '/' + matlab_data,sampler_model_name);
+        except NotImplementedError as e:
+            print(e);
+            model_tmp = h5py.File(self.data_dir + '/' + matlab_data,'r')['sampler_out'];
+            #model = matlab_cobra_struct_to_python_cobra_object(matlab_struct)
+            model = self.model;
 
         # load sample points from MATLAB file into numpy array
-        points = scipy.io.loadmat(self.data_dir + '/' + matlab_data)[sampler_model_name]['points'][0][0];
-        mixed_fraction=scipy.io.loadmat(self.data_dir + '/' + matlab_data)['mixedFrac'][0][0];
+        try:
+            points = scipy.io.loadmat(self.data_dir + '/' + matlab_data)[sampler_model_name]['points'][0][0];
+            mixed_fraction=scipy.io.loadmat(self.data_dir + '/' + matlab_data)['mixedFrac'][0][0];
+        except NotImplementedError as e:
+            print(e);
+            points = h5py.File(self.data_dir + '/' + matlab_data,'r')[sampler_model_name]['points'];
+            points = numpy.array(points);
+            mixed_fraction=h5py.File(self.data_dir + '/' + matlab_data,'r')['mixedFrac'][0][0];
         #mat = scipy.io.loadmat('data/EvoWt.mat')
         #points = mat['model_WT_sampler_out']['points'][0][0]
 
@@ -157,7 +172,7 @@ class cobra_sampling(base_calculate):
         for r in reaction_lst:
             # loop through each reaction in the list
             plt.figure()
-            n, bins, patches = plt.hist(self.points[r]['points'],50,label = [r])
+            n, bins, patches = plt.hist(self.points[r],50,label = [r])
             plt.legend()
             plt.show()
     def plot_points_boxAndWhiskers(self,reaction_lst=[]):
@@ -172,7 +187,7 @@ class cobra_sampling(base_calculate):
             # loop through each reaction in the list
             plt.figure()
             fig, ax = plt.subplots()
-            bp = ax.boxplot(self.points[r]['points'], sym='k+',
+            bp = ax.boxplot(self.points[r], sym='k+',
                             notch=False, bootstrap=False,
                             usermedians=None,
                             conf_intervals=None)
@@ -289,6 +304,16 @@ class cobra_sampling(base_calculate):
 
         self.points = points_flux;
         return
+    # points QC
+    def remove_points_notInSolutionSpace(self):
+        '''remove points that are not in the solution space'''
+        pruned_reactions = [];
+        for rxn in self.model.reactions:
+            points_copy = copy(self.points[rxn.id])
+            self.points[rxn.id] = [p for p in self.points[rxn.id] if p >= rxn.lower_bound and p<= rxn.upper_bound] 
+            if len(points_copy)!= len(self.points[rxn.id]):
+                pruned_reactions.append(rxn.id)
+        return pruned_reactions
     # analyses
     def descriptive_statistics(self):
         '''calculate the following:

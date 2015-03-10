@@ -108,6 +108,31 @@ class stage02_isotopomer_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
+    def reset_data_stage02_simulation(self,simulation_id_I):
+        """Remove fitted flux information by simulation_id"""
+        query_cmd = ('''DELETE FROM "data_stage02_isotopomer_simulationParameters"
+                WHERE simulation_id LIKE '(%s)';
+                DELETE FROM "data_stage02_isotopomer_fittedData"
+                WHERE simulation_id LIKE '(%s)';
+                DELETE FROM "data_stage02_isotopomer_fittedFluxes"
+                WHERE simulation_id LIKE '(%s)';
+                DELETE FROM "data_stage02_isotopomer_fittedFragments"
+                WHERE simulation_id LIKE '(%s)';
+                DELETE FROM "data_stage02_isotopomer_fittedMeasuredFluxResiduals"
+                WHERE simulation_id LIKE '(%s)';
+                DELETE FROM "data_stage02_isotopomer_fittedMeasuredFluxes"
+                WHERE simulation_id LIKE '(%s)';
+                DELETE FROM "data_stage02_isotopomer_fittedMeasuredFragmentResiduals"
+                WHERE simulation_id LIKE '(%s)';
+                DELETE FROM "data_stage02_isotopomer_fittedMeasuredFragments"
+                WHERE simulation_id LIKE '(%s)';
+                DELETE FROM "data_stage02_isotopomer_fittedNetFluxes"
+                WHERE simulation_id LIKE '(%s)';
+        ''' %(simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I))
+
+        data = self.session.execute(query_cmd);
+        self.session.commit();
+
     def initialize_datastage02(self):
         try:
             data_stage02_isotopomer_simulation.__table__.create(engine,True);

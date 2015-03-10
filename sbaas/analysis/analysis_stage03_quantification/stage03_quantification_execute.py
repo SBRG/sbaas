@@ -25,11 +25,15 @@ from resources.sampling import cobra_sampling,cobra_sampling_n
 
 class stage03_quantification_execute():
     '''class for quantitative metabolomics analysis'''
-    def __init__(self):
+    def __init__(self,data_dir_I=None):
         self.session = Session();
         self.stage03_quantification_query = stage03_quantification_query();
         self.calculate = base_calculate();
         self.models = {};
+        if data_dir_I:
+            self.data_dir = data_dir_I;
+        else:
+            self.data_dir=None;
     # analyses:
     def execute_makeMetabolomicsData_intracellular(self,experiment_id_I,data_I=[],compartment_id_I='c'):
         '''Get the currated metabolomics data from data_stage01_quantification_averagesMIGeo'''
@@ -446,11 +450,10 @@ class stage03_quantification_execute():
                             print e;
                             print "Press any key to continue"
                             a=raw_input();
-                    self.session.commit();    
-    #TODO                
+                    self.session.commit();                   
     def execute_calculate_dG_p(self,experiment_id_I,model_ids_I = [],
                                time_points_I=[],sample_name_abbreviations_I=[]):
-        '''calculate dG0_r, dG_r, displacements, and perform a thermodynamic consistency check'''
+        '''calculate dG0_p and dG_p, and perform a thermodynamic consistency check'''
         
         # get the model ids:
         if model_ids_I:
@@ -547,7 +550,260 @@ class stage03_quantification_execute():
                             print e;
                             print "Press any key to continue"
                             a=raw_input();
-                    self.session.commit();                 
+                    self.session.commit();   
+    def execute_thermodynamicSampling(self,simulation_id_I,rxn_ids_I=[],
+                    inconsistent_dG_f_I=[],inconsistent_concentrations_I=[],
+                    inconsistent_tcc_I=[],
+                    measured_concentration_coverage_criteria_I=0.5,
+                    measured_dG_f_coverage_criteria_I=0.99):
+        '''execute a thermodynamic analysis using the thermodynamic
+        module for cobrapy'''
+
+        #Input:
+        #   inconsistent_dG_f_I = dG_f measured values to be substituted for estimated values
+        #   inconsistent_concentrations_I = concentration measured values to be substituted for estimated values
+        #   inconsistent_tcc_I = reactions considered feasible to be changed to infeasible so that dG0_r constraints do not break the model
+
+        print 'execute_thermodynamicSampling...'
+        # get simulation information
+        simulation_info_all = [];
+        simulation_info_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulation(simulation_id_I);
+        if not simulation_info_all:
+            print 'simulation not found!'
+            return;
+        simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get simulation parameters
+        simulation_parameters_all = [];
+        simulation_parameters_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulationParameters(simulation_id_I);
+        if not simulation_parameters_all:
+            print 'simulation not found!'
+            return;
+        simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get the cobra model
+        cobra_model = self.models[simulation_info['model_id']];
+        # copy the model
+        cobra_model_copy = cobra_model.copy();
+        # get rxn_ids
+        if rxn_ids_I:
+            rxn_ids = rxn_ids_I;
+        else:
+            rxn_ids = [];
+            rxn_ids = self.stage03_quantification_query.get_rows_experimentIDAndModelIDAndSampleNameAbbreviation_dataStage03QuantificationMeasuredFluxes(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['sample_name_abbreviation']);
+        for rxn in rxn_ids:
+            # constrain the model
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).lower_bound = rxn['flux_lb'];
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).upper_bound = rxn['flux_ub'];
+        # make the model irreversible
+        convert_to_irreversible(cobra_model_copy);
+        # get otherData
+        pH,temperature,ionic_strength = {},{},{}
+        pH,temperature,ionic_strength = self.stage03_quantification_query.get_rowsFormatted_experimentIDAndTimePointAndSampleNameAbbreviation_dataStage03QuantificationOtherData(simulation_info['experiment_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        # load pH, ionic_strength, and temperature parameters
+        other_data = thermodynamics_otherData(pH_I=pH,temperature_I=temperature,ionic_strength_I=ionic_strength);
+        other_data.check_data();
+        # get dG_f data:
+        dG_f = {};
+        dG_f = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationDGf(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        dG_f_data = thermodynamics_dG_f_data(dG_f_I=dG_f);
+        dG_f_data.format_dG_f();
+        dG_f_data.generate_estimated_dG_f(cobra_model)
+        dG_f_data.check_data(); 
+        # remove an inconsistent dGf values
+        if inconsistent_dG_f_I: dG_f_data.remove_measured_dG_f(inconsistent_dG_f_I)
+        # query metabolomicsData
+        concentrations = [];
+        concentrations = self.stage03_quantification_query.get_rowsDict_experimentIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationMetabolomicsData(simulation_info['experiment_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        # load metabolomicsData
+        metabolomics_data = thermodynamics_metabolomicsData(measured_concentrations_I=concentrations);
+        metabolomics_data.generate_estimated_metabolomics_data(cobra_model);
+        # remove an inconsistent concentration values
+        if inconsistent_concentrations_I: metabolomics_data.remove_measured_concentrations(inconsistent_concentrations_I);
+        # get dG0r, dGr, and tcc data
+        dG0_r = {};
+        dG0_r = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationDG0r(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation'])
+        measured_concentration_coverage,measured_dG_f_coverage,feasible = {},{},{};
+        measured_concentration_coverage,measured_dG_f_coverage,feasible = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationTCC(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation'],0,0)
+        tcc = thermodynamics_dG_r_data(dG0_r_I = dG0_r,
+                 dG_r_coverage_I = measured_dG_f_coverage,
+                 metabolomics_coverage_I = measured_concentration_coverage,
+                 thermodynamic_consistency_check_I = feasible);
+        if inconsistent_tcc_I: tcc.change_feasibleReactions(inconsistent_tcc_I);
+        # apply tfba constraints
+        tfba = thermodynamics_tfba()
+        tfba._add_conc_ln_constraints_transport(cobra_model_copy, metabolomics_data.measured_concentrations, metabolomics_data.estimated_concentrations,
+                                             tcc.dG0_r, other_data.pH,other_data.temperature,tcc.metabolomics_coverage,
+                                             tcc.dG_r_coverage, tcc.thermodynamic_consistency_check,
+                                             measured_concentration_coverage_criteria_I, measured_dG_f_coverage_criteria_I,
+                                             use_measured_concentrations=True,use_measured_dG0_r=True);
+        # Test model
+        if self.test_model(cobra_model_I=cobra_model_copy):
+            sampling = cobra_sampling(data_dir_I = self.data_dir);
+            if simulation_parameters['sampler_id']=='gpSampler':
+                filename_model = simulation_id_I + '.mat';
+                filename_script = simulation_id_I + '.m';
+                filename_points = simulation_id_I + '_points' + '.mat';
+                sampling.export_sampling_matlab(cobra_model=cobra_model_copy,filename_model=filename_model,filename_script=filename_script,filename_points=filename_points,\
+                    solver_id_I = simulation_parameters['solver_id'],\
+                    n_points_I = simulation_parameters['n_points'],\
+                    n_steps_I = simulation_parameters['n_steps'],\
+                    max_time_I = simulation_parameters['max_time']);
+            elif simulation_parameters['sampler_id']=='optGpSampler':
+                return;
+            else:
+                print 'sampler_id not recognized';
+        else:
+            print 'no solution found!';  
+    def execute_addMeasuredFluxes(self,experiment_id_I, ko_list={}, flux_dict={}, model_ids_I=[], sample_name_abbreviations_I=[]):
+        '''Add flux data for physiological simulation'''
+        #Input:
+            #flux_dict = {};
+            #flux_dict['iJO1366'] = {};
+            #flux_dict['iJO1366'] = {};
+            #flux_dict['iJO1366']['sna'] = {};
+            #flux_dict['iJO1366']['sna']['Ec_biomass_iJO1366_WT_53p95M'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':0.704*0.9,'ub':0.704*1.1};
+            #flux_dict['iJO1366']['sna']['EX_ac_LPAREN_e_RPAREN_'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':2.13*0.9,'ub':2.13*1.1};
+            #flux_dict['iJO1366']['sna']['EX_o2_LPAREN_e_RPAREN__reverse'] = {'ave':None,'units':'mmol*gDCW-1*hr-1','stdev':None,'lb':0,'ub':16};
+            #flux_dict['iJO1366']['sna']['EX_glc_LPAREN_e_RPAREN_'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':-7.4*1.1,'ub':-7.4*0.9};
+
+        data_O = [];
+        # get the model ids:
+        if model_ids_I:
+            model_ids = model_ids_I;
+        else:
+            model_ids = [];
+            model_ids = self.stage03_quantification_query.get_modelID_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
+        for model_id in model_ids:
+            # get sample names and sample name abbreviations
+            if sample_name_abbreviations_I:
+                sample_name_abbreviations = sample_name_abbreviations_I;
+            else:
+                sample_name_abbreviations = [];
+                sample_name_abbreviations = self.stage03_quantification_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage03QuantificationSimulation(experiment_id_I,model_id);
+            for sna_cnt,sna in enumerate(sample_name_abbreviations):
+                print 'Adding experimental fluxes for sample name abbreviation ' + sna;
+                if flux_dict:
+                    for k,v in flux_dict[model_id][sna].iteritems():
+                        # record the data
+                        data_tmp = {'experiment_id':experiment_id_I,
+                                'model_id':model_id,
+                                'sample_name_abbreviation':sna,
+                                'rxn_id':k,
+                                'flux_average':v['ave'],
+                                'flux_stdev':v['stdev'],
+                                'flux_lb':v['lb'], 
+                                'flux_ub':v['ub'],
+                                'flux_units':v['units'],
+                                'used_':True,
+                                'comment_':None}
+                        data_O.append(data_tmp);
+                        #add data to the database
+                        row = [];
+                        row = data_stage03_quantification_measuredFluxes(
+                            experiment_id_I,
+                            model_id,
+                            sna,
+                            k,
+                            v['ave'],
+                            v['stdev'],
+                            v['lb'], 
+                            v['ub'],
+                            v['units'],
+                            True,
+                            None);
+                        self.session.add(row);
+                if ko_list:
+                    for k in ko_list[model_id][sna]:
+                        # record the data
+                        data_tmp = {'experiment_id':experiment_id_I,
+                                'model_id':model_id,
+                                'sample_name_abbreviation':sna,
+                                'rxn_id':k,
+                                'flux_average':0.0,
+                                'flux_stdev':0.0,
+                                'flux_lb':0.0, 
+                                'flux_ub':0.0,
+                                'flux_units':'mmol*gDCW-1*hr-1',
+                                'used_':True,
+                                'comment_':None}
+                        data_O.append(data_tmp);
+                        #add data to the database
+                        row = [];
+                        row = data_stage03_quantification_measuredFluxes(
+                            experiment_id_I,
+                            model_id,
+                            sna,
+                            k,
+                            0.0,
+                            0.0,
+                            0.0, 
+                            0.0,
+                            'mmol*gDCW-1*hr-1',
+                            True,
+                            None);
+                        self.session.add(row);
+        self.session.commit();
+    def execute_makeMeasuredFluxes(self,experiment_id_I, metID2RxnID_I = {}, sample_name_abbreviations_I = [], met_ids_I = []):
+        '''Collect and flux data from data_stage01_physiology_ratesAverages for physiological simulation'''
+        #Input:
+        #   metID2RxnID_I = e.g. {'glc-D':{'model_id':'140407_iDM2014','rxn_id':'EX_glc_LPAREN_e_RPAREN_'},
+        #                        {'ac':{'model_id':'140407_iDM2014','rxn_id':'EX_ac_LPAREN_e_RPAREN_'},
+        #                        {'succ':{'model_id':'140407_iDM2014','rxn_id':'EX_succ_LPAREN_e_RPAREN_'},
+        #                        {'lac-L':{'model_id':'140407_iDM2014','rxn_id':'EX_lac_DASH_L_LPAREN_e_RPAREN_'},
+        #                        {'biomass':{'model_id':'140407_iDM2014','rxn_id':'Ec_biomass_iJO1366_WT_53p95M'}};
+
+        data_O = [];
+        # get sample names and sample name abbreviations
+        if sample_name_abbreviations_I:
+            sample_name_abbreviations = sample_name_abbreviations_I;
+        else:
+            sample_name_abbreviations = [];
+            sample_name_abbreviations = self.stage03_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
+        for sna in sample_name_abbreviations:
+            print 'Collecting experimental fluxes for sample name abbreviation ' + sna;
+            # get met_ids
+            if not met_ids_I:
+                met_ids = [];
+                met_ids = self.stage03_quantification_query.get_metID_experimentIDAndSampleNameAbbreviation_dataStage01PhysiologyRatesAverages(experiment_id_I,sna);
+            else:
+                met_ids = met_ids_I;
+            if not(met_ids): continue #no component information was found
+            for met in met_ids:
+                print 'Collecting experimental fluxes for metabolite ' + met;
+                # get rateData
+                slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = None,None,None,None,None,None,None;
+                slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = self.stage03_quantification_query.get_rateData_experimentIDAndSampleNameAbbreviationAndMetID_dataStage01PhysiologyRatesAverages(experiment_id_I,sna,met);
+                rate_stdev = sqrt(rate_var);
+                model_id = metID2RxnID_I[met]['model_id'];
+                rxn_id = metID2RxnID_I[met]['rxn_id'];
+                # record the data
+                data_tmp = {'experiment_id':experiment_id_I,
+                        'model_id':model_id,
+                        'sample_name_abbreviation':sna,
+                        'rxn_id':rxn_id,
+                        'flux_average':rate_average,
+                        'flux_stdev':rate_stdev,
+                        'flux_lb':rate_lb, 
+                        'flux_ub':rate_ub,
+                        'flux_units':rate_units,
+                        'used_':True,
+                        'comment_':None}
+                data_O.append(data_tmp);
+                #add data to the database
+                row = [];
+                row = data_stage03_quantification_measuredFluxes(
+                    experiment_id_I,
+                    model_id,
+                    sna,
+                    rxn_id,
+                    rate_average,
+                    rate_stdev,
+                    rate_lb, 
+                    rate_ub,
+                    rate_units,
+                    True,
+                    None);
+                self.session.add(row);
+        self.session.commit();              
     # data_stage01_quantification initializations
     def drop_dataStage03_quantification(self):
         try:
@@ -779,14 +1035,29 @@ class stage03_quantification_execute():
             else:
                 print 'file_type not supported'
             self.models[model_id]=cobra_model;
-    def execute_thermodynamicSampling(self,simulation_id_I,rxn_ids_I=[],
+
+    #TODO:
+    def execute_compareThermodynamicStates(self,experiment_id_I):
+        '''perform a  pairwise comparison of thermodynamic states'''
+
+        print 'execute_compareThermodynamicStates'
+
+    def execute_visualizeThermodynamicStates(self,experiment_id_I):
+        '''exports thermodynamic data for visualization using escher'''
+
+        print 'execute_visualizeThermodynamicStates'
+    def execute_makeEstimatedFluxes(self,experimentID2IsotopomerSimulationID_I = {},sample_name_abbreviations_I = [],snaIsotopomer2snaPhysiology_I={}):
+        '''Collect estimated flux data from data_stage02_istopomer_netFluxes for thermodynamic simulation'''
+        return
+
+    def check_thermodynamicConstraints(self,simulation_id_I,rxn_ids_I=[],
                     inconsistent_dG_f_I=[],inconsistent_concentrations_I=[],
                     measured_concentration_coverage_criteria_I=0.5,
-                    measured_dG_f_coverage_criteria_I=0.99):
-        '''execute a thermodynamic analysis using the thermodynamic
-        module for cobrapy'''
-
-        print 'execute_thermodynamicSampling...'
+                    measured_dG_f_coverage_criteria_I=0.99,
+                    n_checks_I = 5,
+                    diagnose_solver_I='glpk',diagnose_threshold_I=0.98,diagnose_break_I=0.1):
+        
+        print 'check_thermodynamicConstraints...'
         # get simulation information
         simulation_info_all = [];
         simulation_info_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulation(simulation_id_I);
@@ -851,193 +1122,143 @@ class stage03_quantification_execute():
                  thermodynamic_consistency_check_I = feasible);
         # apply tfba constraints
         tfba = thermodynamics_tfba()
-        tfba.tsampling_conc_ln_matlab_export(cobra_model_copy, metabolomics_data.measured_concentrations, metabolomics_data.estimated_concentrations,
+        thermodynamic_constraints_check,diagnose_variables_1,diagnose_variables_2,diagnose_variables_3 = tfba.check_conc_ln_constraints_transport(cobra_model_copy,
+                                             metabolomics_data.measured_concentrations, metabolomics_data.estimated_concentrations,
                                              tcc.dG0_r, other_data.pH,other_data.temperature,tcc.metabolomics_coverage,
                                              tcc.dG_r_coverage, tcc.thermodynamic_consistency_check,
                                              measured_concentration_coverage_criteria_I, measured_dG_f_coverage_criteria_I,
-                                             use_measured_concentrations=True,use_measured_dG0_r=True, solver=simulation_parameters['solver_id']);
-        # Test model
+                                             n_checks_I = 5,
+                                             diagnose_solver_I='gurobi',diagnose_threshold_I=0.98,diagnose_break_I=0.1);
+
+        return thermodynamic_constraints_check,diagnose_variables_1,diagnose_variables_2,diagnose_variables_3;
+    def execute_analyzeThermodynamicSamplingPoints(self,simulation_id_I,rxn_ids_I=[],
+                    inconsistent_dG_f_I=[],inconsistent_concentrations_I=[],
+                    inconsistent_tcc_I=[],
+                    measured_concentration_coverage_criteria_I=0.5,
+                    measured_dG_f_coverage_criteria_I=0.99):
+        '''Load and analyze sampling points'''
+
+        print 'analyzing sampling points';
+        
+        # get simulation information
+        simulation_info_all = [];
+        simulation_info_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulation(simulation_id_I);
+        if not simulation_info_all:
+            print 'simulation not found!'
+            return;
+        simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get simulation parameters
+        simulation_parameters_all = [];
+        simulation_parameters_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulationParameters(simulation_id_I);
+        if not simulation_parameters_all:
+            print 'simulation not found!'
+            return;
+        simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
+        # get the cobra model
+        cobra_model = self.models[simulation_info['model_id']];
+        # copy the model
+        cobra_model_copy = cobra_model.copy();
+        # get rxn_ids
+        if rxn_ids_I:
+            rxn_ids = rxn_ids_I;
+        else:
+            rxn_ids = [];
+            rxn_ids = self.stage03_quantification_query.get_rows_experimentIDAndModelIDAndSampleNameAbbreviation_dataStage03QuantificationMeasuredFluxes(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['sample_name_abbreviation']);
+        for rxn in rxn_ids:
+            # constrain the model
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).lower_bound = rxn['flux_lb'];
+            cobra_model_copy.reactions.get_by_id(rxn['rxn_id']).upper_bound = rxn['flux_ub'];
+        # make the model irreversible
+        convert_to_irreversible(cobra_model_copy);
+        # get otherData
+        pH,temperature,ionic_strength = {},{},{}
+        pH,temperature,ionic_strength = self.stage03_quantification_query.get_rowsFormatted_experimentIDAndTimePointAndSampleNameAbbreviation_dataStage03QuantificationOtherData(simulation_info['experiment_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        # load pH, ionic_strength, and temperature parameters
+        other_data = thermodynamics_otherData(pH_I=pH,temperature_I=temperature,ionic_strength_I=ionic_strength);
+        other_data.check_data();
+        # get dG_f data:
+        dG_f = {};
+        dG_f = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationDGf(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        dG_f_data = thermodynamics_dG_f_data(dG_f_I=dG_f);
+        dG_f_data.format_dG_f();
+        dG_f_data.generate_estimated_dG_f(cobra_model)
+        dG_f_data.check_data(); 
+        # remove an inconsistent dGf values
+        if inconsistent_dG_f_I: dG_f_data.remove_measured_dG_f(inconsistent_dG_f_I)
+        # query metabolomicsData
+        concentrations = [];
+        concentrations = self.stage03_quantification_query.get_rowsDict_experimentIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationMetabolomicsData(simulation_info['experiment_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation']);
+        # load metabolomicsData
+        metabolomics_data = thermodynamics_metabolomicsData(measured_concentrations_I=concentrations);
+        metabolomics_data.generate_estimated_metabolomics_data(cobra_model);
+        # remove an inconsistent concentration values
+        if inconsistent_concentrations_I: metabolomics_data.remove_measured_concentrations(inconsistent_concentrations_I);
+        # get dG0r, dGr, and tcc data
+        dG0_r = {};
+        dG0_r = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationDG0r(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation'])
+        measured_concentration_coverage,measured_dG_f_coverage,feasible = {},{},{};
+        measured_concentration_coverage,measured_dG_f_coverage,feasible = self.stage03_quantification_query.get_rowsDict_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationTCC(simulation_info['experiment_id'],simulation_info['model_id'],simulation_info['time_point'],simulation_info['sample_name_abbreviation'],0,0)
+        tcc = thermodynamics_dG_r_data(dG0_r_I = dG0_r,
+                 dG_r_coverage_I = measured_dG_f_coverage,
+                 metabolomics_coverage_I = measured_concentration_coverage,
+                 thermodynamic_consistency_check_I = feasible);
+        if inconsistent_tcc_I: tcc.change_feasibleReactions(inconsistent_tcc_I);
+        # apply tfba constraints
+        tfba = thermodynamics_tfba()
+        tfba._add_conc_ln_constraints_transport(cobra_model_copy, metabolomics_data.measured_concentrations, metabolomics_data.estimated_concentrations,
+                                             tcc.dG0_r, other_data.pH,other_data.temperature,tcc.metabolomics_coverage,
+                                             tcc.dG_r_coverage, tcc.thermodynamic_consistency_check,
+                                             measured_concentration_coverage_criteria_I, measured_dG_f_coverage_criteria_I,
+                                             use_measured_concentrations=True,use_measured_dG0_r=True);
+        # Test each model
         if self.test_model(cobra_model_I=cobra_model_copy):
-            sampling = cobra_sampling(data_dir_I = self.data_dir);
+            sampling = cobra_sampling(data_dir_I = self.data_dir,model_I = cobra_model_copy);
             if simulation_parameters['sampler_id']=='gpSampler':
-                filename_model = simulation_id_I + '.mat';
-                filename_script = simulation_id_I + '.m';
+                # load the results of sampling
                 filename_points = simulation_id_I + '_points' + '.mat';
-                sampling.export_sampling_matlab(cobra_model=cobra_model_copy,filename_model=filename_model,filename_script=filename_script,filename_points=filename_points,\
-                    solver_id_I = simulation_parameters['solver_id'],\
-                    n_points_I = simulation_parameters['n_points'],\
-                    n_steps_I = simulation_parameters['n_steps'],\
-                    max_time_I = simulation_parameters['max_time']);
+                sampling.get_points_matlab(filename_points,'sampler_out');
+                # check if points were sampled outside the solution space
+                pruned_reactions = sampling.remove_points_notInSolutionSpace();
+                ## check if the model contains loops
+                #sampling.simulate_loops(data_fva=settings.workspace_data + '/loops_fva_tmp.json');
+                #sampling.find_loops(data_fva=settings.workspace_data + '/loops_fva_tmp.json');
+                #sampling.remove_loopsFromPoints();
+                sampling.descriptive_statistics();
             elif simulation_parameters['sampler_id']=='optGpSampler':
                 return;
             else:
                 print 'sampler_id not recognized';
-        else:
-            print 'no solution found!';  
-
-    def execute_compareThermodynamicStates(self,experiment_id_I):
-        '''perform a  pairwise comparison of thermodynamic states'''
-
-        print 'execute_compareThermodynamicStates'
-
-    def execute_visualizeThermodynamicStates(self,experiment_id_I):
-        '''exports thermodynamic data for visualization using escher'''
-
-        print 'execute_visualizeThermodynamicStates'
-
-    #TODO:
-    def execute_addMeasuredFluxes(self,experiment_id_I, ko_list={}, flux_dict={}, model_ids_I=[], sample_name_abbreviations_I=[]):
-        '''Add flux data for physiological simulation'''
-        #Input:
-            #flux_dict = {};
-            #flux_dict['iJO1366'] = {};
-            #flux_dict['iJO1366'] = {};
-            #flux_dict['iJO1366']['sna'] = {};
-            #flux_dict['iJO1366']['sna']['Ec_biomass_iJO1366_WT_53p95M'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':0.704*0.9,'ub':0.704*1.1};
-            #flux_dict['iJO1366']['sna']['EX_ac_LPAREN_e_RPAREN_'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':2.13*0.9,'ub':2.13*1.1};
-            #flux_dict['iJO1366']['sna']['EX_o2_LPAREN_e_RPAREN__reverse'] = {'ave':None,'units':'mmol*gDCW-1*hr-1','stdev':None,'lb':0,'ub':16};
-            #flux_dict['iJO1366']['sna']['EX_glc_LPAREN_e_RPAREN_'] = {'ave':None,'stdev':None,'units':'mmol*gDCW-1*hr-1','lb':-7.4*1.1,'ub':-7.4*0.9};
-
-        data_O = [];
-        # get the model ids:
-        if model_ids_I:
-            model_ids = model_ids_I;
-        else:
-            model_ids = [];
-            model_ids = self.stage03_quantification_query.get_modelID_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
-        for model_id in model_ids:
-            # get sample names and sample name abbreviations
-            if sample_name_abbreviations_I:
-                sample_name_abbreviations = sample_name_abbreviations_I;
-            else:
-                sample_name_abbreviations = [];
-                sample_name_abbreviations = self.stage03_quantification_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage03QuantificationSimulation(experiment_id_I,model_id);
-            for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                print 'Adding experimental fluxes for sample name abbreviation ' + sna;
-                if flux_dict:
-                    for k,v in flux_dict[model_id][sna].iteritems():
-                        # record the data
-                        data_tmp = {'experiment_id':experiment_id_I,
-                                'model_id':model_id,
-                                'sample_name_abbreviation':sna,
-                                'rxn_id':k,
-                                'flux_average':v['ave'],
-                                'flux_stdev':v['stdev'],
-                                'flux_lb':v['lb'], 
-                                'flux_ub':v['ub'],
-                                'flux_units':v['units'],
-                                'used_':True,
-                                'comment_':None}
-                        data_O.append(data_tmp);
-                        #add data to the database
-                        row = [];
-                        row = data_stage03_quantification_measuredFluxes(
-                            experiment_id_I,
-                            model_id,
-                            sna,
-                            k,
-                            v['ave'],
-                            v['stdev'],
-                            v['lb'], 
-                            v['ub'],
-                            v['units'],
-                            True,
-                            None);
-                        self.session.add(row);
-                if ko_list:
-                    for k in ko_list[model_id][sna]:
-                        # record the data
-                        data_tmp = {'experiment_id':experiment_id_I,
-                                'model_id':model_id,
-                                'sample_name_abbreviation':sna,
-                                'rxn_id':k,
-                                'flux_average':0.0,
-                                'flux_stdev':0.0,
-                                'flux_lb':0.0, 
-                                'flux_ub':0.0,
-                                'flux_units':'mmol*gDCW-1*hr-1',
-                                'used_':True,
-                                'comment_':None}
-                        data_O.append(data_tmp);
-                        #add data to the database
-                        row = [];
-                        row = data_stage03_quantification_measuredFluxes(
-                            experiment_id_I,
-                            model_id,
-                            sna,
-                            k,
-                            0.0,
-                            0.0,
-                            0.0, 
-                            0.0,
-                            'mmol*gDCW-1*hr-1',
-                            True,
-                            None);
-                        self.session.add(row);
-        self.session.commit();
-    def execute_makeMeasuredFluxes(self,experiment_id_I, metID2RxnID_I = {}, sample_name_abbreviations_I = [], met_ids_I = []):
-        '''Collect and flux data from data_stage01_physiology_ratesAverages for physiological simulation'''
-        #Input:
-        #   metID2RxnID_I = e.g. {'glc-D':{'model_id':'140407_iDM2014','rxn_id':'EX_glc_LPAREN_e_RPAREN_'},
-        #                        {'ac':{'model_id':'140407_iDM2014','rxn_id':'EX_ac_LPAREN_e_RPAREN_'},
-        #                        {'succ':{'model_id':'140407_iDM2014','rxn_id':'EX_succ_LPAREN_e_RPAREN_'},
-        #                        {'lac-L':{'model_id':'140407_iDM2014','rxn_id':'EX_lac_DASH_L_LPAREN_e_RPAREN_'},
-        #                        {'biomass':{'model_id':'140407_iDM2014','rxn_id':'Ec_biomass_iJO1366_WT_53p95M'}};
-
-        data_O = [];
-        # get sample names and sample name abbreviations
-        if sample_name_abbreviations_I:
-            sample_name_abbreviations = sample_name_abbreviations_I;
-        else:
-            sample_name_abbreviations = [];
-            sample_name_abbreviations = self.stage03_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
-        for sna in sample_name_abbreviations:
-            print 'Collecting experimental fluxes for sample name abbreviation ' + sna;
-            # get met_ids
-            if not met_ids_I:
-                met_ids = [];
-                met_ids = self.stage03_quantification_query.get_metID_experimentIDAndSampleNameAbbreviation_dataStage01PhysiologyRatesAverages(experiment_id_I,sna);
-            else:
-                met_ids = met_ids_I;
-            if not(met_ids): continue #no component information was found
-            for met in met_ids:
-                print 'Collecting experimental fluxes for metabolite ' + met;
-                # get rateData
-                slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = None,None,None,None,None,None,None;
-                slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = self.stage03_quantification_query.get_rateData_experimentIDAndSampleNameAbbreviationAndMetID_dataStage01PhysiologyRatesAverages(experiment_id_I,sna,met);
-                rate_stdev = sqrt(rate_var);
-                model_id = metID2RxnID_I[met]['model_id'];
-                rxn_id = metID2RxnID_I[met]['rxn_id'];
-                # record the data
-                data_tmp = {'experiment_id':experiment_id_I,
-                        'model_id':model_id,
-                        'sample_name_abbreviation':sna,
-                        'rxn_id':rxn_id,
-                        'flux_average':rate_average,
-                        'flux_stdev':rate_stdev,
-                        'flux_lb':rate_lb, 
-                        'flux_ub':rate_ub,
-                        'flux_units':rate_units,
-                        'used_':True,
-                        'comment_':None}
-                data_O.append(data_tmp);
-                #add data to the database
-                row = [];
-                row = data_stage03_quantification_measuredFluxes(
-                    experiment_id_I,
-                    model_id,
-                    sna,
-                    rxn_id,
-                    rate_average,
-                    rate_stdev,
-                    rate_lb, 
-                    rate_ub,
-                    rate_units,
+            # add data to the database
+            row = None;
+            row = data_stage03_quantification_sampledPoints(
+                simulation_id_I,
+                sampling.simulation_dateAndTime,
+                sampling.mixed_fraction,
+                sampling.matlab_path+'/'+filename_points,
+                sampling.loops,
+                True,
+                None);
+            self.session.add(row);
+            for k,v in self.sampling.points_statistics.iteritems():
+                row = None;
+                row = data_stage03_quantification_sampledData(
+                    simulation_id_I,
+                    sampling.simulation_dateAndTime,
+                    k,
+                    'mmol*gDW-1*hr-1',
+                    None, #v['points'],
+                    v['ave'],
+                    v['var'],
+                    v['lb'],
+                    v['ub'],
+                    v['min'],
+                    v['max'],
+                    v['median'],
+                    v['iq_1'],
+                    v['iq_3'],
                     True,
                     None);
                 self.session.add(row);
-        self.session.commit();
-    def execute_makeEstimatedFluxes(self,experimentID2IsotopomerSimulationID_I = {},sample_name_abbreviations_I = [],snaIsotopomer2snaPhysiology_I={}):
-        '''Collect estimated flux data from data_stage02_istopomer_netFluxes for thermodynamic simulation'''
-        return
-            
+        else:
+            print 'no solution found!';
+        self.session.commit()  
