@@ -885,7 +885,7 @@ class stage01_isotopomer_execute():
                 sample_types_lst = [];
                 for st in sample_types:
                     sample_name_abbreviations_tmp = [];
-                    sample_name_abbreviations_tmp = self.get_sampleNameAbbreviations_experimentIDAndSampleTypeAndTimePoint_peakSpectrum(experiment_id_I,st,tp);
+                    sample_name_abbreviations_tmp = self.stage01_isotopomer_query.get_sampleNameAbbreviations_experimentIDAndSampleTypeAndTimePoint_peakSpectrum(experiment_id_I,st,tp);
                     sample_name_abbreviations.extend(sample_name_abbreviations_tmp);
                     sample_types_lst.extend([st for i in range(len(sample_name_abbreviations_tmp))]);
             for sna_cnt,sna in enumerate(sample_name_abbreviations):

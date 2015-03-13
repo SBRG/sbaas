@@ -4831,8 +4831,17 @@ class stage02_isotopomer_mappingUtilities():
                     #clear reaction
                     irm.clear_reactionMapping();
 
-
-isotopomer_rxns_net = {
+class isotopomer_netRxns():
+    def __init__(self):
+        self.isotopomer_rxns_net = {};
+        self.isotopomer_rxns_net = self.define_netRxns();
+    def define_netRxns(self):
+        isotopomer_rxns_net = {};
+        isotopomer_rxns_net.update(self.define_netRxns_iDM2014_reversible());
+        isotopomer_rxns_net.update(self.define_netRxns_RL2013_reversible());
+        return isotopomer_rxns_net
+    def define_netRxns_iDM2014_reversible(self):
+        isotopomer_rxns_net = {
         'ptrc_to_4abut_1':{'reactions':['PTRCTA','ABUTD'],
                            'stoichiometry':[1,1]},
         'ptrc_to_4abut_2':{'reactions':['GGPTRCS','GGPTRCO','GGGABADr','GGGABAH'],
@@ -4948,3 +4957,36 @@ isotopomer_rxns_net = {
         'LIPOPOLYSACCHARIDE_4':{'reactions':['KDOPP','KDOCT2','KDOPS'],'stoichiometry':[1,1,1]},
         'ASTPathway':{'reactions':['AST','SADH','SGDS','SGSAD','SOTA'],'stoichiometry':[1,1,1,1,1]}
         };
+        return isotopomer_rxns_net
+    def define_netRxns_RL2013_reversible(self):
+        isotopomer_rxns_net = {
+        'PTAr_ACKr_ACS':{'reactions':['PTAr','ACKr','ACS'],
+                           'stoichiometry':[1,-1,-1]}, #acetate secretion
+        'ACONTa_ACONTb':{'reactions':['ACONTa','ACONTb'],
+                           'stoichiometry':[1,1]},
+        'G6PDH2r_PGL':{'reactions':['G6PDH2r','PGL'],
+                           'stoichiometry':[1,1]},
+        'GAPD_PGK':{'reactions':['GAPD','PGK'], #glycolysis
+                           'stoichiometry':[1,-1]},
+        'PGM':{'reactions':['PGM','ENO'], #glycolysis
+                           'stoichiometry':[-1,1]},
+        'SUCCOAS':{'reactions':['SUCOAS'], #mispelling
+                           'stoichiometry':[1]}
+        #TODO: amino acid synthesis reactions
+        };
+        return isotopomer_rxns_net;
+
+class isotopomer_fluxSplits():
+    def __init__(self):
+        self.isotopomer_splits = {};
+        self.isotopomer_splits = self.define_fluxSplits();
+    def define_fluxSplits(self):
+        isotopomer_splits = {};
+        isotopomer_splits['g6p_2_f6p_or_6pgc']=['PGI','G6PDH2r'];
+        isotopomer_splits['6pgc_2_2ddg6p_or_ru5p-D']=['EDD','GND'];
+        isotopomer_splits['pep_2_oaa_or_pyr']=['PPC','PYK','GLCptspp'];
+        isotopomer_splits['accoa_2_ac_or_cit']=['PTAr','CS'];
+        isotopomer_splits['icit_2_akg_or_glx']=['ICDHyr','ICL'];
+        isotopomer_splits['glc-D_2_g6p']=['HEX1','GLCptspp'];
+        isotopomer_splits['mal-L_2_oaa_or_pyr']=['ME1','ME2','MDH'];
+        return isotopomer_splits
