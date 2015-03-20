@@ -2739,13 +2739,17 @@ class stage02_isotopomer_io(base_analysis):
                 fragment_string = re.sub('_LPARANTHES_','[(]',fragment_string)
                 fragment_string = re.sub('_RPARANTHES_','[)]',fragment_string)
                 fragment_list = fragment_string.split('_');
-                fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2]])
+                #fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2]])
+                fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2],fragment_list[3]])
                 fragment_id = re.sub('-','_DASH_',fragment_id)
                 fragment_id = re.sub('[(]','_LPARANTHES_',fragment_id)
                 fragment_id = re.sub('[)]','_RPARANTHES_',fragment_id)
-                fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
-                time_point = fragment_list[4];
+                #fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
+                fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[4]);
+                #time_point = fragment_list[4];
+                time_point = fragment_list[5];
                 #exp_id = fragment_list[5];
+                #exp_id = fragment_list[6];
                 if f_mnt_res_expt[cnt] in simulation_info['experiment_id']:
                     fittedMeasuredFragmentResiduals.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
@@ -2891,13 +2895,16 @@ class stage02_isotopomer_io(base_analysis):
                 fragment_string = re.sub('_LPARANTHES_','[(]',fragment_string)
                 fragment_string = re.sub('_RPARANTHES_','[)]',fragment_string)
                 fragment_list = fragment_string.split('_');
-                #fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2]])
+                #fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2],fragment_list[3]])
                 #fragment_id = re.sub('-','_DASH_',fragment_id)
                 #fragment_id = re.sub('[(]','_LPARANTHES_',fragment_id)
                 #fragment_id = re.sub('[)]','_RPARANTHES_',fragment_id)
-                fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
-                time_point = fragment_list[4];
+                #fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
+                fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[4]);
+                #time_point = fragment_list[4];
+                time_point = fragment_list[5];
                 #expt_id = fragment_list[5];
+                #expt_id = fragment_list[6];
                 if expt in simulation_info['experiment_id']:
                     fittedFragments.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
@@ -2953,8 +2960,9 @@ class stage02_isotopomer_io(base_analysis):
                          model_ids_dict_I={},
                      mapping_ids_I=[],
                      sample_name_abbreviations_I=[],
+                     map_ids_I=[],
                      filename=[settings.visualization_data,'/isotopomer/metabolicmap/','fluxomics/']):
-        '''export concentration and dG_r data for visualization'''
+        '''export estimated fluxes for visualization'''
         
         # get the model ids:
         filter_O = {};
@@ -3034,14 +3042,19 @@ class stage02_isotopomer_io(base_analysis):
                             fluxes.update(fluxes_O);
                         else:
                             fluxes.update({k:v});
-                    for map_id in [
+                    # map_ids
+                    if map_ids_I:
+                        map_ids = map_ids_I;
+                    else:
+                        map_ids = [
                         'AlternateCarbonMetabolism',\
                         'AminoAcidMetabolism',\
                         'CofactorBiosynthesis',\
                         'InorganicIonMetabolism',\
                         'NucleotideMetabolism',\
                         'CentralMetabolism'
-                        ]:
+                        ];
+                    for map_id in map_ids:
                         filter_map_str = 'model_id/'+ model_id.replace('_','') +'/mapping_id/'+mapping.replace('_','')+'/sample/'+sna.replace('_','')+'/map_id/'+map_id.replace('_','');
                         filter_O['map_id'].append(filter_map_str);
                         print 'exporting fluxomics analysis for map_id ' + map_id;
@@ -3080,8 +3093,10 @@ class stage02_isotopomer_io(base_analysis):
         #   rxns_O = list, rxn_ids
         #   fluxes_O = list, floats
         #   fluxes_O_dict = dict, rxn_id:flux
+        
 
-        from stage02_isotopomer_dependencies import isotopomer_rxns_net
+        from stage02_isotopomer_dependencies import isotopomer_netRxns
+        netRxns = isotopomer_netRxns();
 
         rxns_O = [];
         fluxes_O = [];
@@ -3090,9 +3105,9 @@ class stage02_isotopomer_io(base_analysis):
         if not flux_I:
             #print 'reaction has no flux';
             return fluxes_O_dict;
-        elif net_rxn_I in isotopomer_rxns_net.keys():
-            rxns_O = isotopomer_rxns_net[net_rxn_I]['reactions'];
-            stoichiometry = isotopomer_rxns_net[net_rxn_I]['stoichiometry'];
+        elif net_rxn_I in netRxns.isotopomer_rxns_net.keys():
+            rxns_O = netRxns.isotopomer_rxns_net[net_rxn_I]['reactions'];
+            stoichiometry = netRxns.isotopomer_rxns_net[net_rxn_I]['stoichiometry'];
             # change the direction of the fluxes according to the stoichiometry of the reactions
             fluxes_O = [s*flux_I for s in stoichiometry];
         else:

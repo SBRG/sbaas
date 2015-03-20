@@ -15,6 +15,11 @@ class data_stage02_isotopomer_simulation(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
+    __table_args__ = (
+            UniqueConstraint('experiment_id','model_id','mapping_id','sample_name_abbreviation','time_point'),
+            UniqueConstraint('simulation_id'),
+            )
+
     def __init__(self,
             simulation_id_I,
             experiment_id_I,

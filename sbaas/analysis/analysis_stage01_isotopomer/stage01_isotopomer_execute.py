@@ -1715,7 +1715,11 @@ class stage01_isotopomer_execute():
         #                                   'stdDev':fraction,
         #                                   'absDev':fraction}}
 
-        fragments_I = peakSpectrum_normalized_list_I[0].keys();
+        fragments_all = [];
+        for row in peakSpectrum_normalized_list_I:
+            fragments_all.extend(row.keys());
+        fragments_I = list(set(fragments_all));
+        #fragments_I = peakSpectrum_normalized_list_I[0].keys(); 
         peakSpectrum_theoretical = self.report_fragmentSpectrum_normMax(fragments_I,True);
 
         peakSpectrum_stats_O = {};
@@ -1781,7 +1785,11 @@ class stage01_isotopomer_execute():
         #                                   'stdDev':fraction,
         #                                   'absDev':fraction}}
 
-        fragments_I = peakSpectrum_normalized_list_I[0].keys();
+        fragments_all = [];
+        for row in peakSpectrum_normalized_list_I:
+            fragments_all.extend(row.keys());
+        fragments_I = list(set(fragments_all));
+        #fragments_I = peakSpectrum_normalized_list_I[0].keys(); 
         peakSpectrum_theoretical = self.report_fragmentSpectrum_normSum(fragments_I,True);
 
         peakSpectrum_stats_O = {};

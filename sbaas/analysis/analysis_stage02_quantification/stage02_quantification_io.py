@@ -315,3 +315,57 @@ class stage02_quantification_io(base_analysis):
         filename_str = filename[0]  + '/' +  experiment_id_I + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'w') as file:
             file.write(json_str);
+
+    def import_dataStage02QuantificationAnalysis_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_dataStage02QuantificationAnalysis(data.data);
+        data.clear_data();
+
+    def add_dataStage02QuantificationAnalysis(self, data_I):
+        '''add rows of data_stage02_quantification_analysis'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = data_stage02_quantification_analysis(
+                        d['analysis_id'],
+                        d['experiment_id'],
+                        d['sample_name_short'],
+                        d['time_point'],
+                        d['analysis_type'],
+                        d['used_'],
+                        d['comment_']);
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
+
+    def import_dataStage02QuantificationAnalysis_update(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.update_dataStage02QuantificationAnalysis(data.data);
+        data.clear_data();
+
+    def update_dataStage02QuantificationAnalysis(self,data_I):
+        '''update rows of data_stage02_quantification_analysis'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_update = self.session.query(data_stage02_quantification_analysis).filter(
+                            data_stage02_quantification_analysis.id.like(d['id'])).update(
+                            {
+                            'analysis_id':d['analysis_id'],
+                            'experiment_id':d['experiment_id'],
+                            'sample_name_short':d['sample_name_short'],
+                            'time_point':d['time_point'],
+                            'analysis_type':d['analysis_type'],
+                            'used_':d['used_'],
+                            'comment_I':d['comment_I']},
+                            synchronize_session=False);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();

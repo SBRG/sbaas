@@ -509,7 +509,7 @@ class stage01_quantification_execute():
                         row = data_stage01_quantification_replicates(experiment_id_I, sample_name_short, tp, component_group_name, cn,
                                                                 conc_broth, conc_units, True);
                         self.session.add(row);
-        self.session.commit();
+            self.session.commit();
     def execute_analyzeAverages(self,experiment_id_I,sample_name_abbreviations_I=[],sample_names_I=[],component_names_I=[]):
         '''calculate the averages
         NOTE: data_stage01_quantification_normalized must be populated'''
@@ -704,7 +704,7 @@ class stage01_quantification_execute():
                     # update data_stage01_quantification_replicatesMI
                     row = data_stage01_quantification_replicatesMI(experiment_id_I,sns_NA[n],tp,component_group_name,cn_NA[n],cc_NA[n],calculated_concentration_units,True);
                     self.session.add(row);
-        self.session.commit(); 
+            self.session.commit(); 
     def execute_calculateMissingComponents_replicates(self,experiment_id_I,biological_material_I=None,conversion_name_I=None,sample_names_short_I=[]):
         '''calculate estimates for samples in which a component was not found for any of the replicates'''
         
@@ -855,7 +855,7 @@ class stage01_quantification_execute():
                     row = data_stage01_quantification_averagesMI(experiment_id_I, sna, tp, component_group_name, cn,
                                                    n_replicates, conc_average, conc_cv, conc_units, True);   
                     self.session.add(row);
-        self.session.commit(); 
+            self.session.commit(); 
     def execute_calculateGeoAverages_replicates(self,experiment_id_I,sample_name_abbreviations_I=[]):
         '''Calculate the averages from replicates MI in ln space'''
 
@@ -923,7 +923,7 @@ class stage01_quantification_execute():
                     row = data_stage01_quantification_averagesMIgeo(experiment_id_I, sna, tp, component_group_name, cn,
                                                    n_replicates, conc_average, conc_var, conc_lb, conc_ub, conc_units, True);   
                     self.session.add(row);
-        self.session.commit(); 
+            self.session.commit(); 
     def execute_physiologicalRatios_replicates(self,experiment_id_I):
         '''Calculate physiologicalRatios from replicates MI'''
         
@@ -1413,18 +1413,21 @@ class stage01_quantification_execute():
         except SQLAlchemyError as e:
             print(e);
     # data_stage01_quantification deletes
-    def execute_deleteExperimentFromMQResultsTable(self,experiment_id_I,sample_types_I = ['Quality Control','Unknown']):
+    def execute_deleteExperimentFromMQResultsTable(self,experiment_id_I,sample_types_I = ['Quality Control','Unknown'],sample_names_I = []):
         '''delete rows in data_stage01_MQResultsTable by sample name and sample type 
         (default = Quality Control and Unknown) from the experiment'''
         
         print 'deleting rows in data_stage01_MQResultsTable by sample_name and sample_type...';
         dataDeletes = [];
         # get sample_names
-        sample_names = [];
-        for st in sample_types_I:
-            sample_names_tmp = [];
-            sample_names_tmp = self.stage01_quantification_query.get_sampleNames_experimentIDAndSampleType(experiment_id_I,st);
-            sample_names.extend(sample_names_tmp);
+        if sample_names_I:
+            sample_names = sample_names_I;
+        else:
+            sample_names = [];
+            for st in sample_types_I:
+                sample_names_tmp = [];
+                sample_names_tmp = self.stage01_quantification_query.get_sampleNames_experimentIDAndSampleType(experiment_id_I,st);
+                sample_names.extend(sample_names_tmp);
         for sn in sample_names:
             # format into a dictionary list
             print 'deleting sample_name ' + sn;
@@ -1567,7 +1570,7 @@ class stage01_quantification_execute():
                 # visualize the stats:
                 #self.matplot.barPlot(data_plot_ratio_ids[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
                 self.matplot.boxAndWhiskersPlot(data_plot_ratio_ids[0],data_plot_sna,data_plot_ratio_units[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
-    def execute_boxAndWhiskersPlot_averages(self,experiment_id_I,sample_name_abbreviations_I=[],component_names_I=[],time_points_I=[],time_course_I=False,show_95_ci_I=False):
+    def execute_boxAndWhiskersPlot_averages(self,experiment_id_I,sample_name_abbreviations_I=[],component_names_I=[],time_points_I=[],time_course_I=False,show_95_ci_I=False,filename_I=None):
         '''generate a boxAndWhiskers plot from averagesMIGeo table'''
 
         print 'execute_boxAndWhiskersPlot...'
@@ -1608,6 +1611,7 @@ class stage01_quantification_execute():
                         if not data: continue;
                         calculated_concentrations = [];
                         calculated_concentrations = self.stage01_quantification_query.get_calculatedConcentrations_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id_I,sna,tp,cn)
+                        if not calculated_concentrations: continue;
                         # record data for plotting
                         data_plot_mean.append(data['calculated_concentration_average']);
                         data_plot_var.append(data['calculated_concentration_var']);
@@ -1617,11 +1621,18 @@ class stage01_quantification_execute():
                         data_plot_component_names.append(cn);
                         data_plot_calculated_concentration_units.append(data['calculated_concentration_units']);
                 # visualize the stats:
+                if filename_I: filename = filename_I + cn.split('.')[0];
                 if show_95_ci_I:
                     data_95 = []
                     for i,d in enumerate(data_plot_mean):
                         data_95.append([data_plot_ci[i][0],data_plot_ci[i][1],d])
-                    self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_95,data_plot_mean,data_plot_ci);
+                    try:
+                        if filename_I:
+                            self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_95,data_plot_mean,data_plot_ci,filename_I=filename,show_plot_I=False);
+                        else:
+                            self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_95,data_plot_mean,data_plot_ci);
+                    except IndexError as e:
+                        print e;
                 else:
                     data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
                     #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,se_I=data_plot_se,add_labels_I=False);

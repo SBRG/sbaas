@@ -960,7 +960,7 @@ class stage01_isotopomer_query(base_analysis):
             print(e);
     # delet data from data_stage01_isotopomer_mqresultstable
     def delete_row_sampleName(self,sampleNames_I):
-        '''Delete specific samples from an experiment by their sample ID from sample_physiologicalparameters'''
+        '''Delete specific samples from an experiment by their sample name'''
         deletes = [];
         for d in sampleNames_I:
             try:

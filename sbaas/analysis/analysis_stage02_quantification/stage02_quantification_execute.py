@@ -18,13 +18,55 @@ class stage02_quantification_execute():
         self.r_calc = r_calculate();
         self.matplot = matplot();
     # analyses:
-    def execute_glogNormalization(self,experiment_id_I,concentration_units_I=[]
+    def execute_glogNormalization_v1(self,experiment_id_I,concentration_units_I=[],time_course_I=False
                                   ):
         '''glog normalize concentration values using R'''
 
         print 'execute_glogNormalization...'
         
+        # get the analysis information
+
         # query metabolomics data from the experiment
+        #if time_course_I:
+        #    # get the concentration units
+        #    data_transformed = [];
+        #    if concentration_units_I:
+        #        concentration_units = concentration_units_I;
+        #    else:
+        #        concentration_units = [];
+        #        concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,tp);
+        #    for cu in concentration_units:
+        #        print 'calculating glogNormalization for concentration_units ' + cu;
+        #        data = [];
+        #        # get the time-points
+        #        time_points = [];
+        #        time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage01ReplicatesMI(experiment_id_I);
+        #        for tp in time_points:
+        #            print 'calculating glogNormalization for time_point ' + tp;
+        #            data_tmp = [];
+        #            data = self.stage02_quantification_query.get_RExpressionData_experimentIDAndTimePointAndUnitsAndSampleNameShort_dataStage01ReplicatesMI(experiment_id_I, tp, cu);
+        #            data.extend(data_tmp)
+        #        # call R
+        #        data_transformed = [];
+        #        concentrations = None;
+        #        concentrations_glog = None;
+        #        data_glog, concentrations, concentrations_glog = self.r_calc.calculate_glogNormalization(data)
+        #        ## plot original values:
+        #        self.matplot.densityPlot(concentrations);
+        #        self.matplot.densityPlot(concentrations_glog);
+        #        # upload data
+        #        for d in data:
+        #            row = data_stage02_quantification_glogNormalized(experiment_id_I,experiment_id_I, d['sample_name_short'],
+        #                                                        d['time_point'],d['component_group_name'],
+        #                                                        d['component_name'],d['calculated_concentration'],
+        #                                                        d['calculated_concentration_units'] + '_glog_normalized',
+        #                                                        True,None);
+        #            self.session.add(row);
+        #        data_transformed.extend(data_glog);
+        #    # commit data to the session every timepoint
+        #    self.session.commit();
+        #    self.stage02_quantification_query.update_concentrations_dataStage02GlogNormalized(experiment_id_I,experiment_id_I, tp, data_transformed)
+        #else:
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage01ReplicatesMI(experiment_id_I);
@@ -51,7 +93,7 @@ class stage02_quantification_execute():
                 self.matplot.densityPlot(concentrations_glog);
                 # upload data
                 for d in data:
-                    row = data_stage02_quantification_glogNormalized(experiment_id_I, d['sample_name_short'],
+                    row = data_stage02_quantification_glogNormalized(experiment_id_I,experiment_id_I, d['sample_name_short'],
                                                                 d['time_point'],d['component_group_name'],
                                                                 d['component_name'],d['calculated_concentration'],
                                                                 d['calculated_concentration_units'] + '_glog_normalized',
@@ -60,7 +102,7 @@ class stage02_quantification_execute():
                 data_transformed.extend(data_glog);
             # commit data to the session every timepoint
             self.session.commit();
-            self.stage02_quantification_query.update_concentrations_dataStage02GlogNormalized(experiment_id_I, tp, data_transformed)
+            self.stage02_quantification_query.update_concentrations_dataStage02GlogNormalized(experiment_id_I,experiment_id_I, tp, data_transformed)
     def execute_componentNameSpecificNormalization(self,experiment_id_I,sample_name_abbreviations_I=[],cn_normalize_I='glu-L.glu_L_1.Light'):
         '''normalize concentration values to a specific component'''
 
@@ -179,7 +221,7 @@ class stage02_quantification_execute():
                     data_anova,data_pairwise = self.r_calc.calculate_anova(data);
                     # add data to database
                     for d in data_anova:
-                        row1 = data_stage02_quantification_anova(experiment_id_I,
+                        row1 = data_stage02_quantification_anova(experiment_id_I,experiment_id_I,
                                 d['sample_name_abbreviation'],
                                 tp,
                                 component_group_names[cnt_cn],
@@ -351,7 +393,7 @@ class stage02_quantification_execute():
                     #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
                     #self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
         self.session.commit();
-    def execute_pca(self,experiment_id_I):
+    def execute_pca_v1(self,experiment_id_I):
         '''execute pca using R'''
 
         print 'execute_pca...'
@@ -478,6 +520,7 @@ class stage02_quantification_execute():
             data_stage02_quantification_pca_loadings.__table__.drop(engine,True);
             #data_stage02_quantification_heatmap.__table__.drop(engine,True);
             #data_stage02_quantification_svm.__table__.drop(engine,True);
+            data_stage02_quantification_analysis.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_dataStage02_quantification(self,experiment_id_I = None):
@@ -491,6 +534,7 @@ class stage02_quantification_execute():
                 reset = self.session.query(data_stage02_quantification_pca_loadings).filter(data_stage02_quantification_pca_loadings.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_heatmap).filter(data_stage02_quantification_heatmap.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_svm).filter(data_stage02_quantification_svm.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_analysis).filter(data_stage02_quantification_analysis.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage02_quantification_glogNormalized).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_anova).delete(synchronize_session=False);
@@ -501,6 +545,7 @@ class stage02_quantification_execute():
                 reset = self.session.query(data_stage02_quantification_heatmap).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_metabolomicsData).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_svm).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_analysis).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -514,6 +559,7 @@ class stage02_quantification_execute():
             data_stage02_quantification_pca_loadings.__table__.create(engine,True);
             #data_stage02_quantification_heatmap.__table__.create(engine,True);
             #data_stage02_quantification_svm.__table__.create(engine,True);
+            data_stage02_quantification_analysis.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     #TODO
@@ -593,3 +639,127 @@ class stage02_quantification_execute():
                     # visualize the stats:
                     #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
                     self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
+
+    def execute_glogNormalization(self,analysis_id_I,concentration_units_I=[]):
+        '''glog normalize concentration values using R'''
+
+        print 'execute_glogNormalization...'
+        
+        # get the analysis information
+        analysis_info = [];
+        analysis_info = self.stage02_quantification_query.get_rows_analysisID_dataStage02QuantificationAnalysis(analysis_id_I);
+        # query metabolomics data from the experiment
+        data_transformed = [];
+        if concentration_units_I:
+            concentration_units = concentration_units_I;
+        else:
+            concentration_units = [];
+            for row in simulatio_info:
+                concentration_units_tmp = []
+                concentration_units_tmp = self.stage02_quantification_query.get_concentrationUnits_experimentID_dataStage01ReplicatesMI(row['experiment_id']);
+                concentration_units.extend(concentration_units_tmp)
+            concentration_units = list(set(concentration_units));
+        for cu in concentration_units:
+            print 'calculating glogNormalization for concentration_units ' + cu;
+            data = [];
+            # get all of the samples in the simulation
+            for row in simulation_info:
+                data_tmp = [];
+                data = self.stage02_quantification_query.get_RExpressionData_experimentIDAndTimePointAndUnitsAndSampleNameShort_dataStage01ReplicatesMI(row['experiment_id'], row['time_point'], cu, row['sample_name_short']);
+                data.extend(data_tmp)
+            # call R
+            data_transformed = [];
+            concentrations = None;
+            concentrations_glog = None;
+            data_glog, concentrations, concentrations_glog = self.r_calc.calculate_glogNormalization(data)
+            ## plot original values:
+            self.matplot.densityPlot(concentrations);
+            self.matplot.densityPlot(concentrations_glog);
+            # upload data
+            for d in data:
+                row = data_stage02_quantification_glogNormalized(analysis_id_I,row['experiment_id'], d['sample_name_short'],
+                                                            d['time_point'],d['component_group_name'],
+                                                            d['component_name'],d['calculated_concentration'],
+                                                            d['calculated_concentration_units'] + '_glog_normalized',
+                                                            True,None);
+                self.session.add(row);
+            data_transformed.extend(data_glog);
+        # commit data to the session every timepoint
+        self.session.commit();
+        self.stage02_quantification_query.update_concentrations_dataStage02GlogNormalized(experiment_id_I, tp, data_transformed)
+    def execute_pca(self,analysis_id_I):
+        '''execute pca using R'''
+
+        print 'execute_pca...'
+
+        # query metabolomics data from glogNormalization
+        # get concentration units
+        data_transformed = [];
+        if concentration_units_I:
+            concentration_units = concentration_units_I;
+        else:
+            concentration_units = [];
+            concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
+        for cu in concentration_units:
+            print 'calculating pca for concentration_units ' + cu;
+            # get data:
+            data = [];
+            data = self.stage02_quantification_query.get_RExpressionData_analysisIDAndUnits_dataStage02GlogNormalized(analysis_id_I,cu);
+            # call R
+            data_scores,data_loadings = [],[];
+            data_scores,data_loadings = self.r_calc.calculate_pca_prcomp(data, retx_I = "TRUE", center_I = "FALSE", na_action_I='na.omit',scale_I="TRUE");
+            ## plot the data:
+            ## scores
+            #title,xlabel,ylabel,x_data,y_data,text_labels,samples = self.matplot._extractPCAScores(data_scores);
+            #self.matplot.volcanoPlot(title,xlabel,ylabel,x_data,y_data,text_labels);
+            ## loadings
+            #title,xlabel,ylabel,x_data,y_data,text_labels = self.matplot._extractPCALoadings(data_loadings);
+            #self.matplot.volcanoPlot(title,xlabel,ylabel,x_data,y_data,text_labels);
+            # add data to database
+            for d in data_scores:
+                row1 = data_stage02_quantification_pca_scores(analysis_id_I,
+                        d['experiment_id'],
+                        d['sample_name_short'],
+                        d['time_point'],
+                        d['score'],
+                        d['axis'],
+                        d['var_proportion'],
+                        d['var_cumulative'],
+                        cu,
+                        True,None);
+                self.session.add(row1);
+            for d in data_loadings:
+                row2 = data_stage02_quantification_pca_loadings(analysis_id_I,
+                        d['experiment_id'],
+                        d['time_point'],
+                        d['component_group_name'],
+                        d['component_name'],
+                        d['loadings'],
+                        d['axis'],
+                        cu,
+                        True,None);
+                self.session.add(row2);
+        self.session.commit();
+    def execute_pcaPlot(self,anlaysis_id_I):
+        '''generate a pca plot'''
+
+        print 'execute_pcaPlot...'
+        # query metabolomics data from pca_scores and pca_loadings
+        # get concentration units...
+        concentration_units = [];
+        concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02Scores(analysis_id_I);
+        for cu in concentration_units:
+            if cu=='height_ratio_glog_normalized' or cu=='height_ratio': continue; # skip for now...
+            print 'plotting pca for concentration_units ' + cu;
+            # get data:
+            data_scores,data_loadings = [],[];
+            data_scores,data_loadings = self.stage02_quantification_query.get_RExpressionData_experimentIDAndTimePointAndUnits_dataStage02ScoresLoadings(analysis_id_I,cu);
+            # plot the data:
+            PCs = [[1,2],[1,3],[2,3]];
+            for PC in PCs:
+                # scores
+                title,xlabel,ylabel,x_data,y_data,text_labels,samples = self.matplot._extractPCAScores(data_scores,PC[0],PC[1]);
+                self.matplot.volcanoPlot(title,xlabel,ylabel,x_data,y_data,text_labels);
+                # loadings
+                title,xlabel,ylabel,x_data,y_data,text_labels = self.matplot._extractPCALoadings(data_loadings,PC[0],PC[1]);
+                self.matplot.volcanoPlot(title,xlabel,ylabel,x_data,y_data,text_labels);

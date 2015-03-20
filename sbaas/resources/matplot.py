@@ -95,27 +95,30 @@ class matplot():
                     data_I = [[ci_lb,ci_ub,mean],...]'''
 
         whiskers_I=[5,95]
+        ha = ['right', 'center', 'left']
+        try:
+            fig, ax = plt.subplots()
+            pos = numpy.array(range(len(data_I)))+1
+            bp = ax.boxplot(data_I, sym='k+', #whis=whiskers_I,
+                            positions=pos,
+                            notch=notch_I, bootstrap=bootstrap_I,
+                            usermedians=mean_I,
+                            conf_intervals=ci_I)
 
-        fig, ax = plt.subplots()
-        pos = numpy.array(range(len(data_I)))+1
-        bp = ax.boxplot(data_I, sym='k+', #whis=whiskers_I,
-                        positions=pos,
-                        notch=notch_I, bootstrap=bootstrap_I,
-                        usermedians=mean_I,
-                        conf_intervals=ci_I)
-
-        ax.set_xlabel(xlabel_I)
-        ax.set_ylabel(ylabel_I)
-        ax.set_xticklabels(xticklabels_I)
-        ax.set_title(title_I)
-        plt.setp(bp['whiskers'], color='k',  linestyle='-' )
-        plt.setp(bp['fliers'], markersize=3.0)
-        # Produce an image.
-        if filename_I:
-            fig.savefig(filename_I)
-        # Show the image.
-        if show_plot_I:
-            plt.show();
+            ax.set_xlabel(xlabel_I)
+            ax.set_ylabel(ylabel_I)
+            ax.set_xticklabels(xticklabels_I, size=6, rotation=15, ha=ha[1])
+            ax.set_title(title_I)
+            plt.setp(bp['whiskers'], color='k',  linestyle='-' )
+            plt.setp(bp['fliers'], markersize=3.0)
+            # Produce an image.
+            if filename_I:
+                fig.savefig(filename_I)
+            # Show the image.
+            if show_plot_I:
+                plt.show();
+        except IndexError as e:
+            print e;
     def _extractPCAScores(self,data_I,axis1_I=1,axis2_I=2):
         '''extract out pca data from [{},{},{}] format'''
         x_data = [];

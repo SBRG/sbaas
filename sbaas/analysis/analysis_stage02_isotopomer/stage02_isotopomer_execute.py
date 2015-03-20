@@ -7,6 +7,7 @@ from stage02_isotopomer_io import *
 from stage02_isotopomer_dependencies import *
 import re
 from math import sqrt
+from datetime import datetime as dt
 
 class stage02_isotopomer_execute():
     '''class for isotopomer metabolomics analysis'''
@@ -90,21 +91,36 @@ class stage02_isotopomer_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
-    def reset_datastage02_isotopomer_fittedNetFluxes(self,simulation_id_I = None):
+    def reset_datastage02_isotopomer_fittedNetFluxes(self,simulation_id_I = None,simulation_dateAndTime_I=None):
         try:
-            reset = self.session.query(data_stage02_isotopomer_fittedNetFluxes).filter(data_stage02_isotopomer_fittedNetFluxes.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+            if simulation_id_I and simulation_dateAndTime_I:
+                reset = self.session.query(data_stage02_isotopomer_fittedNetFluxes).filter(
+                    data_stage02_isotopomer_fittedNetFluxes.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_fittedNetFluxes.simulation_dateAndTime==self.convert_string2datetime(simulation_dateAndTime_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage02_isotopomer_fittedNetFluxes).filter(data_stage02_isotopomer_fittedNetFluxes.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
-    def reset_datastage02_isotopomer_fittedFluxRatios(self,simulation_id_I = None):
+    def reset_datastage02_isotopomer_fittedFluxRatios(self,simulation_id_I = None,simulation_dateAndTime_I=None):
         try:
-            reset = self.session.query(data_stage02_isotopomer_fittedFluxRatios).filter(data_stage02_isotopomer_fittedFluxRatios.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+            if simulation_id_I and simulation_dateAndTime_I:
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxRatios).filter(
+                    data_stage02_isotopomer_fittedFluxRatios.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_fittedFluxRatios.simulation_dateAndTime==self.convert_string2datetime(simulation_dateAndTime_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxRatios).filter(data_stage02_isotopomer_fittedFluxRatios.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
-    def reset_datastage02_isotopomer_fittedFluxSplits(self,simulation_id_I = None):
+    def reset_datastage02_isotopomer_fittedFluxSplits(self,simulation_id_I = None,simulation_dateAndTime_I=None):
         try:
-            reset = self.session.query(data_stage02_isotopomer_fittedFluxSplits).filter(data_stage02_isotopomer_fittedFluxSplits.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+            if simulation_id_I and simulation_dateAndTime_I:
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxSplits).filter(
+                    data_stage02_isotopomer_fittedFluxSplits.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_fittedFluxSplits.simulation_dateAndTime==self.convert_string2datetime(simulation_dateAndTime_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxSplits).filter(data_stage02_isotopomer_fittedFluxSplits.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -504,13 +520,16 @@ class stage02_isotopomer_execute():
             inca.make_isotopomerSimulation_parallel_sna_INCA(simulation_info,stationary_I,ko_list_I,flux_dict_I,description_I)
         else:
             inca.make_isotopomerSimulation_individual_INCA(simulation_info,stationary_I,ko_list_I,flux_dict_I,description_I)
-    def execute_makeNetFluxes(self, simulation_id_I,normalize_rxn_id_I=None,convert_netRxn2IndividualRxns_I=False):
+    def execute_makeNetFluxes(self, simulation_id_I,simulation_dateAndTimes_I=[],normalize_rxn_id_I=None,convert_netRxn2IndividualRxns_I=False):
         '''Determine the net flux through a reaction'''
         
         data_O = [];
         # simulation_dateAndTime
-        simulation_dateAndTimes = [];
-        simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
+        if simulation_dateAndTimes_I:
+            simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
+        else:
+            simulation_dateAndTimes = [];
+            simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
         for simulation_dateAndTime in simulation_dateAndTimes:
             # get all reactions included in the simulation (in alphabetical order)
             rxns = [];
@@ -637,6 +656,137 @@ class stage02_isotopomer_execute():
                 self.session.add(data_add);
             except SQLAlchemyError as e:
                 print(e);
+        self.session.commit();
+    def execute_calculateFluxRatios(self,simulation_id_I,simulation_dateAndTimes_I=[],flux_ratios_I={}):
+        '''calculate the flux ratios'''
+        #Input:
+        #   simulation_id_I = string, simulation id
+        #   flux_ratios_I = dict, {ratio_id:[rxn_id_1,rxn_id_2]}
+
+        data_O = [];
+        print 'calculating flux ratios...'
+        # simulation_dateAndTime
+        if simulation_dateAndTimes_I:
+            simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
+        else:
+            simulation_dateAndTimes = [];
+            simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
+        for simulation_dateAndTime in simulation_dateAndTimes:
+            print 'calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime)
+            # get all flux_units
+            flux_units = [];
+            flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
+            for flux_unit_cnt,flux_unit in enumerate(flux_units):
+                print 'calculating flux ratios for flux_units ' + str(flux_unit)
+                # check for more than 1 flux_unit
+                if flux_unit_cnt>0:
+                    break; #ratios do not depend on the flux_unit
+                for k,v in flux_ratios_I.iteritems():
+                    print 'calculating flux ratios for flux_ratio ' + str(k)
+                    # get the fluxes
+                    flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,v[0]);
+                    flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,v[1]);
+                    # calculate the ratio
+                    ratio,ratio_stdev,ratio_lb,ratio_ub,ratio_units=self.calculate_fluxRatio(flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
+                                                                                             flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2)
+                    # record the data
+                    data_O.append({'simulation_id':simulation_id_I,
+                        'simulation_dateAndTime':simulation_dateAndTime,
+                        'ratio_id':k,
+                        'ratio_rxn_ids':v,
+                        'ratio':ratio,
+                        'ratio_stdev':ratio_stdev,
+                        'ratio_lb':ratio_lb,
+                        'ratio_ub':ratio_ub,
+                        'ratio_units':ratio_units,
+                        'used_':True,
+                        'comment_':None})
+        # add the data to the database:
+        for d in data_O:
+            row=None;
+            row=data_stage02_isotopomer_fittedFluxRatios(d['simulation_id'],
+                                d['simulation_dateAndTime'],
+                                d['ratio_id'],
+                                d['ratio_rxn_ids'],
+                                d['ratio'],
+                                d['ratio_stdev'],
+                                d['ratio_lb'],
+                                d['ratio_ub'],
+                                d['ratio_units'],
+                                d['used_'],
+                                d['comment_']);
+            self.session.add(row);
+        self.session.commit();
+    def execute_calculateFluxSplits(self,simulation_id_I,simulation_dateAndTimes_I=[],flux_splits_I=None):
+        '''calculate the flux splits'''
+        #Input:
+        #   simulation_id_I = string, simulation id
+        #   flux_splits_I = dict, {split_id:[rxn_id_1,rxn_id_2]}
+
+        if not flux_splits_I:
+            from stage02_isotopomer_dependencies import isotopomer_fluxSplits
+            flux_splits = isotopomer_fluxSplits();
+            flux_splits_I=flux_splits.isotopomer_splits;
+
+        data_O = [];
+        print 'calculating flux splits...'
+        # simulation_dateAndTime
+        if simulation_dateAndTimes_I:
+            simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
+        else:
+            simulation_dateAndTimes = [];
+            simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
+        for simulation_dateAndTime in simulation_dateAndTimes:
+            print 'calculating flux splits for simulation_dateAndTime ' + str(simulation_dateAndTime)
+            # get all flux_units
+            flux_units = [];
+            flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
+            for flux_unit_cnt,flux_unit in enumerate(flux_units):
+                # check for more than 1 flux_unit
+                if flux_unit_cnt>0:
+                    break; #splits do not depend on the flux_unit
+                print 'calculating flux splits for flux_unit ' + str(flux_unit)
+                for k,v in flux_splits_I.iteritems():
+                    print 'flux_split ' + str(k)
+                    # get the fluxes
+                    flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1=[],[],[],[],[]
+                    for rxn_id in v:
+                        flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,rxn_id);
+                        flux_average_1.append(flux_average_2);
+                        flux_stdev_1.append(flux_stdev_2);
+                        flux_lb_1.append(flux_lb_2);
+                        flux_ub_1.append(flux_ub_2);
+                        flux_units_1.append(flux_units_2);
+                    # calculate the split
+                    split,split_stdev,split_lb,split_ub,split_units=self.calculate_fluxSplit(flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1)
+                    # record the data
+                    for rxn_id_cnt,rxn_id in enumerate(v):
+                        data_O.append({'simulation_id':simulation_id_I,
+                            'simulation_dateAndTime':simulation_dateAndTime,
+                            'split_id':k,
+                            'split_rxn_ids':rxn_id,
+                            'split':split[rxn_id_cnt],
+                            'split_stdev':split_stdev[rxn_id_cnt],
+                            'split_lb':split_lb[rxn_id_cnt],
+                            'split_ub':split_ub[rxn_id_cnt],
+                            'split_units':split_units[rxn_id_cnt],
+                            'used_':True,
+                            'comment_':None})
+        # add the data to the database:
+        for d in data_O:
+            row=None;
+            row=data_stage02_isotopomer_fittedFluxSplits(d['simulation_id'],
+                                d['simulation_dateAndTime'],
+                                d['split_id'],
+                                d['split_rxn_ids'],
+                                d['split'],
+                                d['split_stdev'],
+                                d['split_lb'],
+                                d['split_ub'],
+                                d['split_units'],
+                                d['used_'],
+                                d['comment_']);
+            self.session.add(row);
         self.session.commit();
     #internal functions
     def simulate_model(self,model_id_I,ko_list=[],flux_dict={},measured_flux_list=[],description=None):
@@ -1186,10 +1336,178 @@ class stage02_isotopomer_execute():
 
         flux_units_O = rxn_id_norm + '_normalized'
         return flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O
+    def calculate_fluxRatio(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
+                          flux_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2):
+        '''Calculate the flux ratio between two reactions'''
+
+        ratio,ratio_stdev,ratio_lb,ratio_ub,ratio_units=None,None,None,None,'';
+
+        # check that the direction of the fluxes are the same
+        #TODO
+
+        if flux_1 and flux_2:
+            ratio=flux_1/flux_2
+            if flux_lb_1==0:
+                flux_lb_numerator = flux_1-flux_stdev_1;
+            else:
+                flux_lb_numerator = flux_lb_1;
+            if flux_lb_2==0:
+                flux_lb_denominator = flux_2-flux_stdev_2;
+            else:
+                flux_lb_denominator = flux_lb_2;
+            if flux_ub_1==0:
+                flux_ub_numerator = flux_1+flux_stdev_1;
+            else:
+                flux_ub_numerator = flux_ub_1;
+            if flux_ub_2==0:
+                flux_ub_denominator = flux_2+flux_stdev_2;
+            else:
+                flux_ub_denominator = flux_ub_2;
+            ratio_lb=min([flux_lb_numerator/flux_lb_denominator,flux_ub_numerator/flux_ub_denominator])
+            ratio_ub=max([flux_lb_numerator/flux_lb_denominator,flux_ub_numerator/flux_ub_denominator])
+            ratio_stdev=self.correct_fluxStdev(ratio_lb,ratio_ub);
+            ratio_units=flux_units_1+'/'+flux_units_2;
+        else:
+            print 'invalid flux_1 or flux_2'
+
+        return ratio,ratio_stdev,ratio_lb,ratio_ub,ratio_units
+    def calculate_fluxSplit(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1):
+        '''Calculate the split % between two or more reactions'''
+
+        split,split_stdev,split_lb,split_ub,split_units=[],[],[],[],[];
+
+        # check that the direction of the fluxes are the same
+        #TODO
+        flux_1_I = [];
+        flux_lb_1_I = [];
+        flux_ub_1_I = [];
+        flux_cv_I = [];
+        for flux_cnt,flux in enumerate(flux_1):
+            if flux:
+                flux_1_I.append(abs(flux));
+                #if self.check_fluxRange(flux,flux_lb_1[flux_cnt],flux_ub_1[flux_cnt]):
+                #    flux_lb_1_I.append(abs(flux_lb_1[flux_cnt]));
+                #    flux_ub_1_I.append(abs(flux_ub_1[flux_cnt]));
+                #else:
+                #    flux_lb_1_I.append(None);
+                #    flux_ub_1_I.append(None);
+                flux_lb_1_I.append(abs(flux_lb_1[flux_cnt]));
+                flux_ub_1_I.append(abs(flux_ub_1[flux_cnt]));
+                if flux==0:
+                    flux_cv_I.append(0.0);
+                else:
+                    flux_cv_I.append(flux_stdev_1[flux_cnt]/flux);
+            else:
+                flux_1_I.append(None);
+                flux_lb_1_I.append(None);
+                flux_ub_1_I.append(None);
+                flux_cv_I.append(None);
+
+        #calculate the total flux
+        split_total = 0.0;
+        for flux in flux_1_I:
+            if flux:
+                split_total+=flux;
+        split_lb_total = 0.0;
+        for flux in flux_lb_1_I:
+            if flux:
+                split_lb_total+=flux;
+        split_ub_total = 0.0;
+        for flux in flux_ub_1_I:
+            if flux:
+                split_ub_total+=flux;
+
+        #calculate the flux percentage
+        ##Method1:
+        #for cnt,flux in enumerate(flux_1_I):
+        #    if flux:
+        #        if flux!=0:
+        #            split_tmp = flux/split_total
+        #            split.append(split_tmp);
+        #            split_stdev_tmp=flux_stdev_1[cnt]/flux*split_tmp;
+        #            split_stdev.append(split_stdev_tmp);
+        #            if split_tmp-split_stdev_tmp<0.0:
+        #                split_lb.append(0.0);
+        #            else:
+        #                split_lb.append(split_tmp-split_stdev_tmp);
+        #            if split_tmp+split_stdev_tmp>1.0:
+        #                split_ub.append(1.0);
+        #            else:
+        #                split_ub.append(split_tmp+split_stdev_tmp);
+        #            split_units.append('split_fraction');
+        #        elif flux==0:
+        #            split_tmp = flux/split_total
+        #            split.append(split_tmp);
+        #            split_stdev.append(0.0);
+        #            split_lb.append(0.0);
+        #            split_ub.append(0.0);
+        #            split_units.append('split_fraction');
+        #    else:
+        #        split.append(0.0);
+        #        split_stdev.append(0.0);
+        #        split_lb.append(0.0);
+        #        split_ub.append(0.0);
+        #        split_units.append('split_fraction');
+        # Method 2:
+        for cnt,flux in enumerate(flux_1_I):
+            if flux:
+                split_tmp = flux/split_total
+                split.append(split_tmp);
+                if not flux_lb_1_I[cnt] or split_lb_total==0:
+                    split_lb_tmp=split_tmp-flux_cv_I[cnt]*split_tmp;
+                else:
+                    split_lb_tmp=flux_lb_1_I[cnt]/split_lb_total;
+                if not flux_ub_1_I[cnt] or split_ub_total==0:
+                    split_ub_tmp=split_tmp+flux_cv_I[cnt]*split_tmp;
+                else:
+                    split_ub_tmp=flux_ub_1_I[cnt]/split_ub_total;
+                split_lb.append(min([split_lb_tmp,split_ub_tmp]))
+                split_ub.append(max([split_lb_tmp,split_ub_tmp]))
+                split_stdev.append(self.correct_fluxStdev(min([split_lb_tmp,split_ub_tmp]),max([split_lb_tmp,split_ub_tmp])));
+                split_units.append('split_fraction');
+            else:
+                split.append(0.0);
+                split_stdev.append(0.0);
+                split_lb.append(0.0);
+                split_ub.append(0.0);
+                split_units.append('split_fraction');
+
+        return split,split_stdev,split_lb,split_ub,split_units
+    def convert_string2datetime_mdYHM(self,datetime_I):
+        '''convert string date time to datetime
+        e.g. time.strptime('4/15/2014 15:51','%m/%d/%Y %H:%M')'''
+
+        from time import mktime,strptime
+        from datetime import datetime
+
+        time_struct = strptime(datetime_I,'%m/%d/%Y %H:%M')
+        dt_O = datetime.fromtimestamp(mktime(time_struct))
+        
+        return dt_O
+    def convert_string2datetime(self,datetime_I):
+        '''convert string date time to datetime
+        e.g. time.strptime('2014-04-15 15:51:01','%Y/%m/%d %H:%M:%S')'''
+
+        from time import mktime,strptime
+        from datetime import datetime
+
+        time_struct = strptime(datetime_I,'%Y-%m-%d %H:%M:%S')
+        dt_O = datetime.fromtimestamp(mktime(time_struct))
+        
+        return dt_O
     #Visualization
-    def plot_fluxPrecision(self,simulation_ids_I = [], rxn_ids_I = [],plot_by_rxn_id_I=True,exclude_I = {}):
+    def plot_fluxPrecision(self,simulation_ids_I = [], rxn_ids_I = [], plot_by_rxn_id_I=True, individual_plots_I=True, exclude_I = {}, use_lbubAsErrorBars_I=True):
         '''Plot the flux precision for a given set of simulations and a given set of reactions
         Default: plot the flux precision for each simulation on a single plot for a single reaction'''
+
+        #Input:
+        # simulation_ids_I
+        # rxn_ids_I
+        # plot_by_rxn_id_I = if True, simulations will be plotted per reaction; if false, reactions will be plotted per simulation
+        # individual_plots_I = if True, each reaction/simulation will be plotted per figure; if false, all data will be plotted on a single figure
+        # exclude_I = dict, {simulation_id:rxn_id}, simulations_ids/rxn_ids to exclude from the plot
+        # use_lbubAsErrorBars_I = if True, the lb/ub will be used as error bars; if false, the std_dev will be used as error bars
+        # 
 
         from resources.matplot import matplot
         plot = matplot();
@@ -1218,7 +1536,7 @@ class stage02_isotopomer_execute():
                     data_O[simulation_id][rxn_id] = {};
                 else:
                     flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
-                    flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O = self.stage02_isotopomer_query.get_flux_simulationIDAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id,rxn_id);
+                    flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id,simulation_dataAndTime,rxn_id);
                     # check for None flux
                     if not flux_O: flux_O = 0.0;
                     # save the flux information
@@ -1233,17 +1551,145 @@ class stage02_isotopomer_execute():
                 for k in v1.keys():
                     rxn_ids_all.append(k);
             rxn_ids = list(set(rxn_ids_all));
-            for rxn_id in rxn_ids:
+            if individual_plots_I:
+                for rxn_id in rxn_ids:
+                    title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I = '',[],'','',[],[],[];
+                    for simulation_id in simulation_ids_I:
+                        if data_O[simulation_id][rxn_id]:
+                            xticklabels_I.append(simulation_id);
+                            mean_I.append(data_O[simulation_id][rxn_id]['flux'])
+                            if use_lbubAsErrorBars_I:
+                                ci_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub']])
+                                data_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub'],data_O[simulation_id][rxn_id]['flux']])
+                            else:
+                                ci_I.append([data_O[simulation_id][rxn_id]['flux']-data_O[simulation_id][rxn_id]['flux_stdev'],data_O[simulation_id][rxn_id]['flux']+data_O[simulation_id][rxn_id]['flux_stdev']])
+                                data_I.append([data_O[simulation_id][rxn_id]['flux']-data_O[simulation_id][rxn_id]['flux_stdev'],data_O[simulation_id][rxn_id]['flux']+data_O[simulation_id][rxn_id]['flux_stdev'],data_O[simulation_id][rxn_id]['flux']])
+                            ylabel_I = 'Flux [' + data_O[simulation_id][rxn_id]['flux_units'] + ']';
+                    title_I = rxn_id;
+                    xlabel_I = 'Simulation_id'
+                    plot.boxAndWhiskersPlot(title_I,xticklabels_I,ylabel_I,xlabel_I,data_I=data_I,mean_I=mean_I,ci_I=ci_I)
+            else:
                 title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I = '',[],'','',[],[],[];
-                for simulation_id in simulation_ids_I:
-                    if data_O[simulation_id][rxn_id]:
-                        xticklabels_I.append(simulation_id);
-                        data_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub'],data_O[simulation_id][rxn_id]['flux']])
-                        mean_I.append(data_O[simulation_id][rxn_id]['flux'])
-                        ci_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub']])
-                        ylabel_I = 'Flux [' + data_O[simulation_id][rxn_id]['flux_units'] + ']';
-                title_I = rxn_id;
-                xlabel_I = 'Simulation_id'
+                for rxn_id in rxn_ids:
+                    for simulation_id in simulation_ids_I:
+                        if data_O[simulation_id][rxn_id]:
+                            xticklabels_I.append(simulation_id+'\n'+rxn_id);
+                            mean_I.append(data_O[simulation_id][rxn_id]['flux'])
+                            if use_lbubAsErrorBars_I:
+                                ci_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub']])
+                                data_I.append([data_O[simulation_id][rxn_id]['flux_lb'],data_O[simulation_id][rxn_id]['flux_ub'],data_O[simulation_id][rxn_id]['flux']])
+                            else:
+                                ci_I.append([data_O[simulation_id][rxn_id]['flux']-data_O[simulation_id][rxn_id]['flux_stdev'],data_O[simulation_id][rxn_id]['flux']+data_O[simulation_id][rxn_id]['flux_stdev']])
+                                data_I.append([data_O[simulation_id][rxn_id]['flux']-data_O[simulation_id][rxn_id]['flux_stdev'],data_O[simulation_id][rxn_id]['flux']+data_O[simulation_id][rxn_id]['flux_stdev'],data_O[simulation_id][rxn_id]['flux']])
+                            ylabel_I = 'Flux [' + data_O[simulation_id][rxn_id]['flux_units'] + ']';
+                title_I = '';
+                xlabel_I = 'Simulation_id/Reaction_id'
+                plot.boxAndWhiskersPlot(title_I,xticklabels_I,ylabel_I,xlabel_I,data_I=data_I,mean_I=mean_I,ci_I=ci_I)
+        else: 
+            return;
+    def plot_fluxSplits(self,simulation_ids_I = [], split_ids_I = [], plot_by_split_id_I=True, individual_plots_I=True, exclude_I = {}, use_lbubAsErrorBars_I=True):
+        '''Plot the flux splits for a given set of simulations and a given set of reactions
+        Default: plot the flux precision for each simulation on a single plot for a single reaction'''
+
+        #Input:
+        # simulation_ids_I
+        # split_ids_I
+        # plot_by_split_id_I = if True, simulations will be plotted per split; if false, splitss will be plotted per simulation
+        # individual_plots_I = if True, each split/simulation will be plotted per figure; if false, all data will be plotted on a single figure
+        # exclude_I = dict, {simulation_id:split_id}, simulations_ids/split_ids to exclude from the plot
+        # use_lbubAsErrorBars_I = if True, the lb/ub will be used as error bars; if false, the std_dev will be used as error bars
+        # 
+
+        from resources.matplot import matplot
+        plot = matplot();
+
+        data_O ={}; # keys = simulation_id, values = {rxn_id:{flux_info}};
+        for simulation_id in simulation_ids_I:
+            # get the simulation dataAndTime
+            simulation_dateAndTimes = [];
+            simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxSplits(simulation_id);
+            data_O[simulation_id] = {};
+            if len(simulation_dateAndTimes) > 1:
+                print 'more than 1 simulation date and time found!'
+                continue;
+            else:
+                simulation_dataAndTime = simulation_dateAndTimes[0];
+            # get the split_ids
+            if split_ids_I:
+                split_ids = split_ids_I;
+            else:
+                split_ids = [];
+                split_ids = self.stage02_isotopomer_query.get_splitIDs_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedFluxSplits(simulation_id,simulation_dataAndTime)
+            # get the split information for each simulation
+            for split_id in split_ids:
+                data_O[simulation_id][split_id] = {}
+                if exclude_I and exclude_I.has_key(split_id) and exclude_I[split_id] == simulation_id:
+                    data_O[simulation_id][split_id] = {};
+                else:
+                    split_rxn_id_O,split_O,split_stdev_O,split_lb_O,split_ub_O,split_units_O=[],[],[],[],[],[];
+                    split_rxn_id_O,split_O,split_stdev_O,split_lb_O,split_ub_O,split_units_O = self.stage02_isotopomer_query.get_split_simulationIDAndSimulationDateAndTimeAndSplitID_dataStage02IsotopomerfittedFluxSplits(simulation_id,simulation_dataAndTime,split_id);
+                    # check for None split
+                    if not split_O: continue;
+                    # save the split information
+                    for rxn_id_cnt,rxn_id in enumerate(split_rxn_id_O):
+                        data_O[simulation_id][split_id][rxn_id] = {}
+                        tmp_O = {};
+                        tmp_O = {'split':split_O[rxn_id_cnt],'split_stdev':split_stdev_O[rxn_id_cnt],
+                                 'split_lb':split_lb_O[rxn_id_cnt],'split_ub':split_ub_O[rxn_id_cnt],
+                                 'split_units':split_units_O[rxn_id_cnt]}
+                        data_O[simulation_id][split_id][rxn_id] = tmp_O;
+        # reorder the data for plotting
+        if plot_by_split_id_I:
+            split_ids_all = [];
+            for k1,v1 in data_O.iteritems():
+                for k in v1.keys():
+                    split_ids_all.append(k);
+            split_ids = list(set(split_ids_all));
+            split_rxn_ids_all = {};
+            for split_id in split_ids:
+                split_rxn_ids_all[split_id]=[];
+            for k1,v1 in data_O.iteritems():
+                for k2,v2 in v1.iteritems():
+                    for k in v2.keys():
+                        split_rxn_ids_all[k2].append(k)
+            split_rxn_ids = {};
+            for k1,v1 in split_rxn_ids_all.iteritems():
+                split_rxn_ids[k1] = list(set(v1));                
+            if individual_plots_I:
+                for split_id,rxn_ids in split_rxn_ids.iteritems():
+                    title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I = '',[],'','',[],[],[];
+                    for simulation_id in simulation_ids_I:
+                        for rxn_id in rxn_ids:
+                            if data_O[simulation_id][split_id] and data_O[simulation_id][split_id][rxn_id]:
+                                xticklabels_I.append(simulation_id+'\n'+rxn_id);
+                                mean_I.append(data_O[simulation_id][split_id][rxn_id]['split'])
+                                if use_lbubAsErrorBars_I:
+                                    data_I.append([data_O[simulation_id][split_id][rxn_id]['split_lb'],data_O[simulation_id][split_id][rxn_id]['split_ub'],data_O[simulation_id][split_id][rxn_id]['split']])
+                                    ci_I.append([data_O[simulation_id][split_id][rxn_id]['split_lb'],data_O[simulation_id][split_id][rxn_id]['split_ub']])
+                                else:
+                                    ci_I.append([data_O[simulation_id][split_id][rxn_id]['split']-data_O[simulation_id][split_id][rxn_id]['split_stdev'],data_O[simulation_id][split_id][rxn_id]['split']+data_O[simulation_id][split_id][rxn_id]['split_stdev']])
+                                    data_I.append([data_O[simulation_id][split_id][rxn_id]['split']-data_O[simulation_id][split_id][rxn_id]['split_stdev'],data_O[simulation_id][split_id][rxn_id]['split']+data_O[simulation_id][split_id][rxn_id]['split_stdev'],data_O[simulation_id][split_id][rxn_id]['split']])
+                                ylabel_I = 'split [' + data_O[simulation_id][split_id][rxn_id]['split_units'] + ']';
+                    title_I = split_id;
+                    xlabel_I = 'Simulation_id'
+                    plot.boxAndWhiskersPlot(title_I,xticklabels_I,ylabel_I,xlabel_I,data_I=data_I,mean_I=mean_I,ci_I=ci_I)
+            else:
+                title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I = '',[],'','',[],[],[];
+                for split_id,rxn_ids in split_rxn_ids.iteritems():
+                    for simulation_id in simulation_ids_I:
+                        for rxn_id in rxn_ids:
+                            if data_O[simulation_id][split_id] and data_O[simulation_id][split_id][rxn_id]:
+                                xticklabels_I.append(simulation_id+'\n'+split_id+'\n'+rxn_id);
+                                mean_I.append(data_O[simulation_id][split_id][rxn_id]['split'])
+                                if use_lbubAsErrorBars_I:
+                                    data_I.append([data_O[simulation_id][split_id][rxn_id]['split_lb'],data_O[simulation_id][split_id][rxn_id]['split_ub'],data_O[simulation_id][split_id][rxn_id]['split']])
+                                    ci_I.append([data_O[simulation_id][split_id][rxn_id]['split_lb'],data_O[simulation_id][split_id][rxn_id]['split_ub']])
+                                else:
+                                    ci_I.append([data_O[simulation_id][split_id][rxn_id]['split']-data_O[simulation_id][split_id][rxn_id]['split_stdev'],data_O[simulation_id][split_id][rxn_id]['split']+data_O[simulation_id][split_id][rxn_id]['split_stdev']])
+                                    data_I.append([data_O[simulation_id][split_id][rxn_id]['split']-data_O[simulation_id][split_id][rxn_id]['split_stdev'],data_O[simulation_id][split_id][rxn_id]['split']+data_O[simulation_id][split_id][rxn_id]['split_stdev'],data_O[simulation_id][split_id][rxn_id]['split']])
+                                ylabel_I = 'split [' + data_O[simulation_id][split_id][rxn_id]['split_units'] + ']';
+                title_I = '';
+                xlabel_I = 'Simulation_id\nSplit_id\nReaction_id'
                 plot.boxAndWhiskersPlot(title_I,xticklabels_I,ylabel_I,xlabel_I,data_I=data_I,mean_I=mean_I,ci_I=ci_I)
         else: 
             return;
@@ -1418,274 +1864,7 @@ class stage02_isotopomer_execute():
                         mat_script = self.write_isotopomerExperiment_INCA(modelReaction_data,modelMetabolite_data,measuredFluxes_data,experimentalMS_data,tracers);
                         with open(filename_mat,'w') as f:
                             f.write(mat_script);
-
-    # TODO
-    def execute_calculateFluxRatios(self,simulation_id_I,flux_ratios_I):
-        '''calculate the flux ratios'''
-        #Input:
-        #   simulation_id_I = string, simulation id
-        #   flux_ratios_I = dict, {ratio_id:[rxn_id_1,rxn_id_2]}
-
-        data_O = [];
-        print 'calculating flux ratios...'
-        # simulation_dateAndTime
-        simulation_dateAndTimes = [];
-        simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I);
-        for simulation_dateAndTime in simulation_dateAndTimes:
-            print 'calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime)
-            # get all flux_units
-            flux_units = [];
-            flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
-            for flux_unit_cnt,flux_unit in enumerate(flux_units):
-                print 'calculating flux ratios for flux_units ' + str(flux_unit)
-                # check for more than 1 flux_unit
-                if flux_unit_cnt>0:
-                    break; #ratios do not depend on the flux_unit
-                for k,v in flux_ratios_I.iteritems():
-                    print 'calculating flux ratios for flux_ratio ' + str(k)
-                    # get the fluxes
-                    flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,v[0]);
-                    flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,v[1]);
-                    # calculate the ratio
-                    ratio,ratio_stdev,ratio_lb,ratio_ub,ratio_units=self.calculate_fluxRatio(flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
-                                                                                             flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2)
-                    # record the data
-                    data_O.append({'simulation_id':simulation_id_I,
-                        'simulation_dateAndTime':simulation_dateAndTime,
-                        'ratio_id':k,
-                        'ratio_rxn_ids':v,
-                        'ratio':ratio,
-                        'ratio_stdev':ratio_stdev,
-                        'ratio_lb':ratio_lb,
-                        'ratio_ub':ratio_ub,
-                        'ratio_units':ratio_units,
-                        'used_':True,
-                        'comment_':None})
-        # add the data to the database:
-        for d in data_O:
-            row=None;
-            row=data_stage02_isotopomer_fittedFluxRatios(d['simulation_id'],
-                                d['simulation_dateAndTime'],
-                                d['ratio_id'],
-                                d['ratio_rxn_ids'],
-                                d['ratio'],
-                                d['ratio_stdev'],
-                                d['ratio_lb'],
-                                d['ratio_ub'],
-                                d['ratio_units'],
-                                d['used_'],
-                                d['comment_']);
-            self.session.add(row);
-        self.session.commit();
-
-    def calculate_fluxRatio(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
-                          flux_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2):
-        '''Calculate the flux ratio between two reactions'''
-
-        ratio,ratio_stdev,ratio_lb,ratio_ub,ratio_units=None,None,None,None,'';
-
-        # check that the direction of the fluxes are the same
-        #TODO
-
-        if flux_1 and flux_2:
-            ratio=flux_1/flux_2
-            if flux_lb_1==0:
-                flux_lb_numerator = flux_1-flux_stdev_1;
-            else:
-                flux_lb_numerator = flux_lb_1;
-            if flux_lb_2==0:
-                flux_lb_denominator = flux_2-flux_stdev_2;
-            else:
-                flux_lb_denominator = flux_lb_2;
-            if flux_ub_1==0:
-                flux_ub_numerator = flux_1+flux_stdev_1;
-            else:
-                flux_ub_numerator = flux_ub_1;
-            if flux_ub_2==0:
-                flux_ub_denominator = flux_2+flux_stdev_2;
-            else:
-                flux_ub_denominator = flux_ub_2;
-            ratio_lb=min([flux_lb_numerator/flux_lb_denominator,flux_ub_numerator/flux_ub_denominator])
-            ratio_ub=max([flux_lb_numerator/flux_lb_denominator,flux_ub_numerator/flux_ub_denominator])
-            ratio_stdev=self.correct_fluxStdev(ratio_lb,ratio_ub);
-            ratio_units=flux_units_1+'/'+flux_units_2;
-        else:
-            print 'invalid flux_1 or flux_2'
-
-        return ratio,ratio_stdev,ratio_lb,ratio_ub,ratio_units
-
-    def calculate_fluxSplit(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1):
-        '''Calculate the split % between two or more reactions'''
-
-        split,split_stdev,split_lb,split_ub,split_units=[],[],[],[],[];
-
-        # check that the direction of the fluxes are the same
-        #TODO
-        flux_1_I = [];
-        flux_lb_1_I = [];
-        flux_ub_1_I = [];
-        flux_cv_I = [];
-        for flux_cnt,flux in enumerate(flux_1):
-            if flux:
-                flux_1_I.append(abs(flux));
-                #if self.check_fluxRange(flux,flux_lb_1[flux_cnt],flux_ub_1[flux_cnt]):
-                #    flux_lb_1_I.append(abs(flux_lb_1[flux_cnt]));
-                #    flux_ub_1_I.append(abs(flux_ub_1[flux_cnt]));
-                #else:
-                #    flux_lb_1_I.append(None);
-                #    flux_ub_1_I.append(None);
-                flux_lb_1_I.append(abs(flux_lb_1[flux_cnt]));
-                flux_ub_1_I.append(abs(flux_ub_1[flux_cnt]));
-                if flux==0:
-                    flux_cv_I.append(0.0);
-                else:
-                    flux_cv_I.append(flux_stdev_1[flux_cnt]/flux);
-            else:
-                flux_1_I.append(None);
-                flux_lb_1_I.append(None);
-                flux_ub_1_I.append(None);
-                flux_cv_I.append(None);
-
-        #calculate the total flux
-        split_total = 0.0;
-        for flux in flux_1_I:
-            if flux:
-                split_total+=flux;
-        split_lb_total = 0.0;
-        for flux in flux_lb_1_I:
-            if flux:
-                split_lb_total+=flux;
-        split_ub_total = 0.0;
-        for flux in flux_ub_1_I:
-            if flux:
-                split_ub_total+=flux;
-
-        #calculate the flux percentage
-        ##Method1:
-        #for cnt,flux in enumerate(flux_1_I):
-        #    if flux:
-        #        if flux!=0:
-        #            split_tmp = flux/split_total
-        #            split.append(split_tmp);
-        #            split_stdev_tmp=flux_stdev_1[cnt]/flux*split_tmp;
-        #            split_stdev.append(split_stdev_tmp);
-        #            if split_tmp-split_stdev_tmp<0.0:
-        #                split_lb.append(0.0);
-        #            else:
-        #                split_lb.append(split_tmp-split_stdev_tmp);
-        #            if split_tmp+split_stdev_tmp>1.0:
-        #                split_ub.append(1.0);
-        #            else:
-        #                split_ub.append(split_tmp+split_stdev_tmp);
-        #            split_units.append('split_fraction');
-        #        elif flux==0:
-        #            split_tmp = flux/split_total
-        #            split.append(split_tmp);
-        #            split_stdev.append(0.0);
-        #            split_lb.append(0.0);
-        #            split_ub.append(0.0);
-        #            split_units.append('split_fraction');
-        #    else:
-        #        split.append(0.0);
-        #        split_stdev.append(0.0);
-        #        split_lb.append(0.0);
-        #        split_ub.append(0.0);
-        #        split_units.append('split_fraction');
-        # Method 2:
-        for cnt,flux in enumerate(flux_1_I):
-            if flux:
-                split_tmp = flux/split_total
-                split.append(split_tmp);
-                if not flux_lb_1_I[cnt] or split_lb_total==0:
-                    split_lb_tmp=split_tmp-flux_cv_I[cnt]*split_tmp;
-                else:
-                    split_lb_tmp=flux_lb_1_I[cnt]/split_lb_total;
-                if not flux_ub_1_I[cnt] or split_ub_total==0:
-                    split_ub_tmp=split_tmp+flux_cv_I[cnt]*split_tmp;
-                else:
-                    split_ub_tmp=flux_ub_1_I[cnt]/split_ub_total;
-                split_lb.append(min([split_lb_tmp,split_ub_tmp]))
-                split_ub.append(max([split_lb_tmp,split_ub_tmp]))
-                split_stdev.append(self.correct_fluxStdev(min([split_lb_tmp,split_ub_tmp]),max([split_lb_tmp,split_ub_tmp])));
-                split_units.append('split_fraction');
-            else:
-                split.append(0.0);
-                split_stdev.append(0.0);
-                split_lb.append(0.0);
-                split_ub.append(0.0);
-                split_units.append('split_fraction');
-
-        return split,split_stdev,split_lb,split_ub,split_units
-
-    def execute_calculateFluxSplits(self,simulation_id_I,flux_splits_I=None):
-        '''calculate the flux splits'''
-        #Input:
-        #   simulation_id_I = string, simulation id
-        #   flux_splits_I = dict, {split_id:[rxn_id_1,rxn_id_2]}
-
-        if not flux_splits_I:
-            from stage02_isotopomer_dependencies import isotopomer_fluxSplits
-            flux_splits = isotopomer_fluxSplits();
-            flux_splits_I=flux_splits.isotopomer_splits;
-
-        data_O = [];
-        print 'calculating flux splits...'
-        # simulation_dateAndTime
-        simulation_dateAndTimes = [];
-        simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I);
-        for simulation_dateAndTime in simulation_dateAndTimes:
-            print 'calculating flux splits for simulation_dateAndTime ' + str(simulation_dateAndTime)
-            # get all flux_units
-            flux_units = [];
-            flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
-            for flux_unit_cnt,flux_unit in enumerate(flux_units):
-                # check for more than 1 flux_unit
-                if flux_unit_cnt>0:
-                    break; #splits do not depend on the flux_unit
-                print 'calculating flux splits for flux_unit ' + str(flux_unit)
-                for k,v in flux_splits_I.iteritems():
-                    print 'flux_split ' + str(k)
-                    # get the fluxes
-                    flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1=[],[],[],[],[]
-                    for rxn_id in v:
-                        flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,rxn_id);
-                        flux_average_1.append(flux_average_2);
-                        flux_stdev_1.append(flux_stdev_2);
-                        flux_lb_1.append(flux_lb_2);
-                        flux_ub_1.append(flux_ub_2);
-                        flux_units_1.append(flux_units_2);
-                    # calculate the split
-                    split,split_stdev,split_lb,split_ub,split_units=self.calculate_fluxSplit(flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1)
-                    # record the data
-                    for rxn_id_cnt,rxn_id in enumerate(v):
-                        data_O.append({'simulation_id':simulation_id_I,
-                            'simulation_dateAndTime':simulation_dateAndTime,
-                            'split_id':k,
-                            'split_rxn_ids':rxn_id,
-                            'split':split[rxn_id_cnt],
-                            'split_stdev':split_stdev[rxn_id_cnt],
-                            'split_lb':split_lb[rxn_id_cnt],
-                            'split_ub':split_ub[rxn_id_cnt],
-                            'split_units':split_units[rxn_id_cnt],
-                            'used_':True,
-                            'comment_':None})
-        # add the data to the database:
-        for d in data_O:
-            row=None;
-            row=data_stage02_isotopomer_fittedFluxSplits(d['simulation_id'],
-                                d['simulation_dateAndTime'],
-                                d['split_id'],
-                                d['split_rxn_ids'],
-                                d['split'],
-                                d['split_stdev'],
-                                d['split_lb'],
-                                d['split_ub'],
-                                d['split_units'],
-                                d['used_'],
-                                d['comment_']);
-            self.session.add(row);
-        self.session.commit();
-
+                            
 class inca_api(stage02_isotopomer_execute):
 
     def write_isotopomerExperiment_INCA(self, modelReaction_data_I,modelMetabolite_data_I,
@@ -2064,12 +2243,12 @@ class inca_api(stage02_isotopomer_execute):
                                     ave = ms_data['intensity_normalized_average'][cnt]
                                     stdev = ms_data['intensity_normalized_stdev'][cnt]
                                     # remove 0.0000 values and replace with NaN
-                                    if ave < 1e-9: 
+                                    if ave < 1e-4: 
                                         ave = 'NaN';
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %s;\n' %(sna_cnt+1,i+1,cnt+1,j+1,ave));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %f;\n' %(sna_cnt+1,i+1,cnt+1,j+1,ave));
-                                    if stdev < 1e-9:
+                                    if stdev < 1e-4:
                                         # check if the ave is NaN
                                         if ave=='NaN': stdev = 'NaN';
                                         else: stdev = 0.0001;
