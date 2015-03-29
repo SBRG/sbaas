@@ -246,7 +246,6 @@ heatmap_d3 = function (data_I, chart_I) {
   }
 
   d3.select("#order").on("change",function(){
-    //this.$('#order').on("change",function(){
     order(this.value);
   });
 

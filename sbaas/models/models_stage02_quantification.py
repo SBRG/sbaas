@@ -61,9 +61,9 @@ class data_stage02_quantification_anova(Base):
     __tablename__ = 'data_stage02_quantification_anova'
     id = Column(Integer, Sequence('data_stage02_quantification_anova_id_seq'), primary_key=True)
     analysis_id = Column(String(500))
-    experiment_id = Column(String(50))
+    #experiment_id = Column(String(50))
     sample_name_abbreviation = Column(postgresql.ARRAY(String(100)))
-    time_point = Column(String(10))
+    #time_point = Column(String(10))
     component_group_name = Column(String(100))
     component_name = Column(String(500))
     test_stat = Column(Float)
@@ -76,20 +76,22 @@ class data_stage02_quantification_anova(Base):
     comment_ = Column(Text);
 
     __table_args__ = (#UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','component_name'),
-                      UniqueConstraint('analysis_id','experiment_id','sample_name_abbreviation','time_point','component_name'),
+                      UniqueConstraint('analysis_id','sample_name_abbreviation','component_name'),
             )
 
     def __init__(self, 
                  analysis_id_I,
-                 experiment_id_I, sample_name_abbreviation_I, 
-                 time_point_I, component_group_name_I, component_name_I,
+                 #experiment_id_I, 
+                 sample_name_abbreviation_I, 
+                 #time_point_I, 
+                 component_group_name_I, component_name_I,
                  test_stat_I, test_description_I,
                  pvalue_I, pvalue_corrected_I, pvalue_corrected_description_I, 
                  calculated_concentration_units_I, used_I, comment_I):
         self.analysis_id = analysis_id_I;
-        self.experiment_id = experiment_id_I;
+        #self.experiment_id = experiment_id_I;
         self.sample_name_abbreviation = sample_name_abbreviation_I;
-        self.time_point = time_point_I;
+        #self.time_point = time_point_I;
         self.component_group_name = component_group_name_I;
         self.component_name = component_name_I;
         self.test_stat=test_stat_I;
@@ -104,10 +106,8 @@ class data_stage02_quantification_anova(Base):
     def __repr__dict__(self): # not complete!
         return {
             "analysis_id":self.analysis_id,
-            'experiment_id_I':self.experiment_id,
                 'sample_name_abbreviation_I':self.sample_name_abbreviation,
-
-                "time_point":self.time_point,
+                
                 "component_group_name":self.component_group_name,
                 "component_name":self.component_name,
                 #...
@@ -122,11 +122,11 @@ class data_stage02_quantification_pairWiseTest(Base):
     __tablename__ = 'data_stage02_quantification_pairWiseTest'
     id = Column(Integer, Sequence('data_stage02_quantification_pairWiseTest_id_seq'), primary_key=True)
     analysis_id = Column(String(500))
-    experiment_id = Column(String(50))
+    #experiment_id = Column(String(50))
     sample_name_abbreviation_1 = Column(String(100))
     sample_name_abbreviation_2 = Column(String(100))
-    time_point_1 = Column(String(10))
-    time_point_2 = Column(String(10))
+    #time_point_1 = Column(String(10))
+    #time_point_2 = Column(String(10))
     component_group_name = Column(String(100))
     component_name = Column(String(500))
     test_stat = Column(Float)
@@ -144,23 +144,25 @@ class data_stage02_quantification_pairWiseTest(Base):
     comment_ = Column(Text);
 
     __table_args__ = (#UniqueConstraint('experiment_id','sample_name_abbreviation_1','time_point_1','sample_name_abbreviation_2','time_point_2','component_name'),
-                      UniqueConstraint('analysis_id','experiment_id','sample_name_abbreviation_1','time_point_1','sample_name_abbreviation_2','time_point_2','component_name'),
+                      UniqueConstraint('analysis_id','sample_name_abbreviation_1','sample_name_abbreviation_2','component_name','calculated_concentration_units'),
             )
 
     def __init__(self,
                  analysis_id_I,
-                 experiment_id_I, sample_name_abbreviation_1_I, sample_name_abbreviation_2_I,
-                 time_point_1_I, time_point_2_I, component_group_name_I, component_name_I,
+                 #experiment_id_I,
+                 sample_name_abbreviation_1_I, sample_name_abbreviation_2_I,
+                 #time_point_1_I, time_point_2_I,
+                 component_group_name_I, component_name_I,
                  mean_I, test_stat_I, test_description_I,
                  pvalue_I, pvalue_corrected_I, pvalue_corrected_description_I,
                  ci_lb_I, ci_ub_I, ci_level_I,
                  fold_change_I, calculated_concentration_units_I, used_I, comment_I):
         self.analysis_id = analysis_id_I;
-        self.experiment_id = experiment_id_I;
+        #self.experiment_id = experiment_id_I;
         self.sample_name_abbreviation_1 = sample_name_abbreviation_1_I;
         self.sample_name_abbreviation_2 = sample_name_abbreviation_2_I;
-        self.time_point_1 = time_point_1_I;
-        self.time_point_2 = time_point_2_I;
+        #self.time_point_1 = time_point_1_I;
+        #self.time_point_2 = time_point_2_I;
         self.component_group_name = component_group_name_I;
         self.component_name = component_name_I;
         self.mean=mean_I;
@@ -180,10 +182,8 @@ class data_stage02_quantification_pairWiseTest(Base):
     def __repr__dict__(self): # not complete!
         return {
             "analysis_id":self.analysis_id,
-            'experiment_id_I':self.experiment_id,
                 'sample_name_abbreviation_I':self.sample_name_abbreviation,
 
-                "time_point":self.time_point,
                 "component_group_name":self.component_group_name,
                 "component_name":self.component_name,
                 #...
@@ -197,9 +197,9 @@ class data_stage02_quantification_pca_scores(Base):
     __tablename__ = 'data_stage02_quantification_pca_scores'
     id = Column(Integer, Sequence('data_stage02_quantification_pca_scores_id_seq'), primary_key=True)
     analysis_id = Column(String(500))
-    experiment_id = Column(String(50))
+    #experiment_id = Column(String(50))
     sample_name_short = Column(String(100))
-    time_point = Column(String(10))
+    #time_point = Column(String(10))
     score = Column(Float);
     axis = Column(Integer);
     var_proportion = Column(Float);
@@ -208,20 +208,22 @@ class data_stage02_quantification_pca_scores(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    __table_args__ = (#UniqueConstraint('experiment_id','sample_name_short','axis','calculated_concentration_units'),
-                      UniqueConstraint('analysis_id','experiment_id','sample_name_short','axis','calculated_concentration_units'),
+    __table_args__ = (#UniqueConstraint('analysis_id','experiment_id','sample_name_short','axis','calculated_concentration_units'),
+                      UniqueConstraint('analysis_id','sample_name_short','axis','calculated_concentration_units'),
             )
 
     def __init__(self, 
                  analysis_id_I,
-                 experiment_id_I, sample_name_short_I, 
-                 time_point_I,score_I, axis_I,
+                 #experiment_id_I,
+                 sample_name_short_I, 
+                 #time_point_I,
+                 score_I, axis_I,
                  var_proportion_I, var_cumulative_I,
                  calculated_concentration_units_I, used_I, comment_I):
         self.analysis_id = analysis_id_I;
-        self.experiment_id = experiment_id_I;
+        #self.experiment_id = experiment_id_I;
         self.sample_name_short = sample_name_short_I;
-        self.time_point = time_point_I;
+        #self.time_point = time_point_I;
         self.score=score_I
         self.axis=axis_I
         self.var_proportion=var_proportion_I
@@ -233,7 +235,6 @@ class data_stage02_quantification_pca_scores(Base):
     def __repr__dict__(self): # not complete!
         return {
             "analysis_id":self.analysis_id,
-            'experiment_id_I':self.experiment_id,
                 #...
                 'used_I':self.used_,
                 'comments_I':self.comments_}
@@ -245,8 +246,8 @@ class data_stage02_quantification_pca_loadings(Base):
     __tablename__ = 'data_stage02_quantification_pca_loadings'
     id = Column(Integer, Sequence('data_stage02_quantification_pca_loadings_id_seq'), primary_key=True)
     analysis_id = Column(String(500))
-    experiment_id = Column(String(50))
-    time_point = Column(String(10))
+    #experiment_id = Column(String(50))
+    #time_point = Column(String(10))
     component_group_name = Column(String(100))
     component_name = Column(String(500))
     loadings = Column(Float);
@@ -255,19 +256,21 @@ class data_stage02_quantification_pca_loadings(Base):
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    __table_args__ = (#UniqueConstraint('experiment_id','component_name','axis','calculated_concentration_units'),
-                      UniqueConstraint('analysis_id','experiment_id','component_name','axis','calculated_concentration_units'),
+    __table_args__ = (
+                      #UniqueConstraint('analysis_id','experiment_id','component_name','axis','calculated_concentration_units'),
+                      UniqueConstraint('analysis_id','component_name','axis','calculated_concentration_units'),
             )
 
     def __init__(self, 
                  analysis_id_I,
-                 experiment_id_I,
-                 time_point_I, component_group_name_I, component_name_I,
+                 #experiment_id_I,
+                 #time_point_I,
+                 component_group_name_I, component_name_I,
                  loadings_I, axis_I, calculated_concentration_units_I, 
                  used_I, comment_I):
         self.analysis_id = analysis_id_I;
-        self.experiment_id = experiment_id_I;
-        self.time_point = time_point_I;
+        #self.experiment_id = experiment_id_I;
+        #self.time_point = time_point_I;
         self.component_group_name = component_group_name_I;
         self.component_name = component_name_I;
         self.loadings=loadings_I
@@ -279,7 +282,6 @@ class data_stage02_quantification_pca_loadings(Base):
     def __repr__dict__(self): # not complete!
         return {
             "analysis_id":self.analysis_id,
-            'experiment_id_I':self.experiment_id,
                 #...
                 'used_I':self.used_,
                 'comments_I':self.comments_}

@@ -4,7 +4,7 @@
     // histogram and kernal density plot
 
     // clear any existing svg elements
-    d3.select("svg")
+    d3.select("#" + chart_I).selectAll('svg')
        .remove();
 
     var data = data_I.data; // data = [{x_data:float,dx_data:float,y_data:float,samples:string},{},{},...]

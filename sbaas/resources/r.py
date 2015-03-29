@@ -888,8 +888,8 @@ class r_calculate(base_analysis):
         sns_sorted = sorted(set(sns))
         cn_sorted = sorted(set(cn))
         concentrations = ['NA' for r in range(len(sns_sorted)*len(cn_sorted))];
-        experiment_ids = ['' for r in range(len(sns_sorted)*len(cn_sorted))];
-        time_points = ['' for r in range(len(sns_sorted)*len(cn_sorted))];
+        #experiment_ids = ['' for r in range(len(sns_sorted)*len(cn_sorted))];
+        #time_points = ['' for r in range(len(sns_sorted)*len(cn_sorted))];
         cnt = 0;
         cnt_bool = True;
         cnt2_bool = True;
@@ -902,8 +902,8 @@ class r_calculate(base_analysis):
                         if d['sample_name_short'] == s and d['component_name'] == c:
                             if d['calculated_concentration']:
                                 concentrations[cnt] = d['calculated_concentration'];
-                                experiment_ids[cnt] = d['experiment_id'];
-                                time_points[cnt] = d['time_point'];
+                                #experiment_ids[cnt] = d['experiment_id'];
+                                #time_points[cnt] = d['time_point'];
                                 if cnt_bool:
                                     sna.append(d['sample_name_abbreviation']);
                                 if cnt2_bool:
@@ -952,8 +952,8 @@ class r_calculate(base_analysis):
                         data_tmp['axis'] = c+1;
                         data_tmp['var_proportion'] = var_proportion[c];
                         data_tmp['var_cumulative'] = var_cumulative[c];
-                        data_tmp['experiment_id'] = experiment_ids[cnt];
-                        data_tmp['time_point'] = time_points[cnt];
+                        #data_tmp['experiment_id'] = experiment_ids[cnt];
+                        #data_tmp['time_point'] = time_points[cnt];
                         data_scores.append(data_tmp);
                         cnt+=1;
                 # extract out loadings
@@ -966,8 +966,8 @@ class r_calculate(base_analysis):
                         data_tmp['component_group_name'] = cgn[r];
                         data_tmp['loadings'] = loadings[r,c]; #need to double check
                         data_tmp['axis'] = c+1;
-                        data_tmp['experiment_id'] = experiment_ids[cnt];
-                        data_tmp['time_point'] = time_points[cnt];
+                        #data_tmp['experiment_id'] = experiment_ids[cnt];
+                        #data_tmp['time_point'] = time_points[cnt];
                         data_loadings.append(data_tmp);
                         cnt+=1;
             except Exception as e:
