@@ -2,7 +2,7 @@
 {% block title %}Data analysis visualization{% endblock %}
 {% block head %}
   <script src="{{d3}}"></script>
-<script src="{{jquery}}"></script>
+    <script src="{{jquery}}"></script>
   <script src="{{boot_js}}"></script>
 
   <link rel="stylesheet" href="{{boot_css}}"/>
@@ -70,26 +70,8 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <h3>Experiment ID</h3>
-                <select id="experiment_ids" class="form-control">
-                    <option value="none">None</option>
-                </select>
-            </div>
-            <div class="col-sm-6">
-                <h3>Experiment type</h3>
-                <select id="experiment_types" class="form-control">
-                    <option value="none">None</option>
-                </select>
-            </div>
-            <div class="col-sm-6">
-                <h3>Template</h3>
-                <select id="templates" class="form-control">
-                    <option value="none">None</option>
-                </select>
-            </div>
-            <div class="col-sm-6">
-                <h3>Data</h3>
-                <select id="data_ids" class="form-control">
+                <h3>Project ID</h3>
+                <select id="project_ids" class="form-control">
                     <option value="none">None</option>
                 </select>
             </div>

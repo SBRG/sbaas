@@ -1,4 +1,4 @@
-﻿map2d = function () {
+﻿d3_map2d = function () {
     // generic chart
     this.id = '';
     this.svgelement = null;
@@ -14,24 +14,23 @@
     this.mapdata = {};
     this.datan = {}; //container for each data type
 };
-map2d.prototype.set_id = function () {
-    // set map id
-};
-map2d.prototype.set_svgelement = function () {
+d3_map2d.prototype = Object.create(d3_svg.prototype);
+d3_map2d.prototype.constructor = d3_map2d;
+d3_map2d.prototype.set_svgelement = function () {
     // set svg element
 };
-map2d.prototype.set_title = function () {
+d3_map2d.prototype.set_title = function () {
     // set chart title
 };
-map2d.prototype.set_margin = function () {
+d3_map2d.prototype.set_margin = function () {
     // set margin properties
 };
-map2d.prototype.set_width = function () {
+d3_map2d.prototype.set_width = function () {
     // set width properties
 };
-map2d.prototype.set_height = function () {
+d3_map2d.prototype.set_height = function () {
     // set height properties
 };
-map2d.prototype.add_svgexport = function () {
+d3_map2d.prototype.add_svgexport = function () {
     //add svg element export
 };

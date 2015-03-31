@@ -2,12 +2,13 @@
 {% block title %}{{title}}{% endblock %}
 {% block head %}
     <script src="{{d3}}"></script>
+    <script src="{{colorbrewer}}"></script>
     <script src="{{jquery}}"></script>
     <script src="{{boot_js}}"></script>
 
     <!-- js dependencies -->
     <script src="{{filename_js}}"></script>
-    <script src="{{utilities_js}}"></script>
+    <script src="{{container_js}}"></script>
     <script src="{{vkbeautify}}"></script>
 
   <link rel="stylesheet" href="{{boot_css}}"/>
@@ -20,13 +21,13 @@
 {% block header %}
 <header class="row">
     <div class="container">
-        <div class="row">
+        <!--<div class="row">
             <div class="col-sm-12">
                 <div id="title-box">
                     <h3 id="title">{{title_header}}</h3>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </header>
 {% endblock %}
@@ -34,6 +35,12 @@
 {% block main %}
 <main>
     <div class="container" id="container">
+        <div class="row" id="row1">
+            <div class="col-sm-12" id="col1">
+                <div id="tile1">
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 <!-- d3 render -->

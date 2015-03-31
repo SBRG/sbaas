@@ -126,7 +126,6 @@ class IndexHandler(BaseHandler):
     @authenticated
     def get(self):
         url = urls();
-        # get experiment_ids, experiment_types, and templates
         #response = yield gen.Task(AsyncHTTPClient().fetch,
         #                          '/'.join([url.get_url('index_filter', source='local',protocol='https')]));
         #json_data = response.body if response.body is not None else json.dumps(None)
@@ -152,6 +151,86 @@ class IndexHandler(BaseHandler):
                                data=json_data,
                                version=__version__,
                                web_version=False)
+        
+        self.set_header("Content-Type", "text/html")
+        self.serve(data)
+  
+class ContainerHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self, path_I):
+        # local variables, objects, and settings
+        #source = 'web'
+        source = 'local'
+        url = urls();
+        # parse the path
+        path = path_I.replace('.html','');
+        # parse the input
+        visualization_kwargs = {};
+        arguments = [];
+        for arg in ['project_id_name']:
+            args = self.get_arguments(arg);
+            if len(args)==1:
+                visualization_kwargs[arg] = args[0];
+                arguments.append(args[0]);
+        # make the title name
+        titlename = ' '.join([visualization_kwargs['project_id_name']]);
+        # build up the data directory
+        #boxandwhiskers and histogram
+        if visualization_kwargs.has_key('feature_name'):
+            if visualization_kwargs.has_key('time_point_name'):
+                filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['feature_name'] + '.js';
+            else:
+                filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['feature_name'] + '.js';
+            data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
+            try:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                    data_json = file.read();
+            except:
+                data_json = '';
+        else:
+            #filename_data_id = visualization_kwargs['data_name'] + '.js';
+            filename_data_id = '.js';
+            data_dir = '/'.join([visualization_kwargs['project_id_name']]);
+            try:
+                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
+                    data_json = file.read();
+            except:
+                data_json = '';
+        # get the index data directory if it exists
+        try:
+            with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https') + '/'+'filter.js', "rb") as file:
+                data_index = file.read();
+        except IOError as e:
+            data_index = None;
+        # get the index directory if it exists
+        if data_index:
+            filename_index = url.get_url(filename_index, source)
+        else:
+            filename_index = None;
+        ## get the css directory
+        #filename_css = visualization_kwargs['template_name'] + '_css';
+        ## get the js directory
+        #filename_js = visualization_kwargs['template_name'] + '_js';
+        # get the template directory
+        template_dir = 'container' + '.html';
+        # render the template
+        template = env.get_template(template_dir)
+        data = template.render(d3=url.get_url('d3', source),
+                               colorbrewer=url.get_url('colorbrewer', source),
+                               #filename_css=url.get_url(filename_css, source),
+                               #filename_js=url.get_url(filename_js, source),
+                               container_js=url.get_url('container_js', source),
+                               chart_title=titlename,
+                               title=titlename,
+                               data_id=data_json,
+                               #specific to templates with a menu
+                               index_js=filename_index,
+                               data=data_index,
+                               version=__version__,
+                               web_version=False,
+                               vkbeautify=url.get_url('vkbeautify', source))
         
         self.set_header("Content-Type", "text/html")
         self.serve(data)
@@ -313,7 +392,8 @@ application = Application([
     (r".*/(js/.*)", StaticHandler),
     (r".*/(css/.*)", StaticHandler),
     (r".*/(resources/.*)", StaticHandler),
-    (r"/(data.*)", VisualizationHandler),
+    (r"/(data.*)", ContainerHandler),
+    #(r"/(data.*)", VisualizationHandler),
     (r"/", IndexHandler),
     (r"/login", LoginHandler),
     (r"/logout", LogoutHandler),

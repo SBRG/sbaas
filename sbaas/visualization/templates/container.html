@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block head %}
+    <script src="{{d3}}"></script>
+    <script src="{{jquery}}"></script>
+    <script src="{{boot_js}}"></script>
+
+    <!-- js dependencies -->
+    <script src="{{filename_js}}"></script>
+    <script src="{{container_js}}"></script>
+    <script src="{{vkbeautify}}"></script>
+
+  <link rel="stylesheet" href="{{boot_css}}"/>
+  <link rel="stylesheet" href="{{visualization_css}}"/>
+
+  <!-- This font cannot be downloaded. -->
+  <script src="//use.edgefonts.net/tulpen-one.js"></script>
+{% endblock %}
+
+{% block header %}
+<header class="row">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="title-box">
+                    <h3 id="title">{{title_header}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+{% block nav %}{% endblock %}
+{% block main %}
+<main>
+    <div class="container" id="container">
+        <div class="row" id="row1">
+            <div class="col-sm-12" id="col1">
+                <div id="tile1">
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- d3 render -->
+<script type="text/javascript">
+    //{{data_id}}; //var data = ...(loaded json structure)
+    //chart2d(data);
+</script>
+{% endblock %}
+{% block footer %}
+<footer>
+    <div class="container">
+        <p class="more">
+            Learn more about <a href="{{github}}">this project</a>
+        </p>
+        <p class="version">
+            Version {{version}}
+        </p>
+    </div>
+</footer>
+{% endblock %}
+{% block script %}
+<script>
+    //{{data}};
+</script>
+<script src="{{index_js}}"></script>
+{% if web_version %}
+<script src="{{index_gh_pages_js}}"></script>
+{% else %}
+<!--<script>setup()</script>-->
+{% endif %}
+{% endblock %}
