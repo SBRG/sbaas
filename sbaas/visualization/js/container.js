@@ -125,7 +125,7 @@ d3_svg.prototype.add_svgexportbutton2tile = function () {
     var svgexportbutton_input = svgexportbutton.append("input");
     svgexportbutton_input.attr("type", "button")
         .attr("value", "Download");
-    svgexportbutton_input.on("click",this.export_svgelement);
+    svgexportbutton_input.on("click", this.export_svgelement);
 
 };
 d3_svg.prototype.export_svgelement = function () {
@@ -136,14 +136,20 @@ d3_svg.prototype.export_svgelement = function () {
 
     var do_beautify_I = true;
     var a = document.createElement('a'), xml, ev;
+    var id = this.id;
     a.download = 'figure' + '.svg'; // file name
     // convert node to xml string
     //xml = (new XMLSerializer()).serializeToString(d3.select(svg_sel).node()); //div element interferes with reading the svg file in illustrator/pdf/inkscape
     //xml = (new XMLSerializer()).serializeToString(this.svgelement[0][0]);
     var form = d3.select(this.parentNode);
     var tile = form.node().parentNode;
-    //assumption: the svg element is the first child of the tile
-    xml = (new XMLSerializer()).serializeToString(tile.children[0]);
+    // find the index of the svg element
+    var svgid = null;
+    for (i = 0; i < tile.children.length; i++) {
+        if (tile.children[i].nodeName === 'svg') {
+            svgid = i;};
+    };
+    xml = (new XMLSerializer()).serializeToString(tile.children[svgid]);
     if (do_beautify_I) xml = vkbeautify.xml(xml);
     xml = '<?xml version="1.0" encoding="utf-8"?>\n \
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"\n \
@@ -161,7 +167,7 @@ d3_svg.prototype.export_svgelement = function () {
     }
 };
 d3_map2d = function () {
-    // generic chart
+    // generic map
     this.id = '';
     this.margin = {};
     this.width = 1;
@@ -197,11 +203,10 @@ d3_map2d.prototype.add_svgexport = function () {
 };
 d3_chart2d = function () {
     // generic chart
-    // data1 = [{x_data:float,y_data:float,series_label:string,text_labels:string}]
     d3_svg.call(this);
-    this.svgdata = null;
+    //this.svgdata = null;
     this.svgenter = null;
-    this.svgsvg = null;
+    //this.svgsvg = null;
     this.svgg = null;
     this.duration = 1;
     this.x1scale = null;
@@ -217,10 +222,30 @@ d3_chart2d = function () {
     this.y1axis = null;
     this.y2axis = null;
     this.colorscale = null;
-    this.data1 = {};
-    this.data2 = {};
+    this.data1xdata = '';
+    this.data1ydata = '';
+    this.data1serieslabel = '';
+    this.data1featurelabel = '';
+    this.data2xdata = '';
+    this.data2ydata = '';
+    this.data2serieslabel = '';
+    this.data2featureslabel = '';
+    this.data1 = null; //d3_data
+    this.data2 = null; //d3_data
     this.clippath = null;
     this.title = null;
+    this.x1axisgridlines = null;
+    this.y1axisgridlines = null;
+    this.x1axisgridlinesenter = null;
+    this.y1axisgridlinesenter = null;
+    this.tooltip = null;
+    this.pointsdata1 = null;
+    this.pointsdata2 = null;
+    this.pointsdata1enter = null;
+    this.pointsdata2enter = null;
+    this.legenddata1 = null;
+    this.legenddata1enter = null;
+    this.render = null; // function defining the calls to make the chart
 
 };
 d3_chart2d.prototype = Object.create(d3_svg.prototype);
@@ -228,16 +253,28 @@ d3_chart2d.prototype.constructor = d3_chart2d;
 d3_chart2d.prototype.add_chart2d2tile = function(){
     // add char2d to tile
 
-    this.svgelement = d3.select('#' + this.tileid).selectAll("svg");
-    this.svgdata = this.svgelement.data([0]); //can also be [this.data1]
-    this.svgenter = this.svgdata.enter();
-    this.svgsvg = this.svgenter
-        .append("svg").attr("id", this.id);
-    this.svgg = this.svgsvg.append('g')
+    this.svgelement = d3.select('#' + this.tileid).selectAll("svg")
+        .data([this.data1.listdatafiltered]);
+    this.svgenter = this.svgelement.enter()
+        .append("svg")
+        .attr("id", this.id)
+        .append('g')
         .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-    //set the svgdata attribute after appending g
-    this.svgdata.attr("width", this.width + this.margin.left + this.margin.right)
+    this.svgelement.attr("width", this.width + this.margin.left + this.margin.right)
         .attr("height", this.height + this.margin.top + this.margin.bottom);
+
+    this.svgg = this.svgelement.select('g');
+
+    //this.svgelement = d3.select('#' + this.tileid).selectAll("svg");
+    //this.svgdata = this.svgelement.data([this.data1.listdatafiltered]);
+    //this.svgenter = this.svgdata.enter();
+    //this.svgsvg = this.svgenter
+    //    .append("svg").attr("id", this.id);
+    //this.svgg = this.svgsvg.append('g')
+    //    .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+    ////set the svgdata attribute after appending g
+    //this.svgdata.attr("width", this.width + this.margin.left + this.margin.right)
+    //    .attr("height", this.height + this.margin.top + this.margin.bottom);
 
 };
 d3_chart2d.prototype.add_title = function (title_I) {
@@ -258,9 +295,9 @@ d3_chart2d.prototype.remove_title = function () {
 d3_chart2d.prototype.add_clippath = function () {
     // add clippath to chart
     this.clippath = this.svgg.append("clippath")
-          .attr("id", "clip")
+          .attr("class", "clippath")
+          .attr("id", this.id + "clippath")
         .append("rect")
-          .attr("class", "mesh")
           .attr("width", this.width)
           .attr("height", this.height);
 };
@@ -303,24 +340,28 @@ d3_chart2d.prototype.add_data2 = function (data2_I) {
 };
 d3_chart2d.prototype.set_x1domain = function () {
     // set x1-domain of the plot
-    this.x1scale.domain(d3.extent(this.data1, function (d) { return d.x_data; })).nice();
+    var x_data = this.data1xdata;
+    this.x1scale.domain(d3.extent(this.data1.listdatafiltered, function (d) { return d[x_data]; })).nice();
 };
 d3_chart2d.prototype.set_y1domain = function () {
     // set y1-domain of the plot
-    this.y1scale.domain(d3.extent(this.data1, function (d) { return d.y_data; })).nice();
+    var y_data = this.data1ydata;
+    this.y1scale.domain(d3.extent(this.data1.listdatafiltered, function (d) { return d[y_data]; })).nice();
 };
 d3_chart2d.prototype.set_x2domain = function () {
     // set x2-domain of the plot
-    this.x2scale.domain(d3.extent(this.data2, function (d) { return d.x_data; })).nice();
+    var x_data = this.data2xdata;
+    this.x2scale.domain(d3.extent(this.data2.listdatafiltered, function (d) { return d[x_data]; })).nice();
 };
 d3_chart2d.prototype.set_y2domain = function () {
     // set y2-domain of the plot
-    this.x2scale.domain(d3.extent(this.data2, function (d) { return d.y_data; })).nice();
+    var y_data = this.data2ydata;
+    this.x2scale.domain(d3.extent(this.data2.listdatafiltered, function (d) { return d[y_data]; })).nice();
 };
 d3_chart2d.prototype.set_colorscale = function () {
     // set color scale
     // add in option to change color scale
-    this.colorscale = d3_chart2d.scale.category20c();
+    this.colorscale = d3.scale.category20c();
 };
 d3_chart2d.prototype.set_x1axis = function () {
     //x1 axis properties
@@ -346,16 +387,17 @@ d3_chart2d.prototype.set_y2axis = function () {
 };
 d3_chart2d.prototype.add_x1axis = function () {
     //add x1 axis
-    this.x1axis = this.svgg.append("g")
+    this.x1axis = this.svgenter.append("g")
             .attr("class", "x1axis")
             .attr("id", this.id + "x1axis")
-            .attr("transform", "translate(0," + this.height + ")")
-            .transition()
+            .attr("transform", "translate(0," + this.height + ")");
+    //this.svgg.select('g.x1axis') //can be used as well
+    this.x1axis.transition()
             .call(this._x1axis);
 };
 d3_chart2d.prototype.add_x2axis = function () {
     //add x2 axis
-    this.x2axis = this.svgg.append("g")
+    this.x2axis = this.svgenter.append("g")
             .attr("class", "x2axis")
             .attr("id", this.id + "x2axis")
             .transition()
@@ -363,15 +405,16 @@ d3_chart2d.prototype.add_x2axis = function () {
 };
 d3_chart2d.prototype.add_y1axis = function () {
     //add y1 axis
-    this.y1axis = this.svgg.append("g")
+    this.y1axis = this.svgenter.append("g")
             .attr("class", "y1axis")
-            .attr("id", this.id + "y1axis")
-            .transition()
+            .attr("id", this.id + "y1axis");
+    //this.svgg.select('g.y1axis') //can be used as well
+    this.y1axis.transition()
             .call(this._y1axis);
 };
 d3_chart2d.prototype.add_y2axis = function () {
     //add y2 axis
-    this.y2axis = this.svgg.append("g")
+    this.y2axis = this.svgenter.append("g")
             .attr("class", "y2axis")
             .attr("id", this.id + "y2axis")
             .attr("transform", "translate(" + width + ",0)")
@@ -390,21 +433,45 @@ d3_chart2d.prototype.set_y1tickformat = function () {
 d3_chart2d.prototype.set_y2tickformat = function () {
     //set y2ticklabels properties
 };
-d3_chart2d.prototype.add_xgridlines = function () {
+d3_chart2d.prototype.add_x1axisgridlines = function () {
     //x axis grid lines properties
-    this.x1axisgridlines = this.svgg.selectAll("xgridlines")
-      .data(this.x1scale.ticks(10))
-      .enter().append("line")
+    var y_data = this.data1ydata;
+    var x1scale = this.x1scale;
+    var listdatafiltered = this.data1.listdatafiltered
+
+    var x1axisgridlinesg = this.svgg.append('g')
       .attr("class", "xgridlines")
-      .attr("id", this.id+"xgridlines")
-      .attr("x1", this.x1scale)
-      .attr("x2", this.x1scale)
-      .attr("y1", d3.min(this.data1, function (d) { return d.y_data; }))
-      .attr("y2", d3.max(this.data1, function (d) { return d.y_data; }))
+      .attr("id", this.id + "xgridlines");
+
+    this.x1axisgridlines = x1axisgridlinesg.selectAll("line")
+      .data(x1scale.ticks(10));
+
+    this.x1axisgridlines.exit().remove();
+
+    this.x1axisgridlinesenter = this.x1axisgridlines.enter();
+
+    this.x1axisgridlinesenter.append("line")
+      .transition()
+      .attr("x1", x1scale)
+      .attr("x2", x1scale)
+      .attr("y1", d3.min(data1.listdatafiltered, function (d) { return d[y_data]; }))
+      .attr("y2", d3.max(data1.listdatafiltered, function (d) { return d[y_data]; }))
       .style("stroke", "#ccc");
 };
-d3_chart2d.prototype.add_ygridlines = function () {
+d3_chart2d.prototype.add_y1axisgridlines = function () {
     //y axis grid lines properties
+    var x_data = this.data1ydata;
+    //TODO: match x axis gridlines
+    this.y1axisgridlines = this.svgg.selectAll(".ygridlines")
+    .data(this.y1scale.ticks(10))
+    .enter().append("line")
+    .attr("class", "ygridlines")
+    .attr("id", this.id + "ygridlines")
+    .attr("x1", d3.min(this.data1.listdatafiltered, function (d) { return d[x_data]; }))
+    .attr("x2", d3.max(this.data1.listdatafiltered, function (d) { return d[x_data]; }))
+    .attr("y1", this.y1scale)
+    .attr("y2", this.y1scale)
+    .style("stroke", "#ccc");
 };
 d3_chart2d.prototype.set_x1axislabel = function (x1axislabel_I) {
     //set x1axis label properties
@@ -431,36 +498,280 @@ d3_chart2d.prototype.set_y1axislabel = function (y1axislabel) {
 d3_chart2d.prototype.set_y2axislabel = function () {
     //set y2axis label properties
 };
-d3_chart2d.prototype.set_x1axisstyle = function (x1axissyle_I) {
-    //set x1axis style properties
-    d3.selectAll('#' + this.id + 'y1axis').style(x1axissyle_I);
+d3_chart2d.prototype.set_tooltip = function () {
+    //set tooltip properties
+    var series_label = this.data1serieslabel;
+
+    this.tooltip = d3.select("#" + this.tileid)
+        .append("div")
+        .attr('class', 'hidden')
+        .attr('id', this.id + 'tooltip')
+        .append('p')
+        .attr('id', this.id + 'value');
 };
-d3_chart2d.prototype.set_y1axisstyle = function (y1axissyle_I) {
-    //set y1axis style properties
-    this.y1axis.style(y1axissyle_I);
+d3_chart2d.prototype.set_tooltipstyle = function () {
+    //set tooltip css properties
+    var tooltipselector = "#" + this.id + 'tooltip';
+    //var tooltipstyle = {
+    //        'line-height': '1',
+    //        'font-weight': 'bold',
+    //        'padding': '12px',
+    //        'background': 'rgba(0, 0, 0, 0.8)',
+    //        'color': '#fff',
+    //        'border-radius': '2px'
+    //};
+    var tooltipstyle = {'position': 'fixed',
+        'width': '200px',
+        'height': 'auto',
+        'padding': '10px',
+        'background-color': 'white',
+        '-webkit-border-radius': '10px',
+        '-moz-border-radius': '10px',
+        'border-radius': '10px',
+        '-webkit-box-shadow': '4px 4px 10px rgba(0, 0, 0, 0.4)',
+        '-moz-box-shadow': '4px 4px 10px rgba(0, 0, 0, 0.4)',
+        'box-shadow': '4px 4px 10px rgba(0, 0, 0, 0.4)',
+        'pointer-events': 'none'
+    };
+    var selectionstyle = [{ 'selection': tooltipselector, 'style': tooltipstyle }];
+    this.set_d3css(selectionstyle);
 };
-d3_chart2d.prototype.add_tooltip = function () {
-    //tooltip properties
+d3_chart2d.prototype.add_legendupdate = function () {
+    //add a call to update based on what series_label the user clicks on
+
+    //update data and graphic upon click
+    var series_label = this.data1serieslabel;
+    var _this = this;
+
+    this.legenddata1enter.on("click", function (d) {
+        var filters = [];
+        _this.data1.filters[series_label].forEach(function (n) { if (n !== d.key) { filters.push(n);}; });
+        //_this.data1.change_filters({ series_label: filters });
+        _this.data1.filters[series_label] = filters;
+        _this.data1.filter_stringdata();
+        _this.render();
+    });
 };
-d3_chart2d.prototype.add_legend = function () {
+d3_chart2d.prototype.add_legenddata1 = function () {
     //legend properties
+    //legend location is predifined
+
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var series_label = this.data1serieslabel;
+    var colorscale = this.colorscale;
+    var width = this.width;
+    var id = this.id;
+
+    this.legenddata1 = this.svgg.selectAll('.legendelement')
+        .data(this.data1.nestdatafiltered);
+
+    //var legendg = this.svgg.append('g')
+    //    .attr('class', 'legend')
+    //    .attr('id', this.id + 'legend')
+    //    .attr('transform', "translate(" + width + "," + 0 + ")");
+
+    //this.legend = legendg.selectAll('legendelement')
+    //    .data(this.data1.nestdatafiltered);
+
+    this.legenddata1enter = this.legenddata1.enter()
+         //adding the grouping here "hides" the rect and text
+        .append('g')
+        .attr('class', 'legendelement')
+        .attr('id', function (d, i) { return id + 'legendelement' + i.toString() })
+        .attr('transform', function (d, i) {
+            return "translate(" + width + "," + 0 + ")";
+        });
+
+    //this.legendenterg = this.legendenter
+    //    // adding the grouping here adds ungroups the rect and text from each legend element
+    //    .append('g')
+    //    .attr('class', 'legendelement')
+    //    .attr('id', function (d, i) { return id + 'legendelement' + i.toString() })
+    //    .attr('transform', function (d, i) {
+    //        return "translate(" + width + "," + 0 + ")";
+    //    });
+
+    //set the legend transition
+    this.legenddata1.transition()
+        .attr('transform', function (d, i) {
+            return "translate(" + (width + 10) + "," + 0 + ")";
+        });
+
+    //add filled rectangles
+    this.legenddata1enter.append('rect')
+        .attr('x', 0)
+        .attr('width', 10)
+        .attr('y', function (d, i) { return i * 20; })
+        .attr('height', 10);
+
+    this.legenddata1.select('rect')
+        .transition()
+        .attr('y', function (d, i) { return i * 20; })
+        .style('fill', function (d) {
+            return colorscale(d.key);
+        });
+
+    //annotate with text
+
+    this.legenddata1enter.append('text')
+        .attr('x', 12)
+        .attr('y', function (d, i) {
+            return i * 20 + 9;
+        });
+    this.legenddata1.select('text')
+        .transition()
+        .attr('x', 12)
+        .attr('y', function (d, i) {
+            return i * 20 + 9;
+        })
+        .text(function (d) {
+            return d.key;
+        });
+
+    this.legenddata1.exit()
+      .transition()
+        .attr('transform', function (d, i) {
+            return "translate(" + width + "," + 0 + ")";
+        })
+        .remove();
 };
-d3_chart2d.prototype.update = function () {
-    //update the chart
+d3_chart2d.prototype.render = function () {
+    //render the chart
+
+    //your code here...
 };
-d3_chart2d.prototype.draw = function () {
-    //draw the chart
-};
-d3_chart2d.prototype.filter_data = function () {
-    //filter chart data
-}
-d3_chart2d.prototype.make_lines = function () {
-    //make lines
-};
-d3_chart2d.prototype.add_lines = function () {
+d3_chart2d.prototype.add_linesdata1 = function () {
     //add lines to chart
 };
-d3_chart2d.prototype.add_points = function () {
+d3_chart2d.prototype.add_linesdata2 = function () {
+    //add lines to chart
+};
+d3_chart2d.prototype.add_pointsdata1update = function(){
+    //add call to update when user clicks on the point
+    var feature_label = this.data1featurelabel;
+    
+    this.pointsdata1.on("click", function (d) {
+        if (features_filter[d[feature_label]]) { features_filter[d[feature_label]] = false; }
+        else { features_filter[d[feature_label]] = true; }
+        redraw(features_filter);
+    });
+};
+d3_chart2d.prototype.add_data1featureslabels = function () {
+    //add a change in color upon moving the mouse over the point
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var colorscale = this.colorscale;
+    var features_label = this.data1serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var id = this.id;
+
+    //points text labels
+    this.data1featureslabelstext = this.svgg.selectAll(".featureslabels")
+        .data(this.data1.listdatafiltered);
+
+    this.data1featureslabelstext
+        .transition()
+        .attr("x", function (d) { return x1scale(d[x_data]) + 5; })
+        .attr("y", function (d) { return y1scale(d[y_data]) - 5; })
+        .text(function (d) { return d[features_label]; });
+
+    this.data1featureslabelstextenter = this.data1featureslabelstext.enter()
+
+    data1featureslabelstextenter.append("text")
+        .attr("class", "featureslabels")
+        .attr("id", function (d) { return id + "featureslabels"+ d[features_label]; })
+        .attr("x", function (d) { return x1scale(d[x_data]) + 5; })
+        .attr("y", function (d) { return y1scale(d[y_data]) - 5; })
+        .text(function (d) { return d[features_label]; });
+
+    this.data1featureslabelstext.exit().remove();
+};
+d3_chart2d.prototype.add_pointsdata1onfill = function () {
+    //add a change in color upon moving the mouse over the point
+    var colorscale = this.colorscale;
+    var series_label = this.data1serieslabel;
+    var id = this.id;
+
+    //change color upon mouseover/mouseout
+    this.pointsdata1enter.on("mouseover", function (d, i) {
+        d3.select(id + '#' + "point" + i.toString()).style('fill', 'red');
+    })
+        .on("mouseout", function (d,i) {
+            d3.select(id + '#' + "point" + i.toString()).style("fill", colorscale(d[series_label]));
+        });
+};
+d3_chart2d.prototype.add_pointsdata1tooltip = function () {
+    //add a tooltip upon moving the mouse over the point
+
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var id = this.id;
+
+    //show tooltip
+    this.pointsdata1enter.on("mouseover", function (d) {
+        //Update the tooltip position and value
+        d3.select("#" + id + "tooltip")
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 10) + "px")
+            .select("#" + id + "value")
+            .text('x: ' + d[x_data].toFixed(2) + '; y: ' + d[y_data].toFixed(2));
+        //Show the tooltip
+        d3.select("#" + id + "tooltip").classed("hidden", false);
+    })
+        .on("mouseout", function (d) {
+            d3.select("#" + id + "tooltip").classed("hidden", true);
+        });
+};
+d3_chart2d.prototype.add_pointsdata1 = function () {
+    //points properties
+    //TODO
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var series_label = this.data1serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+
+    //var pointsdata1g = this.svgg.append('g')
+    //    .attr("class", "points")
+    //    .attr("id", this.id + "points");
+
+    //this.pointsdata1 = pointsdata1g.selectAll("circle")
+    //    .data(this.data1.listdatafiltered);
+
+    this.pointsdata1 = this.svgg.selectAll(".points")
+        .data(this.data1.listdatafiltered);
+
+    this.pointsdata1.exit().remove();
+
+    this.pointsdata1.transition()
+        .attr("cx", function (d) { return x1scale(d[x_data]); })
+        .attr("cy", function (d) { return y1scale(d[y_data]); })
+        .style("fill", function (d) { return colorscale(d[series_label]); });
+
+    this.pointsdata1enter = this.pointsdata1.enter()
+        .append("circle")
+        .attr("class", "points")
+        .attr("id", this.id + "points")
+        .attr("r", 3.5)
+        .attr("id", function (d, i) { return id + "point" + i.toString(); })
+        .attr("cx", function (d) { return x1scale(d[x_data]); })
+        .attr("cy", function (d) { return y1scale(d[y_data]); })
+        .style("fill", function (d) { return colorscale(d[series_label]); });
+
+    //this.pointsdata1enter = this.pointsdata1.enter();
+    
+    //this.pointsdata1enter.append("circle")
+    //    .attr("r", 3.5)
+    //    .attr("id", function (d, i) { return id + "point" + i.toString(); })
+    //    .attr("cx", function (d) { return x1scale(d[x_data]); })
+    //    .attr("cy", function (d) { return y1scale(d[y_data]); })
+    //    .style("fill", function (d) { return colorscale(d[series_label]); });
+};
+d3_chart2d.prototype.add_pointsdata2 = function () {
     //points properties
 };
 d3_chart2d.prototype.add_verticalbars = function () {
@@ -500,4 +811,157 @@ d3_chart2d.prototype.remove_y2axis = function () {
     //remove y2 axis
     d3.selectAll('#' + this.id + 'y2axis').remove();
     this.y2axis = null;
+};
+d3_chart2d.prototype.set_svggcss = function (selectionstyle_I) {
+    //set custom css style to svgg
+    //Input:
+    // selectionstyle_I = [{selection: string e.g., '.axis line, .axis path'
+    //                      style: key:value strings e.g., {'fill': 'none', 'stroke': '#000',
+    //                                                      'shape-rendering': 'crispEdges'}}]
+    for (i = 0; i < selectionstyle_I.length; i++) {
+        this.svgg.selectAll(selectionstyle_I[i].selection)
+            .style(selectionstyle_I[i].style);
+    };
+};
+d3_chart2d.prototype.set_d3css = function (selectionstyle_I) {
+    //set custom css style to d3
+    //Input:
+    // selectionstyle_I = [{selection: string e.g., '.axis line, .axis path'
+    //                      style: key:value strings e.g., {'fill': 'none', 'stroke': '#000',
+    //                                                      'shape-rendering': 'crispEdges'}}]
+    for (i = 0; i < selectionstyle_I.length; i++) {
+        d3.selectAll(selectionstyle_I[i].selection)
+            .style(selectionstyle_I[i].style);
+    };
+};
+d3_chart2d.prototype.set_x1andy1axessstyle = function () {
+    // predefined css style for x1 and y1 axis
+    var x1axisselector = '#' + this.id + 'x1axis' + ' path';
+    var y1axisselector = '#' + this.id + 'y1axis' + ' path';
+    var style = {
+        'fill': 'none', 'stroke': '#000',
+        'shape-rendering': 'crispEdges',
+        'stroke-width': '1.5px'
+    };
+    var selectorstyle = [{ 'selection': x1axisselector, 'style': style },
+                     { 'selection': y1axisselector, 'style': style }]
+    this.set_svggcss(selectorstyle);
+};
+d3_chart2d.prototype.set_pointsstyle = function () {
+    // predefined css style for points
+    var pointsselector = '#' + this.id + 'points';
+    var pointsstyle = {
+        'stroke': 'none'
+    };
+    var selectorstyle = [{ 'selection': pointsselector, 'style': pointsstyle }]
+    this.set_svggcss(selectorstyle);
+};
+d3_chart2d.prototype.set_data1ids = function (data1xdata_I, data1ydata_I, data1serieslabel_I, data1featurelabel_I) {
+    //set the data1 column identifiers for x, y, series_label, and feature_label
+    this.data1xdata = data1xdata_I;
+    this.data1ydata = data1ydata_I;
+    this.data1serieslabel = data1serieslabel_I;
+    this.data1featurelabel = data1featurelabel_I;
+};
+d3_chart2d.prototype.set_data2ids = function (data2xdata_I, data2ydata_I, data2serieslabel_I, data2featurelabel_I) {
+    //set the data2 column identifiers for x, y, series_label, and feature_label
+    this.data2xdata = data2xdata_I;
+    this.data2ydata = data2ydata_I;
+    this.data2serieslabel = data2serieslabel_I;
+    this.data2featureslabel = data2featurelabel_I;
+};
+var d3_data = function () {
+    //data function
+    this.keys = []; // list of columns that can be applied as nest keys and filters
+    this.nestkey = ''; // key to apply to nest
+    this.filters = {}; // {key1:[string1,string2,...],...}
+    this.listdata = []; // data in database table form (must contain a column "_used");
+    this.listdatafiltered = []; // data in database table form
+    this.nestdatafiltered = []; // data in nested form
+};
+d3_data.prototype.convert_list2nestlist = function (data_I,key_I) {
+    // convert a list of objects to a d3 nest by a key
+    var nesteddata_O = d3.nest()
+        .key(function (d) { return d[key_I]; })
+        //.rollup()
+        .entries(data_I);
+    return nesteddata_O;
+};
+d3_data.prototype.convert_list2nestmap = function (data_I,key_I) {
+    // convert a list of objects to a d3 nest by a key
+    var nesteddata_O = d3.nest()
+        .key(function (d) { return d[key_I]; })
+        //.rollup()
+        .map(data_I);
+    return nesteddata_O;
+};
+d3_data.prototype.filter_stringdata = function () {
+    // apply filters to listdata
+
+    var listdatacopy = this.listdata;
+    var listdatafiltered_O = [];
+    
+    //set _used to false:
+    for (i = 0; i < listdatacopy.length; i++) {
+        listdatacopy[i]['_used'] = true;
+    };
+
+    //pass each row through the filter
+    for (i = 0; i < listdatacopy.length; i++) {
+        for (filter in this.filters) {
+            if (!listdatacopy[i][filter].match(this.filters[filter].join('|'))) {
+                listdatacopy[i]['_used'] = false;
+            };
+        };
+    };
+
+    // add in the filtered data
+    listdatacopy.forEach(function (d) {
+        if (d['_used']) {
+            listdatafiltered_O.push(d)
+        };
+    });
+
+    // re-make the nestdatafiltered
+    this.listdatafiltered = listdatafiltered_O;
+    this.nestdatafiltered = this.convert_list2nestlist(listdatafiltered_O,this.nestkey);
+};
+d3_data.prototype.set_listdata = function (listdata_I,nestkey_I) {
+    // set list data and initialize filtered data
+    this.nestkey = nestkey_I;
+    this.listdata = listdata_I;
+    this.listdatafiltered = listdata_I;
+    this.nestdatafiltered = this.convert_list2nestlist(listdata_I,this.nestkey);
+};
+d3_data.prototype.set_keys = function (keys_I) {
+    // add list data
+    this.keys = keys_I;
+};
+d3_data.prototype.reset_filters = function () {
+    // generate the initial filter
+
+    var filters = {};
+    for (key_cnt = 0; key_cnt < this.keys.length;key_cnt++) {
+        var colentries = d3.set();
+        for (i = 0; i < this.listdata.length; i++) {
+            colentries.add(this.listdata[i][this.keys[key_cnt]]);
+        };
+        filters[this.keys[key_cnt]] = colentries.values();
+    };
+    this.filters = filters;
+};
+d3_data.prototype.clear_data = function () {
+    // add list data
+    this.listdata = [];
+    this.listdatafiltered = [];
+    this.nestdatafiltered = [];
+};
+d3_data.prototype.change_filters = function (filter_I) {
+    // modify the filter according to the new filter
+    
+    var filters_O = this.filters;
+    for (key in filter_I) {
+        filters_O[key] = filter_I[key];
+    };
+    this.filters = filters_O;
 };
