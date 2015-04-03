@@ -408,11 +408,11 @@ class data_stage02_quantification_descriptiveStats(Base):
     ci_lb = Column(Float)
     ci_ub = Column(Float)
     ci_level = Column(Float)
-    #min = Column(Float)
-    #max = Column(Float)
-    #median = Column(Float)
-    #iq_1 = Column(Float)
-    #iq_3 = Column(Float)
+    min = Column(Float)
+    max = Column(Float)
+    median = Column(Float)
+    iq_1 = Column(Float)
+    iq_3 = Column(Float)
     calculated_concentration_units = Column(String(50))
     used_ = Column(Boolean);
     comment_ = Column(Text);
@@ -428,6 +428,7 @@ class data_stage02_quantification_descriptiveStats(Base):
                  mean_I, var_I, cv_I, n_I, test_stat_I, test_description_I,
                  pvalue_I, pvalue_corrected_I, pvalue_corrected_description_I,
                  ci_lb_I, ci_ub_I, ci_level_I,
+                 min_I,max_I,median_I,iq_1_I,iq_3_I,
                  calculated_concentration_units_I, used_I, comment_I):
         self.analysis_id = analysis_id_I;
         self.experiment_id = experiment_id_I;
@@ -447,6 +448,11 @@ class data_stage02_quantification_descriptiveStats(Base):
         self.ci_lb=ci_lb_I;
         self.ci_ub=ci_ub_I;
         self.ci_level=ci_level_I;
+        self.min=min_I;
+        self.max=max_I;
+        self.median=median_I;
+        self.iq_1=iq_1_I;
+        self.iq_3=iq_3_I;
         self.calculated_concentration_units = calculated_concentration_units_I;
         self.used_ = used_I;
         self.comment_ = comment_I;

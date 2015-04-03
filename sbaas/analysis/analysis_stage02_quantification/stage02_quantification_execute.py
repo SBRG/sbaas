@@ -858,7 +858,7 @@ class stage02_quantification_execute():
     def execute_descriptiveStats(self,analysis_id_I,experiment_ids_I=[],time_points_I=[],concentration_units_I=[],component_names_I=[]):
         '''execute descriptiveStats using R'''
 
-        print 'execute_descriptiveStats...'
+        #print 'execute_descriptiveStats...'
         
         # get the experiment ids
         if experiment_ids_I:
@@ -915,7 +915,7 @@ class stage02_quantification_execute():
                             data_TTest = self.r_calc.calculate_oneSampleTTest(data_1, alternative_I = "two.sided", mu_I = 0, paired_I="FALSE", var_equal_I = "TRUE", ci_level_I = 0.95, padjusted_method_I = "bonferroni");
                             #TODO:
                             # calculate the interquartile range
-                            min_O, max_O, median_O, iq_1_O, iq_2_O=self.calculate.calculate_interquartiles(data_1);
+                            min_O, max_O, median_O, iq_1_O, iq_3_O=self.calculate.calculate_interquartiles(data_1);
                             # record data for plotting
                             data_plot_mean.append(data_TTest['mean']);
                             data_plot_var.append(data_TTest['var']);
@@ -940,6 +940,7 @@ class stage02_quantification_execute():
                                     data_TTest['ci_lb'],
                                     data_TTest['ci_ub'],
                                     data_TTest['ci_level'],
+                                    min_O,max_O,median_O,iq_1_O,iq_3_O,
                                     cu,True,None);
                             self.session.add(row2);
                         ## visualize the stats:
@@ -947,74 +948,74 @@ class stage02_quantification_execute():
                         #self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
         self.session.commit();
 
-        # query metabolomics data from glogNormalization
-        # get concentration units...
-        if concentration_units_I:
-            concentration_units = concentration_units_I;
-        else:
-            concentration_units = [];
-            concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
-        for cu in concentration_units:
-            print 'calculating descriptiveStats for concentration_units ' + cu;
-            # get component_names:
-            component_names, component_group_names = [],[];
-            component_names, component_group_names = self.stage02_quantification_query.get_componentNames_analysisIDAndUnits_dataStage02GlogNormalized(analysis_id_I, cu);
-            for cnt_cn,cn in enumerate(component_names):
-                print 'calculating descriptiveStats for component_names ' + cn;
-                data_plot_mean = [];
-                data_plot_var = [];
-                data_plot_ci = [];
-                data_plot_sna = [];
-                data_plot_component_names = [];
-                data_plot_calculated_concentration_units = [];
-                data_plot_data = [];
-                # get sample_name_abbreviations:
-                sample_name_abbreviations = [];
-                sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_analysisIDAndUnitsAndComponentNames_dataStage02GlogNormalized(analysis_id_I, cu, cn);
-                for sna in sample_name_abbreviations:
-                    print 'calculating descriptiveStats for sample_name_abbreviations ' + sna;
-                    # get data:
-                    all_1,data_1 = [],[];
-                    all_1,data_1 = self.stage02_quantification_query.get_RDataList_analysisIDAndUnitsAndComponentNamesAndSampleNameAbbreviation_dataStage02GlogNormalized(analysis_id_I,cu,cn,sna);
-                    # call R
-                    data_TTest = {};
-                    data_TTest = self.r_calc.calculate_oneSampleTTest(data_1, alternative_I = "two.sided", mu_I = 0, paired_I="FALSE", var_equal_I = "TRUE", ci_level_I = 0.95, padjusted_method_I = "bonferroni");
-                    #TODO:
-                    # calculate the interquartile range
-                    min_O, max_O, median_O, iq_1_O, iq_2_O=self.calculate.calculate_interquartiles(data_1);
-                    # record data for plotting
-                    data_plot_mean.append(data_TTest['mean']);
-                    data_plot_var.append(data_TTest['var']);
-                    data_plot_ci.append([data_TTest['ci_lb'],data_TTest['ci_lb']]);
-                    data_plot_data.append(data_1);
-                    data_plot_sna.append(sna);
-                    data_plot_component_names.append(cn);
-                    data_plot_calculated_concentration_units.append(cu);
-                    # add data to database
-                    row2 = data_stage02_quantification_descriptiveStats(analysis_id_I,
-                            experiment_id,
-                            sna,
-                            tp,
-                            component_group_names[cnt_cn],cn,
-                            data_TTest['mean'],
-                            data_TTest['var'],
-                            data_TTest['cv'],
-                            data_TTest['n'],
-                            data_TTest['test_stat'],
-                            data_TTest['test_description'],
-                            data_TTest['pvalue'],
-                            data_TTest['pvalue_corrected'],
-                            data_TTest['pvalue_corrected_description'],
-                            data_TTest['ci_lb'],
-                            data_TTest['ci_ub'],
-                            data_TTest['ci_level'],
-                            cu,True,None);
-                    self.session.add(row2);
-                ## visualize the stats:
-                #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
-                #self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
-        self.session.commit();
-    # TODO: test
+        ## query metabolomics data from glogNormalization
+        ## get concentration units...
+        #if concentration_units_I:
+        #    concentration_units = concentration_units_I;
+        #else:
+        #    concentration_units = [];
+        #    concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
+        #for cu in concentration_units:
+        #    print 'calculating descriptiveStats for concentration_units ' + cu;
+        #    # get component_names:
+        #    component_names, component_group_names = [],[];
+        #    component_names, component_group_names = self.stage02_quantification_query.get_componentNames_analysisIDAndUnits_dataStage02GlogNormalized(analysis_id_I, cu);
+        #    for cnt_cn,cn in enumerate(component_names):
+        #        print 'calculating descriptiveStats for component_names ' + cn;
+        #        data_plot_mean = [];
+        #        data_plot_var = [];
+        #        data_plot_ci = [];
+        #        data_plot_sna = [];
+        #        data_plot_component_names = [];
+        #        data_plot_calculated_concentration_units = [];
+        #        data_plot_data = [];
+        #        # get sample_name_abbreviations:
+        #        sample_name_abbreviations = [];
+        #        sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_analysisIDAndUnitsAndComponentNames_dataStage02GlogNormalized(analysis_id_I, cu, cn);
+        #        for sna in sample_name_abbreviations:
+        #            print 'calculating descriptiveStats for sample_name_abbreviations ' + sna;
+        #            # get data:
+        #            all_1,data_1 = [],[];
+        #            all_1,data_1 = self.stage02_quantification_query.get_RDataList_analysisIDAndUnitsAndComponentNamesAndSampleNameAbbreviation_dataStage02GlogNormalized(analysis_id_I,cu,cn,sna);
+        #            # call R
+        #            data_TTest = {};
+        #            data_TTest = self.r_calc.calculate_oneSampleTTest(data_1, alternative_I = "two.sided", mu_I = 0, paired_I="FALSE", var_equal_I = "TRUE", ci_level_I = 0.95, padjusted_method_I = "bonferroni");
+        #            #TODO:
+        #            # calculate the interquartile range
+        #            min_O, max_O, median_O, iq_1_O, iq_3_O=self.calculate.calculate_interquartiles(data_1);
+        #            # record data for plotting
+        #            data_plot_mean.append(data_TTest['mean']);
+        #            data_plot_var.append(data_TTest['var']);
+        #            data_plot_ci.append([data_TTest['ci_lb'],data_TTest['ci_lb']]);
+        #            data_plot_data.append(data_1);
+        #            data_plot_sna.append(sna);
+        #            data_plot_component_names.append(cn);
+        #            data_plot_calculated_concentration_units.append(cu);
+        #            # add data to database
+        #            row2 = data_stage02_quantification_descriptiveStats(analysis_id_I,
+        #                    experiment_id,
+        #                    sna,
+        #                    tp,
+        #                    component_group_names[cnt_cn],cn,
+        #                    data_TTest['mean'],
+        #                    data_TTest['var'],
+        #                    data_TTest['cv'],
+        #                    data_TTest['n'],
+        #                    data_TTest['test_stat'],
+        #                    data_TTest['test_description'],
+        #                    data_TTest['pvalue'],
+        #                    data_TTest['pvalue_corrected'],
+        #                    data_TTest['pvalue_corrected_description'],
+        #                    data_TTest['ci_lb'],
+        #                    data_TTest['ci_ub'],
+        #                    data_TTest['ci_level'],
+        #                    min_O,max_O,median_O,iq_1_O,iq_3_O,
+        #                    cu,True,None);
+        #            self.session.add(row2);
+        #        ## visualize the stats:
+        #        #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
+        #        #self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
+        #self.session.commit();
     def execute_anova(self,analysis_id_I,concentration_units_I=[],component_names_I=[]):
         '''execute anova using R'''
 
@@ -1214,7 +1215,6 @@ class stage02_quantification_execute():
                         y_data = [d['pvalue_corrected_negLog10'] for d in data_1];
                         text_labels = [t['component_group_name'] for t in data_1];
                         self.matplot.volcanoPlot(title,xlabel,ylabel,x_data,y_data,text_labels);
-    
     def execute_boxAndWhiskersPlot(self,analysis_id_I,concentration_units_I=[],component_names_I=[]):
         '''generate a boxAndWhiskers plot from descriptiveStats table'''
 

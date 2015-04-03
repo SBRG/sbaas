@@ -341,22 +341,26 @@ d3_chart2d.prototype.add_data2 = function (data2_I) {
 d3_chart2d.prototype.set_x1domain = function () {
     // set x1-domain of the plot
     var x_data = this.data1xdata;
-    this.x1scale.domain(d3.extent(this.data1.listdatafiltered, function (d) { return d[x_data]; })).nice();
+    var _this = this;
+    this.x1scale.domain(d3.extent(_this.data1.listdatafiltered, function (d) { return d[x_data]; })).nice();
 };
 d3_chart2d.prototype.set_y1domain = function () {
     // set y1-domain of the plot
     var y_data = this.data1ydata;
-    this.y1scale.domain(d3.extent(this.data1.listdatafiltered, function (d) { return d[y_data]; })).nice();
+    var _this = this;
+    this.y1scale.domain(d3.extent(_this.data1.listdatafiltered, function (d) { return d[y_data]; })).nice();
 };
 d3_chart2d.prototype.set_x2domain = function () {
     // set x2-domain of the plot
     var x_data = this.data2xdata;
-    this.x2scale.domain(d3.extent(this.data2.listdatafiltered, function (d) { return d[x_data]; })).nice();
+    var _this = this;
+    this.x2scale.domain(d3.extent(_this.data2.listdatafiltered, function (d) { return d[x_data]; })).nice();
 };
 d3_chart2d.prototype.set_y2domain = function () {
     // set y2-domain of the plot
     var y_data = this.data2ydata;
-    this.x2scale.domain(d3.extent(this.data2.listdatafiltered, function (d) { return d[y_data]; })).nice();
+    var _this = this;
+    this.x2scale.domain(d3.extent(_this.data2.listdatafiltered, function (d) { return d[y_data]; })).nice();
 };
 d3_chart2d.prototype.set_colorscale = function () {
     // set color scale
@@ -399,8 +403,8 @@ d3_chart2d.prototype.add_x2axis = function () {
     //add x2 axis
     this.x2axis = this.svgenter.append("g")
             .attr("class", "x2axis")
-            .attr("id", this.id + "x2axis")
-            .transition()
+            .attr("id", this.id + "x2axis");
+    this.x2axis.transition()
             .call(this._x2axis);
 };
 d3_chart2d.prototype.add_y1axis = function () {
@@ -417,8 +421,9 @@ d3_chart2d.prototype.add_y2axis = function () {
     this.y2axis = this.svgenter.append("g")
             .attr("class", "y2axis")
             .attr("id", this.id + "y2axis")
-            .attr("transform", "translate(" + width + ",0)")
-            .transition()
+            .attr("transform", "translate(" + width + ",0)");
+
+    this.y2axis.transition()
             .call(this._y2axis);
 };
 d3_chart2d.prototype.set_x1tickformat = function () {
@@ -435,46 +440,50 @@ d3_chart2d.prototype.set_y2tickformat = function () {
 };
 d3_chart2d.prototype.add_x1axisgridlines = function () {
     //x axis grid lines properties
+    //TODO:
     var y_data = this.data1ydata;
     var x1scale = this.x1scale;
-    var listdatafiltered = this.data1.listdatafiltered
+    var listdatafiltered = this.data1.listdatafiltered;
 
-    var x1axisgridlinesg = this.svgg.append('g')
-      .attr("class", "xgridlines")
-      .attr("id", this.id + "xgridlines");
-
-    this.x1axisgridlines = x1axisgridlinesg.selectAll("line")
-      .data(x1scale.ticks(10));
+    this.x1axisgridlines = this.svgg.selectAll("line")
+      .data(this.x1scale.ticks(10));
 
     this.x1axisgridlines.exit().remove();
 
-    this.x1axisgridlinesenter = this.x1axisgridlines.enter();
-
-    this.x1axisgridlinesenter.append("line")
-      .transition()
+    this.x1axisgridlinesenter = this.x1axisgridlines.enter()
+      .append("line")
+      .attr("class", "xgridlines")
+      .attr("id", this.id + "xgridlines")
       .attr("x1", x1scale)
       .attr("x2", x1scale)
-      .attr("y1", d3.min(data1.listdatafiltered, function (d) { return d[y_data]; }))
-      .attr("y2", d3.max(data1.listdatafiltered, function (d) { return d[y_data]; }))
+      .attr("y1", d3.min(listdatafiltered, function (d) { return d[y_data]; }))
+      .attr("y2", d3.max(listdatafiltered, function (d) { return d[y_data]; }))
       .style("stroke", "#ccc");
 };
 d3_chart2d.prototype.add_y1axisgridlines = function () {
     //y axis grid lines properties
+    //TODO:
     var x_data = this.data1ydata;
-    //TODO: match x axis gridlines
+    var y1scale = this.y1scale;
+    var listdatafiltered = this.data1.listdatafiltered;
+
     this.y1axisgridlines = this.svgg.selectAll(".ygridlines")
-    .data(this.y1scale.ticks(10))
-    .enter().append("line")
-    .attr("class", "ygridlines")
-    .attr("id", this.id + "ygridlines")
-    .attr("x1", d3.min(this.data1.listdatafiltered, function (d) { return d[x_data]; }))
-    .attr("x2", d3.max(this.data1.listdatafiltered, function (d) { return d[x_data]; }))
-    .attr("y1", this.y1scale)
-    .attr("y2", this.y1scale)
-    .style("stroke", "#ccc");
+    .data(this.y1scale.ticks(10));
+
+    this.y1axisgridlines.exit().remove();
+
+    this.y1axisgridlinesenter = this.y1axisgridlines.enter()
+        .append("line")
+        .attr("class", "ygridlines")
+        .attr("id", this.id + "ygridlines")
+        .attr("x1", d3.min(listdatafiltered, function (d) { return d[x_data]; }))
+        .attr("x2", d3.max(listdatafiltered, function (d) { return d[x_data]; }))
+        .attr("y1", y1scale)
+        .attr("y2", y1scale)
+        .style("stroke", "#ccc");
 };
-d3_chart2d.prototype.set_x1axislabel = function (x1axislabel_I) {
-    //set x1axis label properties
+d3_chart2d.prototype.add_x1axislabel = function (x1axislabel_I) {
+    //add x1axis label properties
     this.x1axis.append("text")
         .attr("class", "label")
         .attr("x", this.width / 2)
@@ -482,21 +491,34 @@ d3_chart2d.prototype.set_x1axislabel = function (x1axislabel_I) {
         .style("text-anchor", "middle")
         .text(x1axislabel_I);
 };
-d3_chart2d.prototype.set_x2axislabel = function () {
+d3_chart2d.prototype.add_x2axislabel = function (x2axislabel_I) {
     //set x2axis label properties
+    this.x1axis.append("text")
+        .attr("class", "label")
+        .attr("x", this.width / 2)
+        .attr("y", -28)
+        .style("text-anchor", "middle")
+        .text(x2axislabel_I);
 };
-d3_chart2d.prototype.set_y1axislabel = function (y1axislabel) {
+d3_chart2d.prototype.add_y1axislabel = function (y1axislabel) {
     //set y1axis label properties
-    this.x2axis.append("text")
+    this.y1axis.append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
         .attr("y", -28)
-        .attr("x", -height / 2)
+        .attr("x", -this.height / 2)
         .style("text-anchor", "middle")
         .text(y1axislabel);
 };
-d3_chart2d.prototype.set_y2axislabel = function () {
+d3_chart2d.prototype.add_y2axislabel = function (y2axislabel) {
     //set y2axis label properties
+    this.y2axis.append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 28)
+        .attr("x", -this.height / 2)
+        .style("text-anchor", "middle")
+        .text(y2axislabel);
 };
 d3_chart2d.prototype.set_tooltip = function () {
     //set tooltip properties
@@ -536,8 +558,8 @@ d3_chart2d.prototype.set_tooltipstyle = function () {
     var selectionstyle = [{ 'selection': tooltipselector, 'style': tooltipstyle }];
     this.set_d3css(selectionstyle);
 };
-d3_chart2d.prototype.add_legendupdate = function () {
-    //add a call to update based on what series_label the user clicks on
+d3_chart2d.prototype.add_legenddata1filter = function () {
+    //filter the data on click
 
     //update data and graphic upon click
     var series_label = this.data1serieslabel;
@@ -546,7 +568,6 @@ d3_chart2d.prototype.add_legendupdate = function () {
     this.legenddata1enter.on("click", function (d) {
         var filters = [];
         _this.data1.filters[series_label].forEach(function (n) { if (n !== d.key) { filters.push(n);}; });
-        //_this.data1.change_filters({ series_label: filters });
         _this.data1.filters[series_label] = filters;
         _this.data1.filter_stringdata();
         _this.render();
@@ -641,11 +662,288 @@ d3_chart2d.prototype.render = function () {
 
     //your code here...
 };
-d3_chart2d.prototype.add_linesdata1 = function () {
-    //add lines to chart
+d3_chart2d.prototype.set_linedata1 = function (interoplate_I) {
+    // set the line generator properties
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+
+    this.linedata1generator = d3.svg.line()
+        .interpolate(interoplate_I)
+        .x(function (d) { return x1scale(d[x_data]); })
+        .y(function (d) { return y1scale(d[y_data]); });
 };
-d3_chart2d.prototype.add_linesdata2 = function () {
+d3_chart2d.prototype.set_linedata2 = function (interoplate_I) {
+    var x_data = this.data2xdata;
+    var y_data = this.data21ydata;
+    var x2scale = this.x2scale;
+    var y2scale = this.y2scale;
+
+    this.linedata2generator = d3.svg.line()
+        .interpolate(interoplate_I)
+        .x(function (d) { return x2scale(d[x_data]); })
+        .y(function (d) { return y2scale(d[y_data]); });
+};
+d3_chart2d.prototype.add_linedata1 = function () {
     //add lines to chart
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var series_label = this.data1serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+    var linedata1generator = this.linedata1generator;
+
+    this.linedata1 = this.svgg.selectAll(".line")
+        .data(this.data1.nestdatafiltered);
+
+    this.linedata1enter = this.linedata1.enter()
+        .append("g")
+        .attr("class", "line");
+
+    this.linedata1enter.append('path')
+        .attr('class', 'lineseries')
+        .attr('id', function (d,i) {
+            return id+'lineseries'+i.toString();})
+        .style("stroke", function (d) {
+            return colorscale(d.key);
+        });
+
+    this.linedata1.select("path.lineseries")
+        .style("stroke", function (d) {
+            return colorscale(d.key);
+        })
+        .transition()
+        .attr("d", function (d) {
+            return linedata1generator(d.values);
+        });
+
+    this.linedata1enter.append('text')
+        .attr("x", 3)
+        .attr("dy", ".35em");
+
+    this.linedata1.select("text")
+        .datum(function (d) {
+            return {values: d.values[d.values.length - 1]};
+        })
+        .attr("transform", function (d) {
+            return "translate(" + x1scale(d.values[x_data]) + "," + y1scale(d.values[y_data]) + ")";
+        })
+        .text(function (d) {return d.key;});
+
+    this.linedata1.exit()
+      .remove();
+};
+d3_chart2d.prototype.add_linedata1tooltipandstroke = function () {
+    // add tooltip and change in stroke color on mouseover
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var series_label = this.data1serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+
+    this.linedata1enter.on('mouseover', function (d, i) {
+        d3.select(this)
+            .style("stroke", 'black');
+        d3.select("#" + id + "tooltip")
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 10) + "px")
+            .select("#value")
+            .text("series_label" + ": " + d.key);
+        //Show the tooltip
+        d3.select("#" + id + "tooltip").classed("hidden", false);
+    })
+        .on("mouseout", function (d) {
+            d3.select(this).style("stroke", color(d.key));
+            d3.select("#"+id+"tooltip").classed("hidden", true);
+        });
+};
+d3_chart2d.prototype.add_linedata1onstroke = function () {
+    // add change in stroke color on mouseover
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var series_label = this.data1serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+
+    this.linedata1enter.on('mouseover', function (d, i) {
+        d3.select(this).style("stroke", 'black');
+        })
+        .on("mouseout", function (d) {
+            d3.select(this).style("stroke", color(d.key));
+        });
+};
+d3_chart2d.prototype.add_linedata1tooltip = function () {
+    // add tooltip on mouseover
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var series_label = this.data1serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+
+    this.linedata1enter.on('mouseover', function (d, i) {
+        d3.select("#" + id + "tooltip")
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 10) + "px")
+            .select("#value")
+            .text("series_label" + ": " + d.key);
+        //Show the tooltip
+        d3.select("#" + id + "tooltip").classed("hidden", false);
+    })
+        .on("mouseout", function (d) {
+            d3.select("#" + id + "tooltip").classed("hidden", true);
+        });
+};
+d3_chart2d.prototype.add_linedata1filter = function () {
+    //filter data on click
+
+    var _this = this;
+    
+    this.linedata1enter.on("click", function (d, i) {
+        var filters = [];
+        _this.data1.filters[series_label].forEach(function (n) { if (n !== d.key) { filters.push(n); }; });
+        _this.data1.filters[series_label] = filters;
+        _this.data1.filter_stringdata();
+        _this.render();
+    });
+};
+d3_chart2d.prototype.add_linedata2 = function () {
+    //add lines to chart
+    var x_data = this.data2xdata;
+    var y_data = this.data2ydata;
+    var series_label = this.data2serieslabel;
+    var x2scale = this.x2scale;
+    var y2scale = this.y2scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+    var linedata2generator = this.linedata2generator;
+
+    this.linedata2 = this.svgg.selectAll(".line")
+        .data(this.data2.nestdatafiltered);
+
+    this.linedata2enter = this.linedata2.enter()
+        .append("g")
+        .attr("class", "line");
+
+    this.linedata2enter.append('path')
+        .attr('class', 'lineseries')
+        .attr('id', function (d, i) {
+            return id + 'lineseries' + i.toString();
+        })
+        .style("stroke", function (d) {
+            return colorscale(d.key);
+        });
+
+    this.linedata2.select("path.lineseries")
+        .style("stroke", function (d) {
+            return colorscale(d.key);
+        })
+        .transition()
+        .attr("d", function (d) {
+            return linedata2generator(d.values);
+        });
+
+    this.linedata2enter.append('text')
+        .attr("x", 3)
+        .attr("dy", ".35em");
+
+    this.linedata2.select("text")
+        .datum(function (d) {
+            return { values: d.values[d.values.length - 1] };
+        })
+        .attr("transform", function (d) {
+            return "translate(" + x2scale(d.values[x_data]) + "," + y2scale(d.values[y_data]) + ")";
+        })
+        .text(function (d) { return d.key; });
+
+    this.linedata2.exit().remove();
+};
+d3_chart2d.prototype.add_linedata2tooltipandstroke = function () {
+    // add tooltip and change in stroke color on mouseover
+    var x_data = this.data2xdata;
+    var y_data = this.data2ydata;
+    var series_label = this.data2serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+
+    this.linedata2enter.on('mouseover', function (d, i) {
+        d3.select(this)
+            .style("stroke", 'black');
+        d3.select("#" + id + "tooltip")
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 10) + "px")
+            .select("#value")
+            .text("series_label" + ": " + d.key);
+        //Show the tooltip
+        d3.select("#" + id + "tooltip").classed("hidden", false);
+    })
+        .on("mouseout", function (d) {
+            d3.select(this).style("stroke", color(d.key));
+            d3.select("#" + id + "tooltip").classed("hidden", true);
+        });
+};
+d3_chart2d.prototype.add_linedata2onstroke = function () {
+    // add change in stroke color on mouseover
+    var x_data = this.data2xdata;
+    var y_data = this.data2ydata;
+    var series_label = this.data2serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+
+    this.linedata2enter.on('mouseover', function (d, i) {
+        d3.select(this).style("stroke", 'black');
+    })
+        .on("mouseout", function (d) {
+            d3.select(this).style("stroke", color(d.key));
+        });
+};
+d3_chart2d.prototype.add_linedata2tooltip = function () {
+    // add tooltip on mouseover
+    var x_data = this.data2xdata;
+    var y_data = this.data2ydata;
+    var series_label = this.data2serieslabel;
+    var x1scale = this.x1scale;
+    var y1scale = this.y1scale;
+    var colorscale = this.colorscale;
+    var id = this.id;
+
+    this.linedata2enter.on('mouseover', function (d, i) {
+        d3.select("#" + id + "tooltip")
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 10) + "px")
+            .select("#value")
+            .text("series_label" + ": " + d.key);
+        //Show the tooltip
+        d3.select("#" + id + "tooltip").classed("hidden", false);
+    })
+        .on("mouseout", function (d) {
+            d3.select("#" + id + "tooltip").classed("hidden", true);
+        });
+};
+d3_chart2d.prototype.add_linedata2filter = function () {
+    //filter data on click
+
+    var _this = this;
+
+    this.linedata2enter.on("click", function (d, i) {
+        var filters = [];
+        _this.data2.filters[series_label].forEach(function (n) { if (n !== d.key) { filters.push(n); }; });
+        _this.data2.filters[series_label] = filters;
+        _this.data2.filter_stringdata();
+        _this.render();
+    });
 };
 d3_chart2d.prototype.add_pointsdata1update = function(){
     //add call to update when user clicks on the point
@@ -696,15 +994,16 @@ d3_chart2d.prototype.add_pointsdata1onfill = function () {
 
     //change color upon mouseover/mouseout
     this.pointsdata1enter.on("mouseover", function (d, i) {
-        d3.select(id + '#' + "point" + i.toString()).style('fill', 'red');
+        d3.select(this).style('fill', 'red');
     })
-        .on("mouseout", function (d,i) {
-            d3.select(id + '#' + "point" + i.toString()).style("fill", colorscale(d[series_label]));
+        .on("mouseout", function (d, i) {
+            d3.select(this).style("fill", colorscale(d[series_label]));
         });
 };
 d3_chart2d.prototype.add_pointsdata1tooltip = function () {
     //add a tooltip upon moving the mouse over the point
-
+    var colorscale = this.colorscale;
+    var series_label = this.data1serieslabel;
     var x_data = this.data1xdata;
     var y_data = this.data1ydata;
     var id = this.id;
@@ -724,9 +1023,60 @@ d3_chart2d.prototype.add_pointsdata1tooltip = function () {
             d3.select("#" + id + "tooltip").classed("hidden", true);
         });
 };
+d3_chart2d.prototype.add_pointsdata1tooltipandfill = function () {
+    //add a tooltip upon moving the mouse over the point
+    //add a change in color upon moving the mouse over the point
+    //NOTE: both must be within the same "on" method
+    var colorscale = this.colorscale;
+    var series_label = this.data1serieslabel;
+    var x_data = this.data1xdata;
+    var y_data = this.data1ydata;
+    var id = this.id;
+
+    //show tooltip
+    this.pointsdata1enter.on("mouseover", function (d) {
+        //Change fill color
+        d3.select(this).style('fill', 'red');
+        //Update the tooltip position and value
+        d3.select("#" + id + "tooltip")
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 10) + "px")
+            .select("#" + id + "value")
+            .text('x: ' + d[x_data].toFixed(2) + '; y: ' + d[y_data].toFixed(2));
+        //Show the tooltip
+        d3.select("#" + id + "tooltip").classed("hidden", false);
+    })
+        .on("mouseout", function (d) {
+            d3.select(this).style("fill", colorscale(d[series_label]));
+            d3.select("#" + id + "tooltip").classed("hidden", true);
+        });
+};
+d3_chart2d.prototype.add_pointsdata1seriesfilter = function () {
+    //filter series on click
+    var series_label = this.data1serieslabel;
+    var _this = this;
+    this.pointsdata1enter.on('click', function (d, i) {
+        var filters = [];
+        _this.data1.filters[series_label].forEach(function (n) { if (n !== d[series_labell]) { filters.push(n); }; });
+        _this.data1.filters[series_label] = filters;
+        _this.data1.filter_stringdata();
+        _this.render();
+    });
+};
+d3_chart2d.prototype.add_pointsdata1featurefilter = function () {
+    //filter feature on click
+    var feature_label = this.data1featurelabel
+    var _this = this;
+    this.pointsdata1enter.on('click', function (d, i) {
+        var filters = [];
+        _this.data1.filters[feature_label].forEach(function (n) { if (n !== d[feature_label]) { filters.push(n); }; });
+        _this.data1.filters[feature_label] = filters;
+        _this.data1.filter_stringdata();
+        _this.render();
+    });
+};
 d3_chart2d.prototype.add_pointsdata1 = function () {
     //points properties
-    //TODO
     var x_data = this.data1xdata;
     var y_data = this.data1ydata;
     var series_label = this.data1serieslabel;
