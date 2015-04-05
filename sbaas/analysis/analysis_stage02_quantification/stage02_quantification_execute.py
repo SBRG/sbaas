@@ -574,7 +574,7 @@ class stage02_quantification_execute():
             data_stage02_quantification_descriptiveStats.__table__.drop(engine,True);
             data_stage02_quantification_pca_scores.__table__.drop(engine,True);
             data_stage02_quantification_pca_loadings.__table__.drop(engine,True);
-            #data_stage02_quantification_heatmap.__table__.drop(engine,True);
+            data_stage02_quantification_heatmap.__table__.drop(engine,True);
             #data_stage02_quantification_svm.__table__.drop(engine,True);
             data_stage02_quantification_analysis.__table__.drop(engine,True);
         except SQLAlchemyError as e:
@@ -588,7 +588,7 @@ class stage02_quantification_execute():
                 reset = self.session.query(data_stage02_quantification_descriptiveStats).filter(data_stage02_quantification_descriptiveStats.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_pca_scores).filter(data_stage02_quantification_pca_scores.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_pca_loadings).filter(data_stage02_quantification_pca_loadings.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage02_quantification_heatmap).filter(data_stage02_quantification_heatmap.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_heatmap).filter(data_stage02_quantification_heatmap.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_svm).filter(data_stage02_quantification_svm.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_analysis).filter(data_stage02_quantification_analysis.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
             else:
@@ -599,7 +599,7 @@ class stage02_quantification_execute():
                 reset = self.session.query(data_stage02_quantification_pca_scores).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_pca_loadings).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_heatmap).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage02_quantification_metabolomicsData).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_metabolomicsData).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_svm).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_analysis).delete(synchronize_session=False);
             self.session.commit();
@@ -659,6 +659,15 @@ class stage02_quantification_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
+    def reset_dataStage02_quantification_heatmap(self,analysis_id_I = None):
+        try:
+            if analysis_id_I:
+                reset = self.session.query(data_stage02_quantification_heatmap).filter(data_stage02_quantification_heatmap.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage02_quantification_heatmap).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
     def initialize_dataStage02_quantification(self):
         try:
             data_stage02_quantification_glogNormalized.__table__.create(engine,True);
@@ -667,7 +676,7 @@ class stage02_quantification_execute():
             data_stage02_quantification_descriptiveStats.__table__.create(engine,True);
             data_stage02_quantification_pca_scores.__table__.create(engine,True);
             data_stage02_quantification_pca_loadings.__table__.create(engine,True);
-            #data_stage02_quantification_heatmap.__table__.create(engine,True);
+            data_stage02_quantification_heatmap.__table__.create(engine,True);
             #data_stage02_quantification_svm.__table__.create(engine,True);
             data_stage02_quantification_analysis.__table__.create(engine,True);
         except SQLAlchemyError as e:
@@ -1266,3 +1275,68 @@ class stage02_quantification_execute():
                 # visualize the stats:
                 #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
                 self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
+    def execute_heatmap(self, analysis_id_I,concentration_units_I=[],
+                row_pdist_metric_I='euclidean',row_linkage_method_I='ward',
+                col_pdist_metric_I='euclidean',col_linkage_method_I='ward'):
+        '''Execute hierarchical cluster on row and column data'''
+
+        print 'executing heatmap...';
+        # get the analysis information
+        analysis_info = [];
+        analysis_info = self.stage02_quantification_query.get_rows_analysisID_dataStage02QuantificationAnalysis(analysis_id_I);
+        # query metabolomics data from the experiment
+        data_transformed = [];
+        if concentration_units_I:
+            concentration_units = concentration_units_I;
+        else:
+            concentration_units = [];
+            concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
+        for cu in concentration_units:
+            print 'generating a heatmap for concentration_units ' + cu;
+            # get the data
+            data = [];
+            data = self.stage02_quantification_query.get_RExpressionData_analysisIDAndUnits_dataStage02GlogNormalized(analysis_id_I,cu);
+            # find unique
+            component_group_names = [x['component_group_name'] for x in data];
+            component_group_names_unique = list(set(component_group_names));
+            component_group_names_unique.sort();
+            sample_name_shorts = [x['sample_name_short'] for x in data];
+            sample_name_short_unique = list(set(sample_name_shorts));
+            sample_name_short_unique.sort();
+            # generate the frequency matrix data structure (sample x met)
+            data_O = numpy.zeros((len(sample_name_short_unique),len(component_group_names_unique)));
+            col_cnt = 0;
+            # order 2: groups each lineage by met (sample x met)
+            for sample_name_short_cnt,sample_name_short in enumerate(sample_name_short_unique): #all lineages for sample j / met i
+                for component_group_name_cnt,component_group_name in enumerate(component_group_names_unique): #all mets i for sample j
+                    for row in data:
+                        if row['sample_name_short'] == sample_name_short and row['component_group_name'] == component_group_name:
+                            data_O[sample_name_short_cnt,component_group_name_cnt] = row['calculated_concentration'];
+                col_cnt+=1;
+            # generate the clustering for the heatmap
+            heatmap_O = {};
+            heatmap_O = self.calculate.heatmap(data_O,sample_name_short_unique,component_group_names_unique,
+                    row_pdist_metric_I=row_pdist_metric_I,row_linkage_method_I=row_linkage_method_I,
+                    col_pdist_metric_I=col_pdist_metric_I,col_linkage_method_I=col_linkage_method_I);
+            # add data to to the database
+            row = None;
+            row = data_stage02_quantification_heatmap(
+                analysis_id_I,
+                heatmap_O['col_leaves'],
+                heatmap_O['row_leaves'],
+                heatmap_O['col_icoord'],
+                heatmap_O['row_icoord'],
+                heatmap_O['col_dcoord'],
+                heatmap_O['row_dcoord'],
+                heatmap_O['col_ivl'],
+                heatmap_O['row_ivl'],
+                heatmap_O['col_labels'],
+                heatmap_O['row_labels'],
+                heatmap_O['heatmap_data'],
+                heatmap_O['col_pdist_metric'],
+                heatmap_O['row_pdist_metric'],
+                heatmap_O['col_linkage_method'],
+                heatmap_O['row_linkage_method'],
+                cu, True, None);
+            self.session.add(row);
+        self.session.commit();

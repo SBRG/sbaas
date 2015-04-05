@@ -74,3 +74,9 @@ class base_exportData():
             except csv.Error as e:
                 sys.exit(e);
 
+    def write_dict2js(self,filename,varname):
+        # write dict to js file
+        json_str = 'var ' + varname + ' = ' + json.dumps(self.data);
+        with open(filename,'w') as file:
+            file.write(json_str);
+

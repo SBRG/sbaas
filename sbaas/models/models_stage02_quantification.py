@@ -290,51 +290,94 @@ class data_stage02_quantification_pca_loadings(Base):
         return json.dumps(self.__repr__dict__())
 
 class data_stage02_quantification_heatmap(Base):
-    #TODO
-    # split into heatmap_samples (clustering by samples)
-    # split into heatmap_features (clustering by features)
     __tablename__ = 'data_stage02_quantification_heatmap'
     id = Column(Integer, Sequence('data_stage02_quantification_heatmap_id_seq'), primary_key=True)
-    #analysis_id = Column(String(500))
-    experiment_id = Column(String(50))
-    sample_name_short = Column(String(100))
-    sample_name_abbreviation = Column(String(100))
-    time_point = Column(String(10))
-    component_name = Column(String(100))
-    #...
+    analysis_id = Column(String(500))
+    col_leaves = Column(postgresql.ARRAY(Float))
+    row_leaves = Column(postgresql.ARRAY(Float))
+    col_icoord = Column(postgresql.JSON)
+    row_icoord = Column(postgresql.JSON)
+    row_dcoord = Column(postgresql.JSON)
+    col_dcoord = Column(postgresql.JSON)
+    col_ivl = Column(postgresql.ARRAY(String(100)))
+    row_ivl = Column(postgresql.ARRAY(String(100)))
+    col_labels = Column(postgresql.ARRAY(String(100)))
+    row_labels = Column(postgresql.ARRAY(String(100)))
+    heatmap_data = Column(postgresql.JSON)
+    col_pdist_metric = Column(String(100))
+    row_pdist_metric = Column(String(100))
+    col_linkage_method = Column(String(100))
+    row_linkage_method = Column(String(100))
+    calculated_concentration_units = Column(String(50))
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
-    __table_args__ = (UniqueConstraint('experiment_id','sample_name_short','time_point','component_name'),
-                      #UniqueConstraint('analysis_id','experiment_id','sample_name_short','time_point','component_name'),
+    __table_args__ = (#UniqueConstraint('experiment_id','sample_name_short','time_point','component_name'),
+                      UniqueConstraint('analysis_id','col_pdist_metric','row_pdist_metric','col_linkage_method','row_linkage_method','calculated_concentration_units'),
             )
 
-    def __init__(self,
-                 #analysis_id_I,
-                 experiment_id_I, sample_name_I, sample_name_abbreviation_I,
-                 time_point_I, dilution_I, replicate_number_I, met_id_I, used_I, comment_I):
-        #self.analysis_id = analysis_id_I;
-        self.experiment_id = experiment_id_I;
-        self.sample_name = sample_name_I;
-        self.sample_name_abbreviation = sample_name_abbreviation_I;
-        self.time_point = time_point_I;
-        self.dilution = dilution_I;
-        self.replicate_number = replicate_number_I;
-        self.met_id = met_id_I;
-        #...
-        self.used_ = used_I;
-        self.comment_ = comment_I;
+    def __init__(self,analysis_id_I,
+                col_leaves_I,
+                row_leaves_I,
+                col_icoord_I,
+                row_icoord_I,
+                row_dcoord_I,
+                col_dcoord_I,
+                col_ivl_I,
+                row_ivl_I,
+                col_labels_I,
+                row_labels_I,
+                heatmap_data_I,
+                col_pdist_metric_I,
+                row_pdist_metric_I,
+                col_linkage_method_I,
+                row_linkage_method_I,
+                calculated_concentration_units_I,
+                used__I,
+                comment__I):
+        self.analysis_id=analysis_id_I
+        self.col_leaves=col_leaves_I
+        self.row_leaves=row_leaves_I
+        self.col_icoord=col_icoord_I
+        self.row_icoord=row_icoord_I
+        self.row_dcoord=row_dcoord_I
+        self.col_dcoord=col_dcoord_I
+        self.col_ivl=col_ivl_I
+        self.row_ivl=row_ivl_I
+        self.col_labels=col_labels_I
+        self.row_labels=row_labels_I
+        self.heatmap_data=heatmap_data_I
+        self.col_pdist_metric=col_pdist_metric_I
+        self.row_pdist_metric=row_pdist_metric_I
+        self.col_linkage_method=col_linkage_method_I
+        self.row_linkage_method=row_linkage_method_I
+        self.calculated_concentration_units = calculated_concentration_units_I;
+        self.used_=used__I
+        self.comment_=comment__I
 
     def __repr__dict__(self): # not complete!
-        return {
-            #"analysis_id":self.analysis_id,
-            'experiment_id_I':self.experiment_id,
-                #...
-                'used_I':self.used_,
-                'comments_I':self.comments_}
+        return {'analysis_id':self.analysis_id,
+            'col_leaves':self.col_leaves,
+            'row_leaves':self.row_leaves,
+            'col_icoord':self.col_icoord,
+            'row_icoord':self.row_icoord,
+            'row_dcoord':self.row_dcoord,
+            'col_dcoord':self.col_dcoord,
+            'col_ivl':self.col_ivl,
+            'row_ivl':self.row_ivl,
+            'col_labels':self.col_labels,
+            'row_labels':self.row_labels,
+            'heatmap_data':self.heatmap_data,
+            'col_pdist_metric':self.col_pdist_metric,
+            'row_pdist_metric':self.row_pdist_metric,
+            'col_linkage_method':self.col_linkage_method,
+            'row_linkage_method':self.row_linkage_method,
+            'calculated_concentration_units':self.calculated_concentration_units,
+            'used_':self.used_,
+            'comment_':self.comment_};
     
     def __repr__json__(self):
-        return json.dumps(self.__repr__dict__())
+        return json.dumps(self.__repr__dict__());
 
 class data_stage02_quantification_svm(Base):
     #TODO
@@ -457,18 +500,35 @@ class data_stage02_quantification_descriptiveStats(Base):
         self.used_ = used_I;
         self.comment_ = comment_I;
 
-    def __repr__dict__(self): # not complete!
-        return {
-            "analysis_id":self.analysis_id,
-            'experiment_id_I':self.experiment_id,
-                'sample_name_abbreviation_I':self.sample_name_abbreviation,
-
-                "time_point":self.time_point,
-                "component_group_name":self.component_group_name,
-                "component_name":self.component_name,
-                #...
-                'used_I':self.used_,
-                'comments_I':self.comments_}
+    def __repr__dict__(self): 
+        return {'id':self.id,
+                'analysis_id':self.analysis_id,
+                'experiment_id':self.experiment_id,
+                'sample_name_abbreviation':self.sample_name_abbreviation,
+                'time_point':self.time_point,
+                'component_group_name':self.component_group_name,
+                'component_name':self.component_name,
+                'test_stat':self.test_stat,
+                'test_description':self.test_description,
+                'pvalue':self.pvalue,
+                'pvalue_corrected':self.pvalue_corrected,
+                'pvalue_corrected_description':self.pvalue_corrected_description,
+                'mean':self.mean,
+                'var':self.var,
+                'cv':self.cv,
+                'n':self.n,
+                'ci_lb':self.ci_lb,
+                'ci_ub':self.ci_ub,
+                'ci_level':self.ci_level,
+                'min':self.min,
+                'max':self.max,
+                'median':self.median,
+                'iq_1':self.iq_1,
+                'iq_3':self.iq_3,
+                'calculated_concentration_units':self.calculated_concentration_units,
+                'used_':self.used_,
+                'comment_':self.comment_
+                }
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
