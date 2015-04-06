@@ -575,6 +575,7 @@ class stage02_quantification_execute():
             data_stage02_quantification_pca_scores.__table__.drop(engine,True);
             data_stage02_quantification_pca_loadings.__table__.drop(engine,True);
             data_stage02_quantification_heatmap.__table__.drop(engine,True);
+            data_stage02_quantification_dendrogram.__table__.drop(engine,True);
             #data_stage02_quantification_svm.__table__.drop(engine,True);
             data_stage02_quantification_analysis.__table__.drop(engine,True);
         except SQLAlchemyError as e:
@@ -588,7 +589,6 @@ class stage02_quantification_execute():
                 reset = self.session.query(data_stage02_quantification_descriptiveStats).filter(data_stage02_quantification_descriptiveStats.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_pca_scores).filter(data_stage02_quantification_pca_scores.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_pca_loadings).filter(data_stage02_quantification_pca_loadings.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_heatmap).filter(data_stage02_quantification_heatmap.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_svm).filter(data_stage02_quantification_svm.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_analysis).filter(data_stage02_quantification_analysis.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
             else:
@@ -599,6 +599,7 @@ class stage02_quantification_execute():
                 reset = self.session.query(data_stage02_quantification_pca_scores).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_pca_loadings).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_heatmap).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_dendrogram).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_metabolomicsData).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_svm).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_analysis).delete(synchronize_session=False);
@@ -668,6 +669,15 @@ class stage02_quantification_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
+    def reset_dataStage02_quantification_dendrogram(self,analysis_id_I = None):
+        try:
+            if analysis_id_I:
+                reset = self.session.query(data_stage02_quantification_dendrogram).filter(data_stage02_quantification_dendrogram.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage02_quantification_dendrogram).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
     def initialize_dataStage02_quantification(self):
         try:
             data_stage02_quantification_glogNormalized.__table__.create(engine,True);
@@ -677,6 +687,7 @@ class stage02_quantification_execute():
             data_stage02_quantification_pca_scores.__table__.create(engine,True);
             data_stage02_quantification_pca_loadings.__table__.create(engine,True);
             data_stage02_quantification_heatmap.__table__.create(engine,True);
+            data_stage02_quantification_dendrogram.__table__.create(engine,True);
             #data_stage02_quantification_svm.__table__.create(engine,True);
             data_stage02_quantification_analysis.__table__.create(engine,True);
         except SQLAlchemyError as e:
@@ -1276,8 +1287,8 @@ class stage02_quantification_execute():
                 #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
                 self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
     def execute_heatmap(self, analysis_id_I,concentration_units_I=[],
-                row_pdist_metric_I='euclidean',row_linkage_method_I='ward',
-                col_pdist_metric_I='euclidean',col_linkage_method_I='ward'):
+                row_pdist_metric_I='euclidean',row_linkage_method_I='complete',
+                col_pdist_metric_I='euclidean',col_linkage_method_I='complete'):
         '''Execute hierarchical cluster on row and column data'''
 
         print 'executing heatmap...';
@@ -1314,29 +1325,53 @@ class stage02_quantification_execute():
                             data_O[sample_name_short_cnt,component_group_name_cnt] = row['calculated_concentration'];
                 col_cnt+=1;
             # generate the clustering for the heatmap
-            heatmap_O = {};
-            heatmap_O = self.calculate.heatmap(data_O,sample_name_short_unique,component_group_names_unique,
+            heatmap_O = [];
+            dendrogram_col_O = {};
+            dendrogram_row_O = {};
+            heatmap_O,dendrogram_col_O,dendrogram_row_O = self.calculate.heatmap(data_O,sample_name_short_unique,component_group_names_unique,
                     row_pdist_metric_I=row_pdist_metric_I,row_linkage_method_I=row_linkage_method_I,
                     col_pdist_metric_I=col_pdist_metric_I,col_linkage_method_I=col_linkage_method_I);
-            # add data to to the database
+            # add data to to the database for the heatmap
+            for d in heatmap_O:
+                row = None;
+                row = data_stage02_quantification_heatmap(
+                    analysis_id_I,
+                    d['col_index'],
+                    d['row_index'],
+                    d['value'],
+                    d['col_leaves'],
+                    d['row_leaves'],
+                    d['col_label'],
+                    d['row_label'],
+                    d['col_pdist_metric'],
+                    d['row_pdist_metric'],
+                    d['col_linkage_method'],
+                    d['row_linkage_method'],
+                    cu, True, None);
+                self.session.add(row);
+            # add data to the database for the dendrograms
             row = None;
-            row = data_stage02_quantification_heatmap(
+            row = data_stage02_quantification_dendrogram(
                 analysis_id_I,
-                heatmap_O['col_leaves'],
-                heatmap_O['row_leaves'],
-                heatmap_O['col_icoord'],
-                heatmap_O['row_icoord'],
-                heatmap_O['col_dcoord'],
-                heatmap_O['row_dcoord'],
-                heatmap_O['col_ivl'],
-                heatmap_O['row_ivl'],
-                heatmap_O['col_labels'],
-                heatmap_O['row_labels'],
-                heatmap_O['heatmap_data'],
-                heatmap_O['col_pdist_metric'],
-                heatmap_O['row_pdist_metric'],
-                heatmap_O['col_linkage_method'],
-                heatmap_O['row_linkage_method'],
+                dendrogram_col_O['leaves'],
+                dendrogram_col_O['icoord'],
+                dendrogram_col_O['dcoord'],
+                dendrogram_col_O['ivl'],
+                dendrogram_col_O['colors'],
+                dendrogram_col_O['pdist_metric'],
+                dendrogram_col_O['pdist_metric'],
+                cu, True, None);
+            self.session.add(row);
+            row = None;
+            row = data_stage02_quantification_dendrogram(
+                analysis_id_I,
+                dendrogram_row_O['leaves'],
+                dendrogram_row_O['icoord'],
+                dendrogram_row_O['dcoord'],
+                dendrogram_row_O['ivl'],
+                dendrogram_row_O['colors'],
+                dendrogram_row_O['pdist_metric'],
+                dendrogram_row_O['pdist_metric'],
                 cu, True, None);
             self.session.add(row);
         self.session.commit();

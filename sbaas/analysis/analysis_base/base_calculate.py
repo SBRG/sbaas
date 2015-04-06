@@ -377,8 +377,8 @@ class base_calculate(base_analysis):
 
     # heatmap
     def heatmap(self,data_I,row_labels_I,column_labels_I,
-                row_pdist_metric_I='euclidean',row_linkage_method_I='ward',
-                col_pdist_metric_I='euclidean',col_linkage_method_I='ward'):
+                row_pdist_metric_I='euclidean',row_linkage_method_I='complete',
+                col_pdist_metric_I='euclidean',col_linkage_method_I='complete'):
         '''Generate a heatmap using pandas and scipy'''
 
         """dendrogram documentation:
@@ -406,13 +406,6 @@ class base_calculate(base_analysis):
         col_labels = list(mets_data.columns)
         row_labels = list(mets_data.index)
 
-        #heatmap data matrix
-        heatmap_data = []
-        for i,g in enumerate(mets_data.index):
-            for j,c in enumerate(mets_data.columns):
-                #heatmap_data.append({"col": j+1, "row": i+1, "value": mets_data.ix[g][c]})
-                heatmap_data.append({"col": j, "row": i, "value": mets_data.ix[g][c]})
-
         #perform the custering on the both the rows and columns
         dm = mets_data
         D1 = squareform(pdist(dm, metric=row_pdist_metric_I))
@@ -427,32 +420,48 @@ class base_calculate(base_analysis):
         #parse the output
         col_leaves = Z2['leaves'] # no hclustering; same as heatmap_data['col']
         row_leaves = Z1['leaves'] # no hclustering; same as heatmap_data['row']
+        col_colors = Z2['color_list'] # no hclustering; same as heatmap_data['col']
+        row_colors = Z1['color_list'] # no hclustering; same as heatmap_data['row']
         col_icoord = Z2['icoord'] # no hclustering; same as heatmap_data['col']
         row_icoord = Z1['icoord'] # no hclustering; same as heatmap_data['row']
         col_dcoord = Z2['dcoord'] # no hclustering; same as heatmap_data['col']
         row_dcoord = Z1['dcoord'] # no hclustering; same as heatmap_data['row']
         col_ivl = Z2['ivl'] # no hclustering; same as heatmap_data['col']
         row_ivl = Z1['ivl'] # no hclustering; same as heatmap_data['row']
-        
-        #hccol = [x+1 for x in hccol]; # hccol index should match heatmap_data index
-        #hcrow = [x+1 for x in hcrow];
 
-        heatmap_row_O = {'col_leaves':col_leaves,
-                        'row_leaves':row_leaves,
-                        'col_icoord':col_icoord,
-                        'row_icoord':row_icoord,
-                        'col_dcoord':col_dcoord,
-                        'row_dcoord':row_dcoord,
-                        'col_ivl':col_ivl,
-                        'row_ivl':row_ivl,
-                        'col_labels':col_labels,
-                        'row_labels':row_labels,
+        #heatmap data matrix
+        heatmap_data_O = []
+        for i,r in enumerate(mets_data.index):
+            for j,c in enumerate(mets_data.columns):
+                #heatmap_data.append({"col": j+1, "row": i+1, "value": mets_data.ix[r][c]})
+                tmp = {"col_index": j, "row_index": i, "value": mets_data.ix[r][c],
+                       'row_label': r,'col_label':c,
+                       'col_leaves':col_leaves[j],
+                        'row_leaves':row_leaves[i],
                         'col_pdist_metric':col_pdist_metric_I,
                         'row_pdist_metric':row_pdist_metric_I,
                         'col_linkage_method':col_linkage_method_I,
                         'row_linkage_method':row_linkage_method_I,
-                        'heatmap_data':heatmap_data};
-        return heatmap_row_O;
+                       };
+                heatmap_data_O.append(tmp)
+
+        dendrogram_col_O = {'leaves':col_leaves,
+                        'icoord':col_icoord,
+                        'dcoord':col_dcoord,
+                        'ivl':col_ivl,
+                        'colors':col_colors,
+                        'pdist_metric':col_pdist_metric_I,
+                        'linkage_method':col_linkage_method_I};
+
+        dendrogram_row_O = {
+                        'leaves':row_leaves,
+                        'icoord':row_icoord,
+                        'dcoord':row_dcoord,
+                        'ivl':row_ivl,
+                        'colors':row_colors,
+                        'pdist_metric':row_pdist_metric_I,
+                        'linkage_method':row_linkage_method_I};
+        return heatmap_data_O,dendrogram_col_O,dendrogram_row_O;
     def heatmap_v1(self,data_I,row_labels_I,column_labels_I):
         '''Generate a heatmap using pandas and scipy
         DEPRECATED: kept for compatibility with old io methods'''
