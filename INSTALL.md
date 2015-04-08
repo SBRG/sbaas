@@ -45,4 +45,6 @@ r2py
 
 sqlalchemy
 
-...
+h5py
+
+thermodynamics (https://github.com/dmccloskey/thermodynamics.git)

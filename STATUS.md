@@ -84,6 +84,6 @@ and data_stage01_isotopomer)
 
 3.	Direct integration with breseq
 
-4.	Web-UI for data analysis beyond only data visualization
+4.	Web-UI for data analysis beyond only data visualization using ddt (https://github.com/dmccloskey/ddt.git)(currently in progress...)
 
-5.  Modular database and pipeline deployment
+5.  Modular database and pipeline deployment via the ORM (currently in progress...)

@@ -392,8 +392,8 @@ application = Application([
     (r".*/(js/.*)", StaticHandler),
     (r".*/(css/.*)", StaticHandler),
     (r".*/(resources/.*)", StaticHandler),
-    (r"/(data.*)", ContainerHandler),
-    #(r"/(data.*)", VisualizationHandler),
+    (r"/(data.*)", VisualizationHandler),
+    #(r"/(data.*)", ContainerHandler), refactoring in progress...
     (r"/", IndexHandler),
     (r"/login", LoginHandler),
     (r"/logout", LogoutHandler),

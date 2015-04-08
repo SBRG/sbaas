@@ -955,7 +955,7 @@ class stage00_execute():
         check that no components have the same q1_mass
         '''
     #table initializations:
-    def drop_dataStage01(self):
+    def drop_dataStage00(self):
         try:
             experimentor_id2name.__table__.drop(engine,True);
             experimentor.__table__.drop(engine,True);
@@ -1011,7 +1011,7 @@ class stage00_execute():
 
         except SQLAlchemyError as e:
             print(e);
-    def reset_dataStage01(self,experiment_id_I = None):
+    def reset_dataStage00(self):
         try:
             reset = self.session.query(experimentor_id2name).delete(synchronize_session=False);
             reset = self.session.query(experimentor).delete(synchronize_session=False);
@@ -1068,7 +1068,7 @@ class stage00_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
-    def initialize_dataStage01(self):
+    def initialize_dataStage00(self):
         try:
             experimentor_id2name.__table__.create(engine,True);
             experimentor.__table__.create(engine,True);
