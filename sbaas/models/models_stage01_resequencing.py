@@ -167,10 +167,11 @@ class data_stage01_resequencing_mutationsFiltered(Base):
         return json.dumps(self.__repr__dict__())
     
 class data_stage01_resequencing_lineage(Base):
+    #TODO: rename to _timecourse
     __tablename__ = 'data_stage01_resequencing_lineage'
     id = Column(Integer, Sequence('data_stage01_resequencing_lineage_id_seq'), primary_key=True)
     experiment_id = Column(String(50))
-    lineage_name = Column(String(100))
+    analysis_id = Column(String(500)) #analysis_id
     sample_name = Column(String(100))
     intermediate = Column(Integer)
     mutation_frequency = Column(Float)
@@ -183,8 +184,12 @@ class data_stage01_resequencing_lineage(Base):
     mutation_links = Column(postgresql.ARRAY(String(500)))
     comment_ = Column(Text)
 
-    def __init__(self, experiment_id_I,
-                lineage_name_I,
+    __table_args__ = (UniqueConstraint('analysis_id','experiment_id','sample_name_short','time_point'),
+            )
+
+    def __init__(self, 
+                experiment_id_I,
+                analysis_id_I,
                 sample_name_I,
                 intermediate_I,
                 mutation_frequency_I,
@@ -197,7 +202,7 @@ class data_stage01_resequencing_lineage(Base):
                 mutation_links_I,
                 comment__I):
         self.experiment_id=experiment_id_I
-        self.lineage_name=lineage_name_I
+        self.analysis_id=analysis_id_I
         self.sample_name=sample_name_I
         self.intermediate=intermediate_I
         self.mutation_frequency=mutation_frequency_I
@@ -211,8 +216,9 @@ class data_stage01_resequencing_lineage(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
-                'lineage_name':self.lineage_name,
+        return {
+                'experiment_id':self.experiment_id,
+                'analysis_id':self.analysis_id,
                 'sample_name':self.sample_name,
                 'intermediate':self.intermediate,
                 'mutation_frequency':self.mutation_frequency,
@@ -229,10 +235,11 @@ class data_stage01_resequencing_lineage(Base):
         return json.dumps(self.__repr__dict__())
     
 class data_stage01_resequencing_endpoints(Base):
+    #TODO: rename to _group
     __tablename__ = 'data_stage01_resequencing_endpoints'
     id = Column(Integer, Sequence('data_stage01_resequencing_endpoints_id_seq'), primary_key=True)
     experiment_id = Column(String(50))
-    endpoint_name = Column(String(100))
+    analysis_id = Column(String(500))
     sample_name = Column(String(100))
     mutation_frequency = Column(Float)
     mutation_type = Column(String(3))
@@ -245,8 +252,11 @@ class data_stage01_resequencing_endpoints(Base):
     mutation_links = Column(postgresql.ARRAY(String(500)))
     comment_ = Column(Text)
 
+    __table_args__ = (UniqueConstraint('analysis_id','experiment_id','sample_name'),
+            )
+
     def __init__(self, experiment_id_I,
-                endpoint_name_I,
+                analysis_id_I,
                 sample_name_I,
                 mutation_frequency_I,
                 mutation_type_I,
@@ -259,7 +269,7 @@ class data_stage01_resequencing_endpoints(Base):
                 mutation_links_I,
                 comment__I):
         self.experiment_id=experiment_id_I
-        self.endpoint_name=endpoint_name_I
+        self.analysis_id=analysis_id_I
         self.sample_name=sample_name_I
         self.mutation_frequency=mutation_frequency_I
         self.mutation_type=mutation_type_I
@@ -274,7 +284,7 @@ class data_stage01_resequencing_endpoints(Base):
 
     def __repr__dict__(self):
         return {'experiment_id':self.experiment_id,
-                'endpoint_name':self.endpoint_name,
+                'analysis_id':self.analysis_id,
                 'sample_name':self.sample_name,
                 'mutation_frequency':self.mutation_frequency,
                 'mutation_type':self.mutation_type,
@@ -344,6 +354,48 @@ class data_stage01_resequencing_mutationsAnnotated(Base):
                 'mutation_links':self.mutation_links,
                 'used_':self.used_,
                 'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+class data_stage01_resequencing_analysis(Base):
+    __tablename__ = 'data_stage01_resequencing_analysis'
+    id = Column(Integer, Sequence('data_stage01_resequencing_analysis_id_seq'), primary_key=True)
+    analysis_id = Column(String(500))
+    experiment_id = Column(String(50))
+    sample_name = Column(String(500)) # equivalent to sample_name_abbreviation
+    time_point = Column(String(10)) # converted to intermediate in lineage analysis
+    analysis_type = Column(String(100)); # time-course (i.e., multiple time points), paired (i.e., control compared to multiple replicates), group (i.e., single grouping of samples).
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('experiment_id','sample_name','time_point','analysis_type','analysis_id'),
+            )
+
+    def __init__(self,analysis_id_I,
+                 experiment_id_I,
+            sample_name_I,
+            time_point_I,
+            analysis_type_I,
+            used__I,
+            comment__I):
+        self.analysis_id=analysis_id_I
+        self.experiment_id=experiment_id_I
+        self.sample_name=sample_name_I
+        self.time_point=time_point_I
+        self.analysis_type=analysis_type_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'analysis_id':self.analysis_id,
+            'experiment_id':self.experiment_id,
+            'sample_name':self.sample_name,
+            'time_point':self.time_point,
+            'analysis_type':self.analysis_type,
+            'used_':self.used_,
+            'comment_':self.comment_}
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())

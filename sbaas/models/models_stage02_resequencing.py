@@ -111,6 +111,10 @@ class data_stage02_resequencing_reduceResequencingPhysiology(Base):
     used_ = Column(Boolean)
     comment_ = Column(Text)
 
+    __table_args__ = (
+            UniqueConstraint('experiment_id','group_name','sample_names','sample_name_abbreviations','resequencing_reduce_id','physiology_reduce_id'),
+            )
+
     def __init__(self,
                 experiment_id_I,
                 group_name_I,
@@ -166,6 +170,49 @@ class data_stage02_resequencing_reduceResequencingPhysiology(Base):
             'rate_lbs':self.rate_lbs,
             'rate_ubs':self.rate_ubs,
             'rate_units':self.rate_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
+class data_stage02_resequencing_analysis(Base):
+    __tablename__ = 'data_stage02_resequencing_analysis'
+    id = Column(Integer, Sequence('data_stage02_resequencing_analysis_id_seq'), primary_key=True)
+    analysis_id = Column(String(500))
+    experiment_id = Column(String(50)) # resequencing->phenomics
+    sample_names = Column(String(500))
+    sample_name_abbreviation = Column(String(100)) # resequencing->phenomics
+    analysis_type = Column(String(100)); # time-course (i.e., multiple time points), paired (i.e., control compared to multiple replicates), group (i.e., single grouping of samples).
+    #map_reduce_criteria = Column(postgresql.JSON); #todo: add?
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+            UniqueConstraint('experiment_id','sample_name','sample_name_abbreviation','analysis_type','analysis_id'),
+            )
+
+    def __init__(self,analysis_id_I,
+                 experiment_id_I,
+            sample_name_I,
+            sample_name_abbreviation_I,
+            analysis_type_I,
+            used__I,
+            comment__I):
+        self.analysis_id=analysis_id_I
+        self.experiment_id=experiment_id_I
+        self.sample_name=sample_name_I
+        self.sample_name_abbreviation=sample_name_abbreviation_I
+        self.analysis_type=analysis_type_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'analysis_id':self.analysis_id,
+            'experiment_id':self.experiment_id,
+            'sample_name':self.sample_name,
+            'sample_name_abbreviation':self.sample_name_abbreviation,
+            'analysis_type':self.analysis_type,
             'used_':self.used_,
             'comment_':self.comment_}
     

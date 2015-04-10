@@ -163,88 +163,17 @@ class stage02_resequencing_io(stage01_resequencing_io):
                     print(e);
             self.session.commit();
 
-    def export_dataStage02ResequencingLineage_d3_v1(self, experiment_id,group_names_I=[],
-                                                 json_var_name='data',
-                                                 filename=['visualization/data/','/resequencing-physiology/heatmap/','.js']):
-        '''Export data for viewing using d3'''
-        #Input:
-        #   experiment_id
-        #   lineage_names = list of lineage_names to export
-        #Output:
-        #   
-        
-        # get group_names
-        if group_names_I:
-            group_names = group_names_I;
-        else:
-            group_names = [];
-            group_names = self.stage02_resequencing_query.get_groupNames_experimentID_dataStage02ResequencingReduceResequencingPhysiology(experiment_id);
-        for gn in group_names:
-            # get data for the group
-            group_data = [];
-            group_data = self.stage02_resequencing_query.get_row_experimentIDAndGroupName_dataStage02ResequencingReduceResequencingPhysiology(experiment_id,gn);
-            # find unique mutation_reduce_ids
-            mutation_ids = [x['resequencing_reduce_id'] for x in group_data];
-            mutation_ids_unique = list(set(mutation_ids));
-            mutation_ids_unique.sort();
-            physiology_reduce_ids = [x['physiology_reduce_id'] for x in group_data];
-            physiology_reduce_unique = list(set(physiology_reduce_ids));
-            physiology_reduce_unique.sort();
-            # generate the frequency matrix data structure (mutation x intermediate)
-            json_O = {};
-            data_O = [];
-            options_O = {};
-            options_O['row_axis_label'] = 'physiology_id';
-            options_O['col_axis_label'] = 'resequencing_id';
-            options_O['value_label'] = 'count';
-            options_O['domain'] = '2';
-            labels_O = {};
-            labels_O['row_labels']=[];
-            labels_O['col_labels']=[];
-            labels_O['hcrow']=[];
-            labels_O['hccol']=[];
-            labels_O['lineage']=[];
-            labels_O['maxval']=None;
-            labels_O['minval']=None;
-            col_cnt = 0;
-            # order 2: groups each lineage by mutation (intermediate x mutation)
-            for physiology_reduce_id_cnt,physiology_id in enumerate(physiology_reduce_unique): #all lineages for intermediate j / mutation i
-                labels_O['row_labels'].append(physiology_id); # corresponding label from hierarchical clustering (in this case, arbitrary)
-                labels_O['hcrow'].append(col_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-                for mutation_id_cnt,mutation_id in enumerate(mutation_ids_unique): #all mutations i for intermediate j
-                    if physiology_reduce_id_cnt==0: # record only once
-                        labels_O['col_labels'].append(mutation_id); # corresponding label from hierarchical clustering (in this case, arbitrary)
-                        labels_O['lineage'].append(physiology_id);
-                        labels_O['hccol'].append(mutation_id_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-                    data_tmp = {};
-                    data_tmp['col'] = mutation_id_cnt+1;
-                    data_tmp['row'] = col_cnt+1;
-                    data_tmp['value'] = 0.0;
-                    for row in group_data:
-                        if row['physiology_reduce_id'] == physiology_id and row['resequencing_reduce_id'] == mutation_id:
-                            data_tmp['value'] = row['reduce_count'];
-                    data_O.append(data_tmp);
-                col_cnt+=1;
-            labels_O['maxval']=max([x['value'] for x in data_O]);
-            labels_O['minval']=min([x['value'] for x in data_O]);
-            json_O['heatmap_data']=data_O;
-            json_O.update(labels_O);
-            json_O['options'] = options_O;
-            # dump the data to a json file
-            json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-            filename_str = filename[0] + experiment_id + filename[1] + gn + filename[2]
-            with open(filename_str,'w') as file:
-                file.write(json_str);
-
     def export_dataStage02ResequencingLineage_d3(self, experiment_id,group_names_I=[],
                                                  json_var_name='data',
                                                  filename=['visualization/data/','/resequencing-physiology/heatmap/','.js']):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id
-        #   lineage_names = list of lineage_names to export
+        #   analysis_ids = list of analysis_ids to export
         #Output:
         #   
+
+        #TODO: drive from analysis
         
         # get group_names
         if group_names_I:
@@ -292,3 +221,54 @@ class stage02_resequencing_io(stage01_resequencing_io):
             filename_str = filename[0] + experiment_id + filename[1] + gn + filename[2]
             with open(filename_str,'w') as file:
                 file.write(json_str);
+
+    def import_dataStage02ResequencingAnalysis_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_dataStage02ResequencingAnalysis(data.data);
+        data.clear_data();
+
+    def add_dataStage02ResequencingReduceAnalysis(self, data_I):
+        '''add rows of data_stage02_resequencing_analysis'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = data_stage02_resequencing_analysis(
+                        d['analysis_id'],
+                        d['experiment_id'],
+                        d['sample_name'],
+                        d['sample_name_abbreviation'],
+                        d['analysis_type']);
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
+
+    def import_dataStage02ResequencingAnalysis_update(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.update_dataStage02ResequencingAnalysisy(data.data);
+        data.clear_data();
+
+    def update_dataStage02ResequencingAnalysis(self,data_I):
+        '''update rows of data_stage02_resequencing_analysis'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_update = self.session.query(data_stage02_resequencing_analysis).filter(
+                           data_stage02_resequencing_analysis.id==d['id']).update(
+                            {'analysis_id':d['analysis_id'],
+                            'experiment_id':d['experiment_id'],
+                            'sample_name':d['sample_name'],
+                            'sample_name_abbreviation':d['sample_name_abbreviation'],
+                            'analysis_type':d['analysis_type'],
+                            'used_':d['used_'],
+                            'comment_':d['comment_']},
+                            synchronize_session=False);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();

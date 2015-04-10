@@ -123,14 +123,18 @@ class stage01_resequencing_execute():
         3. hitch-hiker mutations'''
         #Input:
         #   experiment_id = experiment id
-        #   strain_lineage = {"strain_lineage_name":{0:sample_name,1:sample_name,2:sample_name,...,n:sample_name}}
+        #   strain_lineage = {"strain_analysis_id":{0:sample_name,1:sample_name,2:sample_name,...,n:sample_name}}
         #                       where n is the end-point strain
         #Output:
 
+        #TODO: drive from analysis table
+        #TODO: convert time-point to lineage
+        #       lineage = [i for i,tp in enumerate(time_points)];
+
         print 'Executing analyzeLineage_population...'
         data_O = [];
-        for lineage_name,strain in strain_lineage.iteritems():
-            print 'analyzing lineage ' + lineage_name;
+        for analysis_id,strain in strain_lineage.iteritems():
+            print 'analyzing lineage ' + analysis_id;
             lineage = strain.keys();
             end_point = max(lineage)
             # query end data:
@@ -158,7 +162,7 @@ class stage01_resequencing_execute():
                             data_tmp['mutation_frequency'] = frequency
                             data_tmp['mutation_position'] = end_mutation['mutation_data']['position']
                             data_tmp['mutation_type'] = end_mutation['mutation_data']['type']
-                            data_tmp['lineage_name'] = lineage_name;
+                            data_tmp['analysis_id'] = analysis_id;
                             data_tmp['mutation_data'] = end_mutation['mutation_data'];
                             data_O.append(data_tmp);
                         # find the mutation in the intermediates
@@ -220,13 +224,13 @@ class stage01_resequencing_execute():
                             data_tmp['mutation_frequency'] = frequency
                             data_tmp['mutation_position'] = match['mutation_data']['position']
                             data_tmp['mutation_type'] = match['mutation_data']['type']
-                            data_tmp['lineage_name'] = lineage_name;
+                            data_tmp['analysis_id'] = analysis_id;
                             data_tmp['mutation_data'] = match['mutation_data'];
                             data_O.append(data_tmp);
         for d in data_O:
             row = [];
             row = data_stage01_resequencing_lineage(d['experiment_id'],
-                d['lineage_name'],
+                d['analysis_id'],
                 d['sample_name'],
                 d['intermediate'],
                 d['mutation_frequency'],
@@ -242,13 +246,15 @@ class stage01_resequencing_execute():
         2. unique mutations among replicates'''
         #Input:
         #   experiment_id = experiment id
-        #   end_points = {endpoint_name: [sample_name_1,sample_name_2,sample_name_3,...]}
+        #   end_points = {analysis_id: [sample_name_1,sample_name_2,sample_name_3,...]}
         #Output:
+
+        #TODO: drive from analysis table
 
         print 'Executing analyzeEndpointReplicates_population...'
         data_O = [];
-        for endpoint_name,strains in end_points.iteritems():
-            print 'analyzing endpoint ' + endpoint_name;
+        for analysis_id,strains in end_points.iteritems():
+            print 'analyzing endpoint ' + analysis_id;
             analyzed_strain1 = []; # strain1s that have been analyzed
             analyzed_mutation_pairs = []; # mutation pairs that have been analyzed
             matched_mutations = {};
@@ -337,7 +343,7 @@ class stage01_resequencing_execute():
                                 data_tmp['mutation_frequency'] = frequency
                                 data_tmp['mutation_position'] = match['mutation_data']['position']
                                 data_tmp['mutation_type'] = match['mutation_data']['type']
-                                data_tmp['endpoint_name'] = endpoint_name;
+                                data_tmp['analysis_id'] = analysis_id;
                                 data_tmp['mutation_data'] = match['mutation_data'];
                                 data_tmp['isUnique'] = False;
                                 data_O.append(data_tmp);
@@ -366,7 +372,7 @@ class stage01_resequencing_execute():
                                 data_tmp['mutation_frequency'] = frequency
                                 data_tmp['mutation_position'] = strain1_mutation['mutation_data']['position']
                                 data_tmp['mutation_type'] = strain1_mutation['mutation_data']['type']
-                                data_tmp['endpoint_name'] = endpoint_name;
+                                data_tmp['analysis_id'] = analysis_id;
                                 data_tmp['mutation_data'] = strain1_mutation['mutation_data'];
                                 data_tmp['isUnique'] = True;
                                 data_O.append(data_tmp);
@@ -375,7 +381,7 @@ class stage01_resequencing_execute():
         for d in data_O:
             row = [];
             row = data_stage01_resequencing_endpoints(d['experiment_id'],
-                d['endpoint_name'],
+                d['analysis_id'],
                 d['sample_name'],
                 d['mutation_frequency'],
                 d['mutation_type'],
@@ -603,9 +609,10 @@ class stage01_resequencing_execute():
             data_stage01_resequencing_lineage.__table__.drop(engine,True);
             data_stage01_resequencing_endpoints.__table__.drop(engine,True);
             data_stage01_resequencing_mutationsAnnotated.__table__.drop(engine,True);
+            data_stage01_resequencing_analysis.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
-    def reset_dataStage01(self,experiment_id_I = None):
+    def reset_dataStage01(self,experiment_id_I = None,analysis_id_I = None):
         try:
             if experiment_id_I:
                 reset = self.session.query(data_stage01_resequencing_metadata).filter(data_stage01_resequencing_metadata.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
@@ -614,8 +621,12 @@ class stage01_resequencing_execute():
                 reset = self.session.query(data_stage01_resequencing_validation).filter(data_stage01_resequencing_validation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_resequencing_mutationsFiltered).filter(data_stage01_resequencing_mutationsFiltered.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_resequencing_lineage).filter(data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage01_resequencing_endpoints).filter(data_stage01_resequencing_endpoints.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage01_resequencing_mutationsAnnotated).filter(data_stage01_resequencing_mutationsAnnotated.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage01_resequencing_endpoints).filter(data_stage01_resequencing_endpoints.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage01_resequencing_mutationsAnnotated).filter(data_stage01_resequencing_mutationsAnnotated.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            elif analysis_id_I:
+                reset = self.session.query(data_stage01_resequencing_lineage).filter(data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage01_resequencing_endpoints).filter(data_stage01_resequencing_endpoints.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage01_resequencing_analysis).filter(data_stage01_resequencing_analysis.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage01_resequencing_metadata).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_resequencing_mutations).delete(synchronize_session=False);
@@ -625,6 +636,7 @@ class stage01_resequencing_execute():
                 reset = self.session.query(data_stage01_resequencing_lineage).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_resequencing_endpoints).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_resequencing_mutationsAnnotated).delete(synchronize_session=False);
+                reset = self.session.query(data_stage01_resequencing_analysis).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -649,19 +661,19 @@ class stage01_resequencing_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
-    def reset_dataStage01_lineage(self,experiment_id_I = None):
+    def reset_dataStage01_lineage(self,analysis_id_I = None):
         try:
-            if experiment_id_I:
-                reset = self.session.query(data_stage01_resequencing_lineage).filter(data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            if analysis_id_I:
+                reset = self.session.query(data_stage01_resequencing_lineage).filter(data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage01_resequencing_lineage).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
-    def reset_dataStage01_endpoints(self,experiment_id_I = None):
+    def reset_dataStage01_endpoints(self,analysis_id_I = None):
         try:
-            if experiment_id_I:
-                reset = self.session.query(data_stage01_resequencing_endpoints).filter(data_stage01_resequencing_endpoints.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            if analysis_id_I:
+                reset = self.session.query(data_stage01_resequencing_endpoints).filter(data_stage01_resequencing_endpoints.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage01_resequencing_endpoints).delete(synchronize_session=False);
             self.session.commit();

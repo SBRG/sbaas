@@ -135,7 +135,7 @@ class stage01_resequencing_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage01_resequencing_lineage(d['experiment_id'],
-                                d['lineage_name'],
+                                d['analysis_id'],
                                 d['sample_name'],
                                 d['intermediate'],
                                 d['mutation_frequency'],
@@ -172,7 +172,7 @@ class stage01_resequencing_io(base_analysis):
                     data_update = self.session.query(data_stage01_resequencing_lineage).filter(
                            data_stage01_resequencing_lineage.id==d['id']).update(
                             {'experiment_id':d['experiment_id'],
-                                'lineage_name':d['lineage_name'],
+                                'analysis_id':d['analysis_id'],
                                 'sample_name':d['sample_name'],
                                 'intermediate':d['intermediate'],
                                 'mutation_frequency':d['mutation_frequency'],
@@ -203,7 +203,7 @@ class stage01_resequencing_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = data_stage01_resequencing_endpoints(d['experiment_id'],
-                            d['endpoint_name'],
+                            d['analysis_id'],
                             d['sample_name'],
                             d['mutation_frequency'],
                             d['mutation_type'],
@@ -236,7 +236,7 @@ class stage01_resequencing_io(base_analysis):
                     data_update = self.session.query(data_stage01_resequencing_endpoints).filter(
                            data_stage01_resequencing_endpoints.id==d['id']).update(
                             {'experiment_id':d['experiment_id'],
-                            'endpoint_name':d['endpoint_name'],
+                            'analysis_id':d['analysis_id'],
                             'sample_name':d['sample_name'],
                             'mutation_frequency':d['mutation_frequency'],
                             'mutation_type':d['mutation_type'],
@@ -253,241 +253,38 @@ class stage01_resequencing_io(base_analysis):
                     print(e);
             self.session.commit();
 
-    def export_dataStage01ResequencingLineage_d3_v1(self, experiment_id, lineage_names,
-                                                 filename='visualization/data/ALEsKOs01/resequencing/heatmap/data.js',
-                                                 mutation_id_exclusion_list = []):
-        '''Export data for viewing using d3'''
-        #Input:
-        #   experiment_id
-        #   lineage_names = list of lineage_names to export
-        #Output:
-        #   
-        
-        intermediates_lineage = [];
-        mutation_data_lineage = [];
-        rows_lineage = [];
-        n_lineages = len(lineage_names)
-        for lineage_name in lineage_names:
-            ## get ALL sample names by experiment_id and lineage name
-            #sample_names = [];
-            #sample_names = self.stage01_resequencing_query.get_sampleNames_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
-            # get ALL intermediates by experiment_id and lineage name
-            intermediates = [];
-            intermediates = self.stage01_resequencing_query.get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
-            intermediates_lineage.extend(intermediates);
-            # get ALL mutation data by experiment_id and lineage name
-            mutation_data = [];
-            mutation_data = self.stage01_resequencing_query.get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
-            mutation_data_lineage.extend(mutation_data);
-            # get ALL mutation frequencies by experiment_id and lineage name
-            rows = [];
-            rows = self.stage01_resequencing_query.get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name)
-            rows_lineage.extend(rows);
-        intermediates_lineage = list(set(intermediates_lineage));
-        mutation_data_lineage = list(set(mutation_data_lineage)-set(mutation_id_exclusion_list));
-        min_inter = min(intermediates_lineage)
-        max_inter = max(intermediates_lineage);
-        intermediates_all = [i for i in range(min_inter,max_inter+1)];
-        # generate the frequency matrix data structure (mutation x intermediate)
-        json_O = {};
-        data_O = [];
-        labels_O = {};
-        labels_O['row_labels']=[];
-        labels_O['col_labels']=[];
-        labels_O['hcrow']=[];
-        labels_O['hccol']=[];
-        labels_O['lineage']=[];
-        labels_O['maxval']=None;
-        labels_O['minval']=None;
-        # order 1: groups each lineage by mutation (mutation x intermediate) ##NOTE: makes for a very tall chart
-        for intermediate_cnt,intermediate in enumerate(intermediates_all):
-            labels_O['col_labels'].append(intermediate); # corresponding label from hierarchical clustering (in this case, arbitrary)
-            labels_O['hccol'].append(intermediate_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-            for mutation_cnt,mutation in enumerate(mutation_data): #all mutations i for intermediate j
-                for lineage_name_cnt,lineage_name in enumerate(lineage_names): #all lineages for intermediate j / mutation i
-                    if intermediate_cnt==0: # record only once
-                        labels_O['row_labels'].append(lineage_name+": "+mutation); # corresponding label from hierarchical clustering (in this case, arbitrary)
-                        labels_O['lineage'].append(lineage_name);
-                        labels_O['hcrow'].append(n_lineages*mutation_cnt+lineage_name_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-                    data_tmp = {};
-                    data_tmp['row'] = n_lineages*mutation_cnt+lineage_name_cnt+1;
-                    data_tmp['col'] = intermediate_cnt+1;
-                    data_tmp['value'] = 0.0;
-                    for row in rows_lineage:
-                        if row['mutation_id'] == mutation and row['intermediate'] == intermediate and row['lineage_name'] == lineage_name:
-                            data_tmp['value'] = row['mutation_frequency'];
-                    data_O.append(data_tmp);
-        ## order 2: groups each lineage by mutation (intermediate x mutation)
-        #for intermediate_cnt,intermediate in enumerate(intermediates_all):
-        #    labels_O['row_labels'].append(intermediate); # corresponding label from hierarchical clustering (in this case, arbitrary)
-        #    labels_O['hcrow'].append(intermediate_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-        #    for mutation_cnt,mutation in enumerate(mutation_data): #all mutations i for intermediate j
-        #        for lineage_name_cnt,lineage_name in enumerate(lineage_names): #all lineages for intermediate j / mutation i
-        #            if intermediate_cnt==0: # record only once
-        #                labels_O['col_labels'].append(lineage_name+": "+mutation); # corresponding label from hierarchical clustering (in this case, arbitrary)
-        #                labels_O['lineage'].append(lineage_name);
-        #                labels_O['hccol'].append(n_lineages*mutation_cnt+lineage_name_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-        #            data_tmp = {};
-        #            data_tmp['col'] = n_lineages*mutation_cnt+lineage_name_cnt+1;
-        #            data_tmp['row'] = intermediate_cnt+1;
-        #            data_tmp['value'] = None;
-        #            for row in rows_lineage:
-        #                if row['mutation_id'] == mutation and row['intermediate'] == intermediate and row['lineage_name'] == lineage_name:
-        #                    data_tmp['value'] = row['mutation_frequency'];
-        #            data_O.append(data_tmp);
-        labels_O['maxval']=max([x['value'] for x in data_O]);
-        labels_O['minval']=min([x['value'] for x in data_O]);
-        json_O['heatmap_data']=data_O;
-        json_O.update(labels_O);
-        # dump the data to a json file
-        json_str = 'var data = ' + json.dumps(json_O);
-        with open(filename,'w') as file:
-            file.write(json_str);
-
-    def export_dataStage01ResequencingLineage_d3_v2(self, experiment_id, lineage_names,
+    def export_dataStage01ResequencingLineage_d3(self, experiment_id, analysis_ids,
                                                  filename='visualization/data/ALEsKOs01/resequencing/heatmap/data.js',
                                                  json_var_name='data',
                                                  mutation_id_exclusion_list = []):
         '''Export data for viewing using d3'''
         #Input:
         #   experiment_id
-        #   lineage_names = list of lineage_names to export
+        #   analysis_ids = list of analysis_ids to export
         #Output:
         #   
         
         intermediates_lineage = [];
         mutation_data_lineage_all = [];
         rows_lineage = [];
-        n_lineages = len(lineage_names)
+        n_lineages = len(analysis_ids)
         cnt_sample_names = 0;
-        for lineage_name in lineage_names:
+        for analysis_id in analysis_ids:
             ## get ALL sample names by experiment_id and lineage name
             #sample_names = [];
-            #sample_names = self.stage01_resequencing_query.get_sampleNames_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
+            #sample_names = self.stage01_resequencing_query.get_sampleNames_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,analysis_id);
             # get ALL intermediates by experiment_id and lineage name
             intermediates = [];
-            intermediates = self.stage01_resequencing_query.get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
+            intermediates = self.stage01_resequencing_query.get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,analysis_id);
             intermediates_lineage.append(intermediates);
             cnt_sample_names += len(intermediates)
             # get ALL mutation data by experiment_id and lineage name
             mutation_data = [];
-            mutation_data = self.stage01_resequencing_query.get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
+            mutation_data = self.stage01_resequencing_query.get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,analysis_id);
             mutation_data_lineage_all.extend(mutation_data);
             # get ALL mutation frequencies by experiment_id and lineage name
             rows = [];
-            rows = self.stage01_resequencing_query.get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name)
-            rows_lineage.extend(rows);
-        mutation_data_lineage_unique = list(set(mutation_data_lineage_all));
-        mutation_data_lineage = [x for x in mutation_data_lineage_unique if not x in mutation_id_exclusion_list];
-        min_inter = min(intermediates_lineage)
-        max_inter = max(intermediates_lineage);
-        # generate the frequency matrix data structure (mutation x intermediate)
-        json_O = {};
-        data_O = [];
-        options_O = {};
-        options_O['row_axis_label'] = 'lineage_id';
-        options_O['col_axis_label'] = 'mutation_id';
-        options_O['value_label'] = 'population frequency';
-        options_O['domain'] = '2';
-        labels_O = {};
-        labels_O['row_labels']=[];
-        labels_O['col_labels']=[];
-        labels_O['hcrow']=[];
-        labels_O['hccol']=[];
-        labels_O['lineage']=[];
-        labels_O['maxval']=None;
-        labels_O['minval']=None;
-        col_cnt = 0;
-        ## order 1: groups each lineage by mutation (mutation x intermediate) ##NOTE: makes for a very tall chart
-        #for lineage_name_cnt,lineage_name in enumerate(lineage_names): #all lineages for intermediate j / mutation i
-        #    for intermediate_cnt,intermediate in enumerate(intermediates_lineage[lineage_name_cnt]):
-        #        if intermediate_cnt == min(intermediates_lineage[lineage_name_cnt]):
-        #            labels_O['col_labels'].append(lineage_name+": "+"start"); # corresponding label from hierarchical clustering (in this case, arbitrary)
-        #        elif intermediate_cnt == max(intermediates_lineage[lineage_name_cnt]):
-        #            labels_O['col_labels'].append(lineage_name+": "+"end"); # corresponding label from hierarchical clustering (in this case, arbitrary)
-        #        else:
-        #            labels_O['col_labels'].append(lineage_name+": "+str(intermediate)); # corresponding label from hierarchical clustering (in this case, arbitrary)
-        #        labels_O['hccol'].append(col_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-        #        for mutation_cnt,mutation in enumerate(mutation_data_lineage): #all mutations i for intermediate j
-        #            if intermediate_cnt==0 and lineage_name_cnt==0: # record only once
-        #                labels_O['row_labels'].append(mutation); # corresponding label from hierarchical clustering (in this case, arbitrary)
-        #                labels_O['lineage'].append(lineage_name);
-        #                labels_O['hcrow'].append(mutation_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-        #            data_tmp = {};
-        #            data_tmp['row'] = mutation_cnt+1;
-        #            data_tmp['col'] = col_cnt+1;
-        #            data_tmp['value'] = 0.0;
-        #            for row in rows_lineage:
-        #                if row['mutation_id'] == mutation and row['intermediate'] == intermediate and row['lineage_name'] == lineage_name:
-        #                    data_tmp['value'] = row['mutation_frequency'];
-        #            data_O.append(data_tmp);
-        #        col_cnt+=1;
-        # order 2: groups each lineage by mutation (intermediate x mutation)
-        for lineage_name_cnt,lineage_name in enumerate(lineage_names): #all lineages for intermediate j / mutation i
-            for intermediate_cnt,intermediate in enumerate(intermediates_lineage[lineage_name_cnt]):
-                if intermediate_cnt == min(intermediates_lineage[lineage_name_cnt]):
-                    labels_O['row_labels'].append(lineage_name+": "+"start"); # corresponding label from hierarchical clustering (in this case, arbitrary)
-                elif intermediate_cnt == max(intermediates_lineage[lineage_name_cnt]):
-                    labels_O['row_labels'].append(lineage_name+": "+"end"); # corresponding label from hierarchical clustering (in this case, arbitrary)
-                else:
-                    labels_O['row_labels'].append(lineage_name+": "+str(intermediate)); # corresponding label from hierarchical clustering (in this case, arbitrary)
-                labels_O['hcrow'].append(col_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-                for mutation_cnt,mutation in enumerate(mutation_data_lineage): #all mutations i for intermediate j
-                    if intermediate_cnt==0 and lineage_name_cnt==0: # record only once
-                        labels_O['col_labels'].append(mutation); # corresponding label from hierarchical clustering (in this case, arbitrary)
-                        labels_O['lineage'].append(lineage_name);
-                        labels_O['hccol'].append(mutation_cnt+1); # ordering from hierarchical clustering (in this case, arbitrary)
-                    data_tmp = {};
-                    data_tmp['col'] = mutation_cnt+1;
-                    data_tmp['row'] = col_cnt+1;
-                    data_tmp['value'] = 0.0;
-                    for row in rows_lineage:
-                        if row['mutation_id'] == mutation and row['intermediate'] == intermediate and row['lineage_name'] == lineage_name:
-                            data_tmp['value'] = row['mutation_frequency'];
-                    data_O.append(data_tmp);
-                col_cnt+=1;
-        labels_O['maxval']=max([x['value'] for x in data_O]);
-        labels_O['minval']=min([x['value'] for x in data_O]);
-        json_O['heatmap_data']=data_O;
-        json_O.update(labels_O);
-        json_O['options'] = options_O;
-        # dump the data to a json file
-        json_str = 'var ' + json_var_name + ' = ' + json.dumps(json_O);
-        with open(filename,'w') as file:
-            file.write(json_str);
-
-    def export_dataStage01ResequencingLineage_d3(self, experiment_id, lineage_names,
-                                                 filename='visualization/data/ALEsKOs01/resequencing/heatmap/data.js',
-                                                 json_var_name='data',
-                                                 mutation_id_exclusion_list = []):
-        '''Export data for viewing using d3'''
-        #Input:
-        #   experiment_id
-        #   lineage_names = list of lineage_names to export
-        #Output:
-        #   
-        
-        intermediates_lineage = [];
-        mutation_data_lineage_all = [];
-        rows_lineage = [];
-        n_lineages = len(lineage_names)
-        cnt_sample_names = 0;
-        for lineage_name in lineage_names:
-            ## get ALL sample names by experiment_id and lineage name
-            #sample_names = [];
-            #sample_names = self.stage01_resequencing_query.get_sampleNames_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
-            # get ALL intermediates by experiment_id and lineage name
-            intermediates = [];
-            intermediates = self.stage01_resequencing_query.get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
-            intermediates_lineage.append(intermediates);
-            cnt_sample_names += len(intermediates)
-            # get ALL mutation data by experiment_id and lineage name
-            mutation_data = [];
-            mutation_data = self.stage01_resequencing_query.get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name);
-            mutation_data_lineage_all.extend(mutation_data);
-            # get ALL mutation frequencies by experiment_id and lineage name
-            rows = [];
-            rows = self.stage01_resequencing_query.get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,lineage_name)
+            rows = self.stage01_resequencing_query.get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_id,analysis_id)
             rows_lineage.extend(rows);
         mutation_data_lineage_unique = list(set(mutation_data_lineage_all));
         mutation_data_lineage = [x for x in mutation_data_lineage_unique if not x in mutation_id_exclusion_list];
@@ -499,17 +296,17 @@ class stage01_resequencing_io(base_analysis):
         labels_O['lineage']=[];
         col_cnt = 0;
         # order 2: groups each lineage by mutation (intermediate x mutation)
-        for lineage_name_cnt,lineage_name in enumerate(lineage_names): #all lineages for intermediate j / mutation i
-            for intermediate_cnt,intermediate in enumerate(intermediates_lineage[lineage_name_cnt]):
-                if intermediate_cnt == min(intermediates_lineage[lineage_name_cnt]):
-                    labels_O['lineage'].append(lineage_name+": "+"start"); # corresponding label from hierarchical clustering (in this case, arbitrary)
-                elif intermediate_cnt == max(intermediates_lineage[lineage_name_cnt]):
-                    labels_O['lineage'].append(lineage_name+": "+"end"); # corresponding label from hierarchical clustering (in this case, arbitrary)
+        for analysis_id_cnt,analysis_id in enumerate(analysis_ids): #all lineages for intermediate j / mutation i
+            for intermediate_cnt,intermediate in enumerate(intermediates_lineage[analysis_id_cnt]):
+                if intermediate_cnt == min(intermediates_lineage[analysis_id_cnt]):
+                    labels_O['lineage'].append(analysis_id+": "+"start"); # corresponding label from hierarchical clustering (in this case, arbitrary)
+                elif intermediate_cnt == max(intermediates_lineage[analysis_id_cnt]):
+                    labels_O['lineage'].append(analysis_id+": "+"end"); # corresponding label from hierarchical clustering (in this case, arbitrary)
                 else:
-                    labels_O['lineage'].append(lineage_name+": "+str(intermediate)); # corresponding label from hierarchical clustering (in this case, arbitrary)
+                    labels_O['lineage'].append(analysis_id+": "+str(intermediate)); # corresponding label from hierarchical clustering (in this case, arbitrary)
                 for mutation_cnt,mutation in enumerate(mutation_data_lineage): #all mutations i for intermediate j
                     for row in rows_lineage:
-                        if row['mutation_id'] == mutation and row['intermediate'] == intermediate and row['lineage_name'] == lineage_name:
+                        if row['mutation_id'] == mutation and row['intermediate'] == intermediate and row['analysis_id'] == analysis_id:
                             data_O[col_cnt,mutation_cnt] = row['mutation_frequency'];
                             print col_cnt,mutation_cnt
                 col_cnt+=1;
@@ -532,8 +329,8 @@ class stage01_resequencing_io(base_analysis):
         '''Plot the mutation frequency accross the strain lineage for all filtered mutations'''
         
         print 'Executing plotMutationFrequency_population...'
-        for lineage_name,strain in strain_lineage.iteritems():
-            print 'analyzing lineage ' + lineage_name;
+        for analysis_id,strain in strain_lineage.iteritems():
+            print 'analyzing lineage ' + analysis_id;
             intermediates = strain.keys();
             intermediates.sort();
             mutation_data_O = [];
@@ -595,6 +392,62 @@ class stage01_resequencing_io(base_analysis):
             json_O['options'] = options_O;
             # dump the data to a json file
             json_str = 'var ' + 'data' + ' = ' + json.dumps(json_O);
-            filename_str = 'visualization/data/' + experiment_id + '/resequencing/scatterlineplot/' + lineage_name + '.js'
+            filename_str = 'visualization/data/' + experiment_id + '/resequencing/scatterlineplot/' + analysis_id + '.js'
             with open(filename_str,'w') as file:
                 file.write(json_str);
+
+    def import_dataStage01ResequencingAnalysis_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_dataStage01ResequencingAnalysis(data.data);
+        data.clear_data();
+
+    def add_dataStage01ResequencingAnalysis(self, data_I):
+        '''add rows of data_stage01_resequencing_analysis'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = data_stage01_resequencing_analysis(d['analysis_id'],
+                            d['experiment_id'],
+                            d['sample_name'],
+                            d['time_point'],
+                            d['analysis_type'],
+                            d['used_'],
+                            d['comment_']);
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
+
+    def import_dataStage01ResequencingAnalysis_update(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.update_dataStage01ResequencingAnalysis(data.data);
+        data.clear_data();
+
+    def update_dataStage01ResequencingAnalysis(self,data_I):
+        '''update rows of data_stage01_resequencing_lineage'''
+        if data_I:
+            for d in data_I:
+                try:
+                    #if d['mutation_genes']:
+                    #    d['mutation_genes']=d['mutation_genes'].split();
+                    #if d['mutation_location']:
+                    #    d['mutation_location']=d['mutation_location'].split();
+                    data_update = self.session.query(data_stage01_resequencing_analysis).filter(
+                           data_stage01_resequencing_analysis.id==d['id']).update(
+                            {'analysis_id':d['analysis_id'],
+                            'experiment_id':d['experiment_id'],
+                            'sample_name':d['sample_name'],
+                            'time_point':d['time_point'],
+                            'analysis_type':d['analysis_type'],
+                            'used_':d['used_'],
+                            'comment_':d['comment_']},
+                            synchronize_session=False);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();

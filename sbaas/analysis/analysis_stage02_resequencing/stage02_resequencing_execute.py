@@ -16,25 +16,25 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
         try:
             data_stage02_resequencing_mapResequencingPhysiology.__table__.drop(engine,True);
             data_stage02_resequencing_reduceResequencingPhysiology.__table__.drop(engine,True);
-            #data_stage01_resequencing_metadata.__table__.drop(engine,True);
+            data_stage02_resequencing_analysis.__table__.drop(engine,True);
             #data_stage01_resequencing_validation.__table__.drop(engine,True);
             #data_stage02_resequencing_reduceResequencingPhysiologyFiltered.__table__.drop(engine,True);
             #data_stage01_resequencing_lineage.__table__.drop(engine,True);
             #data_stage01_resequencing_endpoints.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
-    def reset_dataStage02(self,experiment_id_I = None):
+    def reset_dataStage02(self,experiment_id_I = None,analysis_id_I = None):
         try:
             if experiment_id_I:
-                #reset = self.session.query(data_stage01_resequencing_metadata).filter(data_stage01_resequencing_metadata.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_resequencing_reduceResequencingPhysiology).filter(data_stage02_resequencing_reduceResequencingPhysiology.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_resequencing_mapResequencingPhysiology).filter(data_stage02_resequencing_mapResequencingPhysiology.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage01_resequencing_validation).filter(data_stage01_resequencing_validation.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_resequencing_reduceResequencingPhysiologyFiltered).filter(data_stage02_resequencing_reduceResequencingPhysiologyFiltered.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage01_resequencing_lineage).filter(data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage01_resequencing_endpoints).filter(data_stage01_resequencing_endpoints.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            elif analysis_id_I:
+                reset = self.session.query(data_stage02_resequencing_analysis).filter(data_stage02_resequencing_analysis.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
             else:
-                #reset = self.session.query(data_stage01_resequencing_metadata).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_resequencing_analysis).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_resequencing_reduceResequencingPhysiology).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_resequencing_mapResequencingPhysiology).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage01_resequencing_validation).delete(synchronize_session=False);
@@ -46,7 +46,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
             print(e);
     def initialize_dataStage02(self):
         try:
-            #data_stage01_resequencing_metadata.__table__.create(engine,True);
+            data_stage02_resequencing_analysis.__table__.create(engine,True);
             data_stage02_resequencing_reduceResequencingPhysiology.__table__.create(engine,True);
             data_stage02_resequencing_mapResequencingPhysiology.__table__.create(engine,True);
             #data_stage01_resequencing_validation.__table__.create(engine,True);
@@ -55,10 +55,10 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
             #data_stage01_resequencing_endpoints.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
-    def reset_dataStage02_reduceResequencingPhysiology(self,experiment_id_I = None):
+    def reset_dataStage02_reduceResequencingPhysiology(self,analysis_id_I = None):
         try:
-            if experiment_id_I:
-                reset = self.session.query(data_stage02_resequencing_reduceResequencingPhysiology).filter(data_stage02_resequencing_reduceResequencingPhysiology.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            if analysis_id_I:
+                reset = self.session.query(data_stage02_resequencing_reduceResequencingPhysiology).filter(data_stage02_resequencing_reduceResequencingPhysiology.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage02_resequencing_reduceResequencingPhysiology).delete(synchronize_session=False);
             self.session.commit();
@@ -67,8 +67,11 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
     #analysis:
     def execute_mapResequencingPhysiology_population(self,experiment_id,sample_names_I=[],met_ids_include_I=[]):
         '''Map the mutations found in the resequencing data with the phenotype found in the physiology data'''
+        #NOTES: the experiment_id and sample_name_abbreviation of the sample_name from data_stage01_resequencing
+        #       must match to the experiment_id and sample_name_abbreviation of data_stage01_physiology
         #Input:
         #   experiment_id = id for the experiment
+
         print 'Executing mapResequencingPysiology_population...'
         genotype_phenotype_O = [];
         # query sample names
@@ -171,6 +174,9 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
         #   sample_names = [string]
         #   sample_count = int;
         #   reduce_criteria = string
+
+        #TODO: drive from analysis table
+        #TODO: change queries
 
         print 'Executing reduceResequencingPhysiology...'
         data_O = [];

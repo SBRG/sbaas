@@ -38,46 +38,6 @@ class stage02_resequencing_query(stage01_resequencing_query,stage01_physiology_q
             return sample_names_O
         except SQLAlchemyError as e:
             print(e);
-    # query mutation information from data_stage02_resequencing_mapResequencingPhysiology
-    def get_mutationData_experimentIDAndLineageName_dataStage02ResequencingMapResequencingPhysiology(self,experiment_id_I,lineage_name_I):
-        '''Query mutation information from resequencing lineage'''
-        try:
-            data = self.session.query(data_stage02_resequencing_mapResequencingPhysiology.mutation_type,
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_position,
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_genes,
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_locations).filter(
-                    data_stage02_resequencing_mapResequencingPhysiology.experiment_id.like(experiment_id_I),
-                    data_stage02_resequencing_mapResequencingPhysiology.lineage_name.like(lineage_name_I)).group_by(
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_type,
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_position,
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_genes,
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_locations).order_by(
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_type.asc(),
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_position.asc(),
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_genes.asc(),
-                    data_stage02_resequencing_mapResequencingPhysiology.mutation_locations.asc()).all();
-            data_O = [];
-            for d in data: 
-                #data_tmp = {};
-                #data_tmp['mutation_type']=d.mutation_type;
-                #data_tmp['mutation_position']=d.mutation_position;
-                #data_tmp['mutation_genes']=d.mutation_genes;
-                #data_tmp['mutation_locations']=d.mutation_locations;
-                #data_O.append(data_tmp);
-                data_tmp_str = '';
-                mutation_genes_str = '';
-                for gene in d.mutation_genes:
-                    mutation_genes_str = mutation_genes_str + gene + '-/-'
-                mutation_genes_str = mutation_genes_str[:-3];
-                #mutation_locations_str = '';
-                #for location in d.mutation_locations:
-                #    mutation_locations_str = mutation_locations_str + location + '&'
-                #mutation_locations_str = mutation_locations_str[:-1];
-                data_tmp_str = d.mutation_type+'_'+mutation_genes_str+'_'+str(d.mutation_position)
-                data_O.append(data_tmp_str);
-            return data_O;
-        except SQLAlchemyError as e:
-            print(e);
     # query row from data_stage02_resequencing_mapResequencingPhysiology
     def get_row_experimentIDAndSampleName_dataStage02ResequencingMapResequencingPhysiology(self,experiment_id_I,sample_name_I):
         '''Query samples names from resequencing lineage'''

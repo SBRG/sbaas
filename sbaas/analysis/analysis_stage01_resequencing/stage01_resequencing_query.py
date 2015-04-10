@@ -235,16 +235,16 @@ class stage01_resequencing_query(base_analysis):
             return sample_names_O
         except SQLAlchemyError as e:
             print(e);
-    def get_sampleNames_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,lineage_name_I):
+    def get_sampleNames_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,analysis_id_I):
         '''Query samples names from resequencing lineage'''
         try:
             data = self.session.query(data_stage01_resequencing_lineage.experiment_id,
                     data_stage01_resequencing_lineage.sample_name).filter(
                     data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I),
-                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).group_by(
+                    data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).group_by(
                     data_stage01_resequencing_lineage.experiment_id,
                     data_stage01_resequencing_lineage.sample_name).order_by(
-                    data_stage01_resequencing_lineage.lineage_name.asc()).all();
+                    data_stage01_resequencing_lineage.analysis_id.asc()).all();
             data_O = [];
             for d in data: 
                 #data_tmp = {};
@@ -255,13 +255,13 @@ class stage01_resequencing_query(base_analysis):
         except SQLAlchemyError as e:
             print(e);
     # Query intermediates from data_stage01_resequencing_lineage
-    def get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,lineage_name_I):
+    def get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,analysis_id_I):
         '''Query intermediates from resequencing lineage'''
         try:
             data = self.session.query(data_stage01_resequencing_lineage.experiment_id,
                     data_stage01_resequencing_lineage.intermediate).filter(
                     data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I),
-                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).group_by(
+                    data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).group_by(
                     data_stage01_resequencing_lineage.experiment_id,
                     data_stage01_resequencing_lineage.intermediate).order_by(
                     data_stage01_resequencing_lineage.intermediate.asc()).all();
@@ -275,7 +275,7 @@ class stage01_resequencing_query(base_analysis):
         except SQLAlchemyError as e:
             print(e);
     # query mutation information from data_stage01_resequencing_lineage
-    def get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,lineage_name_I):
+    def get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,analysis_id_I):
         '''Query mutation information from resequencing lineage'''
         try:
             data = self.session.query(data_stage01_resequencing_lineage.mutation_type,
@@ -283,7 +283,7 @@ class stage01_resequencing_query(base_analysis):
                     data_stage01_resequencing_lineage.mutation_genes,
                     data_stage01_resequencing_lineage.mutation_locations).filter(
                     data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I),
-                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).group_by(
+                    data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).group_by(
                     data_stage01_resequencing_lineage.mutation_type,
                     data_stage01_resequencing_lineage.mutation_position,
                     data_stage01_resequencing_lineage.mutation_genes,
@@ -326,7 +326,7 @@ class stage01_resequencing_query(base_analysis):
                 data_tmp = {};
                 data_tmp['id']=d.id;
                 data_tmp['experiment_id']=d.experiment_id;
-                data_tmp['lineage_name']=d.lineage_name;
+                data_tmp['analysis_id']=d.analysis_id;
                 data_tmp['sample_name']=d.sample_name;
                 data_tmp['intermediate']=d.intermediate;
                 data_tmp['mutation_frequency']=d.mutation_frequency;
@@ -342,18 +342,18 @@ class stage01_resequencing_query(base_analysis):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
-    def get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,lineage_name_I):
+    def get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,analysis_id_I):
         '''Query samples names from resequencing lineage'''
         try:
             data = self.session.query(data_stage01_resequencing_lineage).filter(
                     data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I),
-                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).all();
+                    data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).all();
             data_O = [];
             for d in data: 
                 data_tmp = {};
                 data_tmp['id']=d.id;
                 data_tmp['experiment_id']=d.experiment_id;
-                data_tmp['lineage_name']=d.lineage_name;
+                data_tmp['analysis_id']=d.analysis_id;
                 data_tmp['sample_name']=d.sample_name;
                 data_tmp['intermediate']=d.intermediate;
                 data_tmp['mutation_frequency']=d.mutation_frequency;
@@ -408,7 +408,7 @@ class stage01_resequencing_query(base_analysis):
                 data_tmp = {};
                 data_tmp['id']=d.id;
                 data_tmp['experiment_id']=d.experiment_id;
-                data_tmp['endpoint_name']=d.endpoint_name;
+                data_tmp['analysis_id']=d.analysis_id;
                 data_tmp['sample_name']=d.sample_name;
                 data_tmp['mutation_frequency']=d.mutation_frequency;
                 data_tmp['mutation_type']=d.mutation_type;
