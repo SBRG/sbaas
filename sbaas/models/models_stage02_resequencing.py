@@ -181,7 +181,7 @@ class data_stage02_resequencing_analysis(Base):
     id = Column(Integer, Sequence('data_stage02_resequencing_analysis_id_seq'), primary_key=True)
     analysis_id = Column(String(500))
     experiment_id = Column(String(50)) # resequencing->phenomics
-    sample_names = Column(String(500))
+    sample_name = Column(String(500))
     sample_name_abbreviation = Column(String(100)) # resequencing->phenomics
     analysis_type = Column(String(100)); # time-course (i.e., multiple time points), paired (i.e., control compared to multiple replicates), group (i.e., single grouping of samples).
     #map_reduce_criteria = Column(postgresql.JSON); #todo: add?

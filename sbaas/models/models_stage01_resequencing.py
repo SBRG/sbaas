@@ -184,7 +184,7 @@ class data_stage01_resequencing_lineage(Base):
     mutation_links = Column(postgresql.ARRAY(String(500)))
     comment_ = Column(Text)
 
-    __table_args__ = (UniqueConstraint('analysis_id','experiment_id','sample_name_short','time_point'),
+    __table_args__ = (UniqueConstraint('analysis_id','experiment_id','sample_name','intermediate'),
             )
 
     def __init__(self, 
