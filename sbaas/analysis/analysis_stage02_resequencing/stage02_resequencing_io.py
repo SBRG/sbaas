@@ -230,7 +230,7 @@ class stage02_resequencing_io(stage01_resequencing_io):
         self.add_dataStage02ResequencingAnalysis(data.data);
         data.clear_data();
 
-    def add_dataStage02ResequencingReduceAnalysis(self, data_I):
+    def add_dataStage02ResequencingAnalysis(self, data_I):
         '''add rows of data_stage02_resequencing_analysis'''
         if data_I:
             for d in data_I:
@@ -240,7 +240,9 @@ class stage02_resequencing_io(stage01_resequencing_io):
                         d['experiment_id'],
                         d['sample_name'],
                         d['sample_name_abbreviation'],
-                        d['analysis_type']);
+                        d['analysis_type'],
+                        d['used_'],
+                        d['comment_']);
                     self.session.add(data_add);
                 except SQLAlchemyError as e:
                     print(e);

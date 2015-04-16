@@ -1916,6 +1916,29 @@ class stage01_quantification_query(base_analysis):
             return ratios_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_rows_experimentIDAndSampleNameShortAndTimePoint_dataStage01PhysiologicalRatiosReplicates(self, experiment_id_I, sample_name_short_I, time_point_I):
+        """Query calculated ratios"""
+        try:
+            data = self.session.query(data_stage01_quantification_physiologicalRatios_replicates).filter(
+                    data_stage01_quantification_physiologicalRatios_replicates.experiment_id.like(experiment_id_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.sample_name_short.like(sample_name_short_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.time_point.like(time_point_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.used_.is_(True)).all();
+            rows_O = [];
+            if data:
+                for d in data:
+                    rows_O.append({'experiment_id':d.experiment_id,
+                        'sample_name_short':d.sample_name_short,
+                        'time_point':d.time_point,
+                        'physiologicalratio_id':d.physiologicalratio_id,
+                        'physiologicalratio_name':d.physiologicalratio_name,
+                        'physiologicalratio_value':d.physiologicalratio_value,
+                        'physiologicalratio_description':d.physiologicalratio_description,
+                        'used_':d.used_,
+                        'comment_':d.comment_});
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
     # Query ratio_id information from data_stage01_quantificaton_physiologicalRatios_replicates
     def get_ratioIDs_experimentIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(self,experiment_id_I,time_point_I):
         '''Query physiologicalRatio_ids that are used from the experiment by time_point'''

@@ -740,7 +740,7 @@ class stage00_execute():
                                                 'sample_condition':row['sample_condition'],
                                                 'extraction_method_id':row['extraction_method_id'],
                                                 'biological_material':row['biological_material'],
-                                                'sample_description':row['sample_description'],
+                                                'sample_desc':row['sample_description'],
                                                 'sample_replicate':nMaxBioReps*rep + replicate_number,# modify sample_replicate_biological
                                                 'is_added':row['is_added'],
                                                 'is_added_units':row['is_added_units'],

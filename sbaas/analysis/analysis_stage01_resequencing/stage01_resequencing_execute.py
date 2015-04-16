@@ -650,6 +650,7 @@ class stage01_resequencing_execute():
             data_stage01_resequencing_lineage.__table__.create(engine,True);
             data_stage01_resequencing_endpoints.__table__.create(engine,True);
             data_stage01_resequencing_mutationsAnnotated.__table__.create(engine,True);
+            data_stage01_resequencing_analysis.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_dataStage01_filtered(self,experiment_id_I = None):

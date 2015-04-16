@@ -510,6 +510,36 @@ class stage02_quantification_query(base_analysis):
         except SQLAlchemyError as e:
             print(e);
 
+    # data_stage01_quantification_physiologicalRatios_replicates
+    # Query data from data_stage01_quantification_physiologicalRatios_replicates
+    def get_RExpressionData_AnalysisIDAndExperimentIDAndSampleNameShortAndTimePoint_dataStage01PhysiologicalRatiosReplicates(self,analysis_id_I, experiment_id_I, sample_name_short_I, time_point_I):
+        """Query calculated ratios"""
+        try:
+            data = self.session.query(data_stage01_quantification_physiologicalRatios_replicates).filter(
+                    data_stage02_quantification_analysis.analysis_id.like(analysis_id_I),
+                    data_stage02_quantification_analysis.experiment_id.like(experiment_id_I),
+                    data_stage02_quantification_analysis.time_point.like(time_point_I),
+                    data_stage02_quantification_analysis.sample_name_short.like(sample_name_short_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.experiment_id.like(experiment_id_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.sample_name_short.like(sample_name_short_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.time_point.like(time_point_I),
+                    data_stage01_quantification_physiologicalRatios_replicates.used_.is_(True)).all();
+            rows_O = [];
+            if data:
+                for d in data:
+                    rows_O.append({'experiment_id':d.experiment_id,
+                        'sample_name_short':d.sample_name_short,
+                        'time_point':d.time_point,
+                        'physiologicalratio_id':d.physiologicalratio_id,
+                        'physiologicalratio_name':d.physiologicalratio_name,
+                        'physiologicalratio_value':d.physiologicalratio_value,
+                        'physiologicalratio_description':d.physiologicalratio_description,
+                        'used_':d.used_,
+                        'comment_':d.comment_});
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+
     # data_stage02_quantification_glogNormalized
     # Query time points from data_stage02_quantification_glogNormalized
     def get_experimentID_analysisID_dataStage02GlogNormalized(self,analysis_id_I):
