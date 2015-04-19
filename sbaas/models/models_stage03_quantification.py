@@ -47,7 +47,8 @@ class data_stage03_quantification_simulatedData(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'model_id':self.model_id,
                 #'sample_name_abbreviation':self.sample_name_abbreviation,
                 #'time_point':self.time_point,
@@ -99,7 +100,8 @@ class data_stage03_quantification_otherData(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
                 'time_point':self.time_point,
                 'compartment_id':self.compartment_id,
@@ -155,7 +157,8 @@ class data_stage03_quantification_dG0_r(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'model_id':self.model_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
                 'sample_type':self.sample_type,
@@ -237,7 +240,8 @@ class data_stage03_quantification_dG_r(Base):
         self.comment_=comment__I;
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'model_id':self.model_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
                 'time_point':self.time_point,
@@ -303,7 +307,8 @@ class data_stage03_quantification_dG0_f(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self):
-        return {'reference_id':self.reference_id,
+        return {'id':self.id,
+                'reference_id':self.reference_id,
                 'met_name':self.met_name,
                 'met_id':self.met_id,
                 'KEGG_ID':self.KEGG_id,
@@ -378,7 +383,8 @@ class data_stage03_quantification_dG_f(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self): 
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'model_id':self.model_id,
                     'sample_name_abbreviation':self.sample_name_abbreviation,
                     'time_point':self.time_point,
@@ -439,8 +445,9 @@ class data_stage03_quantification_metabolomicsData(Base):
         self.used_ = used__I;
         self.comment_ = comment__I;
 
-    def __repr__dict__(self): # not complete!
-        return {'experiment_id':self.experiment_id,
+    def __repr__dict__(self):
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
                 'time_point':self.time_point,
                 'met_id':self.met_id,
@@ -494,7 +501,8 @@ class data_stage03_quantification_tcc(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
             'model_id':self.model_id,
             'sample_name_abbreviation':self.sample_name_abbreviation,
             'time_point':self.time_point,
@@ -547,7 +555,8 @@ class data_stage03_quantification_dG_p(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'model_id':self.model_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
                 'time_point':self.time_point,
@@ -600,7 +609,8 @@ class data_stage03_quantification_dG0_p(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'model_id':self.model_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
                 'time_point':self.time_point,
@@ -634,7 +644,7 @@ class data_stage03_quantification_metid2keggid(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self): # not complete!
-        return {
+        return {'id':self.id,
                 'met_id':self.met_id,
                 'KEGG_ID':self.KEGG_id,
                 'used_':self.used_,
@@ -671,7 +681,8 @@ class data_stage03_quantification_models(Base):
         self.date=date_I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
                 'model_name':self.model_name,
                 'model_description':self.model_description,
                 'model_file':self.model_file,
@@ -743,7 +754,8 @@ class data_stage03_quantification_modelReactions(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
             'rxn_id':self.rxn_id,
             'rxn_name':self.rxn_name,
             'equation':self.equation,
@@ -804,7 +816,8 @@ class data_stage03_quantification_modelMetabolites(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
                 'met_name':self.met_name,
                 'met_id':self.met_id,
                 'formula':self.formula,
@@ -841,7 +854,7 @@ class data_stage03_quantification_modelPathways(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self):
-        return {
+        return {'id':self.id,
                 'model_id':self.model_id,
                 'pathway_id':self.pathway_id,
                 'reactions':self.reactions,
@@ -888,7 +901,8 @@ class data_stage03_quantification_simulation(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
             'experiment_id':self.experiment_id,
             'model_id':self.model_id,
             'sample_name_abbreviation':self.sample_name_abbreviation,
@@ -944,7 +958,8 @@ class data_stage03_quantification_simulationParameters(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
             #'simulation_dateAndTime':self.simulation_dateAndTime,
             'solver_id':self.solver_id,
             'n_points':self.n_points,
@@ -1005,7 +1020,8 @@ class data_stage03_quantification_measuredFluxes(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                     'model_id':self.model_id,
                     'sample_name_abbreviation':self.sample_name_abbreviation,
                     #'time_point':self.time_point,
@@ -1057,7 +1073,8 @@ class data_stage03_quantification_sampledPoints(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #        'model_id':self.model_id,
@@ -1133,7 +1150,8 @@ class data_stage03_quantification_sampledData(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #        'model_id':self.model_id,
@@ -1190,7 +1208,6 @@ class data_stage03_quantification_tfbaReactions(Base):
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
-
 class data_stage03_quantification_tfbaMetabolites(Base):
     __tablename__ = 'data_stage03_quantification_tfbaMetabolites'
     id = Column(Integer, Sequence('data_stage03_quantification_tfbaMetabolites_id_seq'), primary_key=True)

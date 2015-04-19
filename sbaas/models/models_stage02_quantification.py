@@ -41,7 +41,7 @@ class data_stage02_quantification_glogNormalized(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self):
-        return {
+        return {'id':self.id,
             "analysis_id":self.analysis_id,
             "experiment_id":self.experiment_id,
                 "sample_name_short":self.sample_name_short,
@@ -103,16 +103,20 @@ class data_stage02_quantification_anova(Base):
         self.used_ = used_I;
         self.comment_ = comment_I;
 
-    def __repr__dict__(self): # not complete!
-        return {
-            "analysis_id":self.analysis_id,
-                'sample_name_abbreviation_I':self.sample_name_abbreviation,
-                
-                "component_group_name":self.component_group_name,
-                "component_name":self.component_name,
-                #...
-                'used_I':self.used_,
-                'comments_I':self.comments_}
+    def __repr__dict__(self): 
+        return {'id':self.id,
+            'analysis_id':self.analysis_id,
+            'sample_name_abbreviation':self.sample_name_abbreviation,
+            'component_group_name':self.component_group_name,
+            'component_name':self.component_name,
+            'test_stat':self.test_stat,
+            'test_description':self.test_description,
+            'pvalue':self.pvalue,
+            'pvalue_corrected':self.pvalue_corrected,
+            'pvalue_corrected_description':self.pvalue_corrected_description,
+            'calculated_concentration_units':self.calculated_concentration_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
@@ -179,16 +183,27 @@ class data_stage02_quantification_pairWiseTest(Base):
         self.used_ = used_I;
         self.comment_ = comment_I;
 
-    def __repr__dict__(self): # not complete!
+    def __repr__dict__(self):
         return {
-            "analysis_id":self.analysis_id,
-                'sample_name_abbreviation_I':self.sample_name_abbreviation,
-
-                "component_group_name":self.component_group_name,
-                "component_name":self.component_name,
-                #...
-                'used_I':self.used_,
-                'comments_I':self.comments_}
+            'id':self.id,
+            'analysis_id':self.analysis_id,
+            'sample_name_abbreviation_1':self.sample_name_abbreviation_1,
+            'sample_name_abbreviation_2':self.sample_name_abbreviation_2,
+            'component_group_name':self.component_group_name,
+            'component_name':self.component_name,
+            'test_stat':self.test_stat,
+            'test_description':self.test_description,
+            'pvalue':self.pvalue,
+            'pvalue_corrected':self.pvalue_corrected,
+            'pvalue_corrected_description':self.pvalue_corrected_description,
+            'mean':self.mean,
+            'ci_lb':self.ci_lb,
+            'ci_ub':self.ci_ub,
+            'ci_level':self.ci_level,
+            'fold_change':self.fold_change,
+            'calculated_concentration_units':self.calculated_concentration_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
@@ -232,12 +247,18 @@ class data_stage02_quantification_pca_scores(Base):
         self.used_ = used_I;
         self.comment_ = comment_I;
 
-    def __repr__dict__(self): # not complete!
+    def __repr__dict__(self):
         return {
-            "analysis_id":self.analysis_id,
-                #...
-                'used_I':self.used_,
-                'comments_I':self.comments_}
+            'id':self.id,
+            'analysis_id':self.analysis_id,
+            'sample_name_short':self.sample_name_short,
+            'score':self.score,
+            'axis':self.axis,
+            'var_proportion':self.var_proportion,
+            'var_cumulative':self.var_cumulative,
+            'calculated_concentration_units':self.calculated_concentration_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
@@ -279,12 +300,16 @@ class data_stage02_quantification_pca_loadings(Base):
         self.used_ = used_I;
         self.comment_ = comment_I;
 
-    def __repr__dict__(self): # not complete!
-        return {
-            "analysis_id":self.analysis_id,
-                #...
-                'used_I':self.used_,
-                'comments_I':self.comments_}
+    def __repr__dict__(self):
+        return {'id':self.id,
+            'analysis_id':self.analysis_id,
+            'component_group_name':self.component_group_name,
+            'component_name':self.component_name,
+            'loadings':self.loadings,
+            'axis':self.axis,
+            'calculated_concentration_units':self.calculated_concentration_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
@@ -331,7 +356,8 @@ class data_stage02_quantification_dendrogram(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'analysis_id':self.analysis_id,
+        return {'id':self.id,
+                'analysis_id':self.analysis_id,
             'leaves':self.leaves,
             'icoord':self.icoord,
             'dcoord':self.dcoord,
@@ -401,7 +427,8 @@ class data_stage02_quantification_heatmap(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self): 
-        return {'analysis_id':self.analysis_id,
+        return {'id':self.id,
+                'analysis_id':self.analysis_id,
             'col_index':self.col_index,
             'row_index':self.row_index,
             'value':self.value,
@@ -455,7 +482,7 @@ class data_stage02_quantification_svm(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self): # not complete!
-        return {
+        return {'id':self.id,
             #"analysis_id":self.analysis_id,
             'experiment_id_I':self.experiment_id,
                 'sample_name_I':self.sample_name,
@@ -601,7 +628,8 @@ class data_stage02_quantification_data(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self):
-        return {"experiment_id":self.experiment_id,
+        return {'id':self.id,
+                "experiment_id":self.experiment_id,
                 "sample_name_short":self.sample_name_short,
                 "time_point":self.time_point,
                 "component_group_name":self.component_group_name,
@@ -648,7 +676,8 @@ class data_stage02_quantification_analysis(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'analysis_id':self.analysis_id,
+        return {'id':self.id,
+                'analysis_id':self.analysis_id,
             'experiment_id':self.experiment_id,
             'sample_name_short':self.sample_name_short,
             'sample_name_abbreviation':self.sample_name_abbreviation,

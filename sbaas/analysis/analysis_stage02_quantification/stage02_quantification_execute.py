@@ -693,16 +693,6 @@ class stage02_quantification_execute():
         except SQLAlchemyError as e:
             print(e);
     #TODO
-    def execute_heatmap(self,experiment_id_I):
-        '''generate a heatmap using R'''
-
-        print 'execute_heatmap...'
-
-        # query metabolomics data from glogNormalization
-        #...
-        # call R
-        #...
-        # upload data
     def execute_svm(self,experiment_id_I):
         '''execute svm using R'''
 

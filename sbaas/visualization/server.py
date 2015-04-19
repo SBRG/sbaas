@@ -136,26 +136,26 @@ class IndexHandler(BaseHandler):
         source = 'local'
         url = urls();
         data = template.render(d3=url.get_url('d3', source),
-                               boot_css=url.get_url('boot_css', source),
-                               boot_js=url.get_url('boot_js', source),
-                               index_css=url.get_url('index_css', source),
-                               jquery=url.get_url('jquery', source),
-                               logo1=url.get_url('logo3', source),
-                               logo2=url.get_url('logo4', source),
-                               logo3=url.get_url('logo5', source),
-                               logo4=url.get_url('logo6', source),
-                               logo5=url.get_url('logo7', source),
-                               github=url.get_url('github'),
-                               index_js=url.get_url('index_js', source),
-                               #index_gh_pages_js=url.get_url('index_gh_pages_js', source),
-                               data=json_data,
-                               version=__version__,
-                               web_version=False)
+            boot_css=url.get_url('boot_css', source),
+            boot_js=url.get_url('boot_js', source),
+            index_js=url.get_url('index_js', source),
+            index_css=url.get_url('index_css', source),
+            jquery=url.get_url('jquery', source),
+            logo1=url.get_url('logo3', source),
+            logo2=url.get_url('logo4', source),
+            logo3=url.get_url('logo5', source),
+            logo4=url.get_url('logo6', source),
+            logo5=url.get_url('logo7', source),
+            github=url.get_url('github'),
+            #index_gh_pages_js=url.get_url('index_gh_pages_js', source),
+            data=json_data,
+            version=__version__,
+            web_version=False)
         
         self.set_header("Content-Type", "text/html")
         self.serve(data)
   
-class ContainerHandler(BaseHandler):
+class ProjectHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     @authenticated
@@ -231,6 +231,67 @@ class ContainerHandler(BaseHandler):
                                version=__version__,
                                web_version=False,
                                vkbeautify=url.get_url('vkbeautify', source))
+        
+        self.set_header("Content-Type", "text/html")
+        self.serve(data)
+  
+class ContainerHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    @authenticated
+    def get(self, path_I):
+        # local variables, objects, and settings
+        #source = 'web'
+        source = 'local'
+        url = urls();
+        # parse the path
+        path = path_I.replace('.html','');
+        # make the title name
+        titlename = 'data-driven tiles';
+        # build up the data directory
+        data_dir = 'tmp';
+        try:
+            with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+'ddt_data.js', "rb") as file:
+                ddt_data_js = file.read();
+        except:
+            ddt_data_js = '';
+        try:
+            with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+'ddt_template.js', "rb") as file:
+                ddt_template_js = file.read();
+        except:
+            ddt_template_js = '';
+        # get the template directory
+        template_dir = 'container' + '.html';
+        # render the template
+        template = env.get_template(template_dir)
+        data = template.render(d3=url.get_url('d3', source),
+            colorbrewer=url.get_url('colorbrewer', source),
+            jquery=url.get_url('jquery', source),
+            boot_js=url.get_url('boot_js', source),
+            boot_css=url.get_url('boot_css', source),
+            vkbeautify=url.get_url('vkbeautify', source),
+            ddt=url.get_url('ddt', source),
+            ddt_data=ddt_data_js,
+            ddt_template=ddt_template_js,
+            title_header=titlename,
+            title=titlename,
+            version=__version__,
+            web_version=False,
+            #d3_chart2d=url.get_url('d3_chart2d', source),
+            #d3_chart2d_boxandwhiskers=url.get_url('d3_chart2d_boxandwhiskers', source),
+            #d3_chart2d_heatmap=url.get_url('d3_chart2d_heatmap', source),
+            #d3_chart2d_horizontalbars=url.get_url('d3_chart2d_horizontalbars', source),
+            #d3_chart2d_line=url.get_url('d3_chart2d_line', source),
+            #d3_chart2d_packlayout=url.get_url('d3_chart2d_packlayout', source),
+            #d3_chart2d_points=url.get_url('d3_chart2d_points', source),
+            #d3_chart2d_treelayout=url.get_url('d3_chart2d_treelayout', source),
+            #d3_chart2d_verticalbars=url.get_url('d3_chart2d_verticalbars', source),
+            #d3_data=url.get_url('d3_data', source),
+            #d3_graph2d=url.get_url('d3_graph2d', source),
+            #d3_map2d=url.get_url('d3_map2d', source),
+            #d3_svg=url.get_url('d3_svg', source),
+            #d3_tile=url.get_url('d3_tile', source)
+            )
         
         self.set_header("Content-Type", "text/html")
         self.serve(data)
@@ -393,7 +454,8 @@ application = Application([
     (r".*/(css/.*)", StaticHandler),
     (r".*/(resources/.*)", StaticHandler),
     (r"/(data.*)", VisualizationHandler),
-    #(r"/(data.*)", ContainerHandler), refactoring in progress...
+    (r"/(project.*)", ProjectHandler), #refactoring in progress...
+    (r"/(container.*)", ContainerHandler), #refactoring in progress...
     (r"/", IndexHandler),
     (r"/login", LoginHandler),
     (r"/logout", LogoutHandler),

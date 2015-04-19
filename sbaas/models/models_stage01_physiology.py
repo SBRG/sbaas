@@ -34,6 +34,21 @@ class data_stage01_physiology_data(Base):
         self.used_=used__I
         self.comment_=comment__I
 
+    def __repr__dict__(self):
+        return {'id':self.id,
+        'experiment_id':self.experiment_id,
+        'sample_id':self.sample_id,
+        'met_id':self.met_id,
+        'data_raw':self.data_raw,
+        'data_corrected':self.data_corrected,
+        'data_units':self.data_units,
+        'data_reference':self.data_reference,
+        'used_':self.used_,
+        'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
 class data_stage01_physiology_rates(Base):
     __tablename__ = 'data_stage01_physiology_rates'
     id = Column(Integer, Sequence('data_stage01_physiology_rates_id_seq'), primary_key=True)
@@ -68,6 +83,24 @@ class data_stage01_physiology_rates(Base):
         self.used_ = used__I;
         self.comment_ = comment__I;
 
+    def __repr__dict__(self):
+        return {'id':self.id,
+        'experiment_id':self.experiment_id,
+        'sample_name_short':self.sample_name_short,
+        'met_id':self.met_id,
+        'slope':self.slope,
+        'intercept':self.intercept,
+        'r2':self.r2,
+        'rate':self.rate,
+        'rate_units':self.rate_units,
+        'p_value':self.p_value,
+        'std_err':self.std_err,
+        'used_':self.used_,
+        'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
 class data_stage01_physiology_ratesAverages(Base):
     __tablename__ = 'data_stage01_physiology_ratesAverages'
     id = Column(Integer, Sequence('data_stage01_physiology_ratesAverages_id_seq'), primary_key=True)
@@ -85,6 +118,10 @@ class data_stage01_physiology_ratesAverages(Base):
     used_ = Column(Boolean)
     comment_ = Column(Text);
 
+    __table_args__ = (
+            UniqueConstraint('experiment_id','sample_name_abbreviation','met_id'),
+            )
+
     def __init__(self, experiment_id_I, sample_name_abbreviation_I,
                  met_id_I, n_I, slope_average_I, intercept_average_I, rate_average_I, rate_var_I,
                  rate_lb_I, rate_ub_I, rate_units_I, used__I, comment__I):
@@ -101,6 +138,25 @@ class data_stage01_physiology_ratesAverages(Base):
         self.rate_units = rate_units_I;
         self.used_ = used__I;
         self.comment_ = comment__I;
+
+    def __repr__dict__(self):
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
+            'sample_name_abbreviation':self.sample_name_abbreviation,
+            'met_id':self.met_id,
+            'n':self.n,
+            'slope_average':self.slope_average,
+            'intercept_average':self.intercept_average,
+            'rate_average':self.rate_average,
+            'rate_var':self.rate_var,
+            'rate_lb':self.rate_lb,
+            'rate_ub':self.rate_ub,
+            'rate_units':self.rate_units,
+            'used_':self.used_,
+            'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
 
 class data_stage01_physiology_analysis(Base):
     __tablename__ = 'data_stage01_physiology_analysis'
@@ -133,7 +189,8 @@ class data_stage01_physiology_analysis(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'analysis_id':self.analysis_id,
+        return {'id':self.id,
+                'analysis_id':self.analysis_id,
             'experiment_id':self.experiment_id,
             'sample_name_short':self.sample_name_short,
             'sample_name_abbreviation':self.sample_name_abbreviation,

@@ -105,7 +105,7 @@ class data_stage01_quantification_normalized(Base):
         self.used_ = used_I;
 
     def __repr__dict__(self):
-        return {
+        return {'id':self.id,
             'experiment_id':self.experiment_id,
             'sample_name':self.sample_name,
             'sample_id':self.sample_id,
@@ -146,7 +146,8 @@ class data_stage01_quantification_replicates(Base):
         self.used_ = used_I;
 
     def __repr__dict__(self):
-        return {"experiment_id":self.experiment_id,
+        return {'id':self.id,
+                "experiment_id":self.experiment_id,
                 "sample_name_short":self.sample_name_short,
                 "time_point":self.time_point,
                 "component_group_name":self.component_group_name,
@@ -184,7 +185,8 @@ class data_stage01_quantification_replicatesMI(Base):
         self.used_ = used_I;
 
     def __repr__dict__(self):
-        return {"experiment_id":self.experiment_id,
+        return {'id':self.id,
+                "experiment_id":self.experiment_id,
                 "sample_name_short":self.sample_name_short,
                 "time_point":self.time_point,
                 "component_group_name":self.component_group_name,
@@ -241,6 +243,30 @@ class data_stage01_quantification_averages(Base):
         self.calculated_concentration_units = calculated_concentration_units_I;
         self.extracellular_percent = extracellular_percent_I;
         self.used_ = used_I;
+
+    def __repr__dict__(self):
+        return {'id':self.id,
+        'experiment_id':self.experiment_id,
+        'sample_name_abbreviation':self.sample_name_abbreviation,
+        'time_point':self.time_point,
+        'component_group_name':self.component_group_name,
+        'component_name':self.component_name,
+        'n_replicates_broth':self.n_replicates_broth,
+        'calculated_concentration_broth_average':self.calculated_concentration_broth_average,
+        'calculated_concentration_broth_cv':self.calculated_concentration_broth_cv,
+        'n_replicates_filtrate':self.n_replicates_filtrate,
+        'calculated_concentration_filtrate_average':self.calculated_concentration_filtrate_average,
+        'calculated_concentration_filtrate_cv':self.calculated_concentration_filtrate_cv,
+        'n_replicates':self.n_replicates,
+        'calculated_concentration_average':self.calculated_concentration_average,
+        'calculated_concentration_cv':self.calculated_concentration_cv,
+        'calculated_concentration_units':self.calculated_concentration_units,
+        'extracellular_percent':self.extracellular_percent,
+        'used_':self.used_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+
 class data_stage01_quantification_averagesMI(Base):
     __tablename__ = 'data_stage01_quantification_averagesmi'
     id = Column(Integer, Sequence('data_stage01_quantification_averagesmi_id_seq'), primary_key=True)
@@ -273,7 +299,8 @@ class data_stage01_quantification_averagesMI(Base):
         self.used_ = used_I;
 
     def __repr__dict__(self):
-        return {"experiment_id":self.experiment_id,
+        return {'id':self.id,
+                "experiment_id":self.experiment_id,
                 "sample_name_abbreviation":self.sample_name_abbreviation,
                 "time_point":self.time_point,
                 "component_group_name":self.component_group_name,
@@ -322,7 +349,8 @@ class data_stage01_quantification_averagesMIgeo(Base):
         self.used_ = used_I;
 
     def __repr__dict__(self):
-        return {"experiment_id":self.experiment_id,
+        return {'id':self.id,
+                "experiment_id":self.experiment_id,
                 "sample_name_abbreviation":self.sample_name_abbreviation,
                 "time_point":self.time_point,
                 "component_group_name":self.component_group_name,
@@ -378,7 +406,8 @@ class data_stage01_quantification_physiologicalRatios_replicates(Base):
                                                                             self.physiologicalratio_id)
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
             'sample_name_short':self.sample_name_short,
             'time_point':self.time_point,
             'physiologicalratio_id':self.physiologicalratio_id,
@@ -440,7 +469,8 @@ class data_stage01_quantification_physiologicalRatios_averages(Base):
                                                                             self.physiologicalratio_id)
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
             'time_point':self.time_point,
                 'physiologicalratio_id':self.physiologicalratio_id,
@@ -510,7 +540,8 @@ class data_stage01_quantification_peakInformation(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
             'component_group_name':self.component_group_name,
             'component_name':self.component_name,
             'peakInfo_parameter':self.peakInfo_parameter,
@@ -583,7 +614,8 @@ class data_stage01_quantification_peakResolution(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
             'component_group_name_pair':self.component_group_name_pair,
             'component_name_pair':self.component_name_pair,
             'peakInfo_parameter':self.peakInfo_parameter,

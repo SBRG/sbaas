@@ -173,7 +173,8 @@ class data_stage01_isotopomer_averagesNormSum(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
                 'sample_type':self.sample_type,
                 'time_point':self.time_point,

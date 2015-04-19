@@ -220,4 +220,42 @@ class stage01_physiology_io(base_analysis):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
-    
+
+    def export_dataStage01PhysiologyRatesAverages_js(self,analysis_id_I):
+        """Export data_stage01_physiology_ratesAverages to js file"""
+        # get the analysis information
+        experiment_ids,sample_name_abbreviations = [],[],[];
+        experiment_ids,sample_name_abbreviations = self.stage01_resequencing_query.get_experimentIDAndSampleName_analysisID_dataStage01PhysiologyAnalysis(analysis_id_I);
+        data_O = [];
+        for sna_cnt,sna in enumerate(sample_name_abbreviations):
+            data_tmp = [];
+            data_tmp = self.stage01_physiology_query.get_rows_experimentIDAndSampleNameAbbreviation_dataStage01PhysiologyRatesAverages(experiment_ids[sna_cnt],sna);
+            if data_tmp: data_O.append(data_tmp);
+        # visualization parameters
+        data1_keys = ['sample_name_abbreviation','rate_units', 'met_id']
+        data1_nestkeys = ['met_id'];
+        data1_keymap = {'xdata':'met_id','ydata':'rate_average',
+                'serieslabel':'sample_name_abbreviation','featureslabel':'met_id',
+                'ydatalb':'rate_lb','ydataub':'rate_ub'};
+        parameters = {"chart1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                    "chart1width":990,"chart1height":500,
+                  "chart1title":"uptake/secretion rates", "chart1y1axislabel":"rate (mmol*gDCW-1*hr-1)",
+                  "chart2margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                  "chart2width":990,"chart2height":500,
+                  "chart2title":"growth rate", "chart2y1axislabel":"rate (hr-1)",
+                  "chart1filters":{'met_id':['glc-D','ac'],'sample_name_abbreviation':["OxicEvo04pgiEcoliGlc","OxicEvo04pgiEvo01EPEcoliGlc","OxicEvo04pgiEvo02EPEcoliGlc","OxicEvo04pgiEvo03EPEcoliGlc","OxicEvo04pgiEvo04EPEcoliGlc","OxicEvo04pgiEvo05EPEcoliGlc","OxicEvo04pgiEvo06EPEcoliGlc","OxicEvo04pgiEvo07EPEcoliGlc","OxicEvo04pgiEvo08EPEcoliGlc"]},
+                  "chart2filters":{'met_id':['biomass'],'sample_name_abbreviation':["OxicEvo04pgiEcoliGlc","OxicEvo04pgiEvo01EPEcoliGlc","OxicEvo04pgiEvo02EPEcoliGlc","OxicEvo04pgiEvo03EPEcoliGlc","OxicEvo04pgiEvo04EPEcoliGlc","OxicEvo04pgiEvo05EPEcoliGlc","OxicEvo04pgiEvo06EPEcoliGlc","OxicEvo04pgiEvo07EPEcoliGlc","OxicEvo04pgiEvo08EPEcoliGlc"]}
+                };
+        # dump the data to a json file
+        data1_str = 'var ' + 'data1' + ' = ' + json.dumps(data_O);
+        data1_keys_str = 'var ' + 'data1_keys' + ' = ' + json.dumps(data1_keys);
+        data1_nestkeys_str = 'var ' + 'data1_nestkeys' + ' = ' + json.dumps(data1_nestkeys);
+        data1_keymap_str = 'var ' + 'data1_keymap' + ' = ' + json.dumps(data1_keymap);
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parameters);
+        filename_str = analysis_id_I + '_data_stage01_physiology_ratesAverages' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data1_str);
+            file.write(data1_keys_str);
+            file.write(data1_nestkeys_str);
+            file.write(data1_keymap_str);
+            file.write(parameters_str);

@@ -611,26 +611,51 @@ class stage01_physiology_query(base_analysis):
             return slope_average, intercept_average, rate_average, rate_units, rate_var;
         except SQLAlchemyError as e:
             print(e);
-    def get_rateData_experimentIDAndSampleNameAbbreviationAndMetID_dataStage01PhysiologyRatesAverages(self,experiment_id_I,sample_name_abbreviation_I,met_id_I):
-        '''Querry rate data by sample id and met id that are used from
-        the experiment'''
+    def get_rows_experimentIDAndSampleNameAbbreviation_dataStage01PhysiologyRatesAverages(self,experiment_id_I,sample_name_abbreviation_I):
+        '''Querry rows by sample name abbreviation that are used from the experiment'''
         try:
-            data = self.session.query(data_stage01_physiology_ratesAverages.slope_average,
-                    data_stage01_physiology_ratesAverages.intercept_average,
-                    data_stage01_physiology_ratesAverages.rate_average,
-                    data_stage01_physiology_ratesAverages.rate_lb,
-                    data_stage01_physiology_ratesAverages.rate_ub,
-                    data_stage01_physiology_ratesAverages.rate_units,
-                    data_stage01_physiology_ratesAverages.rate_var).filter(
-                    data_stage01_physiology_ratesAverages.met_id.like(met_id_I),
+            data = self.session.query(data_stage01_physiology_ratesAverages).filter(
+                    data_stage01_physiology_ratesAverages.sample_name_abbreviation.like(sample_name_abbreviation_I),
                     data_stage01_physiology_ratesAverages.experiment_id.like(experiment_id_I),
-                    data_stage01_physiology_ratesAverages.used_.is_(True),
-                    data_stage01_physiology_ratesAverages.sample_name_abbreviation.like(sample_name_abbreviation_I)).first();
-            slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = None,None,None,None,None,None,None;
+                    data_stage01_physiology_ratesAverages.used_.is_(True)).all();
+            data_O = []
             if data: 
-                slope_average, intercept_average,\
-                    rate_average, rate_lb, rate_ub, rate_units, rate_var = data.slope_average, data.intercept_average,\
-                    data.rate_average, data.rate_lb, data.rate_ub, data.rate_units, data.rate_var;
-            return slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var;
+                for d in data:
+                    data_O.append({'experiment_id':d.experiment_id,
+                    'sample_name_abbreviation':d.sample_name_abbreviation,
+                    'met_id':d.met_id,
+                    'n':d.n,
+                    'slope_average':d.slope_average,
+                    'intercept_average':d.intercept_average,
+                    'rate_average':d.rate_average,
+                    'rate_var':d.rate_var,
+                    'rate_lb':d.rate_lb,
+                    'rate_ub':d.rate_ub,
+                    'rate_units':d.rate_units,
+                    'used_':d.used_,
+                    'comment_':d.comment_})
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);get_experimentIDAndSampleName_analysisID_dataStage01PhysiologyAnalysis
+
+            
+    def get_experimentIDAndSampleName_analysisID_dataStage01PhysiologyAnalysis(self,analysis_id_I):
+        '''Query rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage01_physiology_analysis.experiment_id,
+                    data_stage01_physiology_analysis.sample_name_abbreviation).filter(
+                    data_stage01_physiology_analysis.analysis_id.like(analysis_id_I),
+                    data_stage01_physiology_analysis.used_.is_(True)).group_by(
+                    data_stage01_physiology_analysis.experiment_id,
+                    data_stage01_physiology_analysis.sample_name_abbreviation).order_by(
+                    data_stage01_physiology_analysis.experiment_id.asc(),
+                    data_stage01_physiology_analysis.sample_name_abbreviation.asc()).all();
+            experiment_id_O = []
+            sample_name_abbreviation_O = []
+            if data: 
+                for d in data:
+                    experiment_id_O.append(d.experiment_id);
+                    sample_name_abbreviation_O.append(d.sample_name_abbreviation);                
+            return  experiment_id_O,sample_name_abbreviation_O;
         except SQLAlchemyError as e:
             print(e);

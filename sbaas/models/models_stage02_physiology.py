@@ -51,7 +51,8 @@ class data_stage02_physiology_simulatedData(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
             #    'experiment_id':self.experiment_id,
             #    'model_id':self.model_id,
             #'sample_name_abbreviation':self.sample_name_abbreviation,
@@ -104,7 +105,8 @@ class data_stage02_physiology_simulation(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
             'experiment_id':self.experiment_id,
             'model_id':self.model_id,
             'sample_name_abbreviation':self.sample_name_abbreviation,
@@ -144,7 +146,8 @@ class data_stage02_physiology_models(Base):
         self.date=date_I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
                 'model_name':self.model_name,
                 'model_description':self.model_description,
                 'model_file':self.model_file,
@@ -217,7 +220,8 @@ class data_stage02_physiology_modelReactions(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
             'rxn_id':self.rxn_id,
             'rxn_name':self.rxn_name,
             'equation':self.equation,
@@ -279,7 +283,8 @@ class data_stage02_physiology_modelMetabolites(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
                 'met_name':self.met_name,
                 'met_id':self.met_id,
                 'formula':self.formula,
@@ -339,7 +344,8 @@ class data_stage02_physiology_measuredFluxes(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                     'model_id':self.model_id,
                     'sample_name_abbreviation':self.sample_name_abbreviation,
                     #'time_point':self.time_point,
@@ -391,7 +397,8 @@ class data_stage02_physiology_sampledPoints(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #        'model_id':self.model_id,
@@ -464,7 +471,8 @@ class data_stage02_physiology_sampledData(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #        'model_id':self.model_id,
@@ -531,7 +539,8 @@ class data_stage02_physiology_simulationParameters(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
             #'simulation_dateAndTime':self.simulation_dateAndTime,
             'solver_id':self.solver_id,
             'n_points':self.n_points,
@@ -607,7 +616,8 @@ class data_stage02_physiology_pairWiseTest(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id_1':self.simulation_id_1,
+        return {'id':self.id,
+                'simulation_id_1':self.simulation_id_1,
                 'simulation_id_2':self.simulation_id_2,
         #       'simulation_dateAndTime':self.simulation_dateAndTime,
         #       'experiment_id':self.experiment_id,
@@ -687,7 +697,8 @@ class data_stage02_physiology_pairWiseTestMetabolites(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id_1':self.simulation_id_1,
+        return {'id':self.id,
+                'simulation_id_1':self.simulation_id_1,
                 'simulation_id_2':self.simulation_id_2,
         #'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
@@ -767,7 +778,8 @@ class data_stage02_physiology_pairWiseTestSubsystems(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id_1':self.simulation_id_1,
+        return {'id':self.id,
+                'simulation_id_1':self.simulation_id_1,
                 'simulation_id_2':self.simulation_id_2,
         #'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
@@ -816,7 +828,8 @@ class data_stage02_physiology_pca_scores(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self): # not complete!
-        return {'simulation_id_I':self.experiment_id,
+        return {'id':self.id,
+                'simulation_id_I':self.experiment_id,
                 #...
                 'used_I':self.used_,
                 'comments_I':self.comments_}
@@ -848,7 +861,8 @@ class data_stage02_physiology_pca_loadings(Base):
         self.comment_ = comment_I;
 
     def __repr__dict__(self): # not complete!
-        return {'simulation_id_I':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id_I':self.simulation_id,
                 #...
                 'used_I':self.used_,
                 'comments_I':self.comments_}

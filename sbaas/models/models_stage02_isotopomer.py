@@ -38,7 +38,7 @@ class data_stage02_isotopomer_simulation(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {
+        return {'id':self.id,
             'simulation_id':self.simulation_id,
             'experiment_id':self.experiment_id,
             'model_id':self.model_id,
@@ -98,7 +98,8 @@ class data_stage02_isotopomer_calcFragments(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'model_id':self.model_id,
                 'mapping_id':self.mapping_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
@@ -160,7 +161,8 @@ class data_stage02_isotopomer_calcFluxes(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
             'model_id':self.model_id,
             'mapping_id':self.mapping_id,
             'sample_name_abbreviation':self.sample_name_abbreviation,
@@ -223,7 +225,8 @@ class data_stage02_isotopomer_tracers(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
             'sample_name_abbreviation':self.sample_name_abbreviation,
                 'met_id':self.met_id,
                 'met_name':self.met_name,
@@ -263,7 +266,8 @@ class data_stage02_isotopomer_models(Base):
         self.date=date_I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
                 'model_name':self.model_name,
                 'model_description':self.model_description,
                 'file':self.file,
@@ -340,7 +344,8 @@ class data_stage02_isotopomer_modelReactions(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
             'rxn_id':self.rxn_id,
             'equation':self.equation,
             'subsystem':self.subsystem,
@@ -412,7 +417,8 @@ class data_stage02_isotopomer_modelMetabolites(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
                 'met_name':self.met_name,
                 'met_id':self.met_id,
                 'formula':self.formula,
@@ -472,7 +478,8 @@ class data_stage02_isotopomer_measuredFluxes(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                     'model_id':self.model_id,
                     'sample_name_abbreviation':self.sample_name_abbreviation,
                     #'time_point':self.time_point,
@@ -534,7 +541,8 @@ class data_stage02_isotopomer_measuredPools(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                     'model_id':self.model_id,
                     'sample_name_abbreviation':self.sample_name_abbreviation,
                     'time_point':self.time_point,
@@ -601,7 +609,8 @@ class data_stage02_isotopomer_measuredFragments(Base):
         self.comment_=comment__I;
 
     def __repr__dict__(self):
-        return {'experiment_id':self.experiment_id,
+        return {'id':self.id,
+                'experiment_id':self.experiment_id,
                 'sample_name_abbreviation':self.sample_name_abbreviation,
                 'time_point':self.time_point,
                 'met_id':self.met_id,
@@ -677,7 +686,8 @@ class data_stage02_isotopomer_atomMappingReactions(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'mapping_id':self.mapping_id,
+        return {'id':self.id,
+                'mapping_id':self.mapping_id,
                 'rxn_id':self.rxn_id,
                 'rxn_description':self.rxn_description,
                 'reactants_stoichiometry_tracked':self.reactants_stoichiometry_tracked,
@@ -794,7 +804,8 @@ class data_stage02_isotopomer_modelReactionsAtomMapping(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
             'rxn_id':self.rxn_id,
             'equation':self.equation,
             'subsystem':self.subsystem,
@@ -883,7 +894,8 @@ class data_stage02_isotopomer_modelMetabolitesAtomMapping(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'model_id':self.model_id,
+        return {'id':self.id,
+                'model_id':self.model_id,
                 'met_name':self.met_name,
                 'met_id':self.met_id,
                 'formula':self.formula,
@@ -963,7 +975,8 @@ class data_stage02_isotopomer_atomMappingMetabolites(Base):
         self.base_met_indices = base_met_indices_I;
 
     def __repr__dict__(self):
-        return {'mapping_id':self.mapping_id,
+        return {'id':self.id,
+                'mapping_id':self.mapping_id,
                 #'met_name':self.met_name,
                 'met_id':self.met_id,
                 #'formula':self.formula,
@@ -1055,7 +1068,8 @@ class data_stage02_isotopomer_fittedFluxes(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1146,7 +1160,8 @@ class data_stage02_isotopomer_fittedFragments(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1220,7 +1235,8 @@ class data_stage02_isotopomer_fittedData(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1281,7 +1297,8 @@ class data_stage02_isotopomer_fittedMeasuredFluxes(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1345,7 +1362,8 @@ class data_stage02_isotopomer_fittedMeasuredFragments(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1423,7 +1441,8 @@ class data_stage02_isotopomer_fittedMeasuredFluxResiduals(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1511,7 +1530,8 @@ class data_stage02_isotopomer_fittedMeasuredFragmentResiduals(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1628,7 +1648,8 @@ class data_stage02_isotopomer_simulationParameters(Base):
         self.sim_tunit=sim_tunit_I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
             'simulation_dateAndTime':self.simulation_dateAndTime,
             'cont_alpha':self.cont_alpha,
             'cont_reltol':self.cont_reltol,
@@ -1716,7 +1737,8 @@ class data_stage02_isotopomer_fittedNetFluxes(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1794,7 +1816,8 @@ class data_stage02_isotopomer_fittedFluxRatios(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #'model_id':self.model_id,
@@ -1873,7 +1896,8 @@ class data_stage02_isotopomer_fittedFluxSplits(Base):
         self.comment_=comment__I
 
     def __repr__dict__(self):
-        return {'simulation_id':self.simulation_id,
+        return {'id':self.id,
+                'simulation_id':self.simulation_id,
         'simulation_dateAndTime':self.simulation_dateAndTime,
         #'experiment_id':self.experiment_id,
         #'model_id':self.model_id,

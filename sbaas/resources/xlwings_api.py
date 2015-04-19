@@ -35,7 +35,7 @@ class xlwings_workbook():
         for i,d in enumerate(tableDictList_I):
             if i==0:
                 excelList.append(d.keys())
-            excelList.append(d)
+            excelList.append(d.values())
         return excelList;
 
     def read_workbook(self,sheet_I='Sheet1',cell_I='A1'):

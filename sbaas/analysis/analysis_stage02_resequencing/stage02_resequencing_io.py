@@ -241,6 +241,8 @@ class stage02_resequencing_io(stage01_resequencing_io):
                         d['sample_name'],
                         d['sample_name_abbreviation'],
                         d['analysis_type'],
+                        d['reduce_criteria_1'],
+                        d['reduce_criteria_2'],
                         d['used_'],
                         d['comment_']);
                     self.session.add(data_add);
@@ -268,9 +270,146 @@ class stage02_resequencing_io(stage01_resequencing_io):
                             'sample_name':d['sample_name'],
                             'sample_name_abbreviation':d['sample_name_abbreviation'],
                             'analysis_type':d['analysis_type'],
+                            'reduce_criteria_1':d['reduce_criteria_1'],
+                            'reduce_criteria_2':d['reduce_criteria_2'],
                             'used_':d['used_'],
                             'comment_':d['comment_']},
                             synchronize_session=False);
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
+
+    def export_dataStage01ResequencingMutationsAnnotated_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
+        '''export data_stage01_resequencing_mutationsAnnotated to js file'''
+        
+        print 'exportingdataStage01ResequencingMutationsAnnotated...'
+        # get the analysis information
+        experiment_ids,sample_names,time_points = [],[],[];
+        experiment_ids,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
+        mutation_data_O = [];
+        mutation_ids = [];
+        for sample_name_cnt,sample_name in enumerate(sample_names):
+            # query mutation data:
+            mutations = [];
+            mutations = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsAnnotated(experiment_ids[sample_name_cnt],sample_name);
+            for end_cnt,mutation in enumerate(mutations):
+                if mutation['mutation_position'] > 4000000: #ignore positions great than 4000000
+                    continue;
+                if mutation['mutation_frequency']<frequency_threshold:
+                    continue;
+                # mutation id
+                mutation_genes_str = '';
+                for gene in mutation['mutation_genes']:
+                    mutation_genes_str = mutation_genes_str + gene + '-/-'
+                mutation_genes_str = mutation_genes_str[:-3];
+                mutation_id = mutation_genes_str + '_' + mutation['mutation_type'] + '_' + str(mutation['mutation_position'])
+                tmp = {};
+                tmp.update(mutation);
+                tmp.update({'mutation_id':mutation_id});
+                mutation_data_O.append(tmp);
+                mutation_ids.append(mutation_id);
+        mutation_ids_screened = [x for x in mutation_ids if x not in mutation_id_exclusion_list];
+        mutation_ids_unique = list(set(mutation_ids_screened));
+        data_O = [];
+        for sample_name_cnt,sample_name in enumerate(sample_names):
+            for mutation_id in mutation_ids_unique:
+                tmp = {};
+                tmp_fitted = {};
+                tmp['mutation_id']=mutation_id
+                tmp['time_point']=time_points[sample_name_cnt]
+                tmp['experiment_id']=experiment_ids[sample_name_cnt]
+                tmp['sample_name']=sample_name
+                tmp['mutation_frequency']=0.0;                        
+                tmp['mutation_genes']='';
+                tmp['mutation_position']='';
+                tmp['mutation_annotations']='';
+                tmp['mutation_locations']='';
+                tmp['mutation_links']='';
+                tmp['mutation_type']='';
+                tmp['used_']=True;
+                tmp['comment_']=True;
+                for mutation in mutation_data_O:
+                    if sample_name == mutation['sample_name'] and mutation_id == mutation['mutation_id']:
+                        tmp['mutation_frequency']=mutation['mutation_frequency'];
+                        tmp['mutation_genes']=mutation['mutation_genes'];
+                        tmp['mutation_position']=mutation['mutation_position'];
+                        tmp['mutation_annotations']=mutation['mutation_annotations'];
+                        tmp['mutation_locations']=mutation['mutation_locations'];
+                        tmp['mutation_links']=mutation['mutation_links'];
+                        tmp['mutation_type']=mutation['mutation_type'];
+                        tmp['used_']=mutation['used_'];
+                        tmp['comment_']=mutation['comment_'];
+                        break;
+                data_O.append(tmp);
+        # dump chart parameters to a js files
+        data1_keys = ['experiment_id',
+                    'sample_name',
+                    'mutation_id',
+                    'mutation_frequency',
+                    'mutation_type',
+                    'mutation_position',
+                    #'mutation_data',
+                    'mutation_annotations',
+                    'mutation_genes',
+                    'mutation_locations',
+                    'mutation_links'];
+        data1_nestkeys = ['mutation_id'];
+        data1_keymap = {'xdata':'time_point',
+                        'ydata':'mutation_frequency',
+                        'serieslabel':'mutation_id',
+                        'featureslabel':''};
+        parameters = {"chart1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                    "chart1width":500,"chart1height":350,
+                  "chart1title":"Population mutation frequency", "chart1x1axislabel":"jump_time_point","chart1y1axislabel":"frequency"}
+        # dump the data to a json file
+        data1_str = 'var ' + 'data1' + ' = ' + json.dumps(data_O) + ';';
+        data1_keys_str = 'var ' + 'data1_keys' + ' = ' + json.dumps(data1_keys) + ';';
+        data1_nestkeys_str = 'var ' + 'data1_nestkeys' + ' = ' + json.dumps(data1_nestkeys) + ';';
+        data1_keymap_str = 'var ' + 'data1_keymap' + ' = ' + json.dumps(data1_keymap) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parameters) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_mutationsAnnotated' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data1_str);
+            file.write(data1_keys_str);
+            file.write(data1_nestkeys_str);
+            file.write(data1_keymap_str);
+            file.write(parameters_str);
+    
+    def export_dataStage02ResequencingHeatmap_js(self,analysis_id_I,data_dir_I="tmp"):
+        """export heatmap to js file"""
+
+        #get the heatmap data for the analysis
+        data_O = self.stage02_resequencing_query.get_rows_analysisID_dataStage02ResequencingHeatmap(analysis_id_I);
+        # dump chart parameters to a js files
+        data1_keys = ['analysis_id','row_label','col_label','row_index','col_index','row_leaves','col_leaves',
+                'col_pdist_metric','row_pdist_metric','col_linkage_method','row_linkage_method',
+                'value_units']
+        data1_nestkeys = ['analysis_id'];
+        data1_keymap = {'xdata':'row_leaves','ydata':'col_leaves','zdata':'value',
+                'rowslabel':'row_label','columnslabel':'col_label',
+                'rowsindex':'row_index','columnsindex':'col_index',
+                'rowsleaves':'row_leaves','columnsleaves':'col_leaves'};
+        parameters = {'chart2d1cellsize':18,'chart2d1margin':{ 'top': 200, 'right': 100, 'bottom': 50, 'left': 50 },
+                      'chart2d1colorscale':'quantile',
+                      'chart2d1colorcategory':'heatmap10',
+                      'chart2d1colordomain':"min,max",
+                      'chart2d1colordatalabel':'value'};
+        # dump the data to a json file
+        data1_str = 'var ' + 'data1' + ' = ' + json.dumps(data_O) + ';';
+        data1_keys_str = 'var ' + 'data1_keys' + ' = ' + json.dumps(data1_keys) + ';';
+        data1_nestkeys_str = 'var ' + 'data1_nestkeys' + ' = ' + json.dumps(data1_nestkeys) + ';';
+        data1_keymap_str = 'var ' + 'data1_keymap' + ' = ' + json.dumps(data1_keymap) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parameters) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_resequencing_heatmap' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data1_str);
+            file.write(data1_keys_str);
+            file.write(data1_nestkeys_str);
+            file.write(data1_keymap_str);
+            file.write(parameters_str);

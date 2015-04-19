@@ -11,8 +11,14 @@
     <meta name="viewport" content="width=device-width, height=device-height,
 	  initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"/>
   </head>
-  <body>
-    {% block content %}{% endblock %}
+  <body>      
+    <!--{% block content %}{% endblock %}-->
+    {% block header %}{% endblock %} 
+    {% block nav %}{% endblock %}
+    {% block main %}{% endblock %}
+    {% block footer %}{% endblock %}
+    {% block script %}{% endblock %}
+
 
     <script>
      // temporary fixes for mobile browsers (currently iOS)

@@ -123,7 +123,7 @@ class stage01_resequencing_execute():
         3. hitch-hiker mutations'''
         #Input:
         #   experiment_id = experiment id
-        #   strain_lineage = {"strain_analysis_id":{0:sample_name,1:sample_name,2:sample_name,...,n:sample_name}}
+        #   strain_lineage = {"lineage_name":{0:sample_name,1:sample_name,2:sample_name,...,n:sample_name}}
         #                       where n is the end-point strain
         #Output:
 
@@ -133,8 +133,8 @@ class stage01_resequencing_execute():
 
         print 'Executing analyzeLineage_population...'
         data_O = [];
-        for analysis_id,strain in strain_lineage.iteritems():
-            print 'analyzing lineage ' + analysis_id;
+        for lineage_name,strain in strain_lineage.iteritems():
+            print 'analyzing lineage ' + lineage_name;
             lineage = strain.keys();
             end_point = max(lineage)
             # query end data:
@@ -162,7 +162,7 @@ class stage01_resequencing_execute():
                             data_tmp['mutation_frequency'] = frequency
                             data_tmp['mutation_position'] = end_mutation['mutation_data']['position']
                             data_tmp['mutation_type'] = end_mutation['mutation_data']['type']
-                            data_tmp['analysis_id'] = analysis_id;
+                            data_tmp['lineage_name'] = lineage_name;
                             data_tmp['mutation_data'] = end_mutation['mutation_data'];
                             data_O.append(data_tmp);
                         # find the mutation in the intermediates
@@ -224,13 +224,13 @@ class stage01_resequencing_execute():
                             data_tmp['mutation_frequency'] = frequency
                             data_tmp['mutation_position'] = match['mutation_data']['position']
                             data_tmp['mutation_type'] = match['mutation_data']['type']
-                            data_tmp['analysis_id'] = analysis_id;
+                            data_tmp['lineage_name'] = lineage_name;
                             data_tmp['mutation_data'] = match['mutation_data'];
                             data_O.append(data_tmp);
         for d in data_O:
             row = [];
             row = data_stage01_resequencing_lineage(d['experiment_id'],
-                d['analysis_id'],
+                d['lineage_name'],
                 d['sample_name'],
                 d['intermediate'],
                 d['mutation_frequency'],
@@ -610,6 +610,8 @@ class stage01_resequencing_execute():
             data_stage01_resequencing_endpoints.__table__.drop(engine,True);
             data_stage01_resequencing_mutationsAnnotated.__table__.drop(engine,True);
             data_stage01_resequencing_analysis.__table__.drop(engine,True);
+            data_stage01_resequencing_heatmap.__table__.drop(engine,True);
+            data_stage01_resequencing_dendrogram.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_dataStage01(self,experiment_id_I = None,analysis_id_I = None):
@@ -624,7 +626,6 @@ class stage01_resequencing_execute():
                 #reset = self.session.query(data_stage01_resequencing_endpoints).filter(data_stage01_resequencing_endpoints.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage01_resequencing_mutationsAnnotated).filter(data_stage01_resequencing_mutationsAnnotated.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
             elif analysis_id_I:
-                reset = self.session.query(data_stage01_resequencing_lineage).filter(data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_resequencing_endpoints).filter(data_stage01_resequencing_endpoints.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_resequencing_analysis).filter(data_stage01_resequencing_analysis.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
             else:
@@ -640,6 +641,24 @@ class stage01_resequencing_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
+    def reset_dataStage01_resequencing_heatmap(self,analysis_id_I = None):
+        try:
+            if analysis_id_I:
+                reset = self.session.query(data_stage01_resequencing_heatmap).filter(data_stage01_resequencing_heatmap.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage01_resequencing_heatmap).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_dataStage01_resequencing_dendrogram(self,analysis_id_I = None):
+        try:
+            if analysis_id_I:
+                reset = self.session.query(data_stage01_resequencing_dendrogram).filter(data_stage01_resequencing_dendrogram.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage01_resequencing_dendrogram).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
     def initialize_dataStage01(self):
         try:
             data_stage01_resequencing_metadata.__table__.create(engine,True);
@@ -651,6 +670,8 @@ class stage01_resequencing_execute():
             data_stage01_resequencing_endpoints.__table__.create(engine,True);
             data_stage01_resequencing_mutationsAnnotated.__table__.create(engine,True);
             data_stage01_resequencing_analysis.__table__.create(engine,True);
+            data_stage01_resequencing_heatmap.__table__.create(engine,True);
+            data_stage01_resequencing_dendrogram.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_dataStage01_filtered(self,experiment_id_I = None):
@@ -681,4 +702,109 @@ class stage01_resequencing_execute():
         except SQLAlchemyError as e:
             print(e);
     #TODO:
+    def execute_heatmap(self, analysis_id_I,
+                row_pdist_metric_I='euclidean',row_linkage_method_I='complete',
+                col_pdist_metric_I='euclidean',col_linkage_method_I='complete',
+                                                 mutation_id_exclusion_list = []):
+        '''Execute hierarchical cluster on row and column data'''
+
+        print 'executing heatmap...';
+        # get the analysis information
+        experiment_ids,lineage_names = [],[];
+        experiment_ids,lineage_names = self.stage01_resequencing_query.get_experimentIDAndLineageName_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
+        # partition into variables:
+        intermediates_lineage = [];
+        mutation_data_lineage_all = [];
+        rows_lineage = [];
+        n_lineages = len(lineage_names)
+        cnt_sample_names = 0;
+        for lineage_name_cnt,lineage_name in enumerate(lineage_names):
+            # get ALL intermediates by experiment_id and lineage name
+            intermediates = [];
+            intermediates = self.stage01_resequencing_query.get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_ids[lineage_name_cnt],lineage_name);
+            intermediates_lineage.append(intermediates);
+            cnt_sample_names += len(intermediates)
+            # get ALL mutation data by experiment_id and lineage name
+            mutation_data = [];
+            mutation_data = self.stage01_resequencing_query.get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_ids[lineage_name_cnt],lineage_name);
+            mutation_data_lineage_all.extend(mutation_data);
+            # get ALL mutation frequencies by experiment_id and lineage name
+            rows = [];
+            rows = self.stage01_resequencing_query.get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(experiment_ids[lineage_name_cnt],lineage_name)
+            rows_lineage.extend(rows);
+        mutation_data_lineage_unique = list(set(mutation_data_lineage_all));
+        mutation_data_lineage = [x for x in mutation_data_lineage_unique if not x in mutation_id_exclusion_list];
+        min_inter = min(intermediates_lineage)
+        max_inter = max(intermediates_lineage);
+        # generate the frequency matrix data structure (mutation x intermediate)
+        data_O = numpy.zeros((cnt_sample_names,len(mutation_data_lineage)));
+        labels_O = {};
+        lineages=[];
+        col_cnt = 0;
+        # order 2: groups each lineage by mutation (intermediate x mutation)
+        for lineage_name_cnt,lineage_name in enumerate(lineage_names): #all lineages for intermediate j / mutation i
+            for intermediate_cnt,intermediate in enumerate(intermediates_lineage[lineage_name_cnt]):
+                if intermediate_cnt == min(intermediates_lineage[lineage_name_cnt]):
+                    lineages.append(lineage_name+": "+"start"); # corresponding label from hierarchical clustering (in this case, arbitrary)
+                elif intermediate_cnt == max(intermediates_lineage[lineage_name_cnt]):
+                    lineages.append(lineage_name+": "+"end"); # corresponding label from hierarchical clustering (in this case, arbitrary)
+                else:
+                    lineages.append(lineage_name+": "+str(intermediate)); # corresponding label from hierarchical clustering (in this case, arbitrary)
+                for mutation_cnt,mutation in enumerate(mutation_data_lineage): #all mutations i for intermediate j
+                    for row in rows_lineage:
+                        if row['mutation_id'] == mutation and row['intermediate'] == intermediate and row['lineage_name'] == lineage_name:
+                            data_O[col_cnt,mutation_cnt] = row['mutation_frequency'];
+                            #print col_cnt,mutation_cnt
+                col_cnt+=1;
+        # generate the clustering for the heatmap
+        heatmap_O = [];
+        dendrogram_col_O = {};
+        dendrogram_row_O = {};
+        heatmap_O,dendrogram_col_O,dendrogram_row_O = self.calculate.heatmap(data_O,lineages,mutation_data_lineage,
+                row_pdist_metric_I=row_pdist_metric_I,row_linkage_method_I=row_linkage_method_I,
+                col_pdist_metric_I=col_pdist_metric_I,col_linkage_method_I=col_linkage_method_I);
+        # add data to to the database for the heatmap
+        for d in heatmap_O:
+            row = None;
+            row = data_stage01_resequencing_heatmap(
+                analysis_id_I,
+                d['col_index'],
+                d['row_index'],
+                d['value'],
+                d['col_leaves'],
+                d['row_leaves'],
+                d['col_label'],
+                d['row_label'],
+                d['col_pdist_metric'],
+                d['row_pdist_metric'],
+                d['col_linkage_method'],
+                d['row_linkage_method'],
+                'frequency',True, None);
+            self.session.add(row);
+        # add data to the database for the dendrograms
+        row = None;
+        row = data_stage01_resequencing_dendrogram(
+            analysis_id_I,
+            dendrogram_col_O['leaves'],
+            dendrogram_col_O['icoord'],
+            dendrogram_col_O['dcoord'],
+            dendrogram_col_O['ivl'],
+            dendrogram_col_O['colors'],
+            dendrogram_col_O['pdist_metric'],
+            dendrogram_col_O['pdist_metric'],
+            'frequency',True, None);
+        self.session.add(row);
+        row = None;
+        row = data_stage01_resequencing_dendrogram(
+            analysis_id_I,
+            dendrogram_row_O['leaves'],
+            dendrogram_row_O['icoord'],
+            dendrogram_row_O['dcoord'],
+            dendrogram_row_O['ivl'],
+            dendrogram_row_O['colors'],
+            dendrogram_row_O['pdist_metric'],
+            dendrogram_row_O['pdist_metric'],
+            'frequency',True, None);
+        self.session.add(row);
+        self.session.commit();
                 

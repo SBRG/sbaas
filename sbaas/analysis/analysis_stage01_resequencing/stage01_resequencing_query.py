@@ -235,16 +235,16 @@ class stage01_resequencing_query(base_analysis):
             return sample_names_O
         except SQLAlchemyError as e:
             print(e);
-    def get_sampleNames_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,analysis_id_I):
+    def get_sampleNames_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,lineage_name_I):
         '''Query samples names from resequencing lineage'''
         try:
             data = self.session.query(data_stage01_resequencing_lineage.experiment_id,
                     data_stage01_resequencing_lineage.sample_name).filter(
                     data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I),
-                    data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).group_by(
+                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).group_by(
                     data_stage01_resequencing_lineage.experiment_id,
                     data_stage01_resequencing_lineage.sample_name).order_by(
-                    data_stage01_resequencing_lineage.analysis_id.asc()).all();
+                    data_stage01_resequencing_lineage.lineage_name.asc()).all();
             data_O = [];
             for d in data: 
                 #data_tmp = {};
@@ -255,13 +255,13 @@ class stage01_resequencing_query(base_analysis):
         except SQLAlchemyError as e:
             print(e);
     # Query intermediates from data_stage01_resequencing_lineage
-    def get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,analysis_id_I):
+    def get_intermediates_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,lineage_name_I):
         '''Query intermediates from resequencing lineage'''
         try:
             data = self.session.query(data_stage01_resequencing_lineage.experiment_id,
                     data_stage01_resequencing_lineage.intermediate).filter(
                     data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I),
-                    data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).group_by(
+                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).group_by(
                     data_stage01_resequencing_lineage.experiment_id,
                     data_stage01_resequencing_lineage.intermediate).order_by(
                     data_stage01_resequencing_lineage.intermediate.asc()).all();
@@ -275,7 +275,7 @@ class stage01_resequencing_query(base_analysis):
         except SQLAlchemyError as e:
             print(e);
     # query mutation information from data_stage01_resequencing_lineage
-    def get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,analysis_id_I):
+    def get_mutationData_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,lineage_name_I):
         '''Query mutation information from resequencing lineage'''
         try:
             data = self.session.query(data_stage01_resequencing_lineage.mutation_type,
@@ -283,7 +283,7 @@ class stage01_resequencing_query(base_analysis):
                     data_stage01_resequencing_lineage.mutation_genes,
                     data_stage01_resequencing_lineage.mutation_locations).filter(
                     data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I),
-                    data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).group_by(
+                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).group_by(
                     data_stage01_resequencing_lineage.mutation_type,
                     data_stage01_resequencing_lineage.mutation_position,
                     data_stage01_resequencing_lineage.mutation_genes,
@@ -326,7 +326,7 @@ class stage01_resequencing_query(base_analysis):
                 data_tmp = {};
                 data_tmp['id']=d.id;
                 data_tmp['experiment_id']=d.experiment_id;
-                data_tmp['analysis_id']=d.analysis_id;
+                data_tmp['lineage_name']=d.lineage_name;
                 data_tmp['sample_name']=d.sample_name;
                 data_tmp['intermediate']=d.intermediate;
                 data_tmp['mutation_frequency']=d.mutation_frequency;
@@ -342,18 +342,18 @@ class stage01_resequencing_query(base_analysis):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
-    def get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,analysis_id_I):
+    def get_row_experimentIDAndLineageName_dataStage01ResequencingLineage(self,experiment_id_I,lineage_name_I):
         '''Query samples names from resequencing lineage'''
         try:
             data = self.session.query(data_stage01_resequencing_lineage).filter(
                     data_stage01_resequencing_lineage.experiment_id.like(experiment_id_I),
-                    data_stage01_resequencing_lineage.analysis_id.like(analysis_id_I)).all();
+                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).all();
             data_O = [];
             for d in data: 
                 data_tmp = {};
                 data_tmp['id']=d.id;
                 data_tmp['experiment_id']=d.experiment_id;
-                data_tmp['analysis_id']=d.analysis_id;
+                data_tmp['lineage_name']=d.lineage_name;
                 data_tmp['sample_name']=d.sample_name;
                 data_tmp['intermediate']=d.intermediate;
                 data_tmp['mutation_frequency']=d.mutation_frequency;
@@ -446,6 +446,136 @@ class stage01_resequencing_query(base_analysis):
                             'mutation_links':d.mutation_links,
                             'used_':d.used_,
                             'comment_':d.comment_};
+                data_O.append(data_dict);
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);
+
+    # query data from data_stage01_resequencing_analysis
+    def get_analysis_analysisID_dataStage01ResequencingAnalysis(self,analysis_id_I):
+        '''Query rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage01_resequencing_analysis).filter(
+                    data_stage01_resequencing_analysis.analysis_id.like(analysis_id_I),
+                    data_stage01_resequencing_analysis.used_.is_(True)).all();
+            analysis_id_O = []
+            experiment_id_O = []
+            lineage_name_O = []
+            sample_name_O = []
+            analysis_type_O = []
+            analysis_O = {};
+            if data: 
+                for d in data:
+                    analysis_id_O.append(d.analysis_id);
+                    experiment_id_O.append(d.experiment_id);
+                    lineage_name_O.append(d.lineage_name);
+                    sample_name_O.append(d.sample_name);
+                    analysis_type_O.append(d.analysis_type);
+                analysis_id_O = list(set(analysis_id_O))
+                experiment_id_O = list(set(experiment_id_O))
+                lineage_name_O = list(set(lineage_name_O))
+                sample_name_O = list(set(sample_name_O))
+                analysis_type_O = list(set(analysis_type_O))
+                analysis_O={
+                        'analysis_id':analysis_id_O,
+                        'experiment_id':experiment_id_O,
+                        'lineage_name':lineage_name_O,
+                        'sample_name':sample_name_O,
+                        'analysis_type':analysis_type_O};
+                
+            return analysis_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_experimentIDAndLineageName_analysisID_dataStage01ResequencingAnalysis(self,analysis_id_I):
+        '''Query rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage01_resequencing_analysis.experiment_id,
+                    data_stage01_resequencing_analysis.lineage_name).filter(
+                    data_stage01_resequencing_analysis.analysis_id.like(analysis_id_I),
+                    data_stage01_resequencing_analysis.used_.is_(True)).group_by(
+                    data_stage01_resequencing_analysis.experiment_id,
+                    data_stage01_resequencing_analysis.lineage_name).order_by(
+                    data_stage01_resequencing_analysis.experiment_id.asc(),
+                    data_stage01_resequencing_analysis.lineage_name.asc()).all();
+            experiment_id_O = []
+            lineage_name_O = []
+            if data: 
+                for d in data:
+                    experiment_id_O.append(d.experiment_id);
+                    lineage_name_O.append(d.lineage_name);                
+            return  experiment_id_O,lineage_name_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_experimentIDAndSampleName_analysisID_dataStage01ResequencingAnalysis(self,analysis_id_I):
+        '''Query rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage01_resequencing_analysis.experiment_id,
+                    data_stage01_resequencing_analysis.sample_name).filter(
+                    data_stage01_resequencing_analysis.analysis_id.like(analysis_id_I),
+                    data_stage01_resequencing_analysis.used_.is_(True)).group_by(
+                    data_stage01_resequencing_analysis.experiment_id,
+                    data_stage01_resequencing_analysis.sample_name).order_by(
+                    data_stage01_resequencing_analysis.experiment_id.asc(),
+                    data_stage01_resequencing_analysis.sample_name.asc()).all();
+            experiment_id_O = []
+            sample_name_O = []
+            if data: 
+                for d in data:
+                    experiment_id_O.append(d.experiment_id);
+                    sample_name_O.append(d.sample_name);                
+            return  experiment_id_O,sample_name_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_experimentIDAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(self,analysis_id_I):
+        '''Query rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage01_resequencing_analysis.experiment_id,
+                    data_stage01_resequencing_analysis.sample_name,
+                    data_stage01_resequencing_analysis.time_point).filter(
+                    data_stage01_resequencing_analysis.analysis_id.like(analysis_id_I),
+                    data_stage01_resequencing_analysis.used_.is_(True)).group_by(
+                    data_stage01_resequencing_analysis.experiment_id,
+                    data_stage01_resequencing_analysis.sample_name,
+                    data_stage01_resequencing_analysis.time_point).order_by(
+                    data_stage01_resequencing_analysis.experiment_id.asc(),
+                    data_stage01_resequencing_analysis.sample_name.asc(),
+                    data_stage01_resequencing_analysis.time_point.asc()).all();
+            experiment_id_O = []
+            sample_name_O = []
+            time_point_O = []
+            if data: 
+                for d in data:
+                    experiment_id_O.append(d.experiment_id);
+                    sample_name_O.append(d.sample_name);    
+                    time_point_O.append(d.time_point);              
+            return  experiment_id_O,sample_name_O,time_point_O;
+        except SQLAlchemyError as e:
+            print(e);
+
+    # query data from data_stage01_resequencing_heatmap
+    def get_rows_analysisID_dataStage01ResequencingHeatmap(self,analysis_id_I):
+        '''Query rows from data_stage01_resequencing_heatmap'''
+        try:
+            data = self.session.query(data_stage01_resequencing_heatmap).filter(
+                    data_stage01_resequencing_heatmap.analysis_id.like(analysis_id_I),
+                    data_stage01_resequencing_heatmap.used_).all();
+            data_O = [];
+            for d in data: 
+                data_dict = {'analysis_id':d.analysis_id,
+                    'col_index':d.col_index,
+                    'row_index':d.row_index,
+                    'value':d.value,
+                    'col_leaves':d.col_leaves,
+                    'row_leaves':d.row_leaves,
+                    'col_label':d.col_label,
+                    'row_label':d.row_label,
+                    'col_pdist_metric':d.col_pdist_metric,
+                    'row_pdist_metric':d.row_pdist_metric,
+                    'col_linkage_method':d.col_linkage_method,
+                    'row_linkage_method':d.row_linkage_method,
+                    'value_units':d.value_units,
+                    'used_':d.used_,
+                    'comment_':d.comment_};
                 data_O.append(data_dict);
             return data_O;
         except SQLAlchemyError as e:

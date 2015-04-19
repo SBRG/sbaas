@@ -11,9 +11,9 @@ from sqlalchemy import Table, MetaData, create_engine, Column, Integer, Boolean,
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import CreateTable, DropTable
+from sqlalchemy.exc import SQLAlchemyError
 
 import json
-#import simplejson
 
 from data import sbaas_settings as settings
 
@@ -27,7 +27,125 @@ metadata = MetaData(bind=engine)
 
 def make_table(table_name):
     """function to create a table with the default parameters"""
-    return Table(table_name, metadata, autoload=True)
+    return Table(table_name, metadata, autoload=True);
+
+def select_table(session_I,select_cmd_I,from_cmd_I,where_cmd_I=None,group_by_cmd_I=None,order_by_cmd_I=None,
+                 fetch_I = None, fetch_many_I = 10):
+    '''SELECT query for a table
+    INPUT:
+    session_I = session object
+    select_cmd_I = list of table columns or *
+    from_cmd_I = list of tables
+    where_cmd_I = string reprentation of the filter criteria
+    group_by_cmd_I = list of table columns to group by or *
+    order_by_cmd_I = list of tuples/lists of table columns and ASC or DESC
+    fetch_I = rows to fetch, e.g. "one","many", or "all"
+        if None, the result query object is returned
+    fetch_many_I = number of rows to fetch if fetch_I = many
+    OUTPUT:
+    data_O = keyed-tuple object will be returned
+    TEST:
+    select_table(session,['*'],['sample'],"sample_type LIKE 'QC'",None,[['sample_name','ASC']]);
+    '''
+
+    query_cmd = '';
+
+    select_cmd = 'SELECT ';
+    for d in select_cmd_I:
+        if d=='*':
+            select_cmd += ('%s, ' %(d));
+        else:
+            select_cmd += ('"%s", ' %(d));
+    select_cmd = select_cmd[:-2]; #remove trailing comma
+    query_cmd += select_cmd + ' ';
+
+    from_cmd = 'FROM ';
+    for d in from_cmd_I:
+        from_cmd += ('"%s", ' %(d));
+    from_cmd = from_cmd[:-2]; #remove trailing comma
+    query_cmd += from_cmd + ' ';
+
+    if where_cmd_I:
+        where_cmd = 'WHERE ';
+        where_cmd += where_cmd_I;
+        query_cmd += where_cmd + ' ';
+
+    if group_by_cmd_I:
+        group_by_cmd = 'GROUP BY ';
+        for d in group_by_cmd_I:
+            if d=='*':
+                group_by_cmd += ('%s, ' %(d));
+            else:
+                group_by_cmd += ('"%s", ' %(d));
+        group_by_cmd = group_by_cmd[:-2]; #remove trailing comma
+        query_cmd += group_by_cmd + ' ';
+
+    if order_by_cmd_I:
+        order_by_cmd = 'ORDER BY ';
+        for d in order_by_cmd_I:
+            order_by_cmd += ('"%s" %s, ' %(d[0],d[1]));
+        order_by_cmd = order_by_cmd[:-2]; #remove trailing comma
+        query_cmd += order_by_cmd + ' ';
+
+    query_cmd = query_cmd[:-1]; #remove trailing whitespace
+    query_cmd +=';';
+
+    data_O = None;
+    try:
+        data_O = session_I.execute(query_cmd);
+    except SQLAlchemyError as e:
+        print(e); 
+    
+    if fetch_I:
+        if fetch_I == 'one':
+            return data_O.fetchone();
+        elif fetch_I == 'all':
+            return data_O.fetchall();
+        elif fetch_I == 'many':
+            return data_O.fetchmany(fetch_many_I);
+
+    return data_O;
+
+def update_table(session_I,update_cmd_I,set_cmd_I,where_cmd_I):
+    '''UPDATE query for a table
+    INPUT:
+    session_I = session object
+    update_cmd_I = table to update
+    set_cmd_I = dictionary of columns to update
+    where_cmd_I = string reprentation of the filter criteria
+    fetch_many_I = number of rows to fetch if fetch_I = many
+    OUTPUT:
+    data_O = keyed-tuple object will be returned
+    TEST:
+    select_table(session,['*'],['sample'],"sample_type LIKE 'QC'",None,[['sample_name','ASC']]);
+    '''
+    query_cmd = '';
+
+    update_cmd = 'UPDATE ';
+    update_cmd += ('"%s"' %(update_cmd_I));
+    query_cmd += update_cmd + ' ';
+
+    set_cmd = 'SET ';
+    for d in set_cmd_I:
+        if type(d) == type(1) or type(d) == type(1.0):
+            set_cmd += ('%s, ' %(update_cmd_I)); #int or float
+        else:
+            set_cmd += ("'%s', " %(update_cmd_I)); #string
+    set_cmd = group_by_cmd[:-2]; #remove trailing comma
+    query_cmd += set_cmd + ' ';
+
+    if where_cmd_I:
+        where_cmd = 'WHERE ';
+        where_cmd += where_cmd_I;
+
+    query_cmd += where_cmd; #remove trailing whitespace
+    query_cmd +=';';
+
+    data_O = None;
+    try:
+        data_O = session_I.execute(query_cmd);
+    except SQLAlchemyError as e:
+        print(e); 
 
 
 class _Session(_SA_Session):

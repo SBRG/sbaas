@@ -8,22 +8,30 @@
 
 <!-- This font cannot be downloaded. -->
 <script src="//use.edgefonts.net/tulpen-one.js"></script>
-{% endblock %}
-{% block content %}
-<main>
+{% endblock %}{% block header %}
+<header class="row">
     <div class="container">
-        <header class="row">
+        <div class="row">
             <div class="col-sm-12">
                 <div id="title-box">
                     <h3 id="title">Systems Biochemistry</h3>
                 </div>
             </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+{% block nav %}{% endblock %}
+{% block main %}
+<main>
+    <div class="container">
+        <div class="row">
             <div class="col-sm-12">
                 <div id="title-logo">
                     <img src="{{logo}}" id="logo">
                 </div>
             </div>
-        </header>
+        </div>
         <div class="row">
             <div class="col-sm-6">
                 <form name="login" method="post">
@@ -36,6 +44,8 @@
     </div>
     <div id="push"></div>
 </main>
+{% endblock %}
+{% block footer %}
 <footer>
     <div class="container">
         <p class="more">
