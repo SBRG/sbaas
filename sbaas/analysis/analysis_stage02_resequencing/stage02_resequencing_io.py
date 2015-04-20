@@ -348,7 +348,6 @@ class stage02_resequencing_io(stage01_resequencing_io):
                     'mutation_frequency',
                     'mutation_type',
                     'mutation_position',
-                    #'mutation_data',
                     'mutation_annotations',
                     'mutation_genes',
                     'mutation_locations',
@@ -358,9 +357,9 @@ class stage02_resequencing_io(stage01_resequencing_io):
                         'ydata':'mutation_frequency',
                         'serieslabel':'mutation_id',
                         'featureslabel':''};
-        parameters = {"chart1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
-                    "chart1width":500,"chart1height":350,
-                  "chart1title":"Population mutation frequency", "chart1x1axislabel":"jump_time_point","chart1y1axislabel":"frequency"}
+        parameters = {"chart2d1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                    "chart2d1width":500,"chart2d1height":350,
+                  "chart2d1title":"Population mutation frequency", "chart2d1x1axislabel":"jump_time_point","chart2d1y1axislabel":"frequency"}
         # dump the data to a json file
         data1_str = 'var ' + 'data1' + ' = ' + json.dumps(data_O) + ';';
         data1_keys_str = 'var ' + 'data1_keys' + ' = ' + json.dumps(data1_keys) + ';';
