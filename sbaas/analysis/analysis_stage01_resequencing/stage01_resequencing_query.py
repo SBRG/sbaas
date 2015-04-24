@@ -380,6 +380,45 @@ class stage01_resequencing_query(base_analysis):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_rowsIO_lineageName_dataStage01ResequencingLineage(self,lineage_name_I):
+        '''Query rows from resequencing lineage
+        for visualization, mutation_data is omitted'''
+        try:
+            data = self.session.query(data_stage01_resequencing_lineage).filter(
+                    data_stage01_resequencing_lineage.lineage_name.like(lineage_name_I)).order_by(
+                    data_stage01_resequencing_lineage.sample_name.asc()).all();
+            data_O = [];
+            for d in data: 
+                data_tmp = {};
+                data_tmp['id']=d.id;
+                data_tmp['experiment_id']=d.experiment_id;
+                data_tmp['lineage_name']=d.lineage_name;
+                data_tmp['sample_name']=d.sample_name;
+                data_tmp['intermediate']=d.intermediate;
+                data_tmp['mutation_frequency']=d.mutation_frequency;
+                data_tmp['mutation_type']=d.mutation_type;
+                data_tmp['mutation_position']=d.mutation_position;
+                #data_tmp['mutation_data']=d.mutation_data;
+                data_tmp['mutation_annotations']=d.mutation_annotations;
+                data_tmp['mutation_genes']=d.mutation_genes;
+                data_tmp['mutation_locations']=d.mutation_locations;
+                data_tmp['mutation_links']=d.mutation_links;
+                data_tmp['comment_']=d.comment_;
+                data_tmp_str = '';
+                mutation_genes_str = '';
+                for gene in d.mutation_genes:
+                    mutation_genes_str = mutation_genes_str + gene + '-/-'
+                mutation_genes_str = mutation_genes_str[:-3];
+                #mutation_locations_str = '';
+                #for location in d.mutation_locations:
+                #    mutation_locations_str = mutation_locations_str + location + '&'
+                #mutation_locations_str = mutation_locations_str[:-1];
+                data_tmp_str = d.mutation_type+'_'+mutation_genes_str+'_'+str(d.mutation_position)
+                data_tmp['mutation_id'] = data_tmp_str;
+                data_O.append(data_tmp);
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);
 
     # query sample names from data_stage01_resequencing_endpoints
     def get_sampleNames_experimentID_dataStage01ResequencingEndpoints(self,experiment_id_I):

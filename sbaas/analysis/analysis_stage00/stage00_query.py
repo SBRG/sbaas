@@ -238,7 +238,7 @@ class stage00_query(base_analysis):
                     sample.sample_dilution,
                     sample.sample_type,
                     sample_description.sample_replicate,
-                    sample_description.sample_description,
+                    sample_description.sample_desc,
                     sample_description.sample_name_abbreviation).filter(
                     experiment.id.like(experiment_id_I),
                     experiment.sample_name.like(sample.sample_name),
@@ -250,19 +250,19 @@ class stage00_query(base_analysis):
                     sample.sample_dilution,
                     sample.sample_type,
                     sample_description.sample_replicate,
-                    sample_description.sample_description,
+                    sample_description.sample_desc,
                     sample_description.sample_name_abbreviation).order_by(
                     experiment.id.asc(),
                     sample.sample_dilution.desc(),
                     sample_description.sample_name_abbreviation.asc(),
                     #sample.sample_name.asc(),
                     sample_description.sample_replicate.asc(),
-                    sample_description.sample_description.desc()).all();
+                    sample_description.sample_desc.desc()).all();
             #.order_by(
             #        experiment.id.asc(),
             #        sample.sample_dilution.desc(),
             #        sample_description.sample_replicate.asc(),
-            #        sample_description.sample_description.desc(),
+            #        sample_description.sample_desc.desc(),
             #        sample.sample_name.asc()).all();
             data_O = [];
             if data:
@@ -289,7 +289,7 @@ class stage00_query(base_analysis):
                     sample.sample_dilution,
                     sample.sample_type,
                     sample_description.sample_replicate,
-                    sample_description.sample_description,
+                    sample_description.sample_desc,
                     sample_description.sample_name_abbreviation).filter(
                     experiment.id.like(experiment_id_I),
                     experiment.exp_type_id==exp_type_I,
@@ -302,19 +302,19 @@ class stage00_query(base_analysis):
                     sample.sample_dilution,
                     sample.sample_type,
                     sample_description.sample_replicate,
-                    sample_description.sample_description,
+                    sample_description.sample_desc,
                     sample_description.sample_name_abbreviation).order_by(
                     experiment.id.asc(),
                     sample.sample_dilution.desc(),
                     sample_description.sample_name_abbreviation.asc(),
                     #sample.sample_name.asc(),
                     sample_description.sample_replicate.asc(),
-                    sample_description.sample_description.desc()).all();
+                    sample_description.sample_desc.desc()).all();
             #.order_by(
             #        experiment.id.asc(),
             #        sample.sample_dilution.desc(),
             #        sample_description.sample_replicate.asc(),
-            #        sample_description.sample_description.desc(),
+            #        sample_description.sample_desc.desc(),
             #        sample.sample_name.asc()).all();
             data_O = [];
             if data:
@@ -620,7 +620,7 @@ class stage00_query(base_analysis):
                     experiment.sample_name.like(sample.sample_name),
                     sample.sample_id.like(sample_id_I),
                     sample.sample_id.like(sample_description.sample_id),
-                    sample_description.sample_description.like('Broth'),
+                    sample_description.sample_desc.like('Broth'),
                     sample_description.istechnical != True).group_by(
                     sample_description.sample_replicate).order_by(
                     sample_description.sample_replicate.desc()).all();
@@ -642,7 +642,7 @@ class stage00_query(base_analysis):
                     experiment.sample_name.like(sample.sample_name),
                     sample.sample_id.like(sample_description.sample_id),
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
-                    sample_description.sample_description.like('Broth')
+                    sample_description.sample_desc.like('Broth')
                     #sample_description.istechnical != True
                     ).group_by(
                     sample_description.sample_replicate).order_by(
@@ -666,7 +666,7 @@ class stage00_query(base_analysis):
                     experiment.sample_name.like(sample.sample_name),
                     sample.sample_id.like(sample_description.sample_id),
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
-                    sample_description.sample_description.like('Broth')
+                    sample_description.sample_desc.like('Broth')
                     #sample_description.istechnical != True
                     ).group_by(
                     sample_description.sample_replicate).order_by(

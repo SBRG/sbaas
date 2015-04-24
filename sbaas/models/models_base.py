@@ -54,6 +54,8 @@ def select_table(session_I,select_cmd_I,from_cmd_I,where_cmd_I=None,group_by_cmd
     for d in select_cmd_I:
         if d=='*':
             select_cmd += ('%s, ' %(d));
+        elif '.' in d:
+            select_cmd += ('%s, ' %(d));
         else:
             select_cmd += ('"%s", ' %(d));
     select_cmd = select_cmd[:-2]; #remove trailing comma
@@ -83,7 +85,10 @@ def select_table(session_I,select_cmd_I,from_cmd_I,where_cmd_I=None,group_by_cmd
     if order_by_cmd_I:
         order_by_cmd = 'ORDER BY ';
         for d in order_by_cmd_I:
-            order_by_cmd += ('"%s" %s, ' %(d[0],d[1]));
+            if '.' in d[0]:
+                order_by_cmd += ('%s %s, ' %(d[0],d[1]));
+            else:
+                order_by_cmd += ('"%s" %s, ' %(d[0],d[1]));
         order_by_cmd = order_by_cmd[:-2]; #remove trailing comma
         query_cmd += order_by_cmd + ' ';
 

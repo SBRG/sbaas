@@ -383,7 +383,9 @@ class stage02_resequencing_io(stage01_resequencing_io):
         #get the heatmap data for the analysis
         data_O = self.stage02_resequencing_query.get_rows_analysisID_dataStage02ResequencingHeatmap(analysis_id_I);
         # dump chart parameters to a js files
-        data1_keys = ['analysis_id','row_label','col_label','row_index','col_index','row_leaves','col_leaves',
+        data1_keys = [
+            #'analysis_id',
+                      'row_label','col_label','row_index','col_index','row_leaves','col_leaves',
                 'col_pdist_metric','row_pdist_metric','col_linkage_method','row_linkage_method',
                 'value_units']
         data1_nestkeys = ['analysis_id'];
@@ -391,24 +393,38 @@ class stage02_resequencing_io(stage01_resequencing_io):
                 'rowslabel':'row_label','columnslabel':'col_label',
                 'rowsindex':'row_index','columnsindex':'col_index',
                 'rowsleaves':'row_leaves','columnsleaves':'col_leaves'};
-        parameters = {'chart2d1cellsize':18,'chart2d1margin':{ 'top': 200, 'right': 100, 'bottom': 50, 'left': 50 },
-                      'chart2d1colorscale':'quantile',
-                      'chart2d1colorcategory':'heatmap10',
-                      'chart2d1colordomain':"min,max",
-                      'chart2d1colordatalabel':'value'};
-        # dump the data to a json file
-        data1_str = 'var ' + 'data1' + ' = ' + json.dumps(data_O) + ';';
-        data1_keys_str = 'var ' + 'data1_keys' + ' = ' + json.dumps(data1_keys) + ';';
-        data1_nestkeys_str = 'var ' + 'data1_nestkeys' + ' = ' + json.dumps(data1_nestkeys) + ';';
-        data1_keymap_str = 'var ' + 'data1_keymap' + ' = ' + json.dumps(data1_keymap) + ';';
-        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parameters) + ';';
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        svgparameters_O = {"svgtype":'heatmap2d_01',"svgkeymap":[data1_keymap],
+                            'svgid':'svg1',
+                             'svgcellsize':18,'svgmargin':{ 'top': 200, 'right': 50, 'bottom': 100, 'left': 200 },
+                            'svgcolorscale':'quantile',
+                            'svgcolorcategory':'heatmap10',
+                            'svgcolordomain':'min,max',
+                            'svgcolordatalabel':'value',
+                            'svgdatalisttileid':'tile1'};
+        svgtileparameters_O = {'tileheader':'heatmap','tiletype':'svg','tileid':"tile2",'rowid':"row2",'colid':"col2",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters_O.update(svgparameters_O);
+        formparameters_O = {'tileheader':'filter menu','tiletype':'datalist','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4",
+            'tiledatalist': [{'value':'hclust','text':'by cluster'},
+                            {'value':'probecontrast','text':'by row and column'},
+                            {'value':'probe','text':'by row'},
+                            {'value':'contrast','text':'by column'},
+                            {'value':'custom','text':'by value'}]
+            };
+        parametersobject_O = [formparameters_O,svgtileparameters_O];
+        tile2datamap_O = {"tile1":[],"tile2":[0]};
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
         if data_dir_I=='tmp':
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_resequencing_heatmap' + '.js'
         with open(filename_str,'w') as file:
-            file.write(data1_str);
-            file.write(data1_keys_str);
-            file.write(data1_nestkeys_str);
-            file.write(data1_keymap_str);
+            file.write(data_str);
             file.write(parameters_str);
+            file.write(tile2datamap_str);

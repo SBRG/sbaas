@@ -452,6 +452,8 @@ class stage00_execute():
         n_blank_max_inj = 20;
         vialPos_blank = 54;
         
+        n_qc = len(data_qc_I);
+
         # injection order:
         # QC01
         # Blank
@@ -565,7 +567,7 @@ class stage00_execute():
             cnt_sample +=1;
             if cnt_sample >= 8:
                 # add QC and blank
-                if data_qc_I:
+                if data_qc_I and cnt_qc<n_qc:
                     vialPos = cnt_pos;
                     rackPos = cnt_rack;
                     platePos = 1;
@@ -627,7 +629,7 @@ class stage00_execute():
                 cnt_sample = 0;
 
         # add final QC and Blank
-        if data_qc_I:
+        if data_qc_I and cnt_qc<n_qc:
             vialPos = cnt_pos;
             rackPos = cnt_rack;
             platePos = 1;
@@ -740,7 +742,7 @@ class stage00_execute():
                                                 'sample_condition':row['sample_condition'],
                                                 'extraction_method_id':row['extraction_method_id'],
                                                 'biological_material':row['biological_material'],
-                                                'sample_desc':row['sample_description'],
+                                                'sample_desc':row['sample_desc'],
                                                 'sample_replicate':nMaxBioReps*rep + replicate_number,# modify sample_replicate_biological
                                                 'is_added':row['is_added'],
                                                 'is_added_units':row['is_added_units'],

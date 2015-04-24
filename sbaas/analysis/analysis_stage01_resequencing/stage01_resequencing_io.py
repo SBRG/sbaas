@@ -482,42 +482,192 @@ class stage01_resequencing_io(base_analysis):
                 tmp.update({'mutation_id':mutation_id});
                 mutation_data_O.append(tmp);
                 mutation_ids.append(mutation_id);
+        # screen out mutations
         mutation_ids_screened = [x for x in mutation_ids if x not in mutation_id_exclusion_list];
         mutation_ids_unique = list(set(mutation_ids_screened));
+        # get mutation information for all unique mutations
+        mutation_ids_uniqueInfo = [];
+        for mutation_id in mutation_ids_unique:
+            for mutation in mutation_data_O:
+                if mutation_id == mutation['mutation_id']:
+                    tmp = {};
+                    tmp['mutation_id']=mutation['mutation_id']
+                    tmp['mutation_frequency']=mutation['mutation_frequency'];
+                    tmp['mutation_genes']=mutation['mutation_genes'];
+                    tmp['mutation_position']=mutation['mutation_position'];
+                    tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    tmp['mutation_locations']=mutation['mutation_locations'];
+                    tmp['mutation_links']=mutation['mutation_links'];
+                    tmp['mutation_type']=mutation['mutation_type'];
+                    tmp['used_']=mutation['used_'];
+                    tmp['comment_']=mutation['comment_'];
+                    mutation_ids_uniqueInfo.append(tmp);          
         data_O = [];
+        # add in 0.0 frequency for mutations that are not found
         for sample_name_cnt,sample_name in enumerate(sample_names):
-            for mutation_id in mutation_ids_unique:
+            for mutation_id in mutation_ids_uniqueInfo:
                 tmp = {};
                 tmp_fitted = {};
-                tmp['mutation_id']=mutation_id
+                tmp['mutation_id']=mutation_id['mutation_id']
                 tmp['time_point']=time_points[sample_name_cnt]
                 tmp['experiment_id']=experiment_ids[sample_name_cnt]
                 tmp['sample_name']=sample_name
-                tmp['mutation_frequency']=0.0;                        
-                tmp['mutation_genes']='';
-                tmp['mutation_position']='';
-                tmp['mutation_annotations']='';
-                tmp['mutation_locations']='';
-                tmp['mutation_links']='';
-                tmp['mutation_type']='';
-                tmp['used_']=True;
-                tmp['comment_']=True;
+                tmp['mutation_frequency']=0.0;  
+                tmp['mutation_genes']=mutation_id['mutation_genes'];
+                tmp['mutation_position']=mutation_id['mutation_position'];
+                tmp['mutation_annotations']=mutation_id['mutation_annotations'];
+                tmp['mutation_locations']=mutation_id['mutation_locations'];
+                tmp['mutation_links']=mutation_id['mutation_links'];
+                tmp['mutation_type']=mutation_id['mutation_type'];
+                tmp['used_']=mutation_id['used_'];
+                tmp['comment_']=mutation_id['comment_'];
                 for mutation in mutation_data_O:
-                    if sample_name == mutation['sample_name'] and mutation_id == mutation['mutation_id']:
+                    if sample_name == mutation['sample_name'] and mutation_id['mutation_id'] == mutation['mutation_id']:
                         tmp['mutation_frequency']=mutation['mutation_frequency'];
-                        tmp['mutation_genes']=mutation['mutation_genes'];
-                        tmp['mutation_position']=mutation['mutation_position'];
-                        tmp['mutation_annotations']=mutation['mutation_annotations'];
-                        tmp['mutation_locations']=mutation['mutation_locations'];
-                        tmp['mutation_links']=mutation['mutation_links'];
-                        tmp['mutation_type']=mutation['mutation_type'];
-                        tmp['used_']=mutation['used_'];
                         tmp['comment_']=mutation['comment_'];
                         break;
                 data_O.append(tmp);
         # dump chart parameters to a js files
+        data1_keys = [
+                    #'experiment_id',
+                    #'sample_name',
+                    'mutation_id',
+                    #'mutation_frequency',
+                    'mutation_type',
+                    'mutation_position',
+                    #'mutation_data',
+                    #'mutation_annotations',
+                    'mutation_genes',
+                    #'mutation_links',
+                    'mutation_locations'
+                    ];
+        data1_nestkeys = ['mutation_id'];
+        data1_keymap = {'xdata':'time_point',
+                        'ydata':'mutation_frequency',
+                        'serieslabel':'mutation_id',
+                        'featureslabel':''};
+        parameters = {"chart1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                    "chart1width":500,"chart1height":350,
+                  "chart1title":"Population mutation frequency", "chart1x1axislabel":"jump_time_point","chart1y1axislabel":"frequency"}
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'form','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters_O = {"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters_O.update(formparameters_O);
+        svgparameters_O = {"svgtype":'scatterlineplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
+                            'svgid':'svg1',
+                            "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                            "svgwidth":500,"svgheight":350,
+                            "svgx1axislabel":"jump_time_point","svgy1axislabel":"frequency",
+    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+        svgtileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters_O.update(svgparameters_O);
+        tableparameters_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters_O.update(tableparameters_O);
+        parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
+        tile2datamap_O = {"tile1":[0],"tile2":[0,1],"tile3":[0]};
+        # dump the data to a json file
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_mutationsAnnotated' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);
+    
+    def export_dataStage01ResequencingHeatmap_js(self,analysis_id_I,data_dir_I="tmp"):
+        """export heatmap to js file"""
+
+        #get the heatmap data for the analysis
+        data_O = self.stage01_resequencing_query.get_rows_analysisID_dataStage01ResequencingHeatmap(analysis_id_I);
+        # dump chart parameters to a js files
+        data1_keys = [
+            'analysis_id',
+                      'row_label','col_label','row_index','col_index','row_leaves','col_leaves',
+                'col_pdist_metric','row_pdist_metric','col_linkage_method','row_linkage_method',
+                'value_units']
+        data1_nestkeys = ['analysis_id'];
+        data1_keymap = {'xdata':'row_leaves','ydata':'col_leaves','zdata':'value',
+                'rowslabel':'row_label','columnslabel':'col_label',
+                'rowsindex':'row_index','columnsindex':'col_index',
+                'rowsleaves':'row_leaves','columnsleaves':'col_leaves'};
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        svgparameters_O = {"svgtype":'heatmap2d_01',"svgkeymap":[data1_keymap],
+                            'svgid':'svg1',
+                             'svgcellsize':18,'svgmargin':{ 'top': 200, 'right': 50, 'bottom': 100, 'left': 200 },
+                            'svgcolorscale':'quantile',
+                            'svgcolorcategory':'heatmap10',
+                            'svgcolordomain':[0,1],
+                            'svgcolordatalabel':'value',
+                            'svgdatalisttileid':'tile1'};
+        svgtileparameters_O = {'tileheader':'heatmap','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters_O.update(svgparameters_O);
+        formparameters_O = {'tileheader':'filter menu','tiletype':'datalist','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12",
+            'tiledatalist': [{'value':'hclust','text':'by cluster'},
+                            {'value':'probecontrast','text':'by row and column'},
+                            {'value':'probe','text':'by row'},
+                            {'value':'contrast','text':'by column'},
+                            {'value':'custom','text':'by value'}]
+            };
+        parametersobject_O = [formparameters_O,svgtileparameters_O];
+        tile2datamap_O = {"tile1":[],"tile2":[0]};
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_heatmap' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);
+
+    def export_dataStage01ResequencingLineage_js(self,lineage_name_I,mutation_id_exclusion_list=[],data_dir_I="tmp"):
+        '''export data_stage01_resequencing_lineage to js file'''
+
+        #(self,analysis_id_I,mutation_id_exclusion_list=[],data_dir_I="tmp")
+        
+        print 'exportingdataStage01ResequencingLineage...'
+        ## get the analysis information
+        #analysis_info = {};
+        #analysis_info = self.stage01_resequencing_query.get_analysis_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
+        # get the lineage information
+        lineage_data = [];
+        lineage_data = self.stage01_resequencing_query.get_rowsIO_lineageName_dataStage01ResequencingLineage(lineage_name_I);
+        #for lineage in analysis_info['lineage_name']:
+        #    lineage_data_tmp = [];
+        #    lineage_data_tmp = self.stage01_resequencing_query.get_rowsIO_lineageName_dataStage01ResequencingLineage(lineage);
+        #    lineage_data.extend(lineage_data_tmp);
+        mutation_ids = [x['mutation_id'] for x in lineage_data];
+        mutation_ids_screened = [x for x in mutation_ids if x not in mutation_id_exclusion_list];
+        mutation_ids_unique = list(set(mutation_ids_screened));
+        data_O = [];
+        for d in lineage_data:
+            if d['mutation_id'] in mutation_ids_unique:
+                data_O.append(d);
+        # dump chart parameters to a js files
         data1_keys = ['experiment_id',
                     'sample_name',
+                    'lineage_name',
+                    'intermediate_id',
                     'mutation_id',
                     'mutation_frequency',
                     'mutation_type',
@@ -535,56 +685,42 @@ class stage01_resequencing_io(base_analysis):
         parameters = {"chart1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
                     "chart1width":500,"chart1height":350,
                   "chart1title":"Population mutation frequency", "chart1x1axislabel":"jump_time_point","chart1y1axislabel":"frequency"}
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'form','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters_O = {"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'}};
+        formtileparameters_O.update(formparameters_O);
+        svgparameters_O = {"svgtype":'scatterlineplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
+                            'svgid':'svg1',
+                            "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                            "svgwidth":500,"svgheight":350,
+                            "svgx1axislabel":"jump_time_point","svgy1axislabel":"frequency",
+    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+        svgtileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters_O.update(svgparameters_O);
+        tableparameters_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters_O.update(tableparameters_O);
+        parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
+        tile2datamap_O = {"tile1":[0],"tile2":[0,1],"tile3":[0]};
         # dump the data to a json file
-        data1_str = 'var ' + 'data1' + ' = ' + json.dumps(data_O) + ';';
-        data1_keys_str = 'var ' + 'data1_keys' + ' = ' + json.dumps(data1_keys) + ';';
-        data1_nestkeys_str = 'var ' + 'data1_nestkeys' + ' = ' + json.dumps(data1_nestkeys) + ';';
-        data1_keymap_str = 'var ' + 'data1_keymap' + ' = ' + json.dumps(data1_keymap) + ';';
-        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parameters) + ';';
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
         if data_dir_I=='tmp':
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_mutationsAnnotated' + '.js'
         with open(filename_str,'w') as file:
-            file.write(data1_str);
-            file.write(data1_keys_str);
-            file.write(data1_nestkeys_str);
-            file.write(data1_keymap_str);
+            file.write(data_str);
             file.write(parameters_str);
-    
-    def export_dataStage01ResequencingHeatmap_js(self,analysis_id_I,data_dir_I="tmp"):
-        """export heatmap to js file"""
-
-        #get the heatmap data for the analysis
-        data_O = self.stage01_resequencing_query.get_rows_analysisID_dataStage01ResequencingHeatmap(analysis_id_I);
-        # dump chart parameters to a js files
-        data1_keys = ['analysis_id','row_label','col_label','row_index','col_index','row_leaves','col_leaves',
-                'col_pdist_metric','row_pdist_metric','col_linkage_method','row_linkage_method',
-                'value_units']
-        data1_nestkeys = ['analysis_id'];
-        data1_keymap = {'xdata':'row_leaves','ydata':'col_leaves','zdata':'value',
-                'rowslabel':'row_label','columnslabel':'col_label',
-                'rowsindex':'row_index','columnsindex':'col_index',
-                'rowsleaves':'row_leaves','columnsleaves':'col_leaves'};
-        parameters = {'chart2d1cellsize':18,'chart2d1margin':{ 'top': 200, 'right': 100, 'bottom': 50, 'left': 50 },
-                      'chart2d1colorscale':'quantile',
-                      'chart2d1colorcategory':'heatmap10',
-                      'chart2d1colordomain':[0,1],
-                      'chart2d1colordatalabel':'value'};
-        # dump the data to a json file
-        data1_str = 'var ' + 'data1' + ' = ' + json.dumps(data_O) + ';';
-        data1_keys_str = 'var ' + 'data1_keys' + ' = ' + json.dumps(data1_keys) + ';';
-        data1_nestkeys_str = 'var ' + 'data1_nestkeys' + ' = ' + json.dumps(data1_nestkeys) + ';';
-        data1_keymap_str = 'var ' + 'data1_keymap' + ' = ' + json.dumps(data1_keymap) + ';';
-        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parameters) + ';';
-        if data_dir_I=='tmp':
-            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
-        elif data_dir_I=='project':
-            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_mutationsAnnotated' + '.js'
-        with open(filename_str,'w') as file:
-            file.write(data1_str);
-            file.write(data1_keys_str);
-            file.write(data1_nestkeys_str);
-            file.write(data1_keymap_str);
-            file.write(parameters_str);
+            file.write(tile2datamap_str);
         
