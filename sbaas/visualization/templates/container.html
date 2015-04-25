@@ -10,21 +10,30 @@
     <!--style sheets-->
     <link rel="stylesheet" href="{{boot_css}}"/>
     <!--ddt-->
-    <script src="{{ddt}}"></script>
-    <!--<script src="{{d3_chart2d}}"></script>
-    <script src="{{d3_chart2d_boxandwhiskers}}"></script>
-    <script src="{{d3_chart2d_heatmap}}"></script>
-    <script src="{{d3_chart2d_horizontalbars}}"></script>
-    <script src="{{d3_chart2d_line}}"></script>
-    <script src="{{d3_chart2d_packlayout}}"></script>
-    <script src="{{d3_chart2d_points}}"></script>
-    <script src="{{d3_chart2d_treelayout}}"></script>
-    <script src="{{d3_chart2d_verticalbars}}"></script>
-    <script src="{{d3_data}}"></script>
-    <script src="{{d3_graph2d}}"></script>
-    <script src="{{d3_map2d}}"></script>
-    <script src="{{d3_svg}}"></script>
-    <script src="{{d3_tile}}"></script>-->
+    <script src="{{ddt}}"></script><!-- ddt js dependencies -->
+    <script src="js/d3_tile.js"></script>
+    <script src="js/d3_svg.js"></script>
+    <script src="js/d3_data.js"></script>
+    <script src="js/d3_map2d.js"></script>
+    <script src="js/d3_table.js"></script>
+    <script src="js/d3_chart2d.js"></script>
+    <script src="js/d3_chart2d_boxandwhiskers.js"></script>
+    <script src="js/d3_chart2d_heatmap.js"></script>
+    <script src="js/d3_chart2d_horizontalbars.js"></script>
+    <script src="js/d3_chart2d_line.js"></script>
+    <script src="js/d3_chart2d_packlayout.js"></script>
+    <script src="js/d3_chart2d_points.js"></script>
+    <script src="js/d3_chart2d_verticalbars.js"></script>
+    <script src="js/d3_chart2d_treelayout.js"></script>
+    <script src="js/ddt_table.js"></script>
+    <script src="js/ddt_svg.js"></script>
+    <script src="js/ddt_svg_scatterlineplot2d_01.js"></script>
+    <script src="js/ddt_svg_scatterplot2d_01.js"></script>
+    <script src="js/ddt_svg_heatmap2d_01.js"></script>
+    <script src="js/ddt_svg_verticalbarschart2d_01.js"></script>
+    <script src="js/ddt_tile.js"></script>
+    <script src="js/ddt_table_responsivetable_01.js"></script>
+    <script src="js/ddt_container.js"></script>
     <!-- This font cannot be downloaded. -->
     <script src="//use.edgefonts.net/tulpen-one.js"></script>
 {% endblock %}
@@ -46,46 +55,7 @@
 {% block main %}
 <main>
     <div class="container" id="container">
-        <div class="row" id="row1">
-            <div class="col-sm-12" id="col1">
-                <div id="tile1">
-                </div>
-            </div>
-        </div>
     </div>
-    <!--<div class="container" id="input">
-        <div class="row">
-            <div class="col-sm-12">
-                <div id="tile3title-box">
-                    <h3 id="tile3title">filter menu</h3>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
-                <button class="btn btn-default column-button" id="tile3removebutton">remove</button>
-            </div>
-        </div>
-        <div class="row" id="tile3textarearow">
-            <div class="col-sm-12" id="tile3textareacolsample_name_abbreviation">
-                data file name
-                <br>
-                <input value="data_scatterlineplot.js">
-            </div>
-            <div class="col-sm-12" id="tile3textareacolcalculated_concentration_units">
-                visualization file name
-                <br>
-                <input value="scatterlineplot2d.js">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
-                <button class="btn btn-default column-button" id="submit">
-                    submit
-                </button>
-            </div>
-        </div>
-    </div>-->
 </main>
 {% endblock %}
 {% block footer %}
@@ -104,8 +74,14 @@
 <script type="text/javascript">
     //ddt data and template
     {{ddt_data}}
-    {{ddt_template}}
-    ddt_template(data1, data1_keys, data1_nestkeys, data1_keymap, parameters);
+    ddt_test = new ddt_container();
+    ddt_test.set_parameters(parameters);
+    ddt_test.add_data(data);
+    ddt_test.set_tile2datamap(tile2datamap);
+    ddt_test.make_container();
+    ddt_test.add_datafiltermenuresetbutton();
+    ddt_test.add_datafiltermenusubmitbutton();
+    ddt_test.add_datafiltermenuupdatebutton();
 </script>
 {% if web_version %}
 <script src="{{index_gh_pages_js}}"></script>

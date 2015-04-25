@@ -11,9 +11,10 @@ import copy
 
 class stage02_quantification_execute():
     '''class for quantitative metabolomics analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage02_quantification_query = stage02_quantification_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage02_quantification_query = stage02_quantification_query(self.session);
         self.calculate = base_calculate();
         self.r_calc = r_calculate();
         self.matplot = matplot();

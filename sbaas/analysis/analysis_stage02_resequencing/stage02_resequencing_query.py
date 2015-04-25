@@ -4,6 +4,10 @@ from analysis.analysis_stage01_physiology.stage01_physiology_query import stage0
 import json
 
 class stage02_resequencing_query(stage01_resequencing_query,stage01_physiology_query):
+       
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
     # query sample_name_abbreviation from sample_description
     def get_sampleNameAbbreviation_experimentIDAndSampleID_sampleDescription(self,experiment_id_I,sample_id_I):
         '''Query description by sample id from sample_description'''

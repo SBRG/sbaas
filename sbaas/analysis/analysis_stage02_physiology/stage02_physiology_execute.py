@@ -12,9 +12,10 @@ from cobra.manipulation.modify import convert_to_irreversible
 
 class stage02_physiology_execute():
     '''class for physiological analysis analysis'''
-    def __init__(self,data_dir_I=None):
-        self.session = Session();
-        self.stage02_physiology_query = stage02_physiology_query();
+    def __init__(self,session_I=None,data_dir_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage02_physiology_query = stage02_physiology_query(self.session);
         self.calculate = base_calculate();
         self.models = {};
         if data_dir_I: self.data_dir = data_dir_I;

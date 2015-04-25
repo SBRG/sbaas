@@ -11,9 +11,10 @@ from datetime import datetime as dt
 
 class stage02_isotopomer_execute():
     '''class for isotopomer metabolomics analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage02_isotopomer_query = stage02_isotopomer_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage02_isotopomer_query = stage02_isotopomer_query(self.session);
         self.calculate = base_calculate();
         self.models = {};
         #modified biomass (INCA does not like exponential terms)

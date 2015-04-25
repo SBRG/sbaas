@@ -3,9 +3,10 @@ from stage01_quantification_query import stage01_quantification_query
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 class stage01_quantification_io(base_analysis):
-    def __init__(self):
-        self.session = Session();
-        self.stage01_quantification_query = stage01_quantification_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_quantification_query = stage01_quantification_query(self.session);
     
     def export_dataStage01Replicates_csv(self, experiment_id_I, filename):
         '''export dataStage01Replicates to csv file'''

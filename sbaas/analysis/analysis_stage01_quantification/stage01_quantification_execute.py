@@ -10,9 +10,10 @@ from datetime import datetime
 
 class stage01_quantification_execute():
     '''class for quantitative metabolomics analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage01_quantification_query = stage01_quantification_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_quantification_query = stage01_quantification_query(self.session);
         self.calculate = base_calculate();
         self.matplot = matplot();
         # variables:
@@ -382,8 +383,9 @@ class stage01_quantification_execute():
                     print('biological_material or conversion name is incorrect');
                     exit(-1);  
                 else:
-                    #calculate the cell volume
-                    cell_volume, cell_volume_units = self.calculate.calculate_cellVolume_CVSAndCVSUnitsAndODAndConversionAndConversionUnits(cvs,cvs_units,od600,conversion,conversion_units);
+                    #calculate the cell volume or biomass depending on the conversion units
+                    #cell_volume, cell_volume_units = self.calculate.calculate_cellVolume_CVSAndCVSUnitsAndODAndConversionAndConversionUnits(cvs,cvs_units,od600,conversion,conversion_units);
+                    cell_volume, cell_volume_units = self.calculate.calculate_biomass_CVSAndCVSUnitsAndODAndConversionAndConversionUnits(cvs,cvs_units,od600,conversion,conversion_units);
                 for cn in component_names:
                     print 'normalizing samples2Biomass for component_name ' + cn;
                     # get component group name

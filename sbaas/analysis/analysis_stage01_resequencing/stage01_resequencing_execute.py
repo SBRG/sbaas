@@ -6,9 +6,10 @@ from stage01_resequencing_io import *
 
 class stage01_resequencing_execute():
     '''class for resequencing analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage01_resequencing_query = stage01_resequencing_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_resequencing_query = stage01_resequencing_query(self.session);
         self.calculate = base_calculate();
     #analysis
     def execute_filterMutations_population(self,experiment_id,p_value_criteria=0.01,quality_criteria=6.0,frequency_criteria=0.1,sample_names_I=None):

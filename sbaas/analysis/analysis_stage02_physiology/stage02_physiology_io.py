@@ -12,9 +12,10 @@ from escher import Builder
 
 class stage02_physiology_io(base_analysis):
 
-    def __init__(self):
-        self.session = Session();
-        self.stage02_physiology_query = stage02_physiology_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage02_physiology_query = stage02_physiology_query(self.session);
         self.calculate = base_calculate();
 
     def import_dataStage02PhysiologyModel_sbml(self, model_id_I, date_I, model_sbml):

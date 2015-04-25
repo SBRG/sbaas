@@ -6,9 +6,10 @@ import json
 
 class stage01_resequencing_io(base_analysis):
     '''class for resequencing analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage01_resequencing_query = stage01_resequencing_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_resequencing_query = stage01_resequencing_query(self.session);
         self.calculate = base_calculate();
     
     def import_resequencingData_add(self, filename, experiment_id, sample_name):
@@ -640,63 +641,109 @@ class stage01_resequencing_io(base_analysis):
             file.write(parameters_str);
             file.write(tile2datamap_str);
 
-    def export_dataStage01ResequencingLineage_js(self,lineage_name_I,mutation_id_exclusion_list=[],data_dir_I="tmp"):
+    def export_dataStage01ResequencingLineage_js(self,analysis_id_I,mutation_id_exclusion_list=[],data_dir_I="tmp"):
         '''export data_stage01_resequencing_lineage to js file'''
 
         #(self,analysis_id_I,mutation_id_exclusion_list=[],data_dir_I="tmp")
         
         print 'exportingdataStage01ResequencingLineage...'
-        ## get the analysis information
+        # get the analysis information
         #analysis_info = {};
         #analysis_info = self.stage01_resequencing_query.get_analysis_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
+        experiment_ids = []
+        lineage_names = []
+        sample_names = []
+        time_points = []
+        experiment_ids,lineage_names,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndLineageNameAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
         # get the lineage information
         lineage_data = [];
-        lineage_data = self.stage01_resequencing_query.get_rowsIO_lineageName_dataStage01ResequencingLineage(lineage_name_I);
-        #for lineage in analysis_info['lineage_name']:
+        lineage_data = self.stage01_resequencing_query.get_rowsIO_lineageName_dataStage01ResequencingLineage(lineage_names[0]);
+        #for lineage in lineage_names:
         #    lineage_data_tmp = [];
         #    lineage_data_tmp = self.stage01_resequencing_query.get_rowsIO_lineageName_dataStage01ResequencingLineage(lineage);
         #    lineage_data.extend(lineage_data_tmp);
         mutation_ids = [x['mutation_id'] for x in lineage_data];
         mutation_ids_screened = [x for x in mutation_ids if x not in mutation_id_exclusion_list];
         mutation_ids_unique = list(set(mutation_ids_screened));
+        # get mutation information for all unique mutations
+        mutation_ids_uniqueInfo = [];
+        for mutation_id in mutation_ids_unique:
+            for mutation in lineage_data:
+                if mutation_id == mutation['mutation_id']:
+                    tmp = {};
+                    tmp['mutation_id']=mutation['mutation_id']
+                    tmp['mutation_frequency']=mutation['mutation_frequency'];
+                    tmp['mutation_genes']=mutation['mutation_genes'];
+                    tmp['mutation_position']=mutation['mutation_position'];
+                    tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    tmp['mutation_locations']=mutation['mutation_locations'];
+                    tmp['mutation_links']=mutation['mutation_links'];
+                    tmp['mutation_type']=mutation['mutation_type'];
+                    tmp['used_']=True;
+                    tmp['comment_']=None;
+                    mutation_ids_uniqueInfo.append(tmp);          
         data_O = [];
-        for d in lineage_data:
-            if d['mutation_id'] in mutation_ids_unique:
-                data_O.append(d);
+        # normalize time-points to intermediates (this has potential to break)
+        intermediates = [i for i,t in enumerate(time_points)];
+        # add in 0.0 frequency for mutations that are not found
+        for sample_name_cnt,sample_name in enumerate(sample_names):
+            for mutation_id in mutation_ids_uniqueInfo:
+                tmp = {};
+                tmp_fitted = {};
+                tmp['mutation_id']=mutation_id['mutation_id']
+                tmp['intermediate']=intermediates[sample_name_cnt]
+                tmp['experiment_id']=experiment_ids[sample_name_cnt]
+                tmp['sample_name']=sample_name
+                tmp['mutation_frequency']=0.0;  
+                tmp['mutation_genes']=mutation_id['mutation_genes'];
+                tmp['mutation_position']=mutation_id['mutation_position'];
+                tmp['mutation_annotations']=mutation_id['mutation_annotations'];
+                tmp['mutation_locations']=mutation_id['mutation_locations'];
+                tmp['mutation_links']=mutation_id['mutation_links'];
+                tmp['mutation_type']=mutation_id['mutation_type'];
+                tmp['used_']=mutation_id['used_'];
+                tmp['comment_']=mutation_id['comment_'];
+                for mutation in lineage_data:
+                    if sample_name == mutation['sample_name'] and mutation_id['mutation_id'] == mutation['mutation_id']:
+                        tmp['mutation_frequency']=mutation['mutation_frequency'];
+                        tmp['comment_']=mutation['comment_'];
+                        break;
+                data_O.append(tmp);
         # dump chart parameters to a js files
-        data1_keys = ['experiment_id',
+        data1_keys = [
+                    #'experiment_id',
+                    #'lineage_name',
                     'sample_name',
-                    'lineage_name',
-                    'intermediate_id',
                     'mutation_id',
-                    'mutation_frequency',
+                    #'mutation_frequency',
                     'mutation_type',
                     'mutation_position',
                     #'mutation_data',
-                    'mutation_annotations',
+                    #'mutation_annotations',
                     'mutation_genes',
-                    'mutation_locations',
-                    'mutation_links'];
+                    #'mutation_links',
+                    'mutation_locations'
+                    ];
         data1_nestkeys = ['mutation_id'];
-        data1_keymap = {'xdata':'time_point',
+        data1_keymap = {'xdata':'intermediate',
                         'ydata':'mutation_frequency',
                         'serieslabel':'mutation_id',
                         'featureslabel':''};
         parameters = {"chart1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
                     "chart1width":500,"chart1height":350,
-                  "chart1title":"Population mutation frequency", "chart1x1axislabel":"jump_time_point","chart1y1axislabel":"frequency"}
+                  "chart1title":"Population mutation frequency", "chart1x1axislabel":"intermediate","chart1y1axislabel":"frequency"}
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
         formtileparameters_O = {'tileheader':'Filter menu','tiletype':'form','tileid':"tile1",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
-        formparameters_O = {"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'}};
+        formparameters_O = {"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
         svgparameters_O = {"svgtype":'scatterlineplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
                             'svgid':'svg1',
                             "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
                             "svgwidth":500,"svgheight":350,
-                            "svgx1axislabel":"jump_time_point","svgy1axislabel":"frequency",
+                            "svgx1axislabel":"intermediate","svgy1axislabel":"frequency",
     						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
         svgtileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
@@ -718,7 +765,7 @@ class stage01_resequencing_io(base_analysis):
         if data_dir_I=='tmp':
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
-            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_mutationsAnnotated' + '.js'
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_lineage' + '.js'
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);

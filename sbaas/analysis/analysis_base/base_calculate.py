@@ -20,7 +20,7 @@ from resources.cookb_signalsmooth import smooth
 from resources.legendre_smooth import legendre_smooth
 from Bio.Statistics import lowess
 
-class base_calculate(base_analysis):
+class base_calculate():
     def __init__(self):
         self.data=[];
 
@@ -50,6 +50,10 @@ class base_calculate(base_analysis):
             conc_O = (conc_I*1e-6)*(dil_I)*(1/conversion_I);
             conc_units_O = 'mM';
             return conc_O, conc_units_O;
+        elif (conc_units_I == 'uM' and conversion_units_I == 'gDW' and dil_units_I == 'mL'):
+            conc_O = (conc_I*1e-3)*(dil_I)*(1/conversion_I);
+            conc_units_O = 'uM*gDW-1';
+            return conc_O, conc_units_O;
         elif ((conc_units_I == 'height_ratio' or conc_units_I == 'area_ratio') and conversion_units_I == 'L' and dil_units_I == 'mL'):
             conc_O = (conc_I*1e-3)*(dil_I)*(1/conversion_I);
             conc_units_O = conc_units_I;
@@ -61,6 +65,21 @@ class base_calculate(base_analysis):
         cultureDensity_O = od600_I*conversion_I;
         cultureDensity_units_O = conversion_units_I.replace('*OD600-1','');
         return cultureDensity_O, cultureDensity_units_O;
+    def calculate_biomass_CVSAndCVSUnitsAndODAndConversionAndConversionUnits(self,cvs_I,cvs_units_I,od600_I,conversion_I,conversion_units_I):
+        # check units
+        if (cvs_units_I == 'mL' and conversion_units_I == 'gDW*L-1*OD600-1'):
+            # return the biomass in gDW
+            gdw_O = cvs_I*1e-3*od600_I*conversion_I;
+            gdw_units_O = 'gDW';
+            return gdw_O, gdw_units_O;
+        elif (cvs_units_I == 'mL' and conversion_units_I == 'uL*mL-1*OD600-1'):
+            # return the cell volume in L
+            cellVolume_O = cvs_I*od600_I*conversion_I*1e-6;
+            cellVolume_units_O = 'L';
+            return cellVolume_O, cellVolume_units_O;
+        else:
+            print('biomass conversion units do not match!')
+            exit(-1);
 
     # statistical analysis
     # calculate the geometric mean and variance:

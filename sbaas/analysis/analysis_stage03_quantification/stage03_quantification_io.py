@@ -9,9 +9,10 @@ from cobra.io import load_matlab_model
 from escher import Builder
 
 class stage03_quantification_io(base_analysis):
-    def __init__(self):
-        self.session = Session();
-        self.stage03_quantification_query = stage03_quantification_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage03_quantification_query = stage03_quantification_query(self.session);
     def import_dataStage03MetabolomicsData_add(self, filename):
         '''table adds'''
         data = base_importData();

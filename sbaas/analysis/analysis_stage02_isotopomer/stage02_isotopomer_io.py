@@ -20,9 +20,10 @@ from cobra.core.Model import Model
 from escher import Builder
 
 class stage02_isotopomer_io(base_analysis):
-    def __init__(self):
-        self.stage02_isotopomer_query = stage02_isotopomer_query();
-        self.session = Session();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage02_isotopomer_query = stage02_isotopomer_query(self.session);
     
     def import_data_stage02_isotopomer_simulation_add(self, filename):
         '''table adds'''

@@ -10,10 +10,11 @@ from copy import copy
 
 class stage00_execute():
     '''class for quantitative metabolomics analysis'''
-
-    def __init__(self):
-        self.session = Session();
-        self.stage00_query = stage00_query();
+    
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage00_query = stage00_query(self.session);
         self.calculate = base_calculate();
 
     def execute_correctMassesFromFormula(self):

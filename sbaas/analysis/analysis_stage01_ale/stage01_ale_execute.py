@@ -4,9 +4,10 @@ from stage01_ale_io import *
 
 class stage01_ale_execute():
     '''class for ale analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage01_ale_query = stage01_ale_query();
+    def __init__(self, session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_ale_query = stage01_ale_query(self.session);
         self.calculate = base_calculate();
 
     #analyses:
@@ -52,6 +53,7 @@ class stage01_ale_execute():
         try:
             data_stage01_ale_trajectories.__table__.drop(engine,True);
             data_stage01_ale_jumps.__table__.drop(engine,True);
+            data_stage01_ale_analysis.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_dataStage01(self,experiment_id_I = None):
@@ -62,6 +64,7 @@ class stage01_ale_execute():
             else:
                 reset = self.session.query(data_stage01_ale_trajectories).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_ale_jumps).delete(synchronize_session=False);
+                reset = self.session.query(data_stage01_ale_analysis).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -69,5 +72,15 @@ class stage01_ale_execute():
         try:
             data_stage01_ale_trajectories.__table__.create(engine,True);
             data_stage01_ale_jumps.__table__.create(engine,True);
+            data_stage01_ale_analysis.__table__.create(engine,True);
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_dataStage01Analysis(self,analysis_id_I=None):
+        try:
+            if analysis_id_I:
+                reset = self.session.query(data_stage01_ale_analysis).filter(data_stage01_ale_analysis.analysis_id.like(analysis_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage01_ale_analysis).delete(synchronize_session=False);
+            self.session.commit();
         except SQLAlchemyError as e:
             print(e);

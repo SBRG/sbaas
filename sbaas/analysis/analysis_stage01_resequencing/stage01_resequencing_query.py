@@ -590,6 +590,36 @@ class stage01_resequencing_query(base_analysis):
             return  experiment_id_O,sample_name_O,time_point_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_experimentIDAndLineageNameAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(self,analysis_id_I):
+        '''Query rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage01_resequencing_analysis.experiment_id,
+                    data_stage01_resequencing_analysis.lineage_name,
+                    data_stage01_resequencing_analysis.sample_name,
+                    data_stage01_resequencing_analysis.time_point).filter(
+                    data_stage01_resequencing_analysis.analysis_id.like(analysis_id_I),
+                    data_stage01_resequencing_analysis.used_.is_(True)).group_by(
+                    data_stage01_resequencing_analysis.experiment_id,
+                    data_stage01_resequencing_analysis.lineage_name,
+                    data_stage01_resequencing_analysis.sample_name,
+                    data_stage01_resequencing_analysis.time_point).order_by(
+                    data_stage01_resequencing_analysis.experiment_id.asc(),
+                    data_stage01_resequencing_analysis.lineage_name.asc(),
+                    data_stage01_resequencing_analysis.sample_name.asc(),
+                    data_stage01_resequencing_analysis.time_point.asc()).all();
+            experiment_id_O = []
+            lineage_name_O = []
+            sample_name_O = []
+            time_point_O = []
+            if data: 
+                for d in data:
+                    experiment_id_O.append(d.experiment_id);
+                    lineage_name_O.append(d.lineage_name); 
+                    sample_name_O.append(d.sample_name);    
+                    time_point_O.append(d.time_point);              
+            return  experiment_id_O,lineage_name_O,sample_name_O,time_point_O;
+        except SQLAlchemyError as e:
+            print(e);
 
     # query data from data_stage01_resequencing_heatmap
     def get_rows_analysisID_dataStage01ResequencingHeatmap(self,analysis_id_I):

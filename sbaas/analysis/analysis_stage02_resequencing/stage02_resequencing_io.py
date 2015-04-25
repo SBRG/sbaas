@@ -6,9 +6,10 @@ import json
 
 class stage02_resequencing_io(stage01_resequencing_io):
     '''class for resequencing analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage02_resequencing_query = stage02_resequencing_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage02_resequencing_query = stage02_resequencing_query(self.session);
         self.calculate = base_calculate();
     
     def import_dataStage02ResequencingMapResequencingPhysiology_add(self, filename):

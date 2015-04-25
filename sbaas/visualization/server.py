@@ -246,8 +246,18 @@ class ContainerHandler(BaseHandler):
         url = urls();
         # parse the path
         path = path_I.replace('.html','');
+        ## parse the input
+        #visualization_kwargs = {};
+        #arguments = [];
+        #for arg in ['project_id_name']:
+        #    args = self.get_arguments(arg);
+        #    if len(args)==1:
+        #        visualization_kwargs[arg] = args[0];
+        #        arguments.append(args[0]);
+        ## make the title name
+        #titlename = ' '.join([visualization_kwargs['project_id_name']]);
         # make the title name
-        titlename = 'data-driven tiles';
+        titlename = 'Data-driven tiles';
         # build up the data directory
         data_dir = 'tmp';
         try:
@@ -255,11 +265,6 @@ class ContainerHandler(BaseHandler):
                 ddt_data_js = file.read();
         except:
             ddt_data_js = '';
-        try:
-            with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+'ddt_template.js', "rb") as file:
-                ddt_template_js = file.read();
-        except:
-            ddt_template_js = '';
         # get the template directory
         template_dir = 'container' + '.html';
         # render the template
@@ -272,7 +277,6 @@ class ContainerHandler(BaseHandler):
             vkbeautify=url.get_url('vkbeautify', source),
             ddt=url.get_url('ddt', source),
             ddt_data=ddt_data_js,
-            ddt_template=ddt_template_js,
             title_header=titlename,
             title=titlename,
             version=__version__,

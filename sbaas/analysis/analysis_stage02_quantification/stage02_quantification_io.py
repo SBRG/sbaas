@@ -4,9 +4,10 @@ from resources.matplot import matplot
 from resources.heatmap import heatmap
 
 class stage02_quantification_io(base_analysis):
-    def __init__(self):
-        self.session = Session();
-        self.stage02_quantification_query = stage02_quantification_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage02_quantification_query = stage02_quantification_query(self.session);
         self.matplot = matplot();
         self.calculate = base_calculate();
     

@@ -6,9 +6,10 @@ from math import exp
 
 class stage01_physiology_execute():
     '''class for physiological analysis analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage01_physiology_query = stage01_physiology_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_physiology_query = stage01_physiology_query(self.session);
         self.calculate = base_calculate();
 
     #analyses:

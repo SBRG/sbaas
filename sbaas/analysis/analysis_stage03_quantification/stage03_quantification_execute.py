@@ -25,9 +25,10 @@ from resources.sampling import cobra_sampling,cobra_sampling_n
 
 class stage03_quantification_execute():
     '''class for quantitative metabolomics analysis'''
-    def __init__(self,data_dir_I=None):
-        self.session = Session();
-        self.stage03_quantification_query = stage03_quantification_query();
+    def __init__(self,session_I=None,data_dir_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage03_quantification_query = stage03_quantification_query(self.session);
         self.calculate = base_calculate();
         self.models = {};
         if data_dir_I:

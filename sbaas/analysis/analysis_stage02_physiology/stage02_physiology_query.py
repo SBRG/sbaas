@@ -1,7 +1,10 @@
 from analysis.analysis_base import *
 from analysis.analysis_stage01_physiology.stage01_physiology_query import stage01_physiology_query
 
-class stage02_physiology_query(stage01_physiology_query):        
+class stage02_physiology_query(stage01_physiology_query): 
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();       
     ## Query from data_stage01_physiology_ratesAverages:
     # query met_ids from data_stage01_physiology_ratesAverages
     def get_metID_experimentIDAndSampleNameAbbreviation_dataStage01PhysiologyRatesAverages(self,experiment_id_I,sample_name_abbreviation_I):

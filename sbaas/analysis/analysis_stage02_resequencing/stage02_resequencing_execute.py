@@ -7,9 +7,10 @@ from stage02_resequencing_io import *
 
 class stage02_resequencing_execute(stage01_resequencing_execute):
     '''class for resequencing analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage02_resequencing_query = stage02_resequencing_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage02_resequencing_query = stage02_resequencing_query(self.session);
         self.calculate = base_calculate();
     #table initializations:
     def drop_dataStage02(self):

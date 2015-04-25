@@ -39,3 +39,56 @@ class stage01_ale_query(base_analysis):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
+
+    # query data from data_stage01_ale_analysis
+    def get_analysis_analysisID_dataStage01ResequencingAnalysis(self,analysis_id_I):
+        '''Query rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage01_ale_analysis).filter(
+                    data_stage01_ale_analysis.analysis_id.like(analysis_id_I),
+                    data_stage01_ale_analysis.used_.is_(True)).all();
+            analysis_id_O = []
+            experiment_id_O = []
+            sample_name_abbreviation_O = []
+            analysis_type_O = []
+            analysis_O = {};
+            if data: 
+                for d in data:
+                    analysis_id_O.append(d.analysis_id);
+                    experiment_id_O.append(d.experiment_id);
+                    sample_name_abbreviation_O.append(d.sample_name_abbreviation);
+                    analysis_type_O.append(d.analysis_type);
+                analysis_id_O = list(set(analysis_id_O))
+                experiment_id_O = list(set(experiment_id_O))
+                lineage_name_O = list(set(lineage_name_O))
+                sample_name_abbreviation_O = list(set(sample_name_abbreviation_O))
+                analysis_type_O = list(set(analysis_type_O))
+                analysis_O={
+                        'analysis_id':analysis_id_O,
+                        'experiment_id':experiment_id_O,
+                        'sample_name_abbreviation':sample_name_abbreviation_O,
+                        'analysis_type':analysis_type_O};
+                
+            return analysis_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_experimentIDAndSampleNameAbbreviation_analysisID_dataStage01ResequencingAnalysis(self,analysis_id_I):
+        '''Query rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage01_ale_analysis.experiment_id,
+                    data_stage01_ale_analysis.sample_name_abbreviation).filter(
+                    data_stage01_ale_analysis.analysis_id.like(analysis_id_I),
+                    data_stage01_ale_analysis.used_.is_(True)).group_by(
+                    data_stage01_ale_analysis.experiment_id,
+                    data_stage01_ale_analysis.sample_name_abbreviation).order_by(
+                    data_stage01_ale_analysis.experiment_id.asc(),
+                    data_stage01_ale_analysis.sample_name_abbreviation.asc()).all();
+            experiment_id_O = []
+            sample_name_abbreviation_O = []
+            if data: 
+                for d in data:
+                    experiment_id_O.append(d.experiment_id);
+                    sample_name_abbreviation_O.append(d.sample_name_abbreviation);                
+            return  experiment_id_O,sample_name_abbreviation_O;
+        except SQLAlchemyError as e:
+            print(e);

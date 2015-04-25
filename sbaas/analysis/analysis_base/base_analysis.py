@@ -12,7 +12,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from data import sbaas_settings as settings
 
 class base_analysis():
-    def __init__(self):
-        self.session = Session();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
 
     

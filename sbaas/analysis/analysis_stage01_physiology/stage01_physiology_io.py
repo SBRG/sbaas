@@ -3,9 +3,10 @@ from stage01_physiology_query import stage01_physiology_query
 
 class stage01_physiology_io(base_analysis):
 
-    def __init__(self):
-        self.session = Session();
-        self.stage01_physiology_query = stage01_physiology_query();
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_physiology_query = stage01_physiology_query(self.session);
         self.calculate = base_calculate();
 
     def import_dataStage01PhysiologyData_add(self, filename):
@@ -255,11 +256,29 @@ class stage01_physiology_io(base_analysis):
                   "svgwidth":500,"svgheight":350,"svgy1axislabel":"rate (hr-1)",
                   "svgfilters":{'met_id':['biomass']}
                 };
-        svgtileparameters2_O = {'tileheader':'Growth rate','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col2",
+        svgtileparameters2_O = {'tileheader':'Growth rate','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         svgtileparameters2_O.update(svgparameters2_O);
-        parametersobject_O = [svgtileparameters1_O,svgtileparameters2_O];
-        tile2datamap_O = {"tile1":[0],"tile2":[1]};
+        tableparameters1_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableheaders":['experiment_id','sample_name_abbreviation','met_id','rate_average','rate_var','rate_lb','rate_ub','rate_units','n','comment_','used_'],
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters1_O = {'tileheader':'Uptake/secretion rates','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters1_O.update(tableparameters1_O);
+        tableparameters2_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table2',
+                    "tablefilters":None,
+                    "tableheaders":['experiment_id','sample_name_abbreviation','met_id','rate_average','rate_var','rate_lb','rate_ub','rate_units','n','comment_','used_'],
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters2_O = {'tileheader':'Growth rates','tiletype':'table','tileid':"tile4",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters2_O.update(tableparameters2_O);
+        parametersobject_O = [svgtileparameters1_O,svgtileparameters2_O,tabletileparameters1_O,tabletileparameters2_O];
+        tile2datamap_O = {"tile1":[0],"tile2":[1],"tile3":[0],"tile4":[1]};
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';

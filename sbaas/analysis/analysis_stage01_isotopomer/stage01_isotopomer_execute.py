@@ -13,9 +13,10 @@ from scipy.io import savemat
 
 class stage01_isotopomer_execute():
     '''class for quantitative metabolomics analysis'''
-    def __init__(self):
-        self.session = Session();
-        self.stage01_isotopomer_query = stage01_isotopomer_query();
+    def __init__(self, session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_isotopomer_query = stage01_isotopomer_query(self.session);
         self.calculate = base_calculate();
         self.isotopomer_13C_fragments_validated = {'23dpg':['C3H7O10P2-'],
                                 '6pgc':['C6H12O10P-','C6H10O9P-','C5H12O7P-'],
