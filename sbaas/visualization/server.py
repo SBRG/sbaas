@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
 
+# system dependencies
 import os, subprocess
 from os.path import join, dirname, realpath
+import json
+import re
+# tornado dependencies
 import tornado.ioloop
 from tornado.web import RequestHandler, HTTPError, Application, asynchronous, authenticated
 from tornado.httpclient import AsyncHTTPClient
 from tornado import gen
 import tornado.escape
 from tornado.options import define, options, parse_command_line
-import json
-import re
 from jinja2 import Environment, PackageLoader
 from mimetypes import guess_type
-
 from urls import urls
+# visualization dependencies
 from version import __version__
+# sbaas dependencies
 from data import sbaas_settings as sbaas_settings
+from analysis import *
 
 # set up jinja2 template location
 env = Environment(loader=PackageLoader('visualization', 'templates'))
@@ -26,6 +30,9 @@ NO_CACHE = True
 PORT = 8080
 PUBLIC = False # localhost
 #PUBLIC = True # web
+
+# initialize a global session:
+session = Session();
 
 def run(port=PORT, public=PUBLIC):
     global PORT
@@ -169,50 +176,30 @@ class ProjectHandler(BaseHandler):
         # parse the input
         visualization_kwargs = {};
         arguments = [];
-        for arg in ['project_id_name']:
+        for arg in ['project_id_name','analysis_id_name','export_id_name']:
             args = self.get_arguments(arg);
             if len(args)==1:
                 visualization_kwargs[arg] = args[0];
                 arguments.append(args[0]);
         # make the title name
         titlename = ' '.join([visualization_kwargs['project_id_name']]);
-        # build up the data directory
-        #boxandwhiskers and histogram
-        if visualization_kwargs.has_key('feature_name'):
-            if visualization_kwargs.has_key('time_point_name'):
-                filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['feature_name'] + '.js';
-            else:
-                filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['feature_name'] + '.js';
-            data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
-            try:
-                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
-                    data_json = file.read();
-            except:
-                data_json = '';
-        else:
-            #filename_data_id = visualization_kwargs['data_name'] + '.js';
-            filename_data_id = '.js';
+        # get the data to visualize
+        if visualization_kwargs.has_key('project_id_name') and visualization_kwargs.has_key('analysis_id_name') and visualization_kwargs.has_key('export_id_name'):
+            #visualization data
+            data_json = '';
+            data_json = self.get_jsondata(visualization_kwargs['analysis_id_name'],visualization_kwargs['export_id_name']);
+        elif visualization_kwargs.has_key('project_id_name'):
+            #landing page data
             data_dir = '/'.join([visualization_kwargs['project_id_name']]);
+            filename_data_id = 'data_json.js';
             try:
                 with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
                     data_json = file.read();
             except:
                 data_json = '';
-        # get the index data directory if it exists
-        try:
-            with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https') + '/'+'filter.js', "rb") as file:
-                data_index = file.read();
-        except IOError as e:
-            data_index = None;
-        # get the index directory if it exists
-        if data_index:
-            filename_index = url.get_url(filename_index, source)
         else:
-            filename_index = None;
-        ## get the css directory
-        #filename_css = visualization_kwargs['template_name'] + '_css';
-        ## get the js directory
-        #filename_js = visualization_kwargs['template_name'] + '_js';
+            # re-direct to 404 page
+            print 'bad GET';
         # get the template directory
         template_dir = 'container' + '.html';
         # render the template
@@ -234,6 +221,32 @@ class ProjectHandler(BaseHandler):
         
         self.set_header("Content-Type", "text/html")
         self.serve(data)
+
+    def get_datajson(self,analysis_id_I,table_id_I):
+        '''get the json data for the analysis_id from the table_id'''
+        data_json_O = '';
+        if table_id_I=='export_dataStage01AleTrajectories_js':
+            io = stage01_ale_io(session);
+            data_json_O = io.export_dataStage01AleTrajectories_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage01PhysiologyRatesAverages_js':
+            io = stage01_physiology_io(session);
+            data_json_O = io.export_dataStage01PhysiologyRatesAverages_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage01ResequencingHeatmap_js':
+            io = stage01_resequencing_io(session);
+            data_json_O = io.export_dataStage01ResequencingHeatmap_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage01ResequencingLineage_js':
+            io = stage01_resequencing_io(session);
+            data_json_O = io.export_dataStage01ResequencingLineage_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage02ResequencingHeatmap_js':
+            io = stage02_resequencing_io(session);
+            data_json_O = io.export_dataStage02ResequencingHeatmap_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='':
+            io = stage01_physiology_io(session);
+            data_json_O = io.export_dataStage01PhysiologyRatesAverages_js(analysis_id_I,data_dir_I='data_json');
+        else:
+            #re-direct to 404
+            print 'table not found'
+        return data_json_O;
   
 class ContainerHandler(BaseHandler):
     @asynchronous

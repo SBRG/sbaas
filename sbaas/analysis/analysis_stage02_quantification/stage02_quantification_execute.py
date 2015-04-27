@@ -566,7 +566,7 @@ class stage02_quantification_execute():
                     # visualize the stats:
                     #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,data_plot_var);
                     self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_data,data_plot_mean,data_plot_ci);
-    # data_stage01_quantification initializations
+    # data_stage02_quantification initializations
     def drop_dataStage02_quantification(self):
         try:
             data_stage02_quantification_glogNormalized.__table__.drop(engine,True);
@@ -581,17 +581,19 @@ class stage02_quantification_execute():
             data_stage02_quantification_analysis.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
-    def reset_dataStage02_quantification(self,experiment_id_I = None):
+    def reset_dataStage02_quantification(self,analysis_id_I = None):
         try:
-            if experiment_id_I:
-                reset = self.session.query(data_stage02_quantification_glogNormalized).filter(data_stage02_quantification_glogNormalized.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_anova).filter(data_stage02_quantification_anova.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_pairWiseTest).filter(data_stage02_quantification_pairWiseTest.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_descriptiveStats).filter(data_stage02_quantification_descriptiveStats.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_pca_scores).filter(data_stage02_quantification_pca_scores.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_pca_loadings).filter(data_stage02_quantification_pca_loadings.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage02_quantification_svm).filter(data_stage02_quantification_svm.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_analysis).filter(data_stage02_quantification_analysis.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+            if analysis_id_I:
+                reset = self.session.query(data_stage02_quantification_glogNormalized).filter(data_stage02_quantification_glogNormalized.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_anova).filter(data_stage02_quantification_anova.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_pairWiseTest).filter(data_stage02_quantification_pairWiseTest.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_descriptiveStats).filter(data_stage02_quantification_descriptiveStats.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_pca_scores).filter(data_stage02_quantification_pca_scores.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_pca_loadings).filter(data_stage02_quantification_pca_loadings.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage02_quantification_svm).filter(data_stage02_quantification_svm.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage02_quantification_analysis).filter(data_stage02_quantification_analysis.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage02_quantification_heatmap).filter(data_stage02_quantification_heatmap.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage02_quantification_dendrogram).filter(data_stage02_quantification_dendrogram.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage02_quantification_glogNormalized).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_anova).delete(synchronize_session=False);
@@ -699,12 +701,6 @@ class stage02_quantification_execute():
 
         print 'execute_svm...'
 
-        # query metabolomics data from glogNormalization
-        #...
-        # call R
-        #...
-        # upload data
-
     def execute_glogNormalization(self,analysis_id_I,concentration_units_I=[]):
         '''glog normalize concentration values using R'''
 
@@ -785,9 +781,9 @@ class stage02_quantification_execute():
             # add data to database
             for d in data_scores:
                 row1 = data_stage02_quantification_pca_scores(analysis_id_I,
-                        d['experiment_id'],
+                        #d['experiment_id'],
                         d['sample_name_short'],
-                        d['time_point'],
+                        #d['time_point'],
                         d['score'],
                         d['axis'],
                         d['var_proportion'],
@@ -797,8 +793,8 @@ class stage02_quantification_execute():
                 self.session.add(row1);
             for d in data_loadings:
                 row2 = data_stage02_quantification_pca_loadings(analysis_id_I,
-                        d['experiment_id'],
-                        d['time_point'],
+                        #d['experiment_id'],
+                        #d['time_point'],
                         d['component_group_name'],
                         d['component_name'],
                         d['loadings'],

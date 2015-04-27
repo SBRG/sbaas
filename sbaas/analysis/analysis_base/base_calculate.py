@@ -54,7 +54,7 @@ class base_calculate():
             conc_O = (conc_I*1e-3)*(dil_I)*(1/conversion_I);
             conc_units_O = 'uM*gDW-1';
             return conc_O, conc_units_O;
-        elif ((conc_units_I == 'height_ratio' or conc_units_I == 'area_ratio') and conversion_units_I == 'L' and dil_units_I == 'mL'):
+        elif ((conc_units_I == 'height_ratio' or conc_units_I == 'area_ratio') and (conversion_units_I == 'L' or conversion_units_I == 'gDW') and dil_units_I == 'mL'):
             conc_O = (conc_I*1e-3)*(dil_I)*(1/conversion_I);
             conc_units_O = conc_units_I;
             return conc_O, conc_units_O;

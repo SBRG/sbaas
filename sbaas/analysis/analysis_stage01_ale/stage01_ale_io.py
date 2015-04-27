@@ -326,6 +326,9 @@ class stage01_ale_io(base_analysis):
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_lineage' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);

@@ -21,7 +21,7 @@ class data_stage02_quantification_glogNormalized(Base):
     comment_ = Column(Text);
 
     __table_args__ = (#UniqueConstraint('experiment_id','sample_name_short','time_point','component_name'),
-                      UniqueConstraint('analysis_id','experiment_id','sample_name_short','time_point','component_name'),
+                      UniqueConstraint('analysis_id','experiment_id','sample_name_short','time_point','component_name','calculated_concentration_units'),
             )
 
     def __init__(self, 
@@ -76,7 +76,7 @@ class data_stage02_quantification_anova(Base):
     comment_ = Column(Text);
 
     __table_args__ = (#UniqueConstraint('experiment_id','sample_name_abbreviation','time_point','component_name'),
-                      UniqueConstraint('analysis_id','sample_name_abbreviation','component_name'),
+                      UniqueConstraint('analysis_id','sample_name_abbreviation','component_name','calculated_concentration_units'),
             )
 
     def __init__(self, 
@@ -148,7 +148,7 @@ class data_stage02_quantification_pairWiseTest(Base):
     comment_ = Column(Text);
 
     __table_args__ = (#UniqueConstraint('experiment_id','sample_name_abbreviation_1','time_point_1','sample_name_abbreviation_2','time_point_2','component_name'),
-                      UniqueConstraint('analysis_id','sample_name_abbreviation_1','sample_name_abbreviation_2','component_name','calculated_concentration_units'),
+                      UniqueConstraint('analysis_id','sample_name_abbreviation_1','sample_name_abbreviation_2','component_name','calculated_concentration_units','test_description'),
             )
 
     def __init__(self,
@@ -529,7 +529,7 @@ class data_stage02_quantification_descriptiveStats(Base):
     comment_ = Column(Text);
 
     __table_args__ = (#UniqueConstraint('experiment_id','sample_name_abbreviation','component_name','time_point'),
-                      UniqueConstraint('analysis_id','experiment_id','sample_name_abbreviation','component_name','time_point'),
+                      UniqueConstraint('analysis_id','experiment_id','sample_name_abbreviation','component_name','time_point','calculated_concentration_units'),
             )
 
     def __init__(self, 

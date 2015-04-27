@@ -143,26 +143,26 @@ class stage02_isotopomer_execute():
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
-    def reset_datastage02_simulation(self,simulation_id_I):
+    def reset_datastage02_isotopomer_simulation(self,simulation_id_I):
         """Remove fitted flux information by simulation_id"""
         query_cmd = ('''DELETE FROM "data_stage02_isotopomer_simulationParameters"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
                 DELETE FROM "data_stage02_isotopomer_fittedData"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
                 DELETE FROM "data_stage02_isotopomer_fittedFluxes"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
                 DELETE FROM "data_stage02_isotopomer_fittedFragments"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
                 DELETE FROM "data_stage02_isotopomer_fittedMeasuredFluxResiduals"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
                 DELETE FROM "data_stage02_isotopomer_fittedMeasuredFluxes"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
                 DELETE FROM "data_stage02_isotopomer_fittedMeasuredFragmentResiduals"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
                 DELETE FROM "data_stage02_isotopomer_fittedMeasuredFragments"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
                 DELETE FROM "data_stage02_isotopomer_fittedNetFluxes"
-                WHERE simulation_id LIKE '(%s)';
+                WHERE simulation_id LIKE '%s';
         ''' %(simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I,simulation_id_I))
 
         data = self.session.execute(query_cmd);
@@ -573,6 +573,7 @@ class stage02_isotopomer_execute():
                     max_flux = min_flux_tmp
                     min_flux = max_flux_tmp
             # calculate the net reaction flux average, stdev, lb and ub
+            unique_rxn_ids = []; #add only unique rxn_ids
             for k,v in rxns_pairs.iteritems():
                 flux_average_1 = 0.0
                 flux_average_2 = 0.0
@@ -602,13 +603,15 @@ class stage02_isotopomer_execute():
                 flux_average,flux_stdev,flux_lb,flux_ub,flux_units = self.calculate_netFlux(flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
                           flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2,min_flux,max_flux)
                 # correct the flux stdev
-                flux_stdev = self.correct_fluxStdev(flux_lb,flux_ub)
+                flux_stdev = self.correct_fluxStdev(flux_lb,flux_ub);
                 # record net reaction flux
                 if convert_netRxn2IndividualRxns_I:
                     rxns_O,fluxes_O,fluxes_stdev_O,fluxes_lb_O,fluxes_ub_O,fluxes_units_O = self.convert_netRxn2IndividualRxns(k,flux_average,flux_stdev,flux_lb,flux_ub,flux_units);
                     if fluxes_O:
                         for i,flux in enumerate(fluxes_O):
-                            data_O.append({'simulation_id':simulation_id_I,
+                            if not rxns_O[i] in unique_rxn_ids:
+                                unique_rxn_ids.append(rxns_O[i]);
+                                data_O.append({'simulation_id':simulation_id_I,
                                     'simulation_dateAndTime':simulation_dateAndTime,
                                     'rxn_id':rxns_O[i],
                                     'flux':fluxes_O[i],
@@ -619,7 +622,9 @@ class stage02_isotopomer_execute():
                                     'used_':True,
                                     'comment_':None})
                     else:
-                        data_O.append({'simulation_id':simulation_id_I,
+                        if not k in unique_rxn_ids:
+                            unique_rxn_ids.append(k);
+                            data_O.append({'simulation_id':simulation_id_I,
                                     'simulation_dateAndTime':simulation_dateAndTime,
                                     'rxn_id':k,
                                     'flux':flux_average,
@@ -1058,7 +1063,10 @@ class stage02_isotopomer_execute():
         '''Calculate the standard deviation based off of the 95% confidence intervals
         described in doi:0.1016/j.ymben.2013.08.006'''
         flux_stdev = 0.0;
-        flux_stdev = (flux_ub_I - flux_lb_I)/4
+        try:
+            flux_stdev = (flux_ub_I - flux_lb_I)/4;
+        except TypeError as te:
+            print te;
         return flux_stdev;
     def calculate_netFlux(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
                           flux_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2,

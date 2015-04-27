@@ -4906,8 +4906,8 @@ class isotopomer_netRxns():
                            'stoichiometry':[1,1]},
         'NADSYN_aerobic':{'reactions':['ASPO6','QULNS','NNDPR','NNATr','NADS1','NADK'],
                            'stoichiometry':[1,1,1,1,1,1]},
-        #'NADSYN_anaerobic':{'reactions':['ASPO5','QULNS','NNDPR','NNATr','NADS1','NADK'],
-        #                   'stoichiometry':[1,1,1,1,1,1]},
+        'NADSYN_anaerobic':{'reactions':['ASPO5','QULNS','NNDPR','NNATr','NADS1','NADK'],
+                           'stoichiometry':[1,1,1,1,1,1]},
         #'NADSALVAGE':{'reactions':['NADPPPS','NADN','NNAM','NAMNPP','NMNN','NMNDA','NMNAT','NADDP','ADPRDP'],
         #                   'stoichiometry':[1,1,1,1,1,1,1,1,1]}, #cannot be lumped
         'THFSYN':{'reactions':['GTPCI','DNTPPA','DNMPPA','DHNPA2r','HPPK2','ADCS','ADCL','DHPS2','DHFS'],

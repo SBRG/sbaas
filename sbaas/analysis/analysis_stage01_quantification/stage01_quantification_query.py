@@ -62,7 +62,7 @@ class stage01_quantification_query(base_analysis):
         try:
             sample_names = self.session.query(sample.sample_name).filter(
                     sample_description.sample_name_short.like(sample_name_short_I),
-                    sample_description.sample_description.like(sample_decription_I),
+                    sample_description.sample_desc.like(sample_decription_I),
                     experiment.id.like(experiment_id_I),
                     experiment.exp_type_id == exp_type_I,
                     sample.sample_id.like(sample_description.sample_id),
@@ -82,7 +82,7 @@ class stage01_quantification_query(base_analysis):
         try:
             sample_names = self.session.query(sample.sample_name).filter(
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
-                    sample_description.sample_description.like(sample_decription_I),
+                    sample_description.sample_desc.like(sample_decription_I),
                     experiment.id.like(experiment_id_I),
                     experiment.exp_type_id == exp_type_I,
                     sample.sample_id.like(sample_description.sample_id),
@@ -163,7 +163,7 @@ class stage01_quantification_query(base_analysis):
                     experiment.sample_name.like(sample.sample_name),
                     experiment.sample_name.like(data_stage01_quantification_MQResultsTable.sample_name)).group_by(
                     sample.sample_id).all();
-            sample_id_O = sample_id[0];
+            sample_id_O = sample_id[0][0];
             return sample_id_O;
         except SQLAlchemyError as e:
             print(e);
@@ -698,7 +698,7 @@ class stage01_quantification_query(base_analysis):
                 desc['sample_condition']=data.sample_condition;
                 desc['extraction_method_id']=data.extraction_method_id;
                 desc['biological_material']=data.biological_material;
-                desc['sample_description']=data.sample_description;
+                desc['sample_desc']=data.sample_desc;
                 desc['sample_replicate']=data.sample_replicate;
                 desc['is_added']=data.is_added;
                 desc['is_added_units']=data.is_added_units;
@@ -923,7 +923,7 @@ class stage01_quantification_query(base_analysis):
         try:
             sample_names = self.session.query(data_stage01_quantification_normalized.sample_name).filter(
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
-                    sample_description.sample_description.like(sample_decription_I),
+                    sample_description.sample_desc.like(sample_decription_I),
                     data_stage01_quantification_normalized.experiment_id.like(experiment_id_I),
                     experiment.exp_type_id == exp_type_I,
                     experiment.id.like(experiment_id_I),
@@ -945,7 +945,7 @@ class stage01_quantification_query(base_analysis):
             sample_names = self.session.query(data_stage01_quantification_normalized.sample_name).filter(
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
                     sample_description.time_point.like(time_point_I),
-                    sample_description.sample_description.like(sample_decription_I),
+                    sample_description.sample_desc.like(sample_decription_I),
                     data_stage01_quantification_normalized.experiment_id.like(experiment_id_I),
                     data_stage01_quantification_normalized.component_name.like(component_name_I),
                     sample.sample_id.like(sample_description.sample_id),
@@ -1000,7 +1000,7 @@ class stage01_quantification_query(base_analysis):
                     experiment.id.like(experiment_id_I),
                     experiment.exp_type_id == exp_type_I,
                     experiment.sample_name.like(sample.sample_name),
-                    sample_description.sample_description.like(sample_description_I)).group_by(
+                    sample_description.sample_desc.like(sample_description_I)).group_by(
                     sample_description.sample_name_short).all();
             sample_name_short_O = [];
             if sample_name_short:
@@ -1196,7 +1196,7 @@ class stage01_quantification_query(base_analysis):
                     experiment.sample_name.like(sample.sample_name),
                     sample.sample_id.like(sample_description.sample_id),
                     data_stage01_quantification_replicates.experiment_id.like(experiment_id_I),
-                    sample_description.sample_description.like('Broth'),
+                    sample_description.sample_desc.like('Broth'),
                     data_stage01_quantification_replicates.used_.is_(True),
                     data_stage01_quantification_replicates.sample_name_short.like(sample_description.sample_name_short)
                     ).group_by(

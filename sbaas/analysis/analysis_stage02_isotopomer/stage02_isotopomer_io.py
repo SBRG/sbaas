@@ -2475,40 +2475,6 @@ class stage02_isotopomer_io(base_analysis):
             cobra_model.add_reactions([rxn]);
             cobra_model.repair();
         return cobra_model
-
-    # TODO:
-    def export_data_stage02_isotopomer_models(self,model_id_I,filename_I):
-        cobra_model_sbml = None;
-        cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id_I);
-        # write the model to a temporary file
-        with open(filename_I,'wb') as file:
-            file.write(cobra_model_sbml['sbml_file']);
-    def export_isotopomerModel_cobraMAT(self, filename):
-        '''export isotopomer model for fluxomics simulation using the cobratoolbox 2.0 fluxomics module'''
-        #TODO
-        return
-    def export_isotopomerModel_INCA(self, filename):
-        '''export isotopomer model for fluxomics simulation using INCA1.1'''
-        #TODO
-        return
-    def export_isotopomerExperiment_cobraMAT(self, filename):
-        '''export isotopomer experiment for fluxomics simulation using the cobratoolbox 2.0 fluxomics module'''
-        #TODO
-        return
-    def export_isotopomerExperiment_INCA(self, filename):
-        '''export isotopomer experiment for fluxomics simulation using INCA1.1'''
-        #TODO
-        return
-    def import_isotopomerSimulationResults_cobraMAT(self, filename):
-        '''import results from a fluxomics simulation using the cobratoolbox 2.0 fluxomics module'''
-        #TODO
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_(data.data);
-        data.clear_data();
-        return
     def import_isotopomerSimulationResults_INCA(self, simulation_id, filename, model_rxn_conversion_I=None):
         '''import results from a fluxomics simulation using INCA1.3
         Please reference the model, fitdata, and simdata class structures in the INCA documentation'''
@@ -2740,17 +2706,19 @@ class stage02_isotopomer_io(base_analysis):
                 fragment_string = re.sub('_LPARANTHES_','[(]',fragment_string)
                 fragment_string = re.sub('_RPARANTHES_','[)]',fragment_string)
                 fragment_list = fragment_string.split('_');
-                #fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2]])
-                fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2],fragment_list[3]])
+                if not len(fragment_list)>5 or not ('MRM' in fragment_list or 'EPI' in fragment_list):
+                    fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2]])
+                    fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
+                    time_point = fragment_list[4];
+                else:
+                    fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2],fragment_list[3]])
+                    fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[4]);
+                    time_point = fragment_list[5];
+                #exp_id = fragment_list[5];
+                #exp_id = fragment_list[6];
                 fragment_id = re.sub('-','_DASH_',fragment_id)
                 fragment_id = re.sub('[(]','_LPARANTHES_',fragment_id)
                 fragment_id = re.sub('[)]','_RPARANTHES_',fragment_id)
-                #fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
-                fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[4]);
-                #time_point = fragment_list[4];
-                time_point = fragment_list[5];
-                #exp_id = fragment_list[5];
-                #exp_id = fragment_list[6];
                 if f_mnt_res_expt[cnt] in simulation_info['experiment_id']:
                     fittedMeasuredFragmentResiduals.append({'simulation_id':simulation_id,
                     'simulation_dateAndTime':simulation_dateAndTime,
@@ -2763,7 +2731,7 @@ class stage02_isotopomer_io(base_analysis):
                     #'res_esens':f_mnt_res_esens[cnt],
                     'res_fit':float(f_mnt_res_fit[cnt]),
                     #'res_msens':f_mnt_res_msens[cnt],
-                    'res_peak':float(f_mnt_res_peak[cnt]),
+                    'res_peak':f_mnt_res_peak[cnt], #'res_peak':float(f_mnt_res_peak[cnt]),
                     'res_stdev':float(f_mnt_res_std[cnt]),
                     'res_val':float(f_mnt_res_val[cnt]),
                     'res_msens':None,
@@ -2782,7 +2750,7 @@ class stage02_isotopomer_io(base_analysis):
                     #'res_esens':f_mnt_res_esens[cnt],
                     'res_fit':float(f_mnt_res_fit[cnt]),
                     #'res_msens':f_mnt_res_msens[cnt],
-                    'res_peak':f_mnt_res_peak[cnt],
+                    'res_peak':f_mnt_res_peak[cnt], #'res_peak':float(f_mnt_res_peak[cnt]),
                     'res_stdev':float(f_mnt_res_std[cnt]),
                     'res_val':float(f_mnt_res_val[cnt]),
                     'res_msens':None,
@@ -2813,7 +2781,7 @@ class stage02_isotopomer_io(base_analysis):
         # ensure that there are no negative values or infinite values
         for d in f['par'][0][0][0]['val']:
             if not d:
-                f_par_val.append(None)
+                f_par_val.append(0.0)
             elif isnan(d[0][0]) or d[0][0]<1.0e-6:
                 f_par_val.append(0.0)
             elif isinf(d[0][0]) or d[0][0]>1e3:
@@ -2822,7 +2790,7 @@ class stage02_isotopomer_io(base_analysis):
                 f_par_val.append(float(d[0][0]))
         for d in f['par'][0][0][0]['std']:
             if not d:
-                f_par_std.append(None)
+                f_par_std.append(0.0)
             elif isnan(d[0][0]):
                 f_par_val.append(0.0)
             else:
@@ -2896,14 +2864,16 @@ class stage02_isotopomer_io(base_analysis):
                 fragment_string = re.sub('_LPARANTHES_','[(]',fragment_string)
                 fragment_string = re.sub('_RPARANTHES_','[)]',fragment_string)
                 fragment_list = fragment_string.split('_');
+                if not len(fragment_list)>5 or not ('MRM' in fragment_list or 'EPI' in fragment_list):
+                    fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
+                    time_point = fragment_list[4];
+                else:
+                    fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[4]);
+                    time_point = fragment_list[5];
                 #fragment_id = '_'.join([fragment_list[0],fragment_list[1],fragment_list[2],fragment_list[3]])
                 #fragment_id = re.sub('-','_DASH_',fragment_id)
                 #fragment_id = re.sub('[(]','_LPARANTHES_',fragment_id)
                 #fragment_id = re.sub('[)]','_RPARANTHES_',fragment_id)
-                #fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[3]);
-                fragment_mass = Formula(fragment_list[2]).mass + float(fragment_list[4]);
-                #time_point = fragment_list[4];
-                time_point = fragment_list[5];
                 #expt_id = fragment_list[5];
                 #expt_id = fragment_list[6];
                 if expt in simulation_info['experiment_id']:
@@ -2955,6 +2925,88 @@ class stage02_isotopomer_io(base_analysis):
         self.add_data_stage02_isotopomer_fittedMeasuredFluxResiduals(fittedMeasuredFluxResiduals);
         self.add_data_stage02_isotopomer_fittedMeasuredFragmentResiduals(fittedMeasuredFragmentResiduals);
         self.add_data_stage02_isotopomer_simulationParameters(simulationParameters)
+
+    # TODO:
+    def export_data_stage02_isotopomer_models(self,model_id_I,filename_I):
+        cobra_model_sbml = None;
+        cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id_I);
+        # write the model to a temporary file
+        with open(filename_I,'wb') as file:
+            file.write(cobra_model_sbml['sbml_file']);
+    def export_isotopomerModel_cobraMAT(self, filename):
+        '''export isotopomer model for fluxomics simulation using the cobratoolbox 2.0 fluxomics module'''
+        #TODO
+        return
+    def export_isotopomerModel_INCA(self, filename):
+        '''export isotopomer model for fluxomics simulation using INCA1.1'''
+        #TODO
+        return
+    def export_isotopomerExperiment_cobraMAT(self, filename):
+        '''export isotopomer experiment for fluxomics simulation using the cobratoolbox 2.0 fluxomics module'''
+        #TODO
+        return
+    def export_isotopomerExperiment_INCA(self, filename):
+        '''export isotopomer experiment for fluxomics simulation using INCA1.1'''
+        #TODO
+        return
+    def import_isotopomerSimulationResults_cobraMAT(self, filename):
+        '''import results from a fluxomics simulation using the cobratoolbox 2.0 fluxomics module'''
+        #TODO
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_(data.data);
+        data.clear_data();
+        return
+
+    # Internal
+    def convert_netRxn2IndividualRxns(self,net_rxn_I,flux_I):
+        '''Convert a net rxn into individual rxns,
+        and update the direction of the flux for each individual reactions
+        accordingly'''
+
+        #Input:
+        #   net_rxn_I = string, rxn_id
+        #   flux_I = flux, float
+        #Output:
+        #   rxns_O = list, rxn_ids
+        #   fluxes_O = list, floats
+        #   fluxes_O_dict = dict, rxn_id:flux
+        
+
+        from stage02_isotopomer_dependencies import isotopomer_netRxns
+        netRxns = isotopomer_netRxns();
+
+        rxns_O = [];
+        fluxes_O = [];
+        fluxes_O_dict = {};
+
+        if not flux_I:
+            #print 'reaction has no flux';
+            return fluxes_O_dict;
+        elif net_rxn_I in netRxns.isotopomer_rxns_net.keys():
+            rxns_O = netRxns.isotopomer_rxns_net[net_rxn_I]['reactions'];
+            stoichiometry = netRxns.isotopomer_rxns_net[net_rxn_I]['stoichiometry'];
+            # change the direction of the fluxes according to the stoichiometry of the reactions
+            fluxes_O = [s*flux_I for s in stoichiometry];
+        else:
+            #print 'net reaction not found';
+            return fluxes_O_dict;
+
+        #return rxns_O,fluxes_O;
+        # wrap into a dictionary
+        fluxes_O_dict = dict(zip(rxns_O,fluxes_O));
+        return fluxes_O_dict;
+    def convert_datetime2string(self,datetime_I):
+        '''convert datetime to string date time 
+        e.g. time.strftime('%Y/%m/%d %H:%M:%S') = '2014-04-15 15:51:01' '''
+
+        from time import mktime,strftime
+
+        time_str = datetime_I.strftime('%Y-%m-%d %H:%M:%S')
+        
+        return time_str
 
     # Visualization
     def export_fluxomicsAnalysis_escher(self,experiment_id_I,model_ids_I=[],
@@ -3081,42 +3133,68 @@ class stage02_isotopomer_io(base_analysis):
         filename_str = filename[0]+ '/' +experiment_id_I.replace('_','') + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'wb') as file:
             file.write(json_str);
-
-    def convert_netRxn2IndividualRxns(self,net_rxn_I,flux_I):
-        '''Convert a net rxn into individual rxns,
-        and update the direction of the flux for each individual reactions
-        accordingly'''
+    def export_fittedNetFluxes_js(self,simulation_ids_I = [],data_dir_I="tmp"):
+        '''Plot the flux precision for a given set of simulations and a given set of reactions
+        Default: plot the flux precision for each simulation on a single plot for a single reaction'''
 
         #Input:
-        #   net_rxn_I = string, rxn_id
-        #   flux_I = flux, float
-        #Output:
-        #   rxns_O = list, rxn_ids
-        #   fluxes_O = list, floats
-        #   fluxes_O_dict = dict, rxn_id:flux
-        
+        # simulation_ids_I
 
-        from stage02_isotopomer_dependencies import isotopomer_netRxns
-        netRxns = isotopomer_netRxns();
-
-        rxns_O = [];
-        fluxes_O = [];
-        fluxes_O_dict = {};
-
-        if not flux_I:
-            #print 'reaction has no flux';
-            return fluxes_O_dict;
-        elif net_rxn_I in netRxns.isotopomer_rxns_net.keys():
-            rxns_O = netRxns.isotopomer_rxns_net[net_rxn_I]['reactions'];
-            stoichiometry = netRxns.isotopomer_rxns_net[net_rxn_I]['stoichiometry'];
-            # change the direction of the fluxes according to the stoichiometry of the reactions
-            fluxes_O = [s*flux_I for s in stoichiometry];
-        else:
-            #print 'net reaction not found';
-            return fluxes_O_dict;
-
-        #return rxns_O,fluxes_O;
-        # wrap into a dictionary
-        fluxes_O_dict = dict(zip(rxns_O,fluxes_O));
-        return fluxes_O_dict;
+        data_O =[]; 
+        for simulation_id in simulation_ids_I:
+            # get the flux information for each simulation
+            flux_data = [];
+            flux_data = self.stage02_isotopomer_query.get_rows_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
+            for i,row in enumerate(flux_data):
+                row['simulation_dateAndTime'] = self.convert_datetime2string(row['simulation_dateAndTime']);
+                row['flux_units'] = row['flux_units'].replace('*','x');
+                data_O.append(row);
+        # dump chart parameters to a js files
+        data1_keys = ['simulation_id','rxn_id','simulation_dateAndTime','flux_units'
+                    ];
+        data1_nestkeys = ['rxn_id'];
+        data1_keymap = {'xdata':'rxn_id',
+                        'ydata':'flux',
+                        'ydatalb':'flux_lb',
+                        'ydataub':'flux_ub',
+                        'serieslabel':'simulation_id',
+                        'featureslabel':'rxn_id'};
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'form','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters_O = {"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters_O.update(formparameters_O);
+        svgparameters_O = {"svgtype":'boxandwhiskersplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
+                            'svgid':'svg1',
+                            "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                            "svgwidth":500,"svgheight":350,
+                            "svgx1axislabel":"rxn_id","svgy1axislabel":"flux",
+    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+        svgtileparameters_O = {'tileheader':'Flux precision','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters_O.update(svgparameters_O);
+        tableparameters_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters_O = {'tileheader':'Flux precision','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters_O.update(tableparameters_O);
+        parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
+        tile2datamap_O = {"tile1":[0],"tile2":[0],"tile3":[0]};
+        # dump the data to a json file
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);
     

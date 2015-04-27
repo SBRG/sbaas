@@ -584,6 +584,9 @@ class stage01_resequencing_io(base_analysis):
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_mutationsAnnotated' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);
@@ -636,6 +639,9 @@ class stage01_resequencing_io(base_analysis):
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_heatmap' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);
@@ -729,9 +735,6 @@ class stage01_resequencing_io(base_analysis):
                         'ydata':'mutation_frequency',
                         'serieslabel':'mutation_id',
                         'featureslabel':''};
-        parameters = {"chart1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
-                    "chart1width":500,"chart1height":350,
-                  "chart1title":"Population mutation frequency", "chart1x1axislabel":"intermediate","chart1y1axislabel":"frequency"}
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
@@ -766,6 +769,9 @@ class stage01_resequencing_io(base_analysis):
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_lineage' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);
