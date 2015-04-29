@@ -553,9 +553,9 @@ class stage01_resequencing_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'form','tileid':"tile1",'rowid':"row1",'colid':"col1",
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
-        formparameters_O = {"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formparameters_O = {'htmlid':'form1','htmltype':'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
         svgparameters_O = {"svgtype":'scatterlineplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
                             'svgid':'svg1',
@@ -622,15 +622,17 @@ class stage01_resequencing_io(base_analysis):
         svgtileparameters_O = {'tileheader':'heatmap','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         svgtileparameters_O.update(svgparameters_O);
-        formparameters_O = {'tileheader':'filter menu','tiletype':'datalist','tileid':"tile1",'rowid':"row1",'colid':"col1",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12",
-            'tiledatalist': [{'value':'hclust','text':'by cluster'},
+        formtileparameters_O = {'tileheader':'filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"
+            
+            };
+        formparameters_O = {'htmlid':'datalist1_01','htmltype':'datalist','datalist': [{'value':'hclust','text':'by cluster'},
                             {'value':'probecontrast','text':'by row and column'},
                             {'value':'probe','text':'by row'},
                             {'value':'contrast','text':'by column'},
-                            {'value':'custom','text':'by value'}]
-            };
-        parametersobject_O = [formparameters_O,svgtileparameters_O];
+                            {'value':'custom','text':'by value'}]}
+        formtileparameters_O.update(formaparameters_O);
+        parametersobject_O = [formtileparameters_O,svgtileparameters_O];
         tile2datamap_O = {"tile1":[],"tile2":[0]};
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
@@ -738,9 +740,9 @@ class stage01_resequencing_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'form','tileid':"tile1",'rowid':"row1",'colid':"col1",
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
-        formparameters_O = {"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
         svgparameters_O = {"svgtype":'scatterlineplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
                             'svgid':'svg1',

@@ -206,3 +206,51 @@ ddt_tile_table.prototype.get_table = function(tabletype_I){
         return null;
     };
 };
+ddt_tile_dropdownbuttongrouphref = function () {
+    // dropdown button group with href tile
+    ddt_tile.call(this);
+};
+ddt_tile_dropdownbuttongrouphref.prototype = Object.create(ddt_tile.prototype);
+ddt_tile_dropdownbuttongrouphref.prototype.constructor = ddt_tile_dropdownbuttongrouphref;
+ddt_tile_dropdownbuttongrouphref.prototype.make_tile = function(data_I,parameters_I){
+    // make dropdownbuttongrouphref
+    var header_I = parameters_I.tileheader;
+
+    this.set_parameters(parameters_I);
+    this.set_tile();
+
+    this.tile.add_tile2container();
+    this.tile.add_header2tile();
+    this.tile.add_removebutton2header();
+    this.tile.add_title2header(header_I);
+    this.tile.add_body2tile();
+
+    // permanent filter on the data
+    if (parameters_I.dropdownbuttongroupfilters){
+        data_I[0].change_filters(parameters_I.dropdownbuttongroupfilters);
+        data_I[0].filter_stringdata();
+    };
+    // parse nestlistdatafiltered
+    // TODO: encapsulate in a function as either a method of d3_tile or d3_data
+    input = [];
+    data_I[0].nestdatafiltered.forEach(function(d){
+        var row = {};
+        //row[parameters_I.dropdownbuttongroupkeymap.buttontext]=d.key;
+        //row[parameters_I.dropdownbuttongroupkeymap.litext]=d.values[parameters_I.liparameter];
+        row["buttontext"]=d.key;
+        var litext = [];
+        d.values.forEach(function(e){
+            litext.push(e[parameters_I.liparameter])
+        });
+        row["litext"]=litext;
+        row["liparameter"]=parameters_I.liparameter;
+        row["buttonparameter"]=parameters_I.buttonparameter;
+        input.push(row);
+    });
+    this.tile.add_dropdownbuttongroup2body_href(input,parameters_I.hrefurl);
+};
+ddt_tile_dropdownbuttongrouphref.prototype.update_tile = function(data_I){
+    // update form
+    input = data_I[0].convert_filter2stringmenuinput();
+    this.tile.update_form(input);
+};

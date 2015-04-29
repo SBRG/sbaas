@@ -10,7 +10,4 @@ from analysis_stage02_physiology import *
 from analysis_stage01_resequencing import *
 from analysis_stage02_resequencing import *
 from analysis_stage01_ale import *
-
-# broke class and methods:
-#from analysis_isotopomer import analysis_isotopomer 
-#from analysis_quantitationMethod import analysis_quantitationMethod
+from visualization import *

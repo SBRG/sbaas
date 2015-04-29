@@ -176,27 +176,22 @@ class ProjectHandler(BaseHandler):
         # parse the input
         visualization_kwargs = {};
         arguments = [];
-        for arg in ['project_id_name','analysis_id_name','export_id_name']:
+        for arg in ['project_id','analysis_id','data_export_id']:
             args = self.get_arguments(arg);
             if len(args)==1:
                 visualization_kwargs[arg] = args[0];
                 arguments.append(args[0]);
         # make the title name
-        titlename = ' '.join([visualization_kwargs['project_id_name']]);
+        titlename = ' '.join([visualization_kwargs['project_id']]);
         # get the data to visualize
-        if visualization_kwargs.has_key('project_id_name') and visualization_kwargs.has_key('analysis_id_name') and visualization_kwargs.has_key('export_id_name'):
+        if visualization_kwargs.has_key('project_id') and visualization_kwargs.has_key('analysis_id') and visualization_kwargs.has_key('data_export_id'):
             #visualization data
             data_json = '';
-            data_json = self.get_jsondata(visualization_kwargs['analysis_id_name'],visualization_kwargs['export_id_name']);
-        elif visualization_kwargs.has_key('project_id_name'):
+            data_json = self.get_jsondata_analysis(visualization_kwargs['analysis_id'],visualization_kwargs['export_id']);
+        elif visualization_kwargs.has_key('project_id'):
             #landing page data
-            data_dir = '/'.join([visualization_kwargs['project_id_name']]);
-            filename_data_id = 'data_json.js';
-            try:
-                with open(sbaas_settings.visualization_data+'/'+url.get_url(data_dir, source='local',protocol='https')+filename_data_id, "rb") as file:
-                    data_json = file.read();
-            except:
-                data_json = '';
+            data_json = '';
+            data_json = self.get_datajson_project(visualization_kwargs['project_id']);
         else:
             # re-direct to 404 page
             print 'bad GET';
@@ -209,12 +204,9 @@ class ProjectHandler(BaseHandler):
                                #filename_css=url.get_url(filename_css, source),
                                #filename_js=url.get_url(filename_js, source),
                                container_js=url.get_url('container_js', source),
-                               chart_title=titlename,
+                               title_header=titlename,
                                title=titlename,
-                               data_id=data_json,
-                               #specific to templates with a menu
-                               index_js=filename_index,
-                               data=data_index,
+                               ddt_data=data_json,
                                version=__version__,
                                web_version=False,
                                vkbeautify=url.get_url('vkbeautify', source))
@@ -222,7 +214,7 @@ class ProjectHandler(BaseHandler):
         self.set_header("Content-Type", "text/html")
         self.serve(data)
 
-    def get_datajson(self,analysis_id_I,table_id_I):
+    def get_datajson_analysis(self,analysis_id_I,table_id_I):
         '''get the json data for the analysis_id from the table_id'''
         data_json_O = '';
         if table_id_I=='export_dataStage01AleTrajectories_js':
@@ -246,6 +238,13 @@ class ProjectHandler(BaseHandler):
         else:
             #re-direct to 404
             print 'table not found'
+        return data_json_O;
+
+    def get_datajson_project(self,project_id_I):
+        '''get the json data for the project'''
+        data_json_O = '';
+        io = visualization_io(session);
+        data_json_O = io.export_visualizationProject_js(project_id_I,data_dir_I='data_json');
         return data_json_O;
   
 class ContainerHandler(BaseHandler):

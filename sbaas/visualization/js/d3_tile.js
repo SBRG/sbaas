@@ -263,3 +263,50 @@ d3_tile.prototype.add_body2tile = function (title_I){
         .attr("class","panel-body")
         .attr("id",tileid+"panel-body")
 };
+d3_tile.prototype.add_dropdownbuttongroup2body_href = function (btntext_litext_I,url_I) {
+    // add dropdown button group to the body of the tile
+    // each list element will have an href of the form:
+    //      url_I?buttonparametername=buttontext&lliparametername=litextoption1
+    // INPUT:
+    // btntext_litext_I
+    // e.g. [{'buttontext':'dataStage01Resequencing',
+    //          'buttonparameter':'data_export_id',
+    //          'litext':['option1','option2',...]],
+    //          'liparamater':'analysis_id'},...];
+    // url_I
+    // e.g. project.html
+
+    var tileid = this.tileid;
+
+    this.buttongroup = this.tilebody.append("div")
+        .attr("class","btn-group")
+        .attr("id", tileid + "btn-group");
+
+    for (i=0;i<btntext_litext_I.length;i++){
+        var button = this.buttongroup.append("button")
+            .attr("id", tileid + 'button' + btntext_litext_I[i].buttontext)
+            .attr("class", "btn btn-default btn-lg dropdown-toggle" )
+            .attr("data-toggle", "dropdown")
+            .attr("aria-expanded", "false")
+            .text(btntext_litext_I[i].buttontext)
+            .append("span")
+            .attr("class","caret");
+        var ul = this.buttongroup.append("ul")
+            .attr("class","dropdown-menu")
+            .attr("id",tileid + "dropdown-menu"+ btntext_litext_I[i].buttontext)
+            .attr("role","menu");
+        for (j=0;j<btntext_litext_I[i].litext.length;j++){
+            var url = url_I+"?"
+            url += btntext_litext_I[i].buttonparameter + "=" +btntext_litext_I[i].buttontext+"&";
+            url += btntext_litext_I[i].liparameter + "=" +btntext_litext_I[i].litext[j];
+            var li = ul.append("li").append("a")
+                //.attr("href","#")//default
+                .attr("href",url)//default
+                .text(btntext_litext_I[i].litext[j]);
+        };
+    };
+};
+d3_tile.prototype.update_hrefdropdownbuttongroup = function(btntext_litext_I,url_I){
+    // update the dropdownbuttongroup
+    // TODO:
+};

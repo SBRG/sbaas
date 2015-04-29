@@ -280,104 +280,6 @@ class stage02_resequencing_io(stage01_resequencing_io):
                     print(e);
             self.session.commit();
 
-    def export_dataStage01ResequencingMutationsAnnotated_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
-        '''export data_stage01_resequencing_mutationsAnnotated to js file'''
-        
-        print 'exportingdataStage01ResequencingMutationsAnnotated...'
-        # get the analysis information
-        experiment_ids,sample_names,time_points = [],[],[];
-        experiment_ids,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
-        mutation_data_O = [];
-        mutation_ids = [];
-        for sample_name_cnt,sample_name in enumerate(sample_names):
-            # query mutation data:
-            mutations = [];
-            mutations = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsAnnotated(experiment_ids[sample_name_cnt],sample_name);
-            for end_cnt,mutation in enumerate(mutations):
-                if mutation['mutation_position'] > 4000000: #ignore positions great than 4000000
-                    continue;
-                if mutation['mutation_frequency']<frequency_threshold:
-                    continue;
-                # mutation id
-                mutation_genes_str = '';
-                for gene in mutation['mutation_genes']:
-                    mutation_genes_str = mutation_genes_str + gene + '-/-'
-                mutation_genes_str = mutation_genes_str[:-3];
-                mutation_id = mutation_genes_str + '_' + mutation['mutation_type'] + '_' + str(mutation['mutation_position'])
-                tmp = {};
-                tmp.update(mutation);
-                tmp.update({'mutation_id':mutation_id});
-                mutation_data_O.append(tmp);
-                mutation_ids.append(mutation_id);
-        mutation_ids_screened = [x for x in mutation_ids if x not in mutation_id_exclusion_list];
-        mutation_ids_unique = list(set(mutation_ids_screened));
-        data_O = [];
-        for sample_name_cnt,sample_name in enumerate(sample_names):
-            for mutation_id in mutation_ids_unique:
-                tmp = {};
-                tmp_fitted = {};
-                tmp['mutation_id']=mutation_id
-                tmp['time_point']=time_points[sample_name_cnt]
-                tmp['experiment_id']=experiment_ids[sample_name_cnt]
-                tmp['sample_name']=sample_name
-                tmp['mutation_frequency']=0.0;                        
-                tmp['mutation_genes']='';
-                tmp['mutation_position']='';
-                tmp['mutation_annotations']='';
-                tmp['mutation_locations']='';
-                tmp['mutation_links']='';
-                tmp['mutation_type']='';
-                tmp['used_']=True;
-                tmp['comment_']=True;
-                for mutation in mutation_data_O:
-                    if sample_name == mutation['sample_name'] and mutation_id == mutation['mutation_id']:
-                        tmp['mutation_frequency']=mutation['mutation_frequency'];
-                        tmp['mutation_genes']=mutation['mutation_genes'];
-                        tmp['mutation_position']=mutation['mutation_position'];
-                        tmp['mutation_annotations']=mutation['mutation_annotations'];
-                        tmp['mutation_locations']=mutation['mutation_locations'];
-                        tmp['mutation_links']=mutation['mutation_links'];
-                        tmp['mutation_type']=mutation['mutation_type'];
-                        tmp['used_']=mutation['used_'];
-                        tmp['comment_']=mutation['comment_'];
-                        break;
-                data_O.append(tmp);
-        # dump chart parameters to a js files
-        data1_keys = ['experiment_id',
-                    'sample_name',
-                    'mutation_id',
-                    'mutation_frequency',
-                    'mutation_type',
-                    'mutation_position',
-                    'mutation_annotations',
-                    'mutation_genes',
-                    'mutation_locations',
-                    'mutation_links'];
-        data1_nestkeys = ['mutation_id'];
-        data1_keymap = {'xdata':'time_point',
-                        'ydata':'mutation_frequency',
-                        'serieslabel':'mutation_id',
-                        'featureslabel':''};
-        parameters = {"chart2d1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
-                    "chart2d1width":500,"chart2d1height":350,
-                  "chart2d1title":"Population mutation frequency", "chart2d1x1axislabel":"jump_time_point","chart2d1y1axislabel":"frequency"}
-        # dump the data to a json file
-        data1_str = 'var ' + 'data1' + ' = ' + json.dumps(data_O) + ';';
-        data1_keys_str = 'var ' + 'data1_keys' + ' = ' + json.dumps(data1_keys) + ';';
-        data1_nestkeys_str = 'var ' + 'data1_nestkeys' + ' = ' + json.dumps(data1_nestkeys) + ';';
-        data1_keymap_str = 'var ' + 'data1_keymap' + ' = ' + json.dumps(data1_keymap) + ';';
-        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parameters) + ';';
-        if data_dir_I=='tmp':
-            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
-        elif data_dir_I=='project':
-            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_mutationsAnnotated' + '.js'
-        with open(filename_str,'w') as file:
-            file.write(data1_str);
-            file.write(data1_keys_str);
-            file.write(data1_nestkeys_str);
-            file.write(data1_keymap_str);
-            file.write(parameters_str);
-    
     def export_dataStage02ResequencingHeatmap_js(self,analysis_id_I,data_dir_I="tmp"):
         """export heatmap to js file"""
 
@@ -408,15 +310,16 @@ class stage02_resequencing_io(stage01_resequencing_io):
         svgtileparameters_O = {'tileheader':'heatmap','tiletype':'svg','tileid':"tile2",'rowid':"row2",'colid':"col2",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         svgtileparameters_O.update(svgparameters_O);
-        formparameters_O = {'tileheader':'filter menu','tiletype':'datalist','tileid':"tile1",'rowid':"row1",'colid':"col1",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4",
-            'tiledatalist': [{'value':'hclust','text':'by cluster'},
+        formtileparameters_O = {'tileheader':'filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"
+            
+            };
+        formparameters_O = {'htmlid':'datalist1','htmltype':'datalist_01','datalist': [{'value':'hclust','text':'by cluster'},
                             {'value':'probecontrast','text':'by row and column'},
                             {'value':'probe','text':'by row'},
                             {'value':'contrast','text':'by column'},
-                            {'value':'custom','text':'by value'}]
-            };
-        parametersobject_O = [formparameters_O,svgtileparameters_O];
+                            {'value':'custom','text':'by value'}]}
+        formtileparameters_O.update(formaparameters_O);
         tile2datamap_O = {"tile1":[],"tile2":[0]};
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';

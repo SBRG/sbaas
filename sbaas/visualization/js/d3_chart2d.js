@@ -199,7 +199,7 @@ d3_chart2d.prototype.set_y1domain = function () {
         _this.data1.listdatafiltered.forEach(function(d){
             data1.push(d[y_data]);
             data1.push(d[_this.data1keymap.ydatalb]);
-            data1.push(d[_this.data1keymap.ydatalb]);
+            data1.push(d[_this.data1keymap.ydataub]);
         })
     } else{
         _this.data1.listdatafiltered.forEach(function(d){
@@ -555,6 +555,8 @@ d3_chart2d.prototype.add_y2axislabel = function (y2axislabel) {
 };
 d3_chart2d.prototype.set_tooltip = function () {
     //set tooltip properties
+    //TODO: implement bootstrap tooltip
+    //http://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-tooltips.php
     var series_label = this.data1keymap.serieslabel;
 
     this.tooltip = d3.select("#" + this.tileid)

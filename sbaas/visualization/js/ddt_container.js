@@ -98,6 +98,8 @@ ddt_container.prototype.get_tile = function(tiletype_I){
         return new ddt_tile_form();
     } else if (tiletype_I=='datalist'){
         return new ddt_tile_datalist();
+    } else if (tiletype_I=='dropdownbuttongrouphref'){
+        return new ddt_tile_dropdownbuttongrouphref();
     } else if (tiletype_I=='svg'){
         return new ddt_tile_svg();
     } else if (tiletype_I=='table'){
