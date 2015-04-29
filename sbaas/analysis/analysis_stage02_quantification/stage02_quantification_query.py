@@ -2168,6 +2168,42 @@ class stage02_quantification_query(base_analysis):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_rows_analysisID_dataStage02pairWiseTest(self, analysis_id_I):
+        """get data from analysis ID"""
+        #Tested
+        try:
+            data = self.session.query(data_stage02_quantification_pairWiseTest).filter(
+                    data_stage02_quantification_pairWiseTest.analysis_id.like(analysis_id_I),
+                    data_stage02_quantification_pairWiseTest.used_.is_(True),
+                    data_stage02_quantification_pairWiseTest.ci_level != None).order_by(
+                    data_stage02_quantification_pairWiseTest.calculated_concentration_units.asc(),
+                    data_stage02_quantification_pairWiseTest.sample_name_abbreviation_2.asc(),
+                    data_stage02_quantification_pairWiseTest.component_group_name.asc()).all();
+            data_O = [];
+            for d in data: 
+                data_1 = {};
+                data_1['analysis_id'] = d.analysis_id;
+                data_1['sample_name_abbreviation_1'] = d.sample_name_abbreviation_1;
+                data_1['sample_name_abbreviation_2'] = d.sample_name_abbreviation_2;
+                data_1['component_group_name'] = d.component_group_name;
+                data_1['component_name'] = d.component_name;
+                data_1['test_stat'] = d.test_stat;
+                data_1['test_description'] = d.test_description;
+                data_1['pvalue_negLog10'] = -log(d.pvalue,10);
+                data_1['pvalue_corrected_negLog10'] = -log(d.pvalue_corrected,10);
+                data_1['pvalue_corrected_description'] = d.pvalue_corrected_description;
+                data_1['mean'] = d.mean;
+                data_1['ci_lb'] = d.ci_lb;
+                data_1['ci_ub'] = d.ci_ub;
+                data_1['ci_level'] = d.ci_level;
+                data_1['fold_change_log2'] = log(d.fold_change,2);
+                data_1['calculated_concentration_units'] = d.calculated_concentration_units;
+                data_1['used_'] = d.used_;
+                data_1['comment_'] = d.comment_;
+                data_O.append(data_1);
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);
 
     # data_stage02_quantification_analysis
     # query rows from data_stage02_quantification_analysis
@@ -2188,6 +2224,48 @@ class stage02_quantification_query(base_analysis):
                             'analysis_type':d.analysis_type,
                             'used_':d.used_,
                             'comment_':d.comment_});
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+
+    # data_stage02_quantification_descriptiveStats
+    # query rows from data_stage02_quantification_descriptiveStats
+    def get_rows_analysisID_dataStage02QuantificationDescriptiveStats(self,analysis_id_I):
+        '''Querry rows that are used from the analysis'''
+        try:
+            data = self.session.query(data_stage02_quantification_descriptiveStats).filter(
+                    data_stage02_quantification_descriptiveStats.analysis_id.like(analysis_id_I),
+                    data_stage02_quantification_descriptiveStats.used_.is_(True)).all();
+            rows_O = [];
+            if data: 
+                for d in data:
+                    rows_O.append({'analysis_id':d.analysis_id,
+                    'experiment_id':d.experiment_id,
+                    'sample_name_abbreviation':d.sample_name_abbreviation,
+                    'time_point':d.time_point,
+                    'component_group_name':d.component_group_name,
+                    'component_name':d.component_name,
+                    'test_stat':d.test_stat,
+                    'test_description':d.test_description,
+                    'pvalue':d.pvalue,
+                    'pvalue_corrected':d.pvalue_corrected,
+                    'pvalue_corrected_description':d.pvalue_corrected_description,
+                    'mean':d.mean,
+                    'var':d.var,
+                    'cv':d.cv,
+                    'n':d.n,
+                    'ci_lb':d.ci_lb,
+                    'ci_ub':d.ci_ub,
+                    'ci_level':d.ci_level,
+                    'min':d.min,
+                    'max':d.max,
+                    'median':d.median,
+                    'iq_1':d.iq_1,
+                    'iq_3':d.iq_3,
+                    'calculated_concentration_units':d.calculated_concentration_units,
+                    'used_':d.used_,
+                    'comment_':d.comment_
+                    });
             return rows_O;
         except SQLAlchemyError as e:
             print(e);

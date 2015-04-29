@@ -229,6 +229,9 @@ class ProjectHandler(BaseHandler):
         elif table_id_I=='export_dataStage01ResequencingLineage_js':
             io = stage01_resequencing_io(session);
             data_json_O = io.export_dataStage01ResequencingLineage_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage01ResequencingMutationsAnnotated_js':
+            io = stage01_resequencing_io(session);
+            data_json_O = io.export_dataStage01ResequencingMutationsAnnotated_js(analysis_id_I,data_dir_I='data_json');
         elif table_id_I=='export_dataStage02ResequencingHeatmap_js':
             io = stage02_resequencing_io(session);
             data_json_O = io.export_dataStage02ResequencingHeatmap_js(analysis_id_I,data_dir_I='data_json');

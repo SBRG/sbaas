@@ -3162,9 +3162,9 @@ class stage02_isotopomer_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'form','tileid':"tile1",'rowid':"row1",'colid':"col1",
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
-        formparameters_O = {"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
         svgparameters_O = {"svgtype":'boxandwhiskersplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
                             'svgid':'svg1',

@@ -461,6 +461,10 @@ class stage01_resequencing_io(base_analysis):
         # get the analysis information
         experiment_ids,sample_names,time_points = [],[],[];
         experiment_ids,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
+        # convert time_point to intermediates
+        time_points_int = [int(x) for x in time_points];
+        intermediates,time_points,experiment_ids,sample_names = (list(t) for t in zip(*sorted(zip(time_points_int,time_points,experiment_ids,sample_names))))
+        intermediates = [i for i,x in enumerate(intermediates)];
         mutation_data_O = [];
         mutation_ids = [];
         for sample_name_cnt,sample_name in enumerate(sample_names):
@@ -511,6 +515,7 @@ class stage01_resequencing_io(base_analysis):
                 tmp_fitted = {};
                 tmp['mutation_id']=mutation_id['mutation_id']
                 tmp['time_point']=time_points[sample_name_cnt]
+                tmp['intermediate']=intermediates[sample_name_cnt]
                 tmp['experiment_id']=experiment_ids[sample_name_cnt]
                 tmp['sample_name']=sample_name
                 tmp['mutation_frequency']=0.0;  
@@ -543,7 +548,7 @@ class stage01_resequencing_io(base_analysis):
                     'mutation_locations'
                     ];
         data1_nestkeys = ['mutation_id'];
-        data1_keymap = {'xdata':'time_point',
+        data1_keymap = {'xdata':'intermediate',
                         'ydata':'mutation_frequency',
                         'serieslabel':'mutation_id',
                         'featureslabel':''};
@@ -663,6 +668,10 @@ class stage01_resequencing_io(base_analysis):
         sample_names = []
         time_points = []
         experiment_ids,lineage_names,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndLineageNameAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
+        # convert time_point to intermediates
+        time_points_int = [int(x) for x in time_points];
+        intermediates,time_points,experiment_ids,sample_names,lineage_names = (list(t) for t in zip(*sorted(zip(time_points_int,time_points,experiment_ids,sample_names,lineage_names))))
+        intermediates = [i for i,x in enumerate(intermediates)];
         # get the lineage information
         lineage_data = [];
         lineage_data = self.stage01_resequencing_query.get_rowsIO_lineageName_dataStage01ResequencingLineage(lineage_names[0]);
@@ -691,8 +700,6 @@ class stage01_resequencing_io(base_analysis):
                     tmp['comment_']=None;
                     mutation_ids_uniqueInfo.append(tmp);          
         data_O = [];
-        # normalize time-points to intermediates (this has potential to break)
-        intermediates = [i for i,t in enumerate(time_points)];
         # add in 0.0 frequency for mutations that are not found
         for sample_name_cnt,sample_name in enumerate(sample_names):
             for mutation_id in mutation_ids_uniqueInfo:

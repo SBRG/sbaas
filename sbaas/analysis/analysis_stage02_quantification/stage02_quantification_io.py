@@ -372,3 +372,192 @@ class stage02_quantification_io(base_analysis):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
+
+    def export_dataStage02QuantificationDescriptiveStats_js(self,analysis_id_I,data_dir_I='tmp'):
+        '''Export data for a box and whiskers plot'''
+
+        #get the analysis information
+        analysis_info = [];
+        analysis_info = self.stage02_quantification_query.get_rows_analysisID_dataStage02QuantificationAnalysis(analysis_id_I);
+        #get the data for the analysis
+        data_O = [];
+        data_O = self.stage02_quantification_query.get_(analysis_id_I);
+        # dump chart parameters to a js files
+        data1_keys = ['analysis_id','experiment_id','sample_name_abbreviation','component_name','time_point','calculated_concentration_units','component_group_name'
+                    ];
+        data1_nestkeys = ['component_group_name'];
+        data1_keymap = {'xdata':'component_group_name',
+                        'ydata':'',
+                        'ydatalb':'ci_lb',
+                        'ydataub':'ci_ub',
+                        'ydatamin':'min',
+                        'ydatamax':'max',
+                        'ydataiq1':'iq_1',
+                        'ydataiq3':'iq_3',
+                        'ydatamedian':'median',
+                        'serieslabel':'sample_name_abbreviation',
+                        'featureslabel':'component_group_name'};
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters_O.update(formparameters_O);
+        svgparameters_O = {"svgtype":'boxandwhiskersplot2d_01',"svgkeymap":[data1_keymap],
+                            'svgid':'svg1',
+                            "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                            "svgwidth":500,"svgheight":350,
+                            "svgx1axislabel":"component_group_name","svgy1axislabel":"concentration",
+    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+        svgtileparameters_O = {'tileheader':'Custom box and whiskers plot','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters_O.update(svgparameters_O);
+        tableparameters_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters_O = {'tileheader':'descriptiveStats','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters_O.update(tableparameters_O);
+        parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
+        tile2datamap_O = {"tile1":[0],"tile2":[0],"tile3":[0]};
+        # dump the data to a json file
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);
+        
+    def export_dataStage02QuantificationPairWiseTest_js(self,analysis_id_I,data_dir_I='tmp'):
+        '''Export data for a volcano plot'''
+        
+        #get the data for the analysis
+        data_O = [];
+        data_O = self.stage02_quantification_query.get_rows_analysisID_dataStage02pairWiseTest(analysis_id_I);
+        # make the data parameters
+        data1_keys = ['analysis_id','sample_name_abbreviation_1','sample_name_abbreviation_2','component_name','component_group_name','calculated_concentration_units','test_description'
+                    ];
+        data1_nestkeys = ['analysis_id'];
+        data1_keymap = {'xdata':'pvalue_corrected_negLog10',
+                        'ydata':'fold_change_log2',
+                        'serieslabel':'',
+                        'featureslabel':'component_group_name'};
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters_O.update(formparameters_O);
+        svgparameters_O = {"svgtype":'volcanoplot2d_01',"svgkeymap":[data1_keymap],
+                            'svgid':'svg1',
+                            "svgmargin":{ 'top': 50, 'right': 50, 'bottom': 50, 'left': 50 },
+                            "svgwidth":500,"svgheight":350,
+                            "svgx1axislabel":'Fold Change [log2(FC)]',"svgy1axislabel":'Probability [-log10(P)]',
+    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+        svgtileparameters_O = {'tileheader':'Volcano plot','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters_O.update(svgparameters_O);
+        tableparameters_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters_O = {'tileheader':'pairWiseTest','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters_O.update(tableparameters_O);
+        parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
+        tile2datamap_O = {"tile1":[0],"tile2":[0],"tile3":[0]};
+        # dump the data to a json file
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);
+
+    def export_dataStage02QuantificationHeatmap_js(self,analysis_id_I,data_dir_I='tmp'):
+        return;
+
+    def export_dataStage02QuantificationPca_js(self,analysis_id_I,data_dir_I='tmp'):
+        return;
+        
+        #get the data for the analysis
+        data1_O = [];
+        data1_O = self.stage02_quantification_query.get_rows_analysisID_dataStage02pairWiseTest(analysis_id_I);
+        data2_O = [];
+        data2_O = self.stage02_quantification_query.get_rows_analysisID_dataStage02pairWiseTest(analysis_id_I);
+        # make the data parameters
+        data1_keys = [
+                    ];
+        data1_nestkeys = ['analysis_id'];
+        data1_keymap = {'xdata':'pvalue_corrected_negLog10',
+                        'ydata':'fold_change_log2',
+                        'serieslabel':'',
+                        'featureslabel':'component_group_name'};
+        data2_keys = [
+                    ];
+        data2_nestkeys = ['analysis_id'];
+        data2_keymap = {'xdata':'pvalue_corrected_negLog10',
+                        'ydata':'fold_change_log2',
+                        'serieslabel':'',
+                        'featureslabel':'component_group_name'};
+        # make the data object
+        dataobject_O = [{"data":data1_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},
+                        {"data":data2_O,"datakeys":data2_keys,"datanestkeys":data2_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters1_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters1_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters1_O.update(formparameters1_O);
+        svgparameters1_O = {"svgtype":'volcanoplot2d_01',"svgkeymap":[data1_keymap],
+                            'svgid':'svg1',
+                            "svgmargin":{ 'top': 50, 'right': 50, 'bottom': 50, 'left': 50 },
+                            "svgwidth":500,"svgheight":350,
+                            "svgx1axislabel":'Fold Change [log2(FC)]',"svgy1axislabel":'Probability [-log10(P)]',
+    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+        svgtileparameters1_O = {'tileheader':'Volcano plot','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters1_O.update(svgparameters1_O);
+        formtileparameters2_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile3",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters2_O = {'htmlid':'form2',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters2_O.update(formparameters2_O);
+        svgparameters2_O = {"svgtype":'volcanoplot2d_01',"svgkeymap":[data1_keymap],
+                            'svgid':'svg2',
+                            "svgmargin":{ 'top': 50, 'right': 50, 'bottom': 50, 'left': 50 },
+                            "svgwidth":500,"svgheight":350,
+                            "svgx1axislabel":'Fold Change [log2(FC)]',"svgy1axislabel":'Probability [-log10(P)]',
+    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+        svgtileparameters2_O = {'tileheader':'Volcano plot','tiletype':'svg','tileid':"tile4",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters2_O.update(svgparameters2_O);
+
+        parametersobject_O = [formtileparameters1_O,svgtileparameters1_O,formtileparameters2_O,svgtileparameters2_O,];
+        tile2datamap_O = {"tile1":[0],"tile2":[0],"tile3":[1],"tile4":[1]};
+        # dump the data to a json file
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);
+
