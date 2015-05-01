@@ -1,4 +1,6 @@
-var ddt_tile = function(){
+"use strict";
+//var ddt_tile = function(){
+function ddt_tile(){
     this.parameters = {};
     this.tile = null;
 };
@@ -26,11 +28,6 @@ ddt_tile.prototype.set_tile = function(){
     this.tile.set_rowclass(rowclass);
     this.tile.set_colclass(colclass);
 };
-// ddt_tile.prototype.set_data = function(data_I){
-//     // set data
-//     this.data = data_I;
-// };
-// make functions
 ddt_tile.prototype.make_tile = function(){
     // make the tile
     // define tile make function call sequence here...
@@ -40,67 +37,8 @@ ddt_tile.prototype.update_tile = function(){
     // update the tile
     // define tile update function call sequence here...
 };
-ddt_tile_datalist = function () {
-    // data list tile
-    ddt_tile.call(this);
-};
-ddt_tile_datalist.prototype = Object.create(ddt_tile.prototype);
-ddt_tile_datalist.prototype.constructor = ddt_tile_datalist;
-ddt_tile_datalist.prototype.make_tile = function(data_I,parameters_I){   
-    // make the data list
-    // INPUT:
-    // parameters_I = e.g., {'tileheader':'filter menu','tiletype':'datalist','tileid':"tile1",'rowid':"row1",'colid':"col1",
-    //        'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4",
-    //        'tiledatalist': [{'value':'hclust','text':'by cluster'},
-    //                        {'value':'probecontrast','text':'by row and column'},
-    //                        {'value':'probe','text':'by row'},
-    //                        {'value':'contrast','text':'by column'},
-    //                        {'value':'custom','text':'by value'}]};
-            
-    var header_I = parameters_I.tileheader;
-    var datalist_I = parameters_I.tiledatalist;
-
-    this.set_parameters(parameters_I);
-    this.set_tile();
-
-    this.tile.add_tile2container();
-    this.tile.add_header2tile();
-    this.tile.add_removebutton2header();
-    this.tile.add_title2header(header_I);
-    this.tile.add_body2tile();
-    this.tile.add_datalist2body(datalist_I);
-};
-ddt_tile_form = function () {
-    // form tile
-    ddt_tile.call(this);
-};
-ddt_tile_form.prototype = Object.create(ddt_tile.prototype);
-ddt_tile_form.prototype.constructor = ddt_tile_form;
-ddt_tile_form.prototype.make_tile = function(data_I,parameters_I){
-    // make form
-    var header_I = parameters_I.tileheader;
-
-    this.set_parameters(parameters_I);
-    this.set_tile();
-
-    this.tile.add_tile2container();
-    this.tile.add_header2tile();
-    this.tile.add_removebutton2header();
-    this.tile.add_title2header(header_I);
-    this.tile.add_body2tile();
-
-    input = data_I[0].convert_filter2stringmenuinput();
-    this.tile.add_form2body(input);
-    this.tile.add_submitbutton2form(parameters_I.formsubmitbuttonidtext);
-    this.tile.add_submitbutton2form(parameters_I.formresetbuttonidtext);
-    this.tile.add_submitbutton2form(parameters_I.formupdatebuttonidtext);
-};
-ddt_tile_form.prototype.update_tile = function(data_I){
-    // update form
-    input = data_I[0].convert_filter2stringmenuinput();
-    this.tile.update_form(input);
-};
-ddt_tile_svg = function () {
+//var ddt_tile_svg = function () {
+function ddt_tile_svg() {
     // form tile
     ddt_tile.call(this);
     this.ddtsvg = null;
@@ -132,7 +70,7 @@ ddt_tile_svg.prototype.update_tile = function(data_I){
     // update tile
 
     //update the data filters...
-    this.ddtsvg.add_data(data_I);
+    //this.ddtsvg.add_data(data_I);
     //this.ddtsvg.filter_data1and2stringdata();
     //re-render the svg
     this.ddtsvg.ddtsvg.render();
@@ -151,17 +89,18 @@ ddt_tile_svg.prototype.get_svg = function(svgtype_I){
         return new ddt_svg_verticalbarschart2d_01();
     } else if (svgtype_I=='boxandwhiskersplot2d_01'){
         return new ddt_svg_boxandwhiskersplot2d_01();
-    } else if (svgtype_I=='volcanoplot2d'){
-        return new ddt_svg_volcanoplot2d();
-    } else if (svgtype_I=='pcaplot2d_loadings'){
-        return new ddt_svg_pcaplot2d_loadings();
-    } else if (svgtype_I=='pcaplot2d_scores'){
-        return new ddt_svg_pcaplot2d_scores();
+    } else if (svgtype_I=='volcanoplot2d_01'){
+        return new ddt_svg_volcanoplot2d_01();
+    //} else if (svgtype_I=='pcaplot2d_loadings_01'){
+    //    return new ddt_svg_pcaplot2d_loadings_01();
+    } else if (svgtype_I=='pcaplot2d_scores_01'){
+        return new ddt_svg_pcaplot2d_scores_01();
     } else {
         return null;
     };
 };
-ddt_tile_table = function () {
+//var ddt_tile_table = function () {
+function ddt_tile_table() {
     // table tile
     ddt_tile.call(this);
     this.ddttable = null;
@@ -185,15 +124,17 @@ ddt_tile_table.prototype.make_tile = function(data_I,parameters_I){
 
     //table
     this.ddttable = this.get_table(tabletype_I);
-    this.ddttable.make_table(data_I,parameters_I)
+    this.ddttable.make_table(data_I,parameters_I);
+    //this.ddttable.make_table(parameters_I);
 
     this.ddttable.ddttable.render();
+    //this.ddttable.ddttable.render(data_I[0]);
 };
 ddt_tile_table.prototype.update_tile = function(data_I){
     // update tile
 
     //update the data filters...
-    this.ddttable.add_data(data_I);
+    //this.ddttable.add_data(data_I);
     //this.ddttable.ddttable.data.filter_stringdata();
     //re-render the table
     this.ddttable.ddttable.render();
@@ -206,15 +147,18 @@ ddt_tile_table.prototype.get_table = function(tabletype_I){
         return null;
     };
 };
-ddt_tile_dropdownbuttongrouphref = function () {
-    // dropdown button group with href tile
+//var ddt_tile_html = function () {
+function ddt_tile_html() {
+    // html tile
     ddt_tile.call(this);
+    this.ddthtml = null;
 };
-ddt_tile_dropdownbuttongrouphref.prototype = Object.create(ddt_tile.prototype);
-ddt_tile_dropdownbuttongrouphref.prototype.constructor = ddt_tile_dropdownbuttongrouphref;
-ddt_tile_dropdownbuttongrouphref.prototype.make_tile = function(data_I,parameters_I){
-    // make dropdownbuttongrouphref
+ddt_tile_html.prototype = Object.create(ddt_tile.prototype);
+ddt_tile_html.prototype.constructor = ddt_tile_html;
+ddt_tile_html.prototype.make_tile = function(data_I,parameters_I){
+    // make chart2d tile
     var header_I = parameters_I.tileheader;
+    var htmltype_I = parameters_I.htmltype;
 
     this.set_parameters(parameters_I);
     this.set_tile();
@@ -224,33 +168,43 @@ ddt_tile_dropdownbuttongrouphref.prototype.make_tile = function(data_I,parameter
     this.tile.add_removebutton2header();
     this.tile.add_title2header(header_I);
     this.tile.add_body2tile();
+    this.tile.add_footer2tile();
+    if (parameters_I.formsubmitbuttonidtext){
+        this.tile.add_submitbutton2footer(parameters_I.formsubmitbuttonidtext);
+        };
+    if (parameters_I.formresetbuttonidtext){
+        this.tile.add_submitbutton2footer(parameters_I.formresetbuttonidtext);
+        };
+    if (parameters_I.formupdatebuttonidtext){
+        this.tile.add_submitbutton2footer(parameters_I.formupdatebuttonidtext);
+        };
 
-    // permanent filter on the data
-    if (parameters_I.dropdownbuttongroupfilters){
-        data_I[0].change_filters(parameters_I.dropdownbuttongroupfilters);
-        data_I[0].filter_stringdata();
-    };
-    // parse nestlistdatafiltered
-    // TODO: encapsulate in a function as either a method of d3_tile or d3_data
-    input = [];
-    data_I[0].nestdatafiltered.forEach(function(d){
-        var row = {};
-        //row[parameters_I.dropdownbuttongroupkeymap.buttontext]=d.key;
-        //row[parameters_I.dropdownbuttongroupkeymap.litext]=d.values[parameters_I.liparameter];
-        row["buttontext"]=d.key;
-        var litext = [];
-        d.values.forEach(function(e){
-            litext.push(e[parameters_I.liparameter])
-        });
-        row["litext"]=litext;
-        row["liparameter"]=parameters_I.liparameter;
-        row["buttonparameter"]=parameters_I.buttonparameter;
-        input.push(row);
-    });
-    this.tile.add_dropdownbuttongroup2body_href(input,parameters_I.hrefurl);
+    //html
+    this.ddthtml = this.get_html(htmltype_I);
+    this.ddthtml.make_html(data_I,parameters_I);
+    //this.ddthtml.make_html(parameters_I);
+
+    this.ddthtml.ddthtml.render();
+    //this.ddthtml.ddthtml.render(data_I[0]);
 };
-ddt_tile_dropdownbuttongrouphref.prototype.update_tile = function(data_I){
-    // update form
-    input = data_I[0].convert_filter2stringmenuinput();
-    this.tile.update_form(input);
+ddt_tile_html.prototype.update_tile = function(data_I){
+    // update tile
+
+    //update the data filters...
+    //this.ddthtml.add_data(data_I);
+    //re-render the html
+    this.ddthtml.ddthtml.render();
+    //this.ddthtml.update_html(data_I);
+};
+ddt_tile_html.prototype.get_html = function(htmltype_I){
+    // return the appropriate tile object
+    if (htmltype_I=='form_01'){
+        return new ddt_html_form_01();
+    } else if (htmltype_I=='datalist_01'){
+        return new ddt_html_datalist_01();
+    } else if (htmltype_I=='dropdownbuttongrouphref_01'){
+        return new ddt_html_dropdownbuttongrouphref_01();
+    } else {
+        return null;
+    };
 };

@@ -1,4 +1,6 @@
-ddt_svg_heatmap_01 = function () {
+"use strict";
+//var ddt_svg_heatmap_01 = function () {
+function ddt_svg_heatmap_01() {
     // heatmap
     // description:
     // generic heatmap

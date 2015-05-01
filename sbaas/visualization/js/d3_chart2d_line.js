@@ -1,3 +1,4 @@
+"use strict";
 d3_chart2d.prototype.set_linedata1 = function (interoplate_I) {
     // set the line generator properties
     var x_data = this.data1keymap.xdata;

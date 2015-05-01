@@ -1,5 +1,7 @@
+"use strict";
 //TODO:
-d3_map2d = function () {
+//var d3_map2d = function () {
+function d3_map2d() {
     // generic map
     this.id = '';
     this.margin = {};

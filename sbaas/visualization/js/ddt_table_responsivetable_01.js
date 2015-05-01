@@ -1,4 +1,6 @@
-ddt_table_responsivetable_01 = function () {
+"use strict";
+//var ddt_table_responsivetable_01 = function () {
+function ddt_table_responsivetable_01() {
     // responsive table
     // description:
     // data is formatted and presented in tabular form

@@ -82,36 +82,46 @@ class visualization_io(base_analysis):
         parametersobject_O = [];
         # ale:
         dropdownbuttongrouptileparameters1_O = {'tileheader':'ALE','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-3"};
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
         dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['export_dataStage01AleTrajectories_js']},"hrefurl":'project.html',"htmlkeymap":data1_keymap,
-                        'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html1"};
+                        'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html1"
+                        #,"htmlparagraph":[{"pclass":"text-left","ptext":""},
+        	               #                 {"pclass":"text-left","ptext":""},
+        	               #                 {"pclass":"text-left","ptext":""},
+        	               #                 {"pclass":"text-left","ptext":""},
+        	               #                 {"pclass":"text-left","ptext":""},
+        	               #                 {"pclass":"text-left","ptext":""},
+        	               #                 {"pclass":"text-left","ptext":""},
+        	               #                 {"pclass":"text-left","ptext":""},
+        	               #                 {"pclass":"text-left","ptext":""}]
+                        };
         dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
         parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
         # physiology:
         dropdownbuttongrouptileparameters1_O = {'tileheader':'Physiology','tiletype':'html','tileid':"tile2",'rowid':"row1",'colid':"col2",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-3"};
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
         dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['export_dataStage01PhysiologyRatesAverages_js']},"hrefurl":'project.html',"htmlkeymap":data1_keymap,
                         'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html2"};
         dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
         parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
         # resequencing:
-        dropdownbuttongrouptileparameters1_O = {'tileheader':'Resequencing','tiletype':'html','tileid':"tile3",'rowid':"row1",'colid':"col3",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-3"};
+        dropdownbuttongrouptileparameters1_O = {'tileheader':'Resequencing','tiletype':'html','tileid':"tile3",'rowid':"row2",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['export_dataStage01ResequencingHeatmap_js','export_dataStage01ResequencingLineage_js','export_dataStage02ResequencingHeatmap_js']},
                                             "hrefurl":'project.html',"htmlkeymap":data1_keymap,
                         'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html3"};
         dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
         parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
         # quantification:
-        dropdownbuttongrouptileparameters1_O = {'tileheader':'Quantification','tiletype':'html','tileid':"tile4",'rowid':"row1",'colid':"col4",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-3"};
+        dropdownbuttongrouptileparameters1_O = {'tileheader':'Quantification','tiletype':'html','tileid':"tile4",'rowid':"row3",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
         dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['Quantification']},"hrefurl":'project.html',"htmlkeymap":data1_keymap,
                         'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html4"};
         dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
         parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
         # isotopomer:
-        dropdownbuttongrouptileparameters1_O = {'tileheader':'Isotopomer','tiletype':'html','tileid':"tile5",'rowid':"row1",'colid':"col5",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-3"};
+        dropdownbuttongrouptileparameters1_O = {'tileheader':'Isotopomer','tiletype':'html','tileid':"tile5",'rowid':"row3",'colid':"col2",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
         dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['Isotopomer']},"hrefurl":'project.html',"htmlkeymap":data1_keymap,
                         'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html5"};
         dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);

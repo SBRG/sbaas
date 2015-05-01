@@ -1,3 +1,4 @@
+"use strict";
 //TODO:
 d3_chart2d.prototype.set_diameter = function(diameter_I){
     // set uniform width and height

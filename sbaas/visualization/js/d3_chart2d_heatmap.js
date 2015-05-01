@@ -1,3 +1,4 @@
+"use strict";
 d3_chart2d.prototype.set_heatmapdata1 = function (cellsize_I) {
     //add heatmap to the plot
 
@@ -30,7 +31,7 @@ d3_chart2d.prototype.set_heatmapdata1 = function (cellsize_I) {
     var rowindexmax = rowlabelsset.values().length-1;
     var collabelsordered = [];
     var rowlabelsordered = [];
-    for (i=colindexmin;i<=colindexmax;i++){
+    for (var i=colindexmin;i<=colindexmax;i++){
         collabelsordered.push(i);
     };
     for (i=rowindexmin;i<=rowindexmax;i++){
@@ -38,16 +39,16 @@ d3_chart2d.prototype.set_heatmapdata1 = function (cellsize_I) {
     };
     var columnleavesordered = [];
     var rowleavesordered = [];
-    for (i=0;i<collabelsordered.length;i++){
-        for (j=0;j<listdatafiltered.length;j++){
+    for (var i=0;i<collabelsordered.length;i++){
+        for (var j=0;j<listdatafiltered.length;j++){
             if (collabelsordered[i]===listdatafiltered[j][columnsindex]){
                 columnleavesordered.push(listdatafiltered[j][columnsleaves]);
                 break;
             };
         };
     };
-    for (i=0;i<rowlabelsordered.length;i++){
-        for (j=0;j<listdatafiltered.length;j++){
+    for (var i=0;i<rowlabelsordered.length;i++){
+        for (var j=0;j<listdatafiltered.length;j++){
             if (rowlabelsordered[i]===listdatafiltered[j][rowsindex]){
                 rowleavesordered.push(listdatafiltered[j][rowsleaves]);
                 break;

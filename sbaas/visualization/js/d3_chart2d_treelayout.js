@@ -1,3 +1,4 @@
+"use strict";
 d3_chart2d.prototype.set_treelayoutdata1root = function(treelayoutroot_I){
     //set tree layout root
     if (treelayoutroot_I){this.treelayoutroot = treelayoutroot_I;}

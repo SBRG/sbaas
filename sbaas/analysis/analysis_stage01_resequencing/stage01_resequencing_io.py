@@ -631,14 +631,14 @@ class stage01_resequencing_io(base_analysis):
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"
             
             };
-        formparameters_O = {'htmlid':'datalist1_01','htmltype':'datalist','datalist': [{'value':'hclust','text':'by cluster'},
+        formparameters_O = {'htmlid':'datalist1','htmltype':'datalist_01','datalist': [{'value':'hclust','text':'by cluster'},
                             {'value':'probecontrast','text':'by row and column'},
                             {'value':'probe','text':'by row'},
                             {'value':'contrast','text':'by column'},
                             {'value':'custom','text':'by value'}]}
-        formtileparameters_O.update(formaparameters_O);
+        formtileparameters_O.update(formparameters_O);
         parametersobject_O = [formtileparameters_O,svgtileparameters_O];
-        tile2datamap_O = {"tile1":[],"tile2":[0]};
+        tile2datamap_O = {"tile1":[0],"tile2":[0]};
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
         tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';

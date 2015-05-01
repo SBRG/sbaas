@@ -1,4 +1,6 @@
-ddt_svg_scatterlineplot2d_01 = function () {
+"use strict";
+//var ddt_svg_scatterlineplot2d_01 = function () {
+function ddt_svg_scatterlineplot2d_01() {
     // scatterlineplot
     // description:
     // data 1 and 2 are plotted along the same axis

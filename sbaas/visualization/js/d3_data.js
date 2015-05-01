@@ -1,4 +1,6 @@
-var d3_data = function () {
+"use strict";
+//var d3_data = function () {
+function d3_data() {
     //data function
     this.keys = []; // list of columns that can be applied as nest keys and filters
     this.nestkey = ''; // key to apply to nest
@@ -17,7 +19,7 @@ d3_data.prototype.convert_list2nestlist = function (data_I,key_I,rollup_I) {
     // convert a list of objects to a d3 nest by a key
     var add_nestkey = this.add_nestkey;
     var nesteddata_O = d3.nest();
-    for (i=0;i<key_I.length;i++){
+    for (var i=0;i<key_I.length;i++){
         nesteddata_O = nesteddata_O.key(add_nestkey(key_I[i]));
     };
     if (rollup_I){nesteddata_O = nesteddata_O.rollup(rollup_I)};
@@ -39,13 +41,13 @@ d3_data.prototype.filter_stringdata = function () {
     var listdatafiltered_O = [];
     
     //set _used to false:
-    for (i = 0; i < listdatacopy.length; i++) {
+    for (var i = 0; i < listdatacopy.length; i++) {
         listdatacopy[i]['used_'] = true;
     };
 
     //pass each row through the filter
-    for (i = 0; i < listdatacopy.length; i++) {
-        for (filter in this.filters) {
+    for (var i = 0; i < listdatacopy.length; i++) {
+        for (var filter in this.filters) {
             //console.log(filter);
             var str_compare = listdatacopy[i][filter].toString(); //ensure that the value is a string
             var str_filter = this.filters[filter].join('|');  //breaks for 'mmol*gDCW*hr-1' because * is a regular expression
@@ -84,9 +86,9 @@ d3_data.prototype.reset_filters = function () {
     // generate the initial filter
 
     var filters = {};
-    for (key_cnt = 0; key_cnt < this.keys.length;key_cnt++) {
+    for (var key_cnt = 0; key_cnt < this.keys.length;key_cnt++) {
         var colentries = d3.set();
-        for (i = 0; i < this.listdata.length; i++) {
+        for (var i = 0; i < this.listdata.length; i++) {
             colentries.add(this.listdata[i][this.keys[key_cnt]]);
         };
         filters[this.keys[key_cnt]] = colentries.values();
@@ -97,9 +99,9 @@ d3_data.prototype.update_filters = function () {
     // update the filter based on the current filtered data
 
     var filters = {};
-    for (key_cnt = 0; key_cnt < this.keys.length;key_cnt++) {
+    for (var key_cnt = 0; key_cnt < this.keys.length;key_cnt++) {
         var colentries = d3.set();
-        for (i = 0; i < this.listdatafiltered.length; i++) {
+        for (var i = 0; i < this.listdatafiltered.length; i++) {
             colentries.add(this.listdatafiltered[i][this.keys[key_cnt]]);
         };
         filters[this.keys[key_cnt]] = colentries.values();
@@ -115,7 +117,7 @@ d3_data.prototype.clear_data = function () {
 d3_data.prototype.change_filters = function (filter_I) {
     // modify the filter according to the new filter
     
-    for (key in filter_I) {
+    for (var key in filter_I) {
         this.filters[key] = filter_I[key];
     };
 };
@@ -127,7 +129,7 @@ d3_data.prototype.format_keyvalues2namechildren = function(lastchild_I){
             delete d.key;
         } else {
             lastchild = d[lastchild_I];
-            for(key in d){delete d[key];}; //remove all object properties
+            for(var key in d){delete d[key];}; //remove all object properties
                                            //needed for proper rendering of data for d3 layouts
             d['name']=lastchild;
         };
@@ -142,7 +144,7 @@ d3_data.prototype.format_keyvalues2namechildren = function(lastchild_I){
 d3_data.prototype.convert_filter2stringmenuinput = function(){
     // convert filter list to filter string list
     var filterstring = [];
-    for (key in this.filters){
+    for (var key in this.filters){
         filterstring.push({"text":key,"value":this.filters[key].toString()});
         };
     return filterstring;
@@ -150,7 +152,7 @@ d3_data.prototype.convert_filter2stringmenuinput = function(){
 d3_data.prototype.convert_stringmenuinput2filter = function(filterstring_I){
     // convert filter list to filter string list
     var filtermap = {};
-    for (i=0;i<filterstring_I.length;i++){
+    for (var i=0;i<filterstring_I.length;i++){
         //this.filters[filterstring_I[i].text]=filterstring_I[i].value.split(",");
         filtermap[filterstring_I[i].text]=filterstring_I[i].value.split(",");
     };

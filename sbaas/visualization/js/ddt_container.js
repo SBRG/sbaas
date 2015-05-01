@@ -1,4 +1,6 @@
-var ddt_container = function (){
+"use strict";
+function ddt_container(){
+//var ddt_container = function (){
     // ddt_container class
     this.parameters = [];
     this.tiles = [];
@@ -41,7 +43,7 @@ ddt_container.prototype.add_data = function(data_I){
     // add data to container
     //INPUT:
     // data_I = [{data:[],datakeys:[],datanestkeys:[]},...]
-    for (cnt=0;cnt<data_I.length;cnt++){ //switched from i to cnt due to i changing within the loop
+    for (var cnt=0;cnt<data_I.length;cnt++){ //switched from i to cnt due to i changing within the loop
         var d3data = new d3_data();
         d3data.set_keys(data_I[cnt].datakeys);
         d3data.set_listdata(data_I[cnt].data,data_I[cnt].datanestkeys);
@@ -52,7 +54,7 @@ ddt_container.prototype.add_data = function(data_I){
 ddt_container.prototype.add_containertiles = function(){
     // get all container tiles based on parameters
     // tiles will be added in the same order as the parameters
-    for (i=0;i<this.parameters.length;i++){
+    for (var i=0;i<this.parameters.length;i++){
         var tiletype = this.parameters[i].tiletype
         var tile = this.get_tile(tiletype);
         this.tiles.push(tile);
@@ -62,7 +64,7 @@ ddt_container.prototype.make_container = function(){
     // call all tile make functions
     var data = this.data;
     this.add_containertiles();
-    for (cnt=0;cnt<this.tiles.length;cnt++){ //switched from i to cnt due to i changing within the loop
+    for (var cnt=0;cnt<this.tiles.length;cnt++){ //switched from i to cnt due to i changing within the loop
         var tiledataindex = this.tile2datamap[this.parameters[cnt].tileid];
         var tiledata = [];
         tiledataindex.forEach(function(d){tiledata.push(data[d]);});
@@ -72,7 +74,7 @@ ddt_container.prototype.make_container = function(){
 ddt_container.prototype.update_container = function(){
     // call all tile update functions
     var data = this.data;
-    for (cnt=0;cnt<this.tiles.length;cnt++){ //switched from i to cnt due to i changing within the loop
+    for (var cnt=0;cnt<this.tiles.length;cnt++){ //switched from i to cnt due to i changing within the loop
         var tiledataindex = this.tile2datamap[this.parameters[cnt].tileid];
         var tiledata = [];
         tiledataindex.forEach(function(d){tiledata.push(data[d]);});
@@ -85,7 +87,7 @@ ddt_container.prototype.reset_containerdata = function(){
         this.data[cnt].reset_filters();
     };
     var data = this.data;
-    for (cnt=0;cnt<this.tiles.length;cnt++){ //switched from i to cnt due to i changing within the loop
+    for (var cnt=0;cnt<this.tiles.length;cnt++){ //switched from i to cnt due to i changing within the loop
         var tiledataindex = this.tile2datamap[this.parameters[cnt].tileid];
         var tiledata = [];
         tiledataindex.forEach(function(d){tiledata.push(data[d]);});
@@ -94,12 +96,8 @@ ddt_container.prototype.reset_containerdata = function(){
 };
 ddt_container.prototype.get_tile = function(tiletype_I){
     // return the appropriate tile object
-    if (tiletype_I=='form'){
-        return new ddt_tile_form();
-    } else if (tiletype_I=='datalist'){
-        return new ddt_tile_datalist();
-    } else if (tiletype_I=='dropdownbuttongrouphref'){
-        return new ddt_tile_dropdownbuttongrouphref();
+    if (tiletype_I=='html'){
+        return new ddt_tile_html();
     } else if (tiletype_I=='svg'){
         return new ddt_tile_svg();
     } else if (tiletype_I=='table'){
@@ -112,7 +110,7 @@ ddt_container.prototype.filter_containerdata = function(filter_I){
     // apply a global filter to all container data
     // INPUT:
     // filter_I = {key:value,...}
-    for (cnt=0;cnt<this.data.length;cnt++){ //switched from i to cnt due to i changing within the loop
+    for (var cnt=0;cnt<this.data.length;cnt++){ //switched from i to cnt due to i changing within the loop
         this.data[cnt].change_filters(filter_I);
     };
 };
@@ -125,14 +123,14 @@ ddt_container.prototype.sync_containerdata = function(){
     var parameters_ = this.parameters;
     var tile2datamap_ = this.tile2datamap;
     function update(){
-        for (cnt=0;cnt<tiles_.length;cnt++){ //switched from i to cnt due to i changing within the loop
+        for (var cnt=0;cnt<tiles_.length;cnt++){ //switched from i to cnt due to i changing within the loop
             var tiledataindex = tile2datamap_[parameters_[cnt].tileid];
             var tiledata = [];
             tiledataindex.forEach(function(d){tiledata.push(data[d]);});
             tiles_[cnt].update_tile(tiledata);
         };     
     };
-    for (cnt=0;cnt<this.tiles.length;cnt++){ //switched from i to cnt due to i changing within the loop
+    for (var cnt=0;cnt<this.tiles.length;cnt++){ //switched from i to cnt due to i changing within the loop
         // sync svg
         if (this.tiles[cnt].parameters.svgid){
             //var synctiles = d3.select("#" + this.tiles[cnt].parameters.svgid + " g").on("haschange",update);
@@ -145,10 +143,12 @@ ddt_container.prototype.sync_containerdata = function(){
         };
     };
 };
-ddt_container.prototype.add_datafiltermenusubmitbutton = function (tileid_I,submitbuttonid_I){
+ddt_container.prototype.add_datafiltermenusubmitbutton = function (tileid_I,htmlid_I,submitbuttonid_I){
     // add filter menu submit button listener to tile
     if (tileid_I){var tileid = tileid_I;}
     else{var tileid = this.tiles[0].parameters.tileid;};
+    if (htmlid_I){var htmlid = htmlid_I;}
+    else{var htmlid = this.tiles[0].parameters.htmlid;};
     if (submitbuttonid_I){var submitbuttonid = submitbuttonid_I;}
     else{var submitbuttonid = 'submit1';};
 
@@ -164,12 +164,12 @@ ddt_container.prototype.add_datafiltermenusubmitbutton = function (tileid_I,subm
                 tiledataindex = this_.tile2datamap[d.parameters.tileid];
             };
         })
-        for (key in this_.data[tiledataindex[0]].filters){
-            var filterkey = d3.select("#"+tileid+'formlabel'+key).text();
-            var filterstring = d3.select("#"+tileid+'forminput'+key).node().value;
+        for (var key in this_.data[tiledataindex].filters){
+            var filterkey = d3.select("#"+htmlid+'formlabel'+key).text();
+            var filterstring = d3.select("#"+htmlid+'forminput'+key).node().value;
             filterstringmenu.push({"text":filterkey,"value":filterstring});
         };
-        for (cnt=0;cnt<this_.data.length;cnt++){ //switched from i to cnt due to i changing within the loop
+        for (var cnt=0;cnt<this_.data.length;cnt++){
             this_.data[cnt].convert_stringmenuinput2filter(filterstringmenu);
             this_.data[cnt].filter_stringdata();
         };
@@ -179,11 +179,12 @@ ddt_container.prototype.add_datafiltermenusubmitbutton = function (tileid_I,subm
     };
 
     this.submitbutton = d3.select("#"+tileid+'submitbutton'+submitbuttonid)
-        .on("mousedown",submit);
+        .on("click",submit);
 };
 ddt_container.prototype.add_datafiltermenuresetbutton = function (tileid_I,resetbuttonid_I){
     // add filter menu reset button listener to tile
     if (tileid_I){var tileid = tileid_I;}
+    //else{var tileid = this.tiles[0].parameters.htmlid;};
     else{var tileid = this.tiles[0].parameters.tileid;};
     if (resetbuttonid_I){var resetbuttonid = resetbuttonid_I;}
     else{var resetbuttonid = 'reset1';};
@@ -192,7 +193,7 @@ ddt_container.prototype.add_datafiltermenuresetbutton = function (tileid_I,reset
     
     function reset(){
         // reset data filters and call all tile update functions
-        for (cnt=0;cnt<this_.data.length;cnt++){ //switched from i to cnt due to i changing within the loop
+        for (var cnt=0;cnt<this_.data.length;cnt++){ //switched from i to cnt due to i changing within the loop
             this_.data[cnt].reset_filters();
             this_.data[cnt].filter_stringdata();
         };
@@ -205,6 +206,7 @@ ddt_container.prototype.add_datafiltermenuresetbutton = function (tileid_I,reset
 ddt_container.prototype.add_datafiltermenuupdatebutton = function (tileid_I,updatebuttonid_I){
     // add filter menu reset button listener to tile
     if (tileid_I){var tileid = tileid_I;}
+    //else{var tileid = this.tiles[0].parameters.htmlid;};
     else{var tileid = this.tiles[0].parameters.tileid;};
     if (updatebuttonid_I){var updatebuttonid = updatebuttonid_I;}
     else{var updatebuttonid = 'update1';};
@@ -215,6 +217,6 @@ ddt_container.prototype.add_datafiltermenuupdatebutton = function (tileid_I,upda
         this_.update_container();    
     };
 
-    this.resetbutton = d3.select("#"+tileid+'submitbutton'+updatebuttonid)
+    this.updatebutton = d3.select("#"+tileid+'submitbutton'+updatebuttonid)
         .on("click",update);
 };

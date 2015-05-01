@@ -1,7 +1,7 @@
-
+"use strict";
 d3_chart2d.prototype.add_boxandwhiskersdata1 = function () {
     //add box and whiskers to the plot
-//     boxes: the main body of the boxplot showing the quartiles and the median’s confidence intervals if enabled.
+//     boxes: the main body of the boxplot showing the quartiles and the medianï¿½s confidence intervals if enabled.
 //     medians: horizonal lines at the median of each box.
 //     whiskers: the vertical lines extending to the most extreme, n-outlier data points.
 //     caps: the horizontal lines at the ends of the whiskers.

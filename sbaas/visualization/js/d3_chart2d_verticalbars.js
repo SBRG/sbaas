@@ -1,3 +1,4 @@
+"use strict";
 d3_chart2d.prototype.set_x1x2domain_verticalbarschart = function () {
     // set x1-domain and x1-domain for a barchart
     var series_label = this.data1keymap.serieslabel;

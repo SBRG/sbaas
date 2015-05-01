@@ -1,5 +1,7 @@
-d3_svg = function () {
-    // generic chart
+"use strict";
+//var d3_svg = function () {
+function d3_svg() {
+    // generic svg element
     this.id = '';
     this.tileid = '';
     this.svgelement = null;

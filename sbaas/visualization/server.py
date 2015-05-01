@@ -181,17 +181,19 @@ class ProjectHandler(BaseHandler):
             if len(args)==1:
                 visualization_kwargs[arg] = args[0];
                 arguments.append(args[0]);
-        # make the title name
-        titlename = ' '.join([visualization_kwargs['project_id']]);
         # get the data to visualize
-        if visualization_kwargs.has_key('project_id') and visualization_kwargs.has_key('analysis_id') and visualization_kwargs.has_key('data_export_id'):
+        if visualization_kwargs.has_key('analysis_id') and visualization_kwargs.has_key('data_export_id'):
             #visualization data
             data_json = '';
-            data_json = self.get_jsondata_analysis(visualization_kwargs['analysis_id'],visualization_kwargs['export_id']);
+            data_json = self.get_datajson_analysis(visualization_kwargs['analysis_id'],visualization_kwargs['data_export_id']);
+            # make the title name
+            titlename = ' '.join([visualization_kwargs['analysis_id']]);
         elif visualization_kwargs.has_key('project_id'):
             #landing page data
             data_json = '';
             data_json = self.get_datajson_project(visualization_kwargs['project_id']);
+            # make the title name
+            titlename = ' '.join([visualization_kwargs['project_id']]);
         else:
             # re-direct to 404 page
             print 'bad GET';

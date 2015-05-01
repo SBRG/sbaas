@@ -1,3 +1,4 @@
+"use strict";
 d3_chart2d.prototype.add_pointsdata1onfill = function () {
     //add a change in color upon moving the mouse over the point
     var colorscale = this.colorscale;

@@ -1,5 +1,7 @@
+"use strict";
 //implement sortable and editable table using d3 and bootstrap
-var d3_table = function (){
+//var d3_table = function (){
+function d3_table(){
     this.id = '';
     this.tileid = '';
     this.tableclass = '';
@@ -164,8 +166,8 @@ d3_table.prototype.partition_listdatafiltered2tableheaderandelements = function(
     this.tableheaders = [];
     this.tableelements = [];
     var datalistdatafiltered = this.data.listdatafiltered;
-    for (i=0;i<datalistdatafiltered.length;i++){
-        for (key in datalistdatafiltered[i]){
+    for (var i=0;i<datalistdatafiltered.length;i++){
+        for (var key in datalistdatafiltered[i]){
             if (i===0){
                 this.tableheaders.push(key);
             };
@@ -177,7 +179,7 @@ d3_table.prototype.extract_tableheaders = function(){
     // extract out headers from listdatafiltered
     this.tableheaders = [];
     var datalistdatafiltered = this.data.listdatafiltered;
-    for (key in datalistdatafiltered[0]){
+    for (var key in datalistdatafiltered[0]){
         this.tableheaders.push(key);
     };
 };
@@ -271,7 +273,7 @@ d3_table.prototype.set_tablecss = function (selectionstyle_I) {
     // selectionstyle_I = [{selection: string e.g., '.axis line, .axis path'
     //                      style: key:value strings e.g., {'fill': 'none', 'stroke': '#000',
     //                                                      'shape-rendering': 'crispEdges'}}]
-    for (i = 0; i < selectionstyle_I.length; i++) {
+    for (var i = 0; i < selectionstyle_I.length; i++) {
         this.table.selectAll(selectionstyle_I[i].selection)
             .style(selectionstyle_I[i].style);
     };
@@ -320,7 +322,7 @@ d3_table.prototype.set_d3css = function (selectionstyle_I) {
     // selectionstyle_I = [{selection: string e.g., '.axis line, .axis path'
     //                      style: key:value strings e.g., {'fill': 'none', 'stroke': '#000',
     //                                                      'shape-rendering': 'crispEdges'}}]
-    for (i = 0; i < selectionstyle_I.length; i++) {
+    for (var i = 0; i < selectionstyle_I.length; i++) {
         d3.selectAll(selectionstyle_I[i].selection)
             .style(selectionstyle_I[i].style);
     };
@@ -336,7 +338,7 @@ d3_table.prototype.add_datafiltermenusubmitbutton = function (tileid_I,submitbut
 
     function submit(){
         var filterstringmenu = [];
-        for (key in this_.data.filters){
+        for (var key in this_.data.filters){
             var filterkey = d3.select("#"+tileid+'formlabel'+key).text();
             var filterstring = d3.select("#"+tileid+'forminput'+key).node().value;
             filterstringmenu.push({"text":filterkey,"value":filterstring});

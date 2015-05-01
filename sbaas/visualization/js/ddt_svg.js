@@ -1,4 +1,6 @@
-var ddt_svg = function(){
+"use strict";
+//var ddt_svg = function(){
+function ddt_svg(){
     // ddt_svg template class
     this.parameters = {};
     this.ddtsvg = null;

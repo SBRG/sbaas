@@ -1,4 +1,6 @@
-d3_chart2d = function () {
+"use strict";
+//var d3_chart2d = function () {
+function d3_chart2d() {
     // generic chart
     d3_svg.call(this);
     //this.svgdata = null;
@@ -743,7 +745,7 @@ d3_chart2d.prototype.set_svggcss = function (selectionstyle_I) {
     // selectionstyle_I = [{selection: string e.g., '.axis line, .axis path'
     //                      style: key:value strings e.g., {'fill': 'none', 'stroke': '#000',
     //                                                      'shape-rendering': 'crispEdges'}}]
-    for (i = 0; i < selectionstyle_I.length; i++) {
+    for (var i = 0; i < selectionstyle_I.length; i++) {
         this.svgg.selectAll(selectionstyle_I[i].selection)
             .style(selectionstyle_I[i].style);
     };
@@ -754,7 +756,7 @@ d3_chart2d.prototype.set_d3css = function (selectionstyle_I) {
     // selectionstyle_I = [{selection: string e.g., '.axis line, .axis path'
     //                      style: key:value strings e.g., {'fill': 'none', 'stroke': '#000',
     //                                                      'shape-rendering': 'crispEdges'}}]
-    for (i = 0; i < selectionstyle_I.length; i++) {
+    for (var i = 0; i < selectionstyle_I.length; i++) {
         d3.selectAll(selectionstyle_I[i].selection)
             .style(selectionstyle_I[i].style);
     };

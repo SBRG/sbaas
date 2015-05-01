@@ -1,3 +1,4 @@
+"use strict";
 //TODO:
 // d3_graph(childclass of d3_svg):
 // collapsible force layout: http://bl.ocks.org/mbostock/1062288

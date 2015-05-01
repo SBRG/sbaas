@@ -1,4 +1,6 @@
-var ddt_table = function(){
+"use strict";
+//var ddt_table = function(){
+function ddt_table(){
     // ddt_table template class
     this.parameters = {};
     this.ddttable = null;
