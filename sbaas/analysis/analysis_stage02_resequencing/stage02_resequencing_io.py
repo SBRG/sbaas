@@ -321,6 +321,8 @@ class stage02_resequencing_io(stage01_resequencing_io):
                             {'value':'custom','text':'by value'}]}
         formtileparameters_O.update(formparameters_O);
         tile2datamap_O = {"tile1":[0],"tile2":[0]};
+        parametersobject_O = [ formtileparameters_O,svgtileparameters_O];
+
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
         tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';

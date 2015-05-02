@@ -902,8 +902,8 @@ class stage01_quantification_execute():
                         elif (conc_unit == 'uM'):
                             conc_units = 'M'; 
                             conc = conc*1e-6;
-                        elif (conc_unit == 'uM*gDW-1'):
-                            conc_units = 'M*gDW-1';
+                        elif (conc_unit == 'umol*gDW-1'):
+                            conc_units = 'mol*gDW-1';
                             conc = conc*1e-6;
                         elif (conc_unit == 'height_ratio' or conc_unit == 'area_ratio'):
                             continue;

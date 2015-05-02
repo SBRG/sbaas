@@ -36,7 +36,7 @@ class visualization_execute():
     def drop_visualization(self):
         try:
             visualization_project.__table__.drop(engine,True);
-            #visualization_project_description.__table__.drop(engine,True);
+            visualization_project_description.__table__.drop(engine,True);
             #visualization_project_status.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
@@ -44,10 +44,10 @@ class visualization_execute():
         try:
             if project_id_I:
                 reset = self.session.query(visualization_project).filter(visualization_project.project_id.like(project_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(visualization_project_description).filter(visualization_project_description.project_id.like(project_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(visualization_project_description).filter(visualization_project_description.project_id.like(project_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(visualization_project).delete(synchronize_session=False);
-                #reset = self.session.query(visualization_project_description).delete(synchronize_session=False);
+                reset = self.session.query(visualization_project_description).delete(synchronize_session=False);
                 #reset = self.session.query(visualization_project_status).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
@@ -55,7 +55,7 @@ class visualization_execute():
     def initialize_visualization(self):
         try:
             visualization_project.__table__.create(engine,True);
-            #visualization_project_description.__table__.create(engine,True);
+            visualization_project_description.__table__.create(engine,True);
             #visualization_project_status.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);

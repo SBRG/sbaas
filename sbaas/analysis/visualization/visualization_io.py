@@ -22,6 +22,7 @@ class visualization_io(base_analysis):
             for d in data_I:
                 try:
                     data_add = visualization_project(d['project_id'],
+                                                     d['pipeline_id'],
                                     d['analysis_id'],
                                     d['data_export_id'],
                                     d['container_export_id'],
@@ -49,6 +50,7 @@ class visualization_io(base_analysis):
                             visualization_project.id == d['id']).update(
                             {
                             'project_id':d['project_id'],
+                            'pipeline_id':d['pipeline_id'],
                             'analysis_id':d['analysis_id'],
                             'data_export_id':d['data_export_id'],
                             'container_export_id':d['container_export_id'],
@@ -64,70 +66,68 @@ class visualization_io(base_analysis):
 
         print "exporting visualization_project..."
 
-        # query the analysis info
+        # query the project info
+        data1_project = {};
+        data1_project = self.visualization_query.get_project_projectID_visualizationProject(project_id_I);
         data1_O = [];
         data1_O = self.visualization_query.get_rows_projectID_visualizationProject(project_id_I);
+        # query the project description
+        data2_O = [];
+        data2_O = self.visualization_query.get_rows_projectID_visualizationProjectDescription(project_id_I);
         # data parameters
-        data1_keys = ['analysis_id','data_export_id'#,'container_export_id'
+        data1_keys = ['analysis_id','data_export_id','pipeline_id'#,'container_export_id'
                       ];
         data1_nestkeys = ['data_export_id'];
-        data1_keymap = {'buttontext':'data_export_id','litext':'analysis_id'};
-        # make the data object
-        dataobject_O = [{"data":data1_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},
-                        {"data":data1_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},
-                        {"data":data1_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},
-                        {"data":data1_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},
-                        {"data":data1_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
-        # make the tile parameter objects
+        data1_keymap = {'buttonparameter':'data_export_id','liparameter':'analysis_id',
+                        'buttontext':'data_export_id','litext':'analysis_id'};
+        data2_keys = ['project_id','project_section','project_heading','project_tileorder'
+                      ];
+        data2_nestkeys = ['project_id'];
+        data2_keymap = {'htmlmediasrc':'project_media','htmlmediaalt':'',
+                        'htmlmediahref':'project_href','htmlmediaheading':'project_heading',
+                        'htmlmediaparagraph':'project_paragraph'};
+        # make the data, parameters, and tile2datamap variables:
+        dataobject_O = [];
         parametersobject_O = [];
-        # ale:
-        dropdownbuttongrouptileparameters1_O = {'tileheader':'ALE','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+        tile2datamap_O = {};
+        tile_cnt = 0;
+        # project_description:
+        for i,d in enumerate(data2_O):
+            tileid = "tile" + str(tile_cnt);
+            colid = "col" + str(i);
+            tileheader = d['project_section'];
+            htmlid = "html" + str(tile_cnt);
+            tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row1",'colid':colid,
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-        dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['export_dataStage01AleTrajectories_js']},"hrefurl":'project.html',"htmlkeymap":data1_keymap,
-                        'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html1"
-                        #,"htmlparagraph":[{"pclass":"text-left","ptext":""},
-        	               #                 {"pclass":"text-left","ptext":""},
-        	               #                 {"pclass":"text-left","ptext":""},
-        	               #                 {"pclass":"text-left","ptext":""},
-        	               #                 {"pclass":"text-left","ptext":""},
-        	               #                 {"pclass":"text-left","ptext":""},
-        	               #                 {"pclass":"text-left","ptext":""},
-        	               #                 {"pclass":"text-left","ptext":""},
-        	               #                 {"pclass":"text-left","ptext":""}]
-                        };
-        dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
-        parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
-        # physiology:
-        dropdownbuttongrouptileparameters1_O = {'tileheader':'Physiology','tiletype':'html','tileid':"tile2",'rowid':"row1",'colid':"col2",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-        dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['export_dataStage01PhysiologyRatesAverages_js']},"hrefurl":'project.html',"htmlkeymap":data1_keymap,
-                        'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html2"};
-        dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
-        parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
-        # resequencing:
-        dropdownbuttongrouptileparameters1_O = {'tileheader':'Resequencing','tiletype':'html','tileid':"tile3",'rowid':"row2",'colid':"col1",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
-        dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['export_dataStage01ResequencingHeatmap_js','export_dataStage01ResequencingLineage_js','export_dataStage02ResequencingHeatmap_js']},
-                                            "hrefurl":'project.html',"htmlkeymap":data1_keymap,
-                        'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html3"};
-        dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
-        parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
-        # quantification:
-        dropdownbuttongrouptileparameters1_O = {'tileheader':'Quantification','tiletype':'html','tileid':"tile4",'rowid':"row3",'colid':"col1",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-        dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['Quantification']},"hrefurl":'project.html',"htmlkeymap":data1_keymap,
-                        'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html4"};
-        dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
-        parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
-        # isotopomer:
-        dropdownbuttongrouptileparameters1_O = {'tileheader':'Isotopomer','tiletype':'html','tileid':"tile5",'rowid':"row3",'colid':"col2",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-        dropdownbuttongroupparameters1_O = {"htmlfilters":{'data_export_id':['Isotopomer']},"hrefurl":'project.html',"htmlkeymap":data1_keymap,
-                        'buttonparameter':'data_export_id','liparameter':'analysis_id','htmltype':'dropdownbuttongrouphref_01','htmlid':"html5"};
-        dropdownbuttongrouptileparameters1_O.update(dropdownbuttongroupparameters1_O);
-        parametersobject_O.append(dropdownbuttongrouptileparameters1_O);
-        # make the tile2datamap
-        tile2datamap_O = {"tile1":[0],"tile2":[1],"tile3":[2],"tile4":[3],"tile5":[4]};
+            htmlparameters={"htmlkeymap":data2_keymap,
+                        'htmltype':'media_01','htmlid':htmlid};
+            tileparameters.update(htmlparameters);
+            parametersobject_O.append(tileparameters);
+            dataobject_O.append({"data":[d],"datakeys":data2_keys,"datanestkeys":data2_nestkeys});
+            tile2datamap_O.update({tileid:[tile_cnt]});
+            tile_cnt+=1;
+        # project:
+        data1_dict = {};
+        for data_export_id in data1_project['data_export_id']:
+            data1_dict[data_export_id]=[];
+        for d in data1_O:
+            data1_dict[d['data_export_id']].append(d);
+        col_cnt = 0;
+        for k,v in data1_dict.iteritems():
+            tileid = "tile" + str(tile_cnt);
+            colid = "col" + str(col_cnt);
+            tileheader = v[0]['pipeline_id'];
+            htmlid = "html" + str(tile_cnt);
+            tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
+                'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"};
+            hrefparameters = {"hrefurl":'project.html',"htmlkeymap":data1_keymap,
+                            'htmltype':'href_01','htmlid':htmlid};
+            tileparameters.update(hrefparameters);
+            parametersobject_O.append(tileparameters);
+            dataobject_O.append({"data":v,"datakeys":data1_keys,"datanestkeys":data1_nestkeys});
+            tile2datamap_O.update({tileid:[tile_cnt]});
+            tile_cnt+=1;
+            col_cnt+=1;
 
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';

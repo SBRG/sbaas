@@ -238,117 +238,13 @@ d3_html.prototype.add_dropdownbuttongroup_href = function () {
 
     var listdatafiltered = this.data.listdatafiltered;
     var nestdatafiltered = this.data.nestdatafiltered;
-    var buttonparameter = this.buttonparameter;
-    var liparameter = this.liparameter;
+    var buttonparameter = this.datakeymap.buttonparameter;
+    var liparameter = this.datakeymap.liparameter;
     var litext = this.datakeymap.litext;
     var hrefurl = this.url;
 
     var id = this.id;
     var tileid = this.tileid;
-
-    //v1:
-//     this.buttongroup = this.html.append("div")
-//         .attr("class","btn-group")
-//         .attr("id", id + "btn-group");
-
-//     for (i=0;i<btntext_litext.length;i++){
-//         var button = this.buttongroup.append("button")
-//             .attr("id", id + 'button' + btntext_litext[i].buttontext)
-//             .attr("class", "btn btn-default btn-lg dropdown-toggle" )
-//             .attr("data-toggle", "dropdown")
-//             .attr("aria-expanded", "false")
-//             .text(btntext_litext[i].buttontext)
-//             .append("span")
-//             .attr("class","caret");
-//         var ul = this.buttongroup.append("ul")
-//             .attr("class","dropdown-menu")
-//             .attr("id",id + "dropdown-menu"+ btntext_litext[i].buttontext)
-//             .attr("role","menu");
-//         for (j=0;j<btntext_litext[i].litext.length;j++){
-//             var url = url_I+"?"
-//             url += btntext_litext[i].buttonparameter + "=" +btntext_litext[i].buttontext+"&";
-//             url += btntext_litext[i].liparameter + "=" +btntext_litext[i].litext[j];
-//             var li = ul.append("li").append("a")
-//                 //.attr("href","#")//default
-//                 .attr("href",url)//default
-//                 .text(btntext_litext[i].litext[j]);
-//         };
-//     };
-
-    //v2:
-//     this.buttongroup = this.html.selectAll(".btn-group")
-//         .data([nestdatafiltered])
-
-//     this.buttongroupenter = this.buttongroup.enter()
-//         .append("div")
-//         .attr("class","btn-group")
-//         .attr("id", id + "btn-group");
-
-//     this.buttongroup.exit().remove();
-
-//     this.button = this.buttongroup.selectAll(".btn btn-default dropdown-toggle")
-//         .data(nestdatafiltered);
-
-//     this.buttonenter = this.button.enter()
-//         .append("button")
-//         .attr("class", "btn btn-default dropdown-toggle" )
-//         .attr("data-toggle", "dropdown")
-//         .attr("aria-expanded", "false")
-//         .text(function(d){return d.key;})
-//         .append("span")
-//         .attr("class","caret");
-
-//     this.button
-//         .attr("class", "btn btn-default dropdown-toggle" )
-//         .attr("data-toggle", "dropdown")
-//         .attr("aria-expanded", "false")
-//         .text(function(d){return d.key;})
-//         .append("span")
-//         .attr("class","caret");
-
-//     this.button.exit().remove();
-
-//     this.ul = this.buttongroup.selectAll(".dropdown-menu")
-//         .data(nestdatafiltered);
-
-//     this.ulenter = this.ul.enter()
-//         .append("ul")
-//         .attr("class","dropdown-menu")
-//         .attr("id",function(d){return id + "dropdown-menu"+ d.key;})
-//         .attr("role","menu");
-
-//     this.ul.exit().remove();
-
-//     this.li = this.ul.selectAll("li")
-//         .data(function(row){
-//             var buttonlitext = [];
-//             var key = row.key;
-//             row.values.forEach(function(d){
-//                 buttonlitext.push({buttontext:key, litext:d[litext],buttonparameter:buttonparameter,liparameter:liparameter});
-//                 });
-//             return buttonlitext;
-//             });
-    
-//     this.lienter = this.li.enter()
-//         .append("li").append("a")
-//         .attr("href",function(d,i){
-//             var url = hrefurl+"?";
-//             url += d.buttonparameter + "=" +d.buttontext+"&";
-//             url += d.liparameter + "=" + d.litext;
-//             return url;
-//             })
-//         .text(function(d,i){return d.litext;});
-
-//     this.li.select("a")
-//         .attr("href",function(d,i){
-//             var url = hrefurl+"?";
-//             url += d.buttonparameter + "=" +d.buttontext+"&";
-//             url += d.liparameter + "=" + d.litext;
-//             return url;
-//             })
-//         .text(function(d,i){return d.litext;});
-
-//     this.li.exit().remove();
 
     this.buttongroup = this.html.selectAll(".btn-group")
         .data(nestdatafiltered)
@@ -443,11 +339,6 @@ d3_html.prototype.set_url = function(url_I){
     // set the base url_I
     this.url = url_I;
 };
-d3_html.prototype.set_buttonliparameters = function(buttonparameter_I,liparameter_I){
-    // set button parameter and li parameters
-    this.buttonparameter = buttonparameter_I;
-    this.liparameter = liparameter_I;
-};
 d3_html.prototype.add_datalist = function (datalist_valuetext_I) {
     // add datalist (menu) for input
     // INPUT:
@@ -467,7 +358,7 @@ d3_html.prototype.add_datalist = function (datalist_valuetext_I) {
 d3_html.prototype.add_paragraphs = function(paragraph_I){
     // add paragraphs to tile body
     // INPUT:
-    // paragraph_I = [{pclass:"text-left",ptext:""},...]
+    // paragraph_I = [{pclass:"text-left",ptext:"",pclass:"text-muted"},...]
 
     this.paragraph = this.html.selectAll("p")
         .data(paragraph_I);
@@ -486,32 +377,32 @@ d3_html.prototype.add_paragraphs = function(paragraph_I){
     this.paragraph.exit().remove();
     
 };
-d3_html.prototype.add_headerandlistgroups_href = function(){
+d3_html.prototype.add_headerandlistgroup_href = function(){
     // add list groups with individual headers to the tile body
     // each list element will have an href of the form:
     //      url_I?buttonparametername=buttontext&lliparametername=litextoption1
 
     var listdatafiltered = this.data.listdatafiltered;
     var nestdatafiltered = this.data.nestdatafiltered;
-    var buttonparameter = this.buttonparameter;
-    var liparameter = this.liparameter;
+    var buttonparameter = this.datakeymap.buttonparameter;
+    var liparameter = this.datakeymap.liparameter;
     var litext = this.datakeymap.litext;
     var hrefurl = this.url;
 
     var id = this.id;
     var tileid = this.tileid;
 
-    this.headergroup = this.html.selectAll(".header-group")
+    this.headergroup = this.html.selectAll("#" + id + "header-group")
         .data(nestdatafiltered)
 
     this.headergroupenter = this.headergroup.enter()
         .append("div")
-        .attr("class","header-group")
+        .attr("class","list-group")
         .attr("id", id + "header-group");
 
     this.headergroup.exit().remove();
 
-    this.header = this.headergroup.selectAll("h4")
+    this.header = this.headergroup.selectAll("#" + id + "header")
         .data(function(row){
             var keys = [];
             keys.push({key:row.key});
@@ -519,33 +410,38 @@ d3_html.prototype.add_headerandlistgroups_href = function(){
         });
 
     this.headerenter = this.header.enter()
+        .append("div")
+        .attr("class","list-group-item")
+        .attr("id",id + "header")
         .append("h4")
+        .attr("class","list-group-item-heading")
         .attr("id", function(d){return id + "h4" + d.key;})
         //.attr("aria-expanded", "false")
         .text(function(d){return d.key;});
 
-    this.header
+    this.header.selectAll("h4")
+        .attr("class","list-group-item-heading")
         .attr("id", function(d){return id + "h4" + d.key;})
         .text(function(d){return d.key;});
 
     this.header.exit().remove();
 
-    this.ul = this.headergroup.selectAll(".list-group")
-        .data(function(row){
-            var keyvalues = [];
-            keyvalues.push({key:row.key,values:row.values});
-            return keyvalues;
-            });
+//     this.ul = this.headergroup.selectAll(".list-group")
+//         .data(function(row){
+//             var keyvalues = [];
+//             keyvalues.push({key:row.key,values:row.values});
+//             return keyvalues;
+//             });
 
-    this.ulenter = this.ul.enter()
-        .append("div")
-        .attr("class","list-group")
-        .attr("id",function(d){return id + "list-group"+ d.key;})
-        .attr("role","menu");
+//     this.ulenter = this.ul.enter()
+//         .append("div")
+//         .attr("class","list-group")
+//         .attr("id",function(d){return id + "list-group"+ d.key;});
 
-    this.ul.exit().remove();
+//     this.ul.exit().remove();
 
-    this.li = this.ul.selectAll("list-group-item")
+    //this.li = this.ul.selectAll("list-group-item")
+    this.li = this.headergroup.selectAll("#" + id + "li")
         .data(function(row){
             var buttonlitext = [];
             var key = row.key;
@@ -558,6 +454,7 @@ d3_html.prototype.add_headerandlistgroups_href = function(){
     this.lienter = this.li.enter()
         .append("a")
         .attr("class","list-group-item")
+        .attr("id",id + "li")
         .attr("href",function(d,i){
             var url = hrefurl+"?";
             url += d.buttonparameter + "=" +d.buttontext+"&";
@@ -577,18 +474,145 @@ d3_html.prototype.add_headerandlistgroups_href = function(){
 
     this.li.exit().remove();
 }
-d3_html.prototype.add_media = function(media_I){
+d3_html.prototype.add_media = function(){
     // add media to the tile body
-    //TODO:
-//     <div class="media">
-//       <div class="media-left media-middle">
-//         <a href="#">
-//           <img class="media-object" src="..." alt="...">
-//         </a>
-//       </div>
-//       <div class="media-body">
-//         <h4 class="media-heading">Middle aligned media</h4>
-//         ...
-//       </div>
-//     </div>
+
+    var id = this.id;
+    var listdatafiltered = this.data.listdatafiltered;
+    var mediasrc = this.datakeymap.htmlmediasrc;
+    var mediaalt = this.datakeymap.htmlmediaalt;
+    var mediahref = this.datakeymap.htmlmediahref;
+    var mediaheading = this.datakeymap.htmlmediaheading;
+    var mediaparagraph = this.datakeymap.htmlmediaparagraph;
+
+    this.htmlmedia = this.html.selectAll(".media")
+        .data(listdatafiltered);
+
+    this.htmlmediaenter = this.htmlmedia.enter()
+        .append("div")
+        .attr("class","media");
+    
+    this.htmlmedia.exit().remove();
+
+    this.htmlmediaimg = this.htmlmedia.selectAll(".media-left media-top")
+        .data(function(d){
+            var rows = [];
+            rows.push(d);
+            return rows;
+        });
+
+    this.htmlmediaimg.selectAll("a")
+        .attr("href",function(d){return d[mediahref];})
+    this.htmlmediaimg.selectAll("img")
+        .attr("class","media-object img-responsive")
+        .attr("src",function(d){return d[mediasrc];})
+        .attr("alt",function(d){return d[mediaalt];});
+
+    this.htmlmediaimg.exit().remove();
+    
+    this.htmlmediaimgenter = this.htmlmediaimg.enter()
+        .append("div")
+        .attr("class","media-left media-top")
+        .append("a")
+        .attr("href",function(d){return d[mediahref];})
+        .append("img")
+        .attr("class","media-object img-responsive")
+        .attr("src",function(d){return d[mediasrc];})
+        .attr("alt",function(d){return d[mediaalt];});
+
+    this.htmlmediabody = this.htmlmedia.selectAll(".media-body")
+        .data(function(d){
+            var rows = [];
+            rows.push(d);
+            return rows;
+        });
+
+    this.htmlmediabody.selectAll("h4")
+        .attr("class","media-heading")
+        .text(function(d){return d[mediaheading];});
+    this.htmlmediabody.selectAll("p")
+        .text(function(d){return d[mediaparagraph];});
+
+    this.htmlmediabody.exit().remove();
+
+    this.htmlmediabodyh4enter = this.htmlmedia.enter()
+        .append("div")
+        .attr("class","media-body")
+        .append("h4")
+        .attr("class","media-heading")
+        .text(function(d){return d[mediaheading];});
+
+    this.htmlmediabodypenter = this.htmlmedia.enter()
+        .append("p")
+        .text(function(d){return d[mediaparagraph];});
+        
+}
+d3_html.prototype.add_mediasvg = function(){
+    // add svg media to the tile body
+
+    var id = this.id;
+    var listdatafiltered = this.data.listdatafiltered;
+    var mediasrc = this.datakeymap.htmlmediasrc;
+    var mediaalt = this.datakeymap.htmlmediaalt;
+    var mediahref = this.datakeymap.htmlmediahref;
+    var mediaheading = this.datakeymap.htmlmediaheading;
+    var mediaparagraph = this.datakeymap.htmlmediaparagraph;
+    
+    this.htmlmedia = this.html.selectAll(".media")
+        .data(listdatafiltered);
+
+    this.htmlmediaenter = this.htmlmedia.enter()
+        .append("div")
+        .attr("class","media");
+    
+    this.htmlmedia.exit().remove();
+
+    this.htmlmediaimg = this.htmlmedia.selectAll(".media-left media-top")
+        .data(function(d){
+            var rows = [];
+            rows.push(d);
+            return rows;
+        });
+
+    this.htmlmediaimg.selectAll("a")
+        .attr("href",function(d){return d[mediahref];})
+    this.htmlmediaimg.selectAll("svg")
+        .attr("class","media-object img-responsive")
+        .html(function(d){return d[mediasrc];});
+
+    this.htmlmediaimg.exit().remove();
+    
+    this.htmlmediaimgenter = this.htmlmediaimg.enter()
+        .append("div")
+        .attr("class","media-left media-top")
+        .append("a")
+        .attr("href",function(d){return d[mediahref];})
+        .html(function(d){return d[mediasrc];});
+
+    this.htmlmediabody = this.htmlmedia.selectAll(".media-body")
+        .data(function(d){
+            var rows = [];
+            rows.push(d);
+            return rows;
+        });
+
+    this.htmlmediabody.selectAll("h4")
+        .attr("class","media-heading")
+        .text(function(d){return d[mediaheading];});
+    this.htmlmediabody.selectAll("p")
+        .text(function(d){return d[mediaparagraph];});
+
+    this.htmlmediabody.exit().remove();
+
+    this.htmlmediabodyh4enter = this.htmlmedia.enter()
+        .append("div")
+        .attr("class","media-body")
+        .append("h4")
+        .attr("class","media-heading")
+        .text(function(d){return d[mediaheading];});
+
+    this.htmlmediabodypenter = this.htmlmedia.enter()
+        .append("p")
+        .text(function(d){return d[mediaparagraph];});
+        
 }

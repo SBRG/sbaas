@@ -1,13 +1,13 @@
 "use strict";
-//var ddt_html_dropdownbuttongrouphref_01 = function () {
-function ddt_html_dropdownbuttongrouphref_01() {
+//var ddt_html_href_01 = function () {
+function ddt_html_href_01() {
     // dropdown button group with href tile
     ddt_html.call(this);
 };
-ddt_html_dropdownbuttongrouphref_01.prototype = Object.create(ddt_html.prototype);
-ddt_html_dropdownbuttongrouphref_01.prototype.constructor = ddt_html_dropdownbuttongrouphref_01;
-ddt_html_dropdownbuttongrouphref_01.prototype.make_html = function(data_I,parameters_I){
-    // make dropdownbuttongrouphref
+ddt_html_href_01.prototype = Object.create(ddt_html.prototype);
+ddt_html_href_01.prototype.constructor = ddt_html_href_01;
+ddt_html_href_01.prototype.make_html = function(data_I,parameters_I){
+    // make href
 
 	this.ddthtml = new d3_html();
 	
@@ -19,7 +19,6 @@ ddt_html_dropdownbuttongrouphref_01.prototype.make_html = function(data_I,parame
 
 	// html specific properties
 	this.ddthtml.set_url(parameters_I.hrefurl);
-	this.ddthtml.set_buttonliparameters(parameters_I.buttonparameter,parameters_I.liparameter);
     this.ddthtml.render = function(){
     	// permanent filter on the data
     	if (typeof parameters_I.htmlfilters != "undefined"){
@@ -29,7 +28,6 @@ ddt_html_dropdownbuttongrouphref_01.prototype.make_html = function(data_I,parame
         this.add_html2tile();
 		this.set_htmlstyle();
         //this.add_dropdownbuttongroup_href();
-        this.add_headerandlistgroups_href();
-        //if(typeof parameters_I.htmlparagraph != "undefined"){this.add_paragraphs(parameters_I.htmlparagraph);};
+        this.add_headerandlistgroup_href();
     };
 };

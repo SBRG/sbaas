@@ -17,6 +17,13 @@ config.set("DATABASE", "password", "dmccloskey")
 config.set("DATABASE", "schema", "public")
 config.set("DATABASE", "user", "dmccloskey")
 
+## guest settings for the database
+#config.set("DATABASE", "host", "localhost:5432")
+#config.set("DATABASE", "database", "metabolomics")
+#config.set("DATABASE", "password", "guest")
+#config.set("DATABASE", "schema", "public")
+#config.set("DATABASE", "user", "guest")
+
 ## default settings for the database upon installation
 #config.add_section("DATABASE")
 #config.set("DATABASE", "host", "localhost:5432")
