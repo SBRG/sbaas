@@ -2343,3 +2343,21 @@ class stage02_isotopomer_query(base_analysis):
             return rows_O;
         except SQLAlchemyError as e:
             print(e);
+
+    ## Query from data_stage02_isotopomer_analysis
+    # query simulation_id
+    def get_simulationID_analysisID_dataStage02IsotopomerAnalysis(self,analysis_id_I):
+        '''Querry simulations that are used for the anlaysis'''
+        try:
+            data = query_session.query(data_stage02_isotopomer_analysis.simulation_id).filter(
+                    data_stage02_isotopomer_analysis.analysis_id.like(analysis_id_I),
+                    data_stage02_isotopomer_analysis.used_.is_(True)).group_by(
+                    data_stage02_isotopomer_analysis.simulation_id).order_by(
+                    data_stage02_isotopomer_analysis.simulation_id.asc()).all();
+            simulation_ids_O = [];
+            if data: 
+                for d in data:
+                    simulation_ids_O.append(d.simulation_id);
+            return simulation_ids_O;
+        except SQLAlchemyError as e:
+            print(e);

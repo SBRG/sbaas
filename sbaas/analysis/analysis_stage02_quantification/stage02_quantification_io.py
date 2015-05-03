@@ -431,6 +431,9 @@ class stage02_quantification_io(base_analysis):
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);
@@ -484,6 +487,9 @@ class stage02_quantification_io(base_analysis):
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);
@@ -556,6 +562,9 @@ class stage02_quantification_io(base_analysis):
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);

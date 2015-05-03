@@ -45,6 +45,7 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_fittedNetFluxes.__table__.drop(engine,True);
             data_stage02_isotopomer_fittedFluxRatios.__table__.drop(engine,True);
             data_stage02_isotopomer_fittedFluxSplits.__table__.drop(engine,True);
+            data_stage02_isotopomer_analysis_id.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_datastage02(self,experiment_id_I = None,simulation_id_I = None):
@@ -89,6 +90,13 @@ class stage02_isotopomer_execute():
                 reset = self.session.query(data_stage02_isotopomer_fittedNetFluxes).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedFluxSplits).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_isotopomer_fittedFluxRatios).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_datastage02_isotopomer_analysis(self,analysis_id_I = None):
+        try:
+            if analysis_id_I:
+                reset = self.session.query(data_stage02_isotopomer_analysis).filter(data_stage02_isotopomer_analysis.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -190,6 +198,7 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_fittedNetFluxes.__table__.create(engine,True);
             data_stage02_isotopomer_fittedFluxRatios.__table__.create(engine,True);
             data_stage02_isotopomer_fittedFluxSplits.__table__.create(engine,True);
+            data_stage02_isotopomer_analysis.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     #analysis

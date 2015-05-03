@@ -592,8 +592,8 @@ class stage02_quantification_execute():
                 reset = self.session.query(data_stage02_quantification_pca_loadings).filter(data_stage02_quantification_pca_loadings.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_svm).filter(data_stage02_quantification_svm.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_analysis).filter(data_stage02_quantification_analysis.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage02_quantification_heatmap).filter(data_stage02_quantification_heatmap.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
-                #reset = self.session.query(data_stage02_quantification_dendrogram).filter(data_stage02_quantification_dendrogram.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_heatmap).filter(data_stage02_quantification_heatmap.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage02_quantification_dendrogram).filter(data_stage02_quantification_dendrogram.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage02_quantification_glogNormalized).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_anova).delete(synchronize_session=False);
@@ -603,9 +603,8 @@ class stage02_quantification_execute():
                 reset = self.session.query(data_stage02_quantification_pca_loadings).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_heatmap).delete(synchronize_session=False);
                 reset = self.session.query(data_stage02_quantification_dendrogram).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_metabolomicsData).delete(synchronize_session=False);
                 #reset = self.session.query(data_stage02_quantification_svm).delete(synchronize_session=False);
-                reset = self.session.query(data_stage02_quantification_analysis).delete(synchronize_session=False);
+                #reset = self.session.query(data_stage02_quantification_analysis).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -733,8 +732,8 @@ class stage02_quantification_execute():
             concentrations_glog = None;
             data_glog, concentrations, concentrations_glog = self.r_calc.calculate_glogNormalization(data)
             ## plot original values:
-            self.matplot.densityPlot(concentrations);
-            self.matplot.densityPlot(concentrations_glog);
+            #self.matplot.densityPlot(concentrations);
+            #self.matplot.densityPlot(concentrations_glog);
             # upload data
             for d in data:
                 row = None;

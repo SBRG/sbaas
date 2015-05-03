@@ -237,6 +237,9 @@ class ProjectHandler(BaseHandler):
         elif table_id_I=='export_dataStage02ResequencingHeatmap_js':
             io = stage02_resequencing_io(session);
             data_json_O = io.export_dataStage02ResequencingHeatmap_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage02IsotopomerFittedNetFluxes_js':
+            io = stage02_isotopomer_io(session);
+            data_json_O = io.export_dataStage02IsotopomerFittedNetFluxes_js(analysis_id_I,data_dir_I='data_json');
         elif table_id_I=='':
             io = stage01_physiology_io(session);
             data_json_O = io.export_dataStage01PhysiologyRatesAverages_js(analysis_id_I,data_dir_I='data_json');

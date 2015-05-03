@@ -25,6 +25,26 @@ class stage02_isotopomer_io(base_analysis):
         else: self.session = Session();
         self.stage02_isotopomer_query = stage02_isotopomer_query(self.session);
     
+    def import_data_stage02_isotopomer_analysis_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(settings.workspace_data+filename);
+        data.format_data();
+        self.add_data_stage02_isotopomer_analysis(data.data);
+        data.clear_data();
+    def add_data_stage02_isotopomer_analysis(self, data_I):
+        '''add rows of data_stage02_isotopomer_analysis'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = data_stage02_isotopomer_analysis(
+                            d['analysis_id'],d['simulation_id'],
+                            d['used_'],
+                            d['comment_']);
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
     def import_data_stage02_isotopomer_simulation_add(self, filename):
         '''table adds'''
         data = base_importData();
@@ -682,6 +702,24 @@ class stage02_isotopomer_io(base_analysis):
                     print(e);
             self.session.commit();
     # TODO: add filters for update queries:
+    def update_data_stage02_isotopomer_analysis(self,data_I):
+        #TODO:
+        '''update rows of data_stage02_isotopomer_analysis'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_update = self.session.query(data_stage02_isotopomer_analysis).filter(
+                            data_stage02_isotopomer_analysis.id.like(d['id'])
+                            ).update(
+                            {
+                            'analysis_id':d['analysis_id'],
+                            'simulation_id':d['simulation_id'],
+                            'used_':d['used_'],
+                            'comment_':d['comment_']},
+                            synchronize_session=False);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
     def update_data_stage02_isotopomer_simulation(self,data_I):
         #TODO:
         '''update rows of data_stage02_isotopomer_simulation'''
@@ -689,7 +727,7 @@ class stage02_isotopomer_io(base_analysis):
             for d in data_I:
                 try:
                     data_update = self.session.query(data_stage02_isotopomer_simulation).filter(
-                            #sample.sample_name.like(d['sample_name'])
+                            data_stage02_isotopomer_simulation.id.like(d['id'])
                             ).update(
                             {
                             'simulation_id':d['simulation_id'],
@@ -3133,15 +3171,21 @@ class stage02_isotopomer_io(base_analysis):
         filename_str = filename[0]+ '/' +experiment_id_I.replace('_','') + filename[1] + filename[2] + 'filter.js'
         with open(filename_str,'wb') as file:
             file.write(json_str);
-    def export_fittedNetFluxes_js(self,simulation_ids_I = [],data_dir_I="tmp"):
+    def export_dataStage02IsotopomerFittedNetFluxes_js(self,analysis_id_I = None, simulation_ids_I = [],data_dir_I="tmp"):
         '''Plot the flux precision for a given set of simulations and a given set of reactions
         Default: plot the flux precision for each simulation on a single plot for a single reaction'''
 
         #Input:
+        # analysis_id_I or
         # simulation_ids_I
 
+        if simulation_ids_I:
+            simulation_ids = simulation_ids_I;
+        else:
+            simulation_ids = [];
+            simulation_ids = self.stage02_isotopomer_query.get_simulationID_analysisID_dataStage02IsotopomerAnalysis(analysis_id_I);
         data_O =[]; 
-        for simulation_id in simulation_ids_I:
+        for simulation_id in simulation_ids:
             # get the flux information for each simulation
             flux_data = [];
             flux_data = self.stage02_isotopomer_query.get_rows_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
@@ -3168,7 +3212,7 @@ class stage02_isotopomer_io(base_analysis):
         formtileparameters_O.update(formparameters_O);
         svgparameters_O = {"svgtype":'boxandwhiskersplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
                             'svgid':'svg1',
-                            "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                            "svgmargin":{ 'top': 50, 'right': 350, 'bottom': 50, 'left': 50 },
                             "svgwidth":500,"svgheight":350,
                             "svgx1axislabel":"rxn_id","svgy1axislabel":"flux",
     						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
@@ -3193,6 +3237,9 @@ class stage02_isotopomer_io(base_analysis):
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);
