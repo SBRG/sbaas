@@ -61,6 +61,63 @@ class visualization_io(base_analysis):
                     print(e);
             self.session.commit();
 
+    def import_visualizationUser_add(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.add_visualizationUser(data.data);
+        data.clear_data();
+
+    def add_visualizationUser(self, data_I):
+        '''add rows of visualization_user'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_add = visualization_user(d['project_ids'],
+                            d['user_name'],
+                            d['user_password'],
+                            d['user_role'],
+                            d['user_host'],
+                            d['user_database'],
+                            d['user_schema'],
+                            d['used_'],
+                            d['comment_']);
+                    self.session.add(data_add);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
+
+    def import_visualizationUser_update(self, filename):
+        '''table adds'''
+        data = base_importData();
+        data.read_csv(filename);
+        data.format_data();
+        self.update_visualizationUser(data.data);
+        data.clear_data();
+
+    def update_visualizationUser(self,data_I):
+        '''update rows of visualization_user'''
+        if data_I:
+            for d in data_I:
+                try:
+                    data_update = self.session.query(visualization_user).filter(
+                            visualization_user.id == d['id']).update(
+                            {
+                            'project_ids':d['project_ids'],
+                            'user_name':d['user_name'],
+                            'user_password':d['user_password'],
+                            'user_role':d['user_role'],
+                            'user_host':d['user_host'],
+                            'user_database':d['user_database'],
+                            'user_schema':d['user_schema'],
+                            'used_':d['used_'],
+                            'comment_':d['comment_']},
+                            synchronize_session=False);
+                except SQLAlchemyError as e:
+                    print(e);
+            self.session.commit();
+
     def export_visualizationProject_js(self,project_id_I,data_dir_I="tmp"):
         """export visualization_project for visualization"""
 

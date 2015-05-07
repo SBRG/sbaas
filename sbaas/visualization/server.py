@@ -211,6 +211,8 @@ class ProjectHandler(BaseHandler):
                                ddt_data=data_json,
                                version=__version__,
                                web_version=False,
+                            github=url.get_url('github'),
+                            #index_gh_pages_js=url.get_url('index_gh_pages_js', source),
                                vkbeautify=url.get_url('vkbeautify', source))
         
         self.set_header("Content-Type", "text/html")
@@ -266,16 +268,6 @@ class ContainerHandler(BaseHandler):
         url = urls();
         # parse the path
         path = path_I.replace('.html','');
-        ## parse the input
-        #visualization_kwargs = {};
-        #arguments = [];
-        #for arg in ['project_id_name']:
-        #    args = self.get_arguments(arg);
-        #    if len(args)==1:
-        #        visualization_kwargs[arg] = args[0];
-        #        arguments.append(args[0]);
-        ## make the title name
-        #titlename = ' '.join([visualization_kwargs['project_id_name']]);
         # make the title name
         titlename = 'Data-driven tiles';
         # build up the data directory
@@ -301,6 +293,8 @@ class ContainerHandler(BaseHandler):
             title=titlename,
             version=__version__,
             web_version=False,
+            github=url.get_url('github')
+            #index_gh_pages_js=url.get_url('index_gh_pages_js', source),
             #d3_chart2d=url.get_url('d3_chart2d', source),
             #d3_chart2d_boxandwhiskers=url.get_url('d3_chart2d_boxandwhiskers', source),
             #d3_chart2d_heatmap=url.get_url('d3_chart2d_heatmap', source),

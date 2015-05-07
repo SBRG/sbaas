@@ -15,7 +15,7 @@ ddt_html_media_01.prototype.make_html = function(data_I,parameters_I){
 	this.set_parameters(parameters_I);
 	this.set_ddthtml()
     this.add_data(data_I);
-    this.set_datakeymap(parameters_I.htmlkeymap);
+    if (parameters_I.htmlkeymap){this.set_datakeymap(parameters_I.htmlkeymap);}
 
 	// html specific properties
     this.ddthtml.render = function(){

@@ -110,7 +110,7 @@ class stage01_isotopomer_execute():
         NOTE: priority is given to the primary transition'''
         return
     #analyses tested:
-    def execute_buildSpectrumFromMRMs(self,experiment_id_I,ms_methodtype_I='isotopomer_13C',sample_names_I=None,met_ids_I=None):
+    def execute_buildSpectrumFromMRMs(self,experiment_id_I,ms_methodtype_I='isotopomer_13C',sample_name_abbreviations_I=[],sample_names_I=[],met_ids_I=[]):
         '''Extract peak spectrum for each fragment from MRMs'''
         # Input:
         #   experiment_id
@@ -142,6 +142,8 @@ class stage01_isotopomer_execute():
                         sample_abbreviations_tmp = [];
                         sample_abbreviations_tmp = self.stage01_isotopomer_query.get_sampleNameAbbreviations_experimentIDAndSampleName(experiment_id_I,sn);
                         sample_abbreviations.extend(sample_abbreviations_tmp);
+                elif sample_name_abbreviations_I:
+                    sample_abbreviations = sample_name_abbreviations_I;
                 else:
                     # get sample names and sample name short
                     sample_abbreviations = [];
@@ -551,6 +553,7 @@ class stage01_isotopomer_execute():
                         sample_types_lst.extend([st for i in range(len(sample_names_tmp))]);
             elif sample_name_abbreviations_I:
                 sample_abbreviations = sample_name_abbreviations_I;
+                sample_types_lst = ['Unknown' for x in sample_abbreviations];
                 # query sample types from sample name abbreviations and time-point from data_stage01_isotopomer_normalized
             else:
                 # get sample names and sample name abbreviations
@@ -1125,6 +1128,7 @@ class stage01_isotopomer_execute():
                         sample_types_lst.extend([st for i in range(len(sample_names_tmp))]);
             elif sample_name_abbreviations_I:
                 sample_abbreviations = sample_name_abbreviations_I;
+                sample_types_lst = ['Unknown' for x in sample_abbreviations];
                 # query sample types from sample name abbreviations and time-point from data_stage01_isotopomer_normalized
             else:
                 # get sample names and sample name abbreviations
@@ -2817,6 +2821,13 @@ class stage01_isotopomer_execute():
                 self.session.commit();
         except SQLAlchemyError as e:
             print(e);
+    def reset_datastage01_isotopomer_peakData(self,experiment_id_I):
+        try:
+            if experiment_id_I:
+                reset = self.session.query(data_stage01_isotopomer_peakData).filter(data_stage01_isotopomer_peakData.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
     def initialize_dataStage01(self):
         try:
             data_stage01_isotopomer_MQResultsTable.__table__.create(engine,True);
@@ -2962,6 +2973,7 @@ class stage01_isotopomer_execute():
                         sample_types_lst.extend([st for i in range(len(sample_names_tmp))]);
             elif sample_name_abbreviations_I:
                 sample_abbreviations = sample_name_abbreviations_I;
+                sample_types_lst = ['Unknown' for x in sample_abbreviations];
                 # query sample types from sample name abbreviations and time-point from data_stage01_isotopomer_normalized
             else:
                 # get sample names and sample name abbreviations
@@ -3053,6 +3065,7 @@ class stage01_isotopomer_execute():
             # get sample names and sample name abbreviations
             if sample_name_abbreviations_I:
                 sample_abbreviations = sample_name_abbreviations_I;
+                sample_types_lst = ['Unknown' for x in sample_abbreviations];
             else:
                 sample_abbreviations = [];
                 sample_types = ['Unknown'];
@@ -3104,7 +3117,7 @@ class stage01_isotopomer_execute():
                                 if data_mat_cv[i]: 
                                     stdev = data_mat[i]*data_mat_cv[i]/100;
                                 data_stdev.append(stdev);
-                            title = met+'_'+frag;
+                            title = sna+'_'+met+'_'+frag;
                             plot.barPlot(title,data_masses,'intensity','m/z',data_mat,var_I=None,se_I=data_stdev,add_labels_I=True)
     # data_stage01_isotopomer deletes
     def execute_deleteExperimentFromMQResultsTable(self,experiment_id_I,sample_types_I = ['Quality Control','Unknown']):

@@ -146,7 +146,8 @@ ddt_container.prototype.sync_containerdata = function(){
 ddt_container.prototype.add_datafiltermenusubmitbutton = function (tileid_I,htmlid_I,submitbuttonid_I){
     // add filter menu submit button listener to tile
     if (tileid_I){var tileid = tileid_I;}
-    else{var tileid = this.tiles[0].parameters.tileid;};
+    else{var tileid = 'filtermenu'; //this.tiles[0].parameters.tileid;
+        };
     if (htmlid_I){var htmlid = htmlid_I;}
     else{var htmlid = this.tiles[0].parameters.htmlid;};
     if (submitbuttonid_I){var submitbuttonid = submitbuttonid_I;}
@@ -185,7 +186,8 @@ ddt_container.prototype.add_datafiltermenuresetbutton = function (tileid_I,reset
     // add filter menu reset button listener to tile
     if (tileid_I){var tileid = tileid_I;}
     //else{var tileid = this.tiles[0].parameters.htmlid;};
-    else{var tileid = this.tiles[0].parameters.tileid;};
+    else{var tileid = 'filtermenu'; //this.tiles[0].parameters.tileid;
+        };
     if (resetbuttonid_I){var resetbuttonid = resetbuttonid_I;}
     else{var resetbuttonid = 'reset1';};
     
@@ -207,7 +209,8 @@ ddt_container.prototype.add_datafiltermenuupdatebutton = function (tileid_I,upda
     // add filter menu reset button listener to tile
     if (tileid_I){var tileid = tileid_I;}
     //else{var tileid = this.tiles[0].parameters.htmlid;};
-    else{var tileid = this.tiles[0].parameters.tileid;};
+    else{var tileid = 'filtermenu'; //this.tiles[0].parameters.tileid;
+        };
     if (updatebuttonid_I){var updatebuttonid = updatebuttonid_I;}
     else{var updatebuttonid = 'update1';};
     

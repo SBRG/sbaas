@@ -2,43 +2,17 @@ from analysis.analysis_base import *
 from stage01_isotopomer_query import stage01_isotopomer_query
 
 class stage01_isotopomer_io(base_analysis):
-    
-    def export_dataStage01Replicates_csv(self, experiment_id_I, filename):
-        '''export dataStage01Replicates to csv file'''
-        # query the data
-        data = [];
-        query = stage01_isotopomer_query();
-        data = query.get_data_experimentID_dataStage01Replicates(experiment_id_I);
-        # expand the data file:
-        sns = []
-        cgn = []
-        for d in data:
-             sns.append(d['sample_name_short']);
-             cgn.append(d['component_group_name']);
-        sns_sorted = sorted(set(sns))
-        cgn_sorted = sorted(set(cgn))
-        concentrations = []
-        for c in cgn_sorted:
-             row = ['NA' for r in range(len(sns_sorted))];
-             cnt = 0;
-             for s in sns_sorted:
-                 for d in data:
-                     if d['sample_name_short'] == s and d['component_group_name'] == c:
-                         if d['intensity']:
-                            row[cnt] = d['intensity'];
-                            break;
-                 cnt = cnt+1
-             concentrations.append(row);
-        # write concentrations to file
-        export = base_exportData(concentrations);
-        export.write_headerAndColumnsAndElements2csv(sns_sorted,cgn_sorted,filename);
+    def __init__(self,session_I=None):
+        if session_I: self.session = session_I;
+        else: self.session = Session();
+        self.stage01_isotopomer_query = stage01_isotopomer_query(self.session);
+
     def export_compareAveragesSpectrumToTheoretical(self, experiment_id_I, filename, sample_name_abbreviations_I=None,scan_types_I=None,met_ids_I = None):
         '''export a comparison of calculated spectrum to theoretical spectrum'''
         # query the data
         data = [];
-        query = stage01_isotopomer_query();
         # get time points
-        time_points = query.get_timePoint_experimentID_dataStage01Averages(experiment_id_I);
+        time_points = self.stage01_isotopomer_query.get_timePoint_experimentID_dataStage01Averages(experiment_id_I);
         for tp in time_points:
             print 'Reporting average precursor and product spectrum from isotopomer normalized for time-point ' + str(tp);
             if sample_name_abbreviations_I:
@@ -51,7 +25,7 @@ class stage01_isotopomer_io(base_analysis):
                 sample_types_lst = [];
                 for st in sample_types:
                     sample_abbreviations_tmp = [];
-                    sample_abbreviations_tmp = query.get_sampleNameAbbreviations_experimentIDAndSampleTypeAndTimePoint_dataStage01Averages(experiment_id_I,st,tp);
+                    sample_abbreviations_tmp = self.stage01_isotopomer_query.get_sampleNameAbbreviations_experimentIDAndSampleTypeAndTimePoint_dataStage01Averages(experiment_id_I,st,tp);
                     sample_abbreviations.extend(sample_abbreviations_tmp);
                     sample_types_lst.extend([st for i in range(len(sample_abbreviations_tmp))]);
             for sna_cnt,sna in enumerate(sample_abbreviations):
@@ -60,17 +34,17 @@ class stage01_isotopomer_io(base_analysis):
                 if scan_types_I:
                     scan_types = [];
                     scan_types_tmp = [];
-                    scan_types_tmp = query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01Averages(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
+                    scan_types_tmp = self.stage01_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01Averages(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
                     scan_types = [st for st in scan_types_tmp if st in scan_types_I];
                 else:
                     scan_types = [];
-                    scan_types = query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01Averages(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
+                    scan_types = self.stage01_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01Averages(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
                 for scan_type in scan_types:
                     print 'Reporting average precursor and product spectrum for scan type ' + scan_type
                     # met_ids
                     if not met_ids_I:
                         met_ids = [];
-                        met_ids = query.get_metIDs_experimentIDAndSampleAbbreviationAndTimePointAndSampleTypeAndScanType_dataStage01Averages( \
+                        met_ids = self.stage01_isotopomer_query.get_metIDs_experimentIDAndSampleAbbreviationAndTimePointAndSampleTypeAndScanType_dataStage01Averages( \
                                 experiment_id_I,sna,tp,sample_types_lst[sna_cnt],scan_type);
                     else:
                         met_ids = met_ids_I;
@@ -78,11 +52,11 @@ class stage01_isotopomer_io(base_analysis):
                     for met in met_ids:
                         print 'Reporting average precursor and product spectrum for metabolite ' + met;
                         data_tmp = [];
-                        data_tmp = query.get_dataPrecursorFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01Averages(\
+                        data_tmp = self.stage01_isotopomer_query.get_dataPrecursorFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01Averages(\
                                 experiment_id_I,sna,tp,sample_types_lst[sna_cnt],scan_type,met);
                         data.extend(data_tmp);
                         data_tmp = [];
-                        data_tmp = query.get_dataProductFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01Averages(\
+                        data_tmp = self.stage01_isotopomer_query.get_dataProductFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01Averages(\
                                 experiment_id_I,sna,tp,sample_types_lst[sna_cnt],scan_type,met);
                         data.extend(data_tmp);
         # write the comparison to file
@@ -103,9 +77,8 @@ class stage01_isotopomer_io(base_analysis):
         '''export a comparison of calculated spectrum to theoretical spectrum'''
         # query the data
         data = [];
-        query = stage01_isotopomer_query();
         # get time points
-        time_points = query.get_timePoint_experimentID_dataStage01AveragesNormSum(experiment_id_I);
+        time_points = self.stage01_isotopomer_query.get_timePoint_experimentID_dataStage01AveragesNormSum(experiment_id_I);
         for tp in time_points:
             print 'Reporting average precursor and product spectrum from isotopomer normalized for time-point ' + str(tp);
             if sample_name_abbreviations_I:
@@ -118,7 +91,7 @@ class stage01_isotopomer_io(base_analysis):
                 sample_types_lst = [];
                 for st in sample_types:
                     sample_abbreviations_tmp = [];
-                    sample_abbreviations_tmp = query.get_sampleNameAbbreviations_experimentIDAndSampleTypeAndTimePoint_dataStage01AveragesNormSum(experiment_id_I,st,tp);
+                    sample_abbreviations_tmp = self.stage01_isotopomer_query.get_sampleNameAbbreviations_experimentIDAndSampleTypeAndTimePoint_dataStage01AveragesNormSum(experiment_id_I,st,tp);
                     sample_abbreviations.extend(sample_abbreviations_tmp);
                     sample_types_lst.extend([st for i in range(len(sample_abbreviations_tmp))]);
             for sna_cnt,sna in enumerate(sample_abbreviations):
@@ -127,17 +100,17 @@ class stage01_isotopomer_io(base_analysis):
                 if scan_types_I:
                     scan_types = [];
                     scan_types_tmp = [];
-                    scan_types_tmp = query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01AveragesNormSum(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
+                    scan_types_tmp = self.stage01_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01AveragesNormSum(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
                     scan_types = [st for st in scan_types_tmp if st in scan_types_I];
                 else:
                     scan_types = [];
-                    scan_types = query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01AveragesNormSum(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
+                    scan_types = self.stage01_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01AveragesNormSum(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
                 for scan_type in scan_types:
                     print 'Reporting average precursor and product spectrum for scan type ' + scan_type
                     # met_ids
                     if not met_ids_I:
                         met_ids = [];
-                        met_ids = query.get_metIDs_experimentIDAndSampleAbbreviationAndTimePointAndSampleTypeAndScanType_dataStage01AveragesNormSum( \
+                        met_ids = self.stage01_isotopomer_query.get_metIDs_experimentIDAndSampleAbbreviationAndTimePointAndSampleTypeAndScanType_dataStage01AveragesNormSum( \
                                 experiment_id_I,sna,tp,sample_types_lst[sna_cnt],scan_type);
                     else:
                         met_ids = met_ids_I;
@@ -145,11 +118,11 @@ class stage01_isotopomer_io(base_analysis):
                     for met in met_ids:
                         print 'Reporting average precursor and product spectrum for metabolite ' + met;
                         data_tmp = [];
-                        data_tmp = query.get_dataPrecursorFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01AveragesNormSum(\
+                        data_tmp = self.stage01_isotopomer_query.get_dataPrecursorFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01AveragesNormSum(\
                                 experiment_id_I,sna,tp,sample_types_lst[sna_cnt],scan_type,met);
                         data.extend(data_tmp);
                         data_tmp = [];
-                        data_tmp = query.get_dataProductFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01AveragesNormSum(\
+                        data_tmp = self.stage01_isotopomer_query.get_dataProductFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01AveragesNormSum(\
                                 experiment_id_I,sna,tp,sample_types_lst[sna_cnt],scan_type,met);
                         data.extend(data_tmp);
         # write the comparison to file
@@ -168,210 +141,6 @@ class stage01_isotopomer_io(base_analysis):
         header.append(headerL2);
         export = base_exportData(data);
         export.write_headersAndElements2csv(header,filename);
-
-    def import_sample_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_sample(data.data);
-        data.clear_data();
-
-    def add_sample(self, data_I):
-        '''add rows of sample'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = sample(d['sample_name'],
-                            d['sample_type'],
-                            d['calibrator_id'],
-                            d['calibrator_level'],
-                            d['sample_id'],
-                            d['sample_dilution']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_sample_update(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.update_sample(data.data);
-        data.clear_data();
-
-    def update_sample(self,data_I):
-        '''update rows of sample'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_update = self.session.query(sample).filter(
-                            sample.sample_name.like(d['sample_name'])).update(
-                            {'sample_type':d['sample_type'],
-                            'calibrator_id':d['calibrator_id'],
-                            'calibrator_level':d['calibrator_level'],
-                            'sample_id':d['sample_id'],
-                            'sample_dilution':d['sample_dilution']},
-                            synchronize_session=False);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_sampleDescription_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_sampleDescription(data.data);
-        data.clear_data();
-
-    def add_sampleDescription(self, data_I):
-        '''add rows of sample_description'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = sample_description(d['sample_id'],
-                            d['sample_name_short'],
-                            d['sample_name_abbreviation'],
-                            d['sample_date'],
-                            d['time_point'],
-                            d['sample_condition'],
-                            d['extraction_method_id'],
-                            d['biological_material'],
-                            d['sample_description'],
-                            d['sample_replicate'],
-                            d['is_added'],
-                            d['is_added_units'],
-                            d['reconstitution_volume'],
-                            d['reconstitution_volume_units'],
-                            d['sample_replicate_biological'],
-                            d['istechnical']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_samplePhysiologicalParameters_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_samplePhysiologicalParameters(data.data);
-        data.clear_data();
-
-    def add_samplePhysiologicalParameters(self, data_I):
-        '''add rows of sample_physiologicalparameters'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = sample_physiologicalParameters(d['sample_id'],
-                            d['growth_condition_short'],
-                            d['growth_condition_long'],
-                            d['media_short'],
-                            d['media_long'],
-                            d['isoxic'],
-                            d['temperature'],
-                            d['supplementation'],
-                            d['od600'],
-                            d['vcd'],
-                            d['culture_density'],
-                            d['culture_volume_sampled'],
-                            d['cells'],
-                            d['dcw'],
-                            d['wcw'],
-                            d['vcd_units'],
-                            d['culture_density_units'],
-                            d['culture_volume_sampled_units'],
-                            d['dcw_units'],
-                            d['wcw_units']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_sampleStorage_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_sampleStorage(data.data);
-        data.clear_data();
-
-    def add_sampleStorage(self, data_I):
-        '''add rows of sample_storage'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = sample_storage(d['sample_id'],
-                            d['sample_label'],
-                            d['ph'],
-                            d['box'],
-                            d['pos']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_experiment_add(self, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_experiment(data.data);
-        data.clear_data();
-
-    def add_experiment(self, data_I):
-        '''add rows of experiment'''
-        if data_I:
-            for d in data_I:
-                try:
-                    data_add = experiment(d['exp_type_id'],
-                        d['id'],
-                        d['sample_name'],
-                        d['experimentor_id'],
-                        d['extraction_method_id'],
-                        d['acquisition_method_id'],
-                        d['quantitation_method_id'],
-                        d['internal_standard_id']);
-                    self.session.add(data_add);
-                except SQLAlchemyError as e:
-                    print(e);
-            self.session.commit();
-
-    def import_quantitationMethod_add(self,QMethod_id_I, filename):
-        '''table adds'''
-        data = base_importData();
-        data.read_csv(filename);
-        data.format_data();
-        self.add_quantitationMethod(QMethod_id_I, data.data);
-        data.clear_data();
-
-    def add_quantitationMethod(self, QMethod_id_I, data_I):
-        '''add rows of quantitation_method'''
-        if data_I:
-            for d in data_I:
-                if d['IS'] == 'FALSE': # ignore internal standards
-                    try:
-                        data_add = quantitation_method(QMethod_id_I,
-                                                    d['Q1 Mass - 1'],
-                                                    d['Q3 Mass - 1'],
-                                                    d['Group Name'],
-                                                    d['Name'],
-                                                    d['IS Name'],
-                                                    d['Regression Type'],
-                                                    d['Regression Weighting'],
-                                                    None,
-                                                    None,
-                                                    None,
-                                                    d['Use Area'],
-                                                    None,
-                                                    None,
-                                                    None);
-                        self.session.add(data_add);
-                    except SQLAlchemyError as e:
-                        print(e);
-            self.session.commit();
 
     def import_dataStage01MQResultsTable_add(self,filename):
         '''table adds'''
@@ -571,15 +340,20 @@ class stage01_isotopomer_io(base_analysis):
             self.session.commit();
 
     def import_peakData_add(self, filename, experiment_id, samplename, precursor_formula, met_id,
-                            mass_units_I='Da',intensity_units_I='cps', scan_type_I='EPI', header_I=True):
+                            mass_units_I='Da',intensity_units_I='cps', scan_type_I='EPI', header_I=True,
+                            add_data_I=True):
         '''table adds'''
         data = base_importData();
-        data.read_tab_fieldnames(filename,['Mass/Charge','Intensity'],header_I);
-        #data.read_tab_fieldnames(filename,['mass','intensity','intensity_percent'],header_I);
-        data.format_data();
-        self.add_peakData(data.data, experiment_id, samplename, precursor_formula, met_id,
-                          mass_units_I,intensity_units_I, scan_type_I);
-        data.clear_data();
+        try:
+            data.read_tab_fieldnames(filename,['Mass/Charge','Intensity'],header_I);
+            #data.read_tab_fieldnames(filename,['mass','intensity','intensity_percent'],header_I);
+            data.format_data();
+            if add_data_I:
+                self.add_peakData(data.data, experiment_id, samplename, precursor_formula, met_id,
+                              mass_units_I,intensity_units_I, scan_type_I);
+            data.clear_data();
+        except IOError as e:
+            print e;
 
     def add_peakData(self, data_I, experiment_id, samplename, precursor_formula, met_id,
                           mass_units_I,intensity_units_I, scan_type_I):
@@ -915,3 +689,56 @@ class stage01_isotopomer_io(base_analysis):
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
+
+    def export_dataStage01IsotopomerNormalized_js(self,experiment_id_I,data_dir_I="tmp"):
+        """Export data_stage01_isotopomer_normalized to js file"""
+        # get the data
+        data_O = [];
+        data_O = self.stage01_isotopomer_query.get_rows_experimentID_dataStage01Normalized(experiment_id_I);
+        # visualization parameters
+        data1_keys = ['sample_name','sample_type','met_id','time_point','fragment_formula','fragment_mass','scan_type']; #,'rate_units' rate_units contain string characters that are registered as regular expressions
+        data1_nestkeys = ['fragment_mass'];
+        data1_keymap = {'xdata':'fragment_mass','ydata':'intensity_normalized',
+                'serieslabel':'sample_name','featureslabel':'fragment_mass',
+                'ydata_lb':'intensity_normalized','ydata_ub':'intensity_normalized'};
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters_O.update(formparameters_O);
+        svgparameters1_O = {"svgtype":'verticalbarschart2d_01',"svgkeymap":[data1_keymap],
+                            'svgid':'svg1',
+                             "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                    "svgwidth":500,"svgheight":350,"svgy1axislabel":"intensity (norm)"#,"svgfilters":{'met_id':['glc-D','ac']}                  
+                };
+        svgtileparameters1_O = {'tileheader':'Isotopomer distribution','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters1_O.update(svgparameters1_O);
+        tableparameters1_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    #"tableheaders":[],
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters1_O = {'tileheader':'Uptake/secretion rates','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters1_O.update(tableparameters1_O);
+        parametersobject_O = [formtileparameters_O,svgtileparameters1_O,tabletileparameters1_O];
+        tile2datamap_O = {"tile1":[0],"tile2":[0],"tile3":[0]};
+        # dump the data to a json file
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_isotopomer_normalized' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);

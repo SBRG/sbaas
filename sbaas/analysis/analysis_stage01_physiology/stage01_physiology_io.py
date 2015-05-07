@@ -232,8 +232,11 @@ class stage01_physiology_io(base_analysis):
             data_tmp = [];
             data_tmp = self.stage01_physiology_query.get_rows_experimentIDAndSampleNameAbbreviation_dataStage01PhysiologyRatesAverages(experiment_ids[sna_cnt],sna);
             if data_tmp: data_O.extend(data_tmp);
+        # remove js regular expressions
+        for i,d in enumerate(data_O):
+            data_O[i]['rate_units'] = self.remove_jsRegularExpressions(d['rate_units']);
         # visualization parameters
-        data1_keys = ['sample_name_abbreviation', 'met_id']; #,'rate_units' rate_units contain string characters that are registered as regular expressions
+        data1_keys = ['sample_name_abbreviation', 'met_id','rate_units']; #rate_units contain string characters that are registered as regular expressions
         data1_nestkeys = ['met_id'];
         data1_keymap = {'xdata':'met_id','ydata':'rate_average',
                 'serieslabel':'sample_name_abbreviation','featureslabel':'met_id',

@@ -72,7 +72,8 @@ class base_importData():
                 except csv.Error as e:
                     sys.exit('file %s, line %d: %s' % (filename, reader.line_num, e));
         except IOError as e:
-            sys.exit('%s does not exist' % e);
+            #sys.exit('%s does not exist' % e);
+            print ('%s does not exist' % e); 
 
     def read_json(self, filename):
         '''import values from a json file'''

@@ -112,3 +112,54 @@ class visualization_project_status(Base):
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
+
+class visualization_user(Base):
+    __tablename__ = 'visualization_user'
+    id = Column(Integer, Sequence('visualization_user_id_seq'), primary_key=True)
+    project_ids = Column(postgresql.ARRAY(String(100)));
+    user_name = Column(String(100));
+    user_password = Column(String(100));
+    user_role = Column(String(100));
+    user_host = Column(String(100));
+    user_database = Column(String(100));
+    user_schema = Column(String(100));
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (UniqueConstraint('user_name'),
+            )
+
+    def __init__(self,project_ids_I,
+                    user_name_I,
+                    user_password_I,
+                    user_role_I,
+                    user_host_I,
+                    user_database_I,
+                    user_schema_I,
+                    used__I,
+                    comment__I):
+        self.project_ids=project_ids_I
+        self.user_name=user_name_I
+        self.user_password=user_password_I
+        self.user_role=user_role_I
+        self.user_host=user_host_I
+        self.user_database=user_database_I
+        self.user_schema=user_schema_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'id':self.id,
+                'project_ids':self.project_ids,
+                'user_name':self.user_name,
+                'user_password':self.user_password,
+                'user_role':self.user_role,
+                'user_host':self.user_host,
+                'user_database':self.user_database,
+                'user_schema':self.user_schema,
+                'used_':self.used_,
+                'comment_':self.comment_}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
+

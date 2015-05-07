@@ -161,6 +161,43 @@ class matplot():
         text_labels = sns_sorted;
 
         return title,xlabel,ylabel,x_data,y_data,text_labels,samples
+    def _extractPCAScores_tablerows(self,data_I,axis1_I=1,axis2_I=2):
+        '''extract out pca data from [{},{},{}] format'''
+        
+        # determine the number of samples and axes
+        sns = []
+        axes = []
+        cus = []
+        for d in data_I:
+                sns.append(d['sample_name_short']);
+                axes.append(d['axis'])
+                cus.append(d['calculated_concentration_units'])
+        sns_sorted = sorted(set(sns))
+        axes_sorted = sorted(set([axis1_I,axis2_I]))
+        cus_sorted = sorted(set(cus))
+        #extract out all axes
+        data_O = [];
+        for i,r in enumerate(sns_sorted):
+            for k,z in enumerate(cus_sorted):
+                cus_tmp = {};
+                for j,c in enumerate(axes_sorted):
+                    tmp = {};
+                    for d in data_I:
+                        if d['sample_name_short'] == r and d['axis'] == c and d['calculated_concentration_units'] == z:
+                            tmp['score_'+str(c)] = d['score'];
+                            tmp['var_proportion_'+str(c)] = d['var_proportion'];
+                            tmp['var_cumulative_'+str(c)] = d['var_cumulative'];
+                            tmp['axislabel'+str(c)] = 'PC' + str(c) + ' [' + str(d['var_proportion']*100) + '%]';
+                            if j==0:
+                                tmp['sample_name_abbreviation'] = d['sample_name_abbreviation'];
+                                tmp['sample_name_short'] = d['sample_name_short'];
+                                tmp['calculated_concentration_units'] = d['calculated_concentration_units'];
+                                tmp['analysis_id'] = d['analysis_id'];
+                            break;
+                    if tmp: cus_tmp.update(tmp);
+                if cus_tmp: data_O.append(cus_tmp);
+
+        return data_O;
     def _extractPCALoadings(self,data_I,axis1_I=1,axis2_I=2):
         '''extract out pca data from [{},{},{}] format'''
         x_data = [];
@@ -194,6 +231,41 @@ class matplot():
         text_labels = cn_sorted;
 
         return title,xlabel,ylabel,x_data,y_data,text_labels
+    def _extractPCALoadings_tablerows(self,data_I,axis1_I=1,axis2_I=2):
+        '''extract out pca data from [{},{},{}] format'''
+        
+        # determine the number of samples and axes
+        cn = []
+        axes = []
+        cus = []
+        for d in data_I:
+                cn.append(d['component_name']);
+                axes.append(d['axis'])
+                cus.append(d['calculated_concentration_units'])
+        cn_sorted = sorted(set(cn))
+        axes_sorted = sorted(set([axis1_I,axis2_I]))
+        cus_sorted = sorted(set(cus))
+        #extract out all axes
+        data_O = [];
+        for i,r in enumerate(cn_sorted):
+            for k,z in enumerate(cus_sorted):
+                cus_tmp = {};
+                for j,c in enumerate(axes_sorted):
+                    tmp = {};
+                    for d in data_I:
+                        if d['component_name'] == r and d['axis'] == c and d['calculated_concentration_units'] == z:
+                            tmp['loadings_'+str(c)] = d['loadings'];
+                            tmp['axislabel'+str(c)] = 'Loadings' + str(c);
+                            if j==0:
+                                tmp['component_group_name'] = d['component_group_name'];
+                                tmp['component_name'] = d['component_name'];
+                                tmp['calculated_concentration_units'] = d['calculated_concentration_units'];
+                                tmp['analysis_id'] = d['analysis_id'];
+                            break;
+                    if tmp: cus_tmp.update(tmp);
+                if cus_tmp: data_O.append(cus_tmp);
+
+        return data_O;
     def heatPlot(self,title_I):
         #TODO:
         # Generate some test data

@@ -49,19 +49,23 @@ class stage01_quantification_execute():
         # create and populate the view
         for n in range(len(check)):
             if check[n]:
-                row = data_stage01_quantification_LLOQAndULOQ(experiment_id_I,
-                                                      check[n]['sample_name'],
-                                                      check[n]['component_group_name'],
-                                                      check[n]['component_name'],
-                                                      check[n]['calculated_concentration'],
-                                                      check[n]['conc_units'],
-                                                      check[n]['correlation'],
-                                                      check[n]['lloq'],
-                                                      check[n]['uloq'],
-                                                      check[n]['points'],
-                                                      check[n]['used']);
-                self.session.add(row);
-        self.session.commit();
+                try:
+                    row = data_stage01_quantification_LLOQAndULOQ(experiment_id_I,
+                                                          check[n]['sample_name'],
+                                                          check[n]['component_group_name'],
+                                                          check[n]['component_name'],
+                                                          check[n]['calculated_concentration'],
+                                                          check[n]['conc_units'],
+                                                          check[n]['correlation'],
+                                                          check[n]['lloq'],
+                                                          check[n]['uloq'],
+                                                          check[n]['points'],
+                                                          check[n]['used']);
+                    self.session.add(row);
+                    self.session.commit();
+                except IntegrityError as e:
+                    self.session.rollback();
+                    print e;
     def execute_checkLLOQAndULOQ(self,experiment_id_I):
         '''check the lloq and uloq from the calibrators
         against the calculated concentration
@@ -742,7 +746,9 @@ class stage01_quantification_execute():
                     lloq = None;
                     conc_units = None;
                     lloq, conc_units = self.stage01_quantification_query.get_lloq_ExperimentIDAndComponentName_dataStage01LLOQAndULOQ(experiment_id_I,cn);
-                    if not lloq: continue
+                    if not lloq:
+                        print 'lloq not found'; 
+                        continue
                     # normalize the lloq
                     if (biological_material_I and conversion_name_I):
                         # get physiological parameters
@@ -764,7 +770,7 @@ class stage01_quantification_execute():
                             exit(-1);  
                         else:
                             #calculate the cell volume
-                            cell_volume, cell_volume_units = self.calculate.calculate_cellVolume_CVSAndCVSUnitsAndODAndConversionAndConversionUnits(cvs,cvs_units,od600,conversion,conversion_units);
+                            cell_volume, cell_volume_units = self.calculate.calculate_biomass_CVSAndCVSUnitsAndODAndConversionAndConversionUnits(cvs,cvs_units,od600,conversion,conversion_units);
                             # calculate the normalized concentration
                             norm_conc = None;
                             norm_conc_units = None;
@@ -1389,6 +1395,20 @@ class stage01_quantification_execute():
             if experiment_id_I:
                 reset = self.session.query(data_stage01_quantification_averagesMI).filter(data_stage01_quantification_averagesMI.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_quantification_averagesMIgeo).filter(data_stage01_quantification_averagesMIgeo.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_datastage01_quantification_LLOQAndULOQ(self,experiment_id_I):
+        try:
+            if experiment_id_I:
+                reset = self.session.query(data_stage01_quantification_LLOQAndULOQ).filter(data_stage01_quantification_LLOQAndULOQ.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                reset = self.session.query(data_stage01_quantification_checkLLOQAndULOQ).filter(data_stage01_quantification_checkLLOQAndULOQ.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
+                self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_datastage01_quantification_physiologicalRatios(self,experiment_id_I):
+        try:
+            if experiment_id_I:
                 reset = self.session.query(data_stage01_quantification_physiologicalRatios_replicates).filter(data_stage01_quantification_physiologicalRatios_replicates.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 reset = self.session.query(data_stage01_quantification_physiologicalRatios_averages).filter(data_stage01_quantification_physiologicalRatios_averages.experiment_id.like(experiment_id_I)).delete(synchronize_session=False);
                 self.session.commit();

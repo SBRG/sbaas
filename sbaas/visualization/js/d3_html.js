@@ -38,10 +38,18 @@ d3_html.prototype.set_tileid = function(htmltileid_I){
     this.tileid = htmltileid_I;
 };
 d3_html.prototype.add_data = function(data_I){
-    // set the htmlid
-    this.data = data_I;
+    // add data to tile
+    this.data = data_I[0];
 };
 d3_html.prototype.set_datakeymap = function(datakeymap_I){
+    // set html data key map
+    this.datakeymap = datakeymap_I[0];  
+};
+d3_html.prototype.add_ndata = function(data_I){
+    // add data to tile
+    this.data = data_I;
+};
+d3_html.prototype.set_ndatakeymap = function(datakeymap_I){
     // set html data key map
     this.datakeymap = datakeymap_I;  
 };
@@ -615,4 +623,38 @@ d3_html.prototype.add_mediasvg = function(){
         .append("p")
         .text(function(d){return d[mediaparagraph];});
         
+};
+d3_html.prototype.add_iphrame = function(){
+    // add an iphrame to tile body
+    // todo:
+    var iphrameclass = this.datakeymap.htmliphrameclass;
+    var iphramehref = this.datakeymap.htmliphramehref;
+};
+d3_html.prototype.add_escher = function(){
+    // add escher map to tile body
+    var id = this.id;
+    var metdata = this.data[0].listdatafiltered;
+    var rxndata = this.data[1].listdatafiltered;
+    var genedata = this.data[2].listdatafiltered;
+    var mapdata = this.eschermapdata;
+    var options = this.escheroptions;
+
+    // reformat the data
+    var eschermetdata = null;
+    var escherrxndata = null;
+    var eschergenedata = null;
+
+    this.html.select("#"+id+"escher").remove();
+
+    this.htmlescher = this.html
+        .append("div")
+        .attr("class","escher")
+        .attr("id",id + "escher");
+
+    // make the escher object
+    this.escher = escher.Builder(mapdata,null,null,"#"+id+"escher",options);
+    if (eschermetdata){this.escher.set_reaction_data(eschermetdata);};
+    if (escherrxndata){this.escher.set_metabolite_data(escherrxndata);};
+    if (eschergenedata){this.escher.set_gene_data(eschergenedata);};
+
 }

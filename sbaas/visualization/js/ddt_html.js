@@ -19,7 +19,7 @@ ddt_html.prototype.set_ddthtml = function(){
 };
 ddt_html.prototype.add_data = function(data_I){
     // add data to ddthtml
-    this.ddthtml.add_data(data_I[0]);
+    this.ddthtml.add_data(data_I);
 };
 ddt_html.prototype.set_datakeymap = function(datakeymap_I){
     // add data to ddthtml

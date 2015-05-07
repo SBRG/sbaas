@@ -79,7 +79,7 @@ class stage01_isotopomer_query(base_analysis):
         try:
             sample_names = self.session.query(sample.sample_name).filter(
                     sample_description.sample_name_short.like(sample_name_short_I),
-                    sample_description.sample_description.like(sample_decription_I),
+                    sample_description.sample_desc.like(sample_decription_I),
                     experiment.id.like(experiment_id_I),
                     experiment.exp_type_id == exp_type_I,
                     sample.sample_id.like(sample_description.sample_id),
@@ -99,7 +99,7 @@ class stage01_isotopomer_query(base_analysis):
         try:
             sample_names = self.session.query(sample.sample_name).filter(
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
-                    sample_description.sample_description.like(sample_decription_I),
+                    sample_description.sample_desc.like(sample_decription_I),
                     experiment.id.like(experiment_id_I),
                     experiment.exp_type_id == exp_type_I,
                     sample.sample_id.like(sample_description.sample_id),
@@ -143,7 +143,7 @@ class stage01_isotopomer_query(base_analysis):
                     sample.sample_type).filter(
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
                     sample_description.time_point.like(time_point_I),
-                    sample_description.sample_description.like(sample_description_I),
+                    sample_description.sample_desc.like(sample_description_I),
                     sample.sample_id.like(sample_description.sample_id),
                     sample.sample_dilution == sample_dilution_I,
                     experiment.sample_name.like(sample.sample_name),
@@ -176,7 +176,7 @@ class stage01_isotopomer_query(base_analysis):
                     sample.sample_type).filter(
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
                     sample_description.time_point.like(time_point_I),
-                    sample_description.sample_description.like(sample_description_I),
+                    sample_description.sample_desc.like(sample_description_I),
                     sample.sample_id.like(sample_description.sample_id),
                     sample.sample_dilution == sample_dilution_I,
                     experiment.sample_name.like(sample.sample_name),
@@ -206,7 +206,7 @@ class stage01_isotopomer_query(base_analysis):
             sample_names = self.session.query(sample.sample_name).filter(
                     sample_description.sample_name_abbreviation.like(sample_name_abbreviation_I),
                     sample_description.time_point.like(time_point_I),
-                    sample_description.sample_description.like(sample_description_I),
+                    sample_description.sample_desc.like(sample_description_I),
                     sample.sample_id.like(sample_description.sample_id),
                     sample.sample_dilution == sample_dilution_I,
                     experiment.sample_name.like(sample.sample_name),
@@ -2816,8 +2816,8 @@ class stage01_isotopomer_query(base_analysis):
                 return data_O;
         except SQLAlchemyError as e:
             print(e);
-    def get_rows_experimentIDAndSampleNameAndMetIDAndAndScanType_normalized(self,experiment_id_I):
-        '''TODO: Query rows for a specific experiment_id'''
+    def get_rows_experimentID_dataStage01Normalized(self,experiment_id_I):
+        '''Query rows for a specific experiment_id'''
         try:
             data = self.session.query(data_stage01_isotopomer_normalized).filter(
                     data_stage01_isotopomer_normalized.experiment_id.like(experiment_id_I),

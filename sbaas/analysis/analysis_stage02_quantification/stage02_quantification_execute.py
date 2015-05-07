@@ -880,6 +880,7 @@ class stage02_quantification_execute():
                             # get data:
                             all_1,data_1 = [],[];
                             all_1,data_1 = self.stage02_quantification_query.get_RDataList_analysisIDAndExperimentIDAndTimePointAndUnitsAndComponentNamesAndSampleNameAbbreviation_dataStage02GlogNormalized(analysis_id_I,experiment_id,tp,cu,cn,sna);
+                            if len(data_1)<2: continue
                             # call R
                             data_TTest = {};
                             data_TTest = self.r_calc.calculate_oneSampleTTest(data_1, alternative_I = "two.sided", mu_I = 0, paired_I="FALSE", var_equal_I = "TRUE", ci_level_I = 0.95, padjusted_method_I = "bonferroni");

@@ -483,6 +483,15 @@ d3_chart2d.prototype.add_boxandwhiskersdata1tooltipandfill_mean = function () {
     var colorscale = this.colorscale;
     var id = this.id;
 
+//     this.boxandwhiskersmeancirclesenter
+//         .attr("data-toggle","tooltip")
+//         .attr("data-placement","top")
+//         .attr("title","Tooltip on top");
+        
+//     $(function () {
+//         $('[data-toggle="tooltip"]').tooltip()
+//     }); 
+
     this.boxandwhiskersmeancirclesenter.on("mouseover", function (d) {
             //change color of the bar
             d3.select(this).style('fill', 'black');
@@ -493,7 +502,7 @@ d3_chart2d.prototype.add_boxandwhiskersdata1tooltipandfill_mean = function () {
                 .select("#" + id + "value")
                 .text(d[series_label] + ': ' + "mean: " + d[y_data_mean].toFixed(2) + ', ' + "ci 95%: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
             //Show the tooltip
-            d3.select("#" + id + "tooltip").classed("hidden", false);
+             d3.select("#" + id + "tooltip").classed("hidden", false);
         })
         .on("mouseout", function (d) {
             d3.select(this).style("fill", colorscale(d[series_label]));

@@ -1460,7 +1460,8 @@ class stage02_quantification_query(base_analysis):
                         data_stage02_quantification_glogNormalized.experiment_id.like(d['experiment_id']),
                         data_stage02_quantification_glogNormalized.sample_name_short.like(d['sample_name_short']),
                         data_stage02_quantification_glogNormalized.time_point.like(d['time_point']),
-                        data_stage02_quantification_glogNormalized.component_name.like(d['component_name'])).update(		
+                        data_stage02_quantification_glogNormalized.component_name.like(d['component_name']),
+                        data_stage02_quantification_glogNormalized.calculated_concentration_units.like(d['calculated_concentration_units'])).update(		
                         {
                         'calculated_concentration':d['calculated_concentration']},
                         synchronize_session=False);
@@ -1569,6 +1570,7 @@ class stage02_quantification_query(base_analysis):
             return units_O;
         except SQLAlchemyError as e:
             print(e);
+    # Query sample_name_short from data_stage01_quantification_pca_scores
     # Query data from data_stage01_quantification_pca_scores and data_stage01_quantification_pca_loadings
     def get_RExpressionData_experimentIDAndTimePointAndUnits_dataStage02ScoresLoadings(self, experiment_id_I,time_point_I,concentration_units_I,exp_type_I=4):
         """get data from experiment ID"""
@@ -1870,6 +1872,69 @@ class stage02_quantification_query(base_analysis):
                 data_1['analysis_id'] = d.analysis_id;
                 data_1['experiment_id'] = d.experiment_id;
                 data_1['time_point'] = d.time_point;
+                data_1['axis'] = d.axis;
+                data_1['component_group_name'] = d.component_group_name;
+                data_1['component_name'] = d.component_name;
+                data_1['loadings'] = d.loadings;
+                data_1['calculated_concentration_units'] = d.calculated_concentration_units;
+                data_loadings_O.append(data_1);
+            return data_scores_O, data_loadings_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_RExpressionData_analysisID_dataStage02ScoresLoadings(self, analysis_id_I):
+        """get data from analysis ID"""
+        try:
+            data_scores = self.session.query(data_stage02_quantification_pca_scores.analysis_id,
+                    data_stage02_quantification_analysis.sample_name_abbreviation,
+                    data_stage02_quantification_pca_scores.sample_name_short,
+                    data_stage02_quantification_pca_scores.score,
+                    data_stage02_quantification_pca_scores.axis,
+                    data_stage02_quantification_pca_scores.var_proportion,
+                    data_stage02_quantification_pca_scores.var_cumulative,
+                    data_stage02_quantification_pca_scores.calculated_concentration_units).filter(
+                    data_stage02_quantification_pca_scores.analysis_id.like(analysis_id_I),
+                    data_stage02_quantification_analysis.analysis_id.like(analysis_id_I),
+                    data_stage02_quantification_pca_scores.sample_name_short.like(data_stage02_quantification_analysis.sample_name_short),
+                    data_stage02_quantification_pca_scores.used_.is_(True)).group_by(
+                    data_stage02_quantification_pca_scores.analysis_id,
+                    data_stage02_quantification_analysis.sample_name_abbreviation,
+                    data_stage02_quantification_pca_scores.sample_name_short,
+                    data_stage02_quantification_pca_scores.score,
+                    data_stage02_quantification_pca_scores.axis,
+                    data_stage02_quantification_pca_scores.var_proportion,
+                    data_stage02_quantification_pca_scores.var_cumulative,
+                    data_stage02_quantification_pca_scores.calculated_concentration_units).all();
+            data_scores_O = []; #data_loadings_O = [];
+            for d in data_scores: 
+                data_1 = {};
+                data_1['analysis_id'] = d.analysis_id;
+                data_1['sample_name_abbreviation'] = d.sample_name_abbreviation;
+                data_1['sample_name_short'] = d.sample_name_short;
+                data_1['score'] = d.score;
+                data_1['axis'] = d.axis;
+                data_1['var_proportion'] = d.var_proportion;
+                data_1['var_cumulative'] = d.var_cumulative;
+                data_1['calculated_concentration_units'] = d.calculated_concentration_units;
+                data_scores_O.append(data_1);
+            # query loadings
+            data_loadings = self.session.query(data_stage02_quantification_pca_loadings.analysis_id,
+                    data_stage02_quantification_pca_loadings.axis,
+                    data_stage02_quantification_pca_loadings.component_group_name,
+                    data_stage02_quantification_pca_loadings.component_name,
+                    data_stage02_quantification_pca_loadings.loadings,
+                    data_stage02_quantification_pca_loadings.calculated_concentration_units).filter(
+                    data_stage02_quantification_pca_loadings.analysis_id.like(analysis_id_I),
+                    data_stage02_quantification_pca_loadings.used_.is_(True)).group_by(
+                    data_stage02_quantification_pca_loadings.analysis_id,
+                    data_stage02_quantification_pca_loadings.axis,
+                    data_stage02_quantification_pca_loadings.component_group_name,
+                    data_stage02_quantification_pca_loadings.component_name,
+                    data_stage02_quantification_pca_loadings.loadings,
+                    data_stage02_quantification_pca_loadings.calculated_concentration_units).all();
+            data_loadings_O = [];
+            for d in data_loadings: 
+                data_1 = {};
+                data_1['analysis_id'] = d.analysis_id;
                 data_1['axis'] = d.axis;
                 data_1['component_group_name'] = d.component_group_name;
                 data_1['component_name'] = d.component_name;
@@ -2267,5 +2332,34 @@ class stage02_quantification_query(base_analysis):
                     'comment_':d.comment_
                     });
             return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
+            
+    # query data from data_stage02_quantification_heatmap
+    def get_rows_analysisID_dataStage02QuantificationHeatmap(self,analysis_id_I):
+        '''Query rows from data_stage02_quantification_heatmap'''
+        try:
+            data = self.session.query(data_stage02_quantification_heatmap).filter(
+                    data_stage02_quantification_heatmap.analysis_id.like(analysis_id_I),
+                    data_stage02_quantification_heatmap.used_).all();
+            data_O = [];
+            for d in data: 
+                data_dict = {'analysis_id':d.analysis_id,
+                    'col_index':d.col_index,
+                    'row_index':d.row_index,
+                    'value':d.value,
+                    'col_leaves':d.col_leaves,
+                    'row_leaves':d.row_leaves,
+                    'col_label':d.col_label,
+                    'row_label':d.row_label,
+                    'col_pdist_metric':d.col_pdist_metric,
+                    'row_pdist_metric':d.row_pdist_metric,
+                    'col_linkage_method':d.col_linkage_method,
+                    'row_linkage_method':d.row_linkage_method,
+                    'value_units':d.value_units,
+                    'used_':d.used_,
+                    'comment_':d.comment_};
+                data_O.append(data_dict);
+            return data_O;
         except SQLAlchemyError as e:
             print(e);

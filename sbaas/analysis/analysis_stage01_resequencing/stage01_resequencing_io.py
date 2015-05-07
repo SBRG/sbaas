@@ -558,7 +558,7 @@ class stage01_resequencing_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         formparameters_O = {'htmlid':'form1','htmltype':'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
@@ -567,7 +567,7 @@ class stage01_resequencing_io(base_analysis):
                             "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
                             "svgwidth":500,"svgheight":350,
                             "svgx1axislabel":"jump_time_point","svgy1axislabel":"frequency",
-    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+    						'svgformtileid':'filtermenu','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
         svgtileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         svgtileparameters_O.update(svgparameters_O);
@@ -575,12 +575,12 @@ class stage01_resequencing_io(base_analysis):
                     'tableid':'table1',
                     "tablefilters":None,
                     "tableclass":"table  table-condensed table-hover",
-    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+    			    'tableformtileid':'filtermenu','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
         tabletileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         tabletileparameters_O.update(tableparameters_O);
         parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
-        tile2datamap_O = {"tile1":[0],"tile2":[0,1],"tile3":[0]};
+        tile2datamap_O = {"filtermenu":[0],"tile2":[0,1],"tile3":[0]};
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
@@ -747,7 +747,7 @@ class stage01_resequencing_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
@@ -756,7 +756,7 @@ class stage01_resequencing_io(base_analysis):
                             "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
                             "svgwidth":500,"svgheight":350,
                             "svgx1axislabel":"intermediate","svgy1axislabel":"frequency",
-    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+    						'svgformtileid':'filtermenu','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
         svgtileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         svgtileparameters_O.update(svgparameters_O);
@@ -764,12 +764,12 @@ class stage01_resequencing_io(base_analysis):
                     'tableid':'table1',
                     "tablefilters":None,
                     "tableclass":"table  table-condensed table-hover",
-    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+    			    'tableformtileid':'filtermenu','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
         tabletileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         tabletileparameters_O.update(tableparameters_O);
         parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
-        tile2datamap_O = {"tile1":[0],"tile2":[0,1],"tile3":[0]};
+        tile2datamap_O = {"filtermenu":[0],"tile2":[0,1],"tile3":[0]};
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';

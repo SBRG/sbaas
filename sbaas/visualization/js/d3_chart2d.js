@@ -561,12 +561,27 @@ d3_chart2d.prototype.set_tooltip = function () {
     //http://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-tooltips.php
     var series_label = this.data1keymap.serieslabel;
 
-    this.tooltip = d3.select("#" + this.tileid)
+    this.tooltip = d3.select("#" + this.tileid + "panel-body")
         .append("div")
         .attr('class', 'hidden')
         .attr('id', this.id + 'tooltip')
         .append('p')
         .attr('id', this.id + 'value');
+
+//     this.tooltip = d3.select("#" + this.tileid + "panel-body")
+//         .append("div")
+//         .attr('class', 'tooltip hidden')
+//         .attr('role', 'tooltip');
+//         //.attr('id', this.id + 'tooltip');
+
+//     this.tooltiparrow = this.tooltip
+//         .append("div")
+//         .attr("class","tooltip-arrow");
+
+//     this.tooltipinner = this.tooltip
+//         .append("div")
+//         .attr("class","tooltip-inner")
+//         .attr('id', this.id + 'value');
 };
 d3_chart2d.prototype.set_tooltipstyle = function () {
     //set tooltip css properties
@@ -579,8 +594,9 @@ d3_chart2d.prototype.set_tooltipstyle = function () {
     //        'color': '#fff',
     //        'border-radius': '2px'
     //};
-    var tooltipstyle = {'position': 'fixed',
-        'width': '200px',
+    var tooltipstyle = {
+        'position': 'fixed',
+        'width': 'auto',
         'height': 'auto',
         'padding': '10px',
         'background-color': 'white',

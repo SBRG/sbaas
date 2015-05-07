@@ -94,7 +94,11 @@ d3_chart2d.prototype.add_pointsdata1featurefilter = function () {
     var _this = this;
     this.pointsdata1enter.on('click', function (d, i) {
         var filters = [];
-        _this.data1.filters[feature_label].forEach(function (n) { if (n !== d[feature_label]) { filters.push(n); }; });
+        _this.data1.filters[feature_label].forEach(function (n) {
+            if (n !== d[feature_label]) {
+                filters.push(n); }
+            //else {console.log(n);}; 
+            });
         _this.data1.filters[feature_label] = filters;
         _this.data1.filter_stringdata();
         if (_this.filterdata1and2){
@@ -126,6 +130,8 @@ d3_chart2d.prototype.add_pointsdata1 = function () {
 
     //this.pointsdata1enter = this.pointsdata1.enter();
 
+    this.pointsdata1.exit().remove();
+
     this.pointsdata1.transition()
         .attr("cx", function (d) { return x1scale(d[x_data]); })
         .attr("cy", function (d) { return y1scale(d[y_data]); })
@@ -139,8 +145,6 @@ d3_chart2d.prototype.add_pointsdata1 = function () {
         .attr("cx", function (d) { return x1scale(d[x_data]); })
         .attr("cy", function (d) { return y1scale(d[y_data]); })
         .style("fill", function (d) { return colorscale(d[series_label]); });
-
-    this.pointsdata1.exit().remove();
 
     //this.pointsdata1enter = this.pointsdata1.enter();
     
