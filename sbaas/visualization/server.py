@@ -242,8 +242,20 @@ class ProjectHandler(BaseHandler):
         elif table_id_I=='export_dataStage02IsotopomerFittedNetFluxes_js':
             io = stage02_isotopomer_io(session);
             data_json_O = io.export_dataStage02IsotopomerFittedNetFluxes_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage02QuantificationPairWiseTest_js':
+            io = stage02_quantification_io(session);
+            data_json_O = io.export_dataStage02QuantificationPairWiseTest_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage02QuantificationDescriptiveStats_js':
+            io = stage02_quantification_io(session);
+            data_json_O = io.export_dataStage02QuantificationDescriptiveStats_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage02QuantificationHeatmap_js':
+            io = stage02_quantification_io(session);
+            data_json_O = io.export_dataStage02QuantificationHeatmap_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage02QuantificationPca_js':
+            io = stage02_quantification_io(session);
+            data_json_O = io.export_dataStage02QuantificationPca_js(analysis_id_I,data_dir_I='data_json');
         elif table_id_I=='':
-            io = stage01_physiology_io(session);
+            io = stage02_quantification_io(session);
             data_json_O = io.export_dataStage01PhysiologyRatesAverages_js(analysis_id_I,data_dir_I='data_json');
         else:
             #re-direct to 404

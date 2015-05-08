@@ -11,3 +11,4 @@ from analysis_stage01_resequencing import *
 from analysis_stage02_resequencing import *
 from analysis_stage01_ale import *
 from visualization import *
+from models import *

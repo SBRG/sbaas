@@ -2131,6 +2131,22 @@ class stage02_isotopomer_query(base_analysis):
             return rows_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_rowsEscherFluxList_simulationID_dataStage02IsotopomerfittedNetFluxes(self,simulation_id_I):
+        '''Query rows that are used from the flux_average
+        output: list, [analysis_id,values:{rxn_id:flux}]'''
+        try:
+            data = self.session.query(data_stage02_isotopomer_fittedNetFluxes).filter(
+                    data_stage02_isotopomer_fittedNetFluxes.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_fittedNetFluxes.used_.is_(True)).all();
+            rows_O = []
+            if data: 
+                for d in data:
+                    rows_O.append({'simulation_id':d.simulation_id,
+                                   'values': {d.rxn_id:d.flux}
+                                   });
+            return rows_O;
+        except SQLAlchemyError as e:
+            print(e);
 
     ## Query from data_stage02_isotopomer_fittedFluxSplits
     # query simulation_dateAndTimes from data_stage02_isotopomer_fittedFluxSplits   

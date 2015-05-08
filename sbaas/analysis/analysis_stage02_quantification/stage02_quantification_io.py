@@ -404,16 +404,16 @@ class stage02_quantification_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu",'rowid':"row1",'colid':"col1",
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"};
-        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formparameters_O = {'htmlid':'filtermenuform1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
         svgparameters_O = {"svgtype":'boxandwhiskersplot2d_01',"svgkeymap":[data1_keymap],
                             'svgid':'svg1',
                             "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
                             "svgwidth":500,"svgheight":350,
                             "svgx1axislabel":"component_group_name","svgy1axislabel":"concentration",
-    						'svgformtileid':'filtermenu','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+    						'svgformtileid':'filtermenu1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
         svgtileparameters_O = {'tileheader':'Custom box and whiskers plot','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col2",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-8"};
         svgtileparameters_O.update(svgparameters_O);
@@ -421,12 +421,12 @@ class stage02_quantification_io(base_analysis):
                     'tableid':'table1',
                     "tablefilters":None,
                     "tableclass":"table  table-condensed table-hover",
-    			    'tableformtileid':'filtermenu','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+    			    'tableformtileid':'filtermenu1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
         tabletileparameters_O = {'tileheader':'descriptiveStats','tiletype':'table','tileid':"tile3",'rowid':"row2",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         tabletileparameters_O.update(tableparameters_O);
         parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
-        tile2datamap_O = {"filtermenu":[0],"tile2":[0],"tile3":[0]};
+        tile2datamap_O = {"filtermenu1":[0],"tile2":[0],"tile3":[0]};
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
@@ -464,16 +464,16 @@ class stage02_quantification_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu",'rowid':"row1",'colid':"col1",
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"};
-        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formparameters_O = {'htmlid':'filtermenuform1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
         svgparameters_O = {"svgtype":'volcanoplot2d_01',"svgkeymap":[data1_keymap],
                             'svgid':'svg1',
                             "svgmargin":{ 'top': 50, 'right': 50, 'bottom': 50, 'left': 50 },
                             "svgwidth":500,"svgheight":350,
                             "svgx1axislabel":'Fold Change [log2(FC)]',"svgy1axislabel":'Probability [-log10(P)]',
-    						'svgformtileid':'filtermenu','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+    						'svgformtileid':'filtermenu1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
         svgtileparameters_O = {'tileheader':'Volcano plot','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col2",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-8"};
         svgtileparameters_O.update(svgparameters_O);
@@ -481,12 +481,12 @@ class stage02_quantification_io(base_analysis):
                     'tableid':'table1',
                     "tablefilters":None,
                     "tableclass":"table  table-condensed table-hover",
-    			    'tableformtileid':'filtermenu','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+    			    'tableformtileid':'filtermenu1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
         tabletileparameters_O = {'tileheader':'pairWiseTest','tiletype':'table','tileid':"tile3",'rowid':"row2",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         tabletileparameters_O.update(tableparameters_O);
         parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
-        tile2datamap_O = {"filtermenu":[0],"tile2":[0],"tile3":[0]};
+        tile2datamap_O = {"filtermenu1":[0],"tile2":[0],"tile3":[0]};
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
@@ -525,9 +525,9 @@ class stage02_quantification_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu",'rowid':"row3",'colid':"col1",
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"};
-        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row3",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
+        formparameters_O = {'htmlid':'filtermenuform1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
         datalisttileparameters_O = {'tileheader':'filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"
@@ -550,8 +550,8 @@ class stage02_quantification_io(base_analysis):
         svgtileparameters_O = {'tileheader':'heatmap','tiletype':'svg','tileid':"tile2",'rowid':"row2",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         svgtileparameters_O.update(svgparameters_O);
-        parametersobject_O = [formtileparameters_O,datalisttileparameters_O,svgtileparameters_O];
-        tile2datamap_O = {"filtermenu":[0],"tile1":[0],"tile2":[0]};
+        parametersobject_O = [datalisttileparameters_O,svgtileparameters_O,formtileparameters_O];
+        tile2datamap_O = {"filtermenu1":[0],"tile1":[0],"tile2":[0]};
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
         tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
@@ -574,14 +574,20 @@ class stage02_quantification_io(base_analysis):
         data_scores,data_loadings = [],[];
         data_scores,data_loadings = self.stage02_quantification_query.get_RExpressionData_analysisID_dataStage02ScoresLoadings(analysis_id_I);
         # reformat the data and remove js regular expressions
+        data_scores_123,data_loadings_123 = [],[];
         for i,d in enumerate(data_scores):
-            data_scores[i]['calculated_concentration_units'] = self.remove_jsRegularExpressions(d['calculated_concentration_units']);
+            if d['axis'] in [1,2,3]:
+                data_scores[i]['calculated_concentration_units'] = self.remove_jsRegularExpressions(d['calculated_concentration_units']);
+                data_scores_123.append(data_scores[i]);
         for i,d in enumerate(data_loadings):
-            data_loadings[i]['component_name'] = self.remove_jsRegularExpressions(d['component_name']);
-            data_loadings[i]['calculated_concentration_units'] = self.remove_jsRegularExpressions(d['calculated_concentration_units']);
+            if d['axis'] in [1,2,3]:
+                data_loadings[i]['component_name'] = self.remove_jsRegularExpressions(d['component_name']);
+                data_loadings[i]['calculated_concentration_units'] = self.remove_jsRegularExpressions(d['calculated_concentration_units']);
+                data_loadings_123.append(data_loadings[i]);
         # make the tile objects
         parametersobject_O = [];
         tile2datamap_O = {};
+        filtermenuobject_O = [];
         # extract out the data:
         PCs = [[1,2],[1,3],[2,3]];
         dataobject_O = [];
@@ -589,13 +595,16 @@ class stage02_quantification_io(base_analysis):
         for PC_cnt,PC in enumerate(PCs):
             # scores
             if PC_cnt == 0:
-                formtileparameters1_O = {'tileheader':'Scores filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row1",'colid':"col1",
+                formtileparameters1_O = {'tileheader':'Scores filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row1",'colid':"col0",
                     'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-                formparameters1_O = {'htmlid':'form'+str(cnt),"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+                formparameters1_O = {'htmlid':'filtermenuform1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
                 formtileparameters1_O.update(formparameters1_O);
                 parametersobject_O.append(formtileparameters1_O);
                 tile2datamap_O.update({"filtermenu1":[cnt]});
-            data1_O = self.matplot._extractPCAScores_tablerows(data_scores,PC[0],PC[1]);
+                filtermenuobject_O.append({"filtermenuid":"filtermenu1","filtermenuhtmlid":"filtermenuform1",
+                        "filtermenusubmitbuttonid":"submit1","filtermenuresetbuttonid":"reset1",
+                        "filtermenuupdatebuttonid":"update1"})
+            data1_O = self.matplot._extractPCAScores_tablerows(data_scores_123,PC[0],PC[1]);
             # define the data parameters:
             data1_keys = ['analysis_id','sample_name_abbreviation','sample_name_short','calculated_concentration_units'
                         ];
@@ -606,14 +615,14 @@ class stage02_quantification_io(base_analysis):
                             'featureslabel':'sample_name_short'};
             dataobject_O.append({"data":data1_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys});
             # define the svg tile parameters
-            svgparameters1_O = {"svgtype":'ddt_svg_pcaplot2d_scores_01.js',"svgkeymap":[data1_keymap],
+            svgparameters1_O = {"svgtype":'pcaplot2d_scores_01',"svgkeymap":[data1_keymap],
                                 'svgid':'svg1',
                                 "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
-                                "svgwidth":350,"svgheight":350,
+                                "svgwidth":400,"svgheight":350,
                                 "svgx1axislabel":data1_O[0]['axislabel'+str(PC[0])],
                                 "svgy1axislabel":data1_O[0]['axislabel'+str(PC[1])],
     						    'svgformtileid':'filtermenu1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
-            svgtileparameters1_O = {'tileheader':'Scores','tiletype':'svg','tileid':"scorestile"+str(PC_cnt),'rowid':"row1",'colid':"col"+str(PC_cnt),
+            svgtileparameters1_O = {'tileheader':'Scores','tiletype':'svg','tileid':"scorestile"+str(PC_cnt),'rowid':"row1",'colid':"col"+str(PC_cnt+1),
                 'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
             svgtileparameters1_O.update(svgparameters1_O);
             parametersobject_O.append(svgtileparameters1_O);
@@ -623,13 +632,16 @@ class stage02_quantification_io(base_analysis):
         for PC_cnt,PC in enumerate(PCs):
             # loadings
             if PC_cnt == 0:
-                formtileparameters2_O = {'tileheader':'Loadings filter menu','tiletype':'html','tileid':"filtermenu2",'rowid':"row2",'colid':"col1",
+                formtileparameters2_O = {'tileheader':'Loadings filter menu','tiletype':'html','tileid':"filtermenu2",'rowid':"row2",'colid':"col0",
                     'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-                formparameters2_O = {'htmlid':'form'+str(cnt),"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+                formparameters2_O = {'htmlid':'filtermenuform2',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit2','text':'submit'},"formresetbuttonidtext":{'id':'reset2','text':'reset'},"formupdatebuttonidtext":{'id':'update12','text':'update'}};
                 formtileparameters2_O.update(formparameters2_O);
                 parametersobject_O.append(formtileparameters2_O);
                 tile2datamap_O.update({"filtermenu2":[cnt]});
-            data2_O = self.matplot._extractPCALoadings_tablerows(data_loadings,PC[0],PC[1]);
+                filtermenuobject_O.append({"filtermenuid":"filtermenu2","filtermenuhtmlid":"filtermenuform2",
+                "filtermenusubmitbuttonid":"submit2","filtermenuresetbuttonid":"reset2",
+                "filtermenuupdatebuttonid":"update2"})
+            data2_O = self.matplot._extractPCALoadings_tablerows(data_loadings_123,PC[0],PC[1]);
             data2_keys = ['analysis_id','component_name','component_group_name','calculated_concentration_units'
                         ];
             data2_nestkeys = ['analysis_id'];
@@ -642,30 +654,33 @@ class stage02_quantification_io(base_analysis):
             svgparameters2_O = {"svgtype":'volcanoplot2d_01',"svgkeymap":[data2_keymap],
                                 'svgid':'svg1',
                                 "svgmargin":{ 'top': 50, 'right': 50, 'bottom': 50, 'left': 50 },
-                                "svgwidth":350,"svgheight":350,
+                                "svgwidth":400,"svgheight":350,
                                 "svgx1axislabel":data2_O[0]['axislabel'+str(PC[0])],
                                 "svgy1axislabel":data2_O[0]['axislabel'+str(PC[1])],
     						    'svgformtileid':'filtermenu2','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
-            svgtileparameters2_O = {'tileheader':'Loadings','tiletype':'svg','tileid':"laodingstile"+str(PC_cnt),'rowid':"row2",'colid':"col"+str(PC_cnt),
+            svgtileparameters2_O = {'tileheader':'Loadings','tiletype':'svg','tileid':"laodingstile"+str(PC_cnt),'rowid':"row2",'colid':"col"+str(PC_cnt+1),
                 'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
             svgtileparameters2_O.update(svgparameters2_O);
             parametersobject_O.append(svgtileparameters2_O);
             # update the tile2datamap
-            tile2datamap_O.update({"laodingstile"+str(PC_cnt):[cnt]});
+            tile2datamap_O.update({"loadingstile"+str(PC_cnt):[cnt]});
             cnt+=1;
+        
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
         tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        filtermenu_str = 'var ' + 'filtermenu' + ' = ' + json.dumps(filtermenuobject_O) + ';';
         if data_dir_I=='tmp':
             filename_str = settings.visualization_data + '/tmp/ddt_data.js'
         elif data_dir_I=='project':
             filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
         elif data_dir_I=='data_json':
-            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str + '\n' + filtermenu_str;
             return data_json_O;
         with open(filename_str,'w') as file:
             file.write(data_str);
             file.write(parameters_str);
             file.write(tile2datamap_str);
+            file.write(filtermenu_str);
 

@@ -814,6 +814,23 @@ d3_chart2d.prototype.set_x1andy1axeslabelstyle = function () {
                      { 'selection': y1axisselector, 'style': style }]
     this.set_svggcss(selectorstyle);
 };
+d3_chart2d.prototype.set_x1x2andy1y2axestickstyle = function () {
+    // predefined css style for x1 and y1 axis
+    var x1axisselector = '#' + this.id + 'x1axis' + ' text.label';
+    var y1axisselector = '#' + this.id + 'y1axis' + ' text.label';
+    var x2axisselector = '#' + this.id + 'x2axis' + ' text.label';
+    var y2axisselector = '#' + this.id + 'y2axis' + ' text.label';
+    var style = {
+        'font-size': '14px',
+        'font-style': 'normal',
+        'font-family': 'arial'
+    };
+    var selectorstyle = [{ 'selection': x1axisselector, 'style': style },
+                     { 'selection': y1axisselector, 'style': style },
+                     { 'selection': x2axisselector, 'style': style },
+                     { 'selection': y2axisselector, 'style': style }]
+    this.set_svggcss(selectorstyle);
+};
 d3_chart2d.prototype.set_x1x2andy1y2axesstyle = function () {
     // predefined css style for x1 and y1 axis
     var x1axisselector = '#' + this.id + 'x1axis' + ' path';

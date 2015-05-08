@@ -156,7 +156,7 @@ class visualization_io(base_analysis):
             htmlid = "html" + str(tile_cnt);
             tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row1",'colid':colid,
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-            htmlparameters={"htmlkeymap":data2_keymap,
+            htmlparameters={"htmlkeymap":[data2_keymap],
                         'htmltype':'media_01','htmlid':htmlid};
             tileparameters.update(htmlparameters);
             parametersobject_O.append(tileparameters);
@@ -177,7 +177,7 @@ class visualization_io(base_analysis):
             htmlid = "html" + str(tile_cnt);
             tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
                 'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"};
-            hrefparameters = {"hrefurl":'project.html',"htmlkeymap":data1_keymap,
+            hrefparameters = {"hrefurl":'project.html',"htmlkeymap":[data1_keymap],
                             'htmltype':'href_01','htmlid':htmlid};
             tileparameters.update(hrefparameters);
             parametersobject_O.append(tileparameters);

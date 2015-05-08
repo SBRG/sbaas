@@ -34,6 +34,7 @@
     <script src="js/ddt_svg_scatterplot2d_01.js"></script>
     <script src="js/ddt_svg_volcanoplot2d_01.js"></script>
     <script src="js/ddt_svg_heatmap2d_01.js"></script>
+    <script src="js/ddt_svg_pcaplot2d_scores_01.js"></script>
     <script src="js/ddt_svg_verticalbarschart2d_01.js"></script>
     <script src="js/ddt_svg_boxandwhiskersplot2d_01.js"></script>
     <script src="js/ddt_html.js"></script>
@@ -88,9 +89,8 @@
     ddt_test.add_data(data);
     ddt_test.set_tile2datamap(tile2datamap);
     ddt_test.make_container();
-    ddt_test.add_datafiltermenuresetbutton();
-    ddt_test.add_datafiltermenusubmitbutton();
-    ddt_test.add_datafiltermenuupdatebutton();
+    if (typeof filtermenu !== "undefined") { ddt_test.add_datafiltermenubuttons(filtermenu); }
+    else { ddt_test.add_datafiltermenubuttons(); };
 </script>
 {% if web_version %}
 <script src="{{index_gh_pages_js}}"></script>

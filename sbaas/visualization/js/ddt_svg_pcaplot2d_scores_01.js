@@ -39,8 +39,6 @@ ddt_svg_pcaplot2d_scores_01.prototype.make_svg = function(data_I,parameters_I){
         this.set_y1y2axis();
         this.add_x1x2axis();
         this.add_y1y2axis();
-        this.set_x1x2andy1y2axesstyle();
-        this.set_x1andy1axestickstyle();
         this.add_x1axisgridlines();
         this.add_y1axisgridlines();
         //this.set_x1axiszoom();
@@ -50,6 +48,7 @@ ddt_svg_pcaplot2d_scores_01.prototype.make_svg = function(data_I,parameters_I){
         this.add_pointsdata1tooltipandfill();
         this.add_pointsdata1featurefilter();
         this.add_data1featureslabels();
+        this.set_pointsdata1featurestyle();
         this.set_pointsstyle();
         this.add_legenddata1();
         this.add_legenddata1filter();
@@ -57,5 +56,7 @@ ddt_svg_pcaplot2d_scores_01.prototype.make_svg = function(data_I,parameters_I){
         this.add_x1axislabel(parameters_I.svgx1axislabel);
         this.add_y1axislabel(parameters_I.svgy1axislabel);
         this.set_x1andy1axeslabelstyle();
+        this.set_x1x2andy1y2axesstyle();
+        this.set_x1x2andy1y2axestickstyle();
     };
 };

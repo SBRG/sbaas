@@ -167,3 +167,15 @@ d3_chart2d.prototype.set_pointsstyle = function () {
     var selectorstyle = [{ 'selection': pointsselector, 'style': pointsstyle }]
     this.set_svggcss(selectorstyle);
 };
+d3_chart2d.prototype.set_pointsdata1featurestyle = function(){
+    // predefined css style for featur labels
+    var featuresselector = '#' + this.id + ' .featureslabels';
+    var featuresstyle = {
+        'font-size': '10px',
+        'font-style': 'normal',
+        'font-family': 'arial'
+    };
+    var selectorstyle = [{ 'selection': featuresselector, 'style': featuresstyle }]
+    this.set_svggcss(selectorstyle);
+    
+}

@@ -18,6 +18,8 @@ from cobra.core.Metabolite import Metabolite
 from cobra.core.Model import Model
 # Dependencies from escher
 from escher import Builder
+# Dependencies from models
+from analysis.models.models_query import models_query
 
 class stage02_isotopomer_io(base_analysis):
     def __init__(self,session_I=None):
@@ -3206,16 +3208,16 @@ class stage02_isotopomer_io(base_analysis):
         # make the data object
         dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
         # make the tile parameter objects
-        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
-        formparameters_O = {'htmlid':'form1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formparameters_O = {'htmlid':'filtermenuform1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
         svgparameters_O = {"svgtype":'boxandwhiskersplot2d_01',"svgkeymap":[data1_keymap,data1_keymap],
                             'svgid':'svg1',
                             "svgmargin":{ 'top': 50, 'right': 350, 'bottom': 50, 'left': 50 },
                             "svgwidth":500,"svgheight":350,
                             "svgx1axislabel":"rxn_id","svgy1axislabel":"flux",
-    						'svgformtileid':'tile1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
+    						'svgformtileid':'filtermenu1','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
         svgtileparameters_O = {'tileheader':'Flux precision','tiletype':'svg','tileid':"tile2",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         svgtileparameters_O.update(svgparameters_O);
@@ -3223,12 +3225,12 @@ class stage02_isotopomer_io(base_analysis):
                     'tableid':'table1',
                     "tablefilters":None,
                     "tableclass":"table  table-condensed table-hover",
-    			    'tableformtileid':'tile1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+    			    'tableformtileid':'filtermenu1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
         tabletileparameters_O = {'tileheader':'Flux precision','tiletype':'table','tileid':"tile3",'rowid':"row1",'colid':"col1",
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
         tabletileparameters_O.update(tableparameters_O);
         parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
-        tile2datamap_O = {"tile1":[0],"tile2":[0],"tile3":[0]};
+        tile2datamap_O = {"filtermenu1":[0],"tile2":[0],"tile3":[0]};
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
         parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
@@ -3244,4 +3246,81 @@ class stage02_isotopomer_io(base_analysis):
             file.write(data_str);
             file.write(parameters_str);
             file.write(tile2datamap_str);
+    def export_dataStage02IsotopomerFluxMap_js(self,simulation_id_I = None,data_dir_I="tmp"):
+        '''Export flux map for viewing'''
+
+        iomod = models_query(self.session);
+
+        # Get the flux information
+        flux = [];
+        flux = self.stage02_isotopomer_query.get_rowsEscherFluxList_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I);
+        # Get the map information
+        map = [];
+        map = iomod.get_rows_modelID_modelsEschermaps('iJO1366');
+        # dump chart parameters to a js files
+        data1_keys = ['simulation_id','rxn_id','simulation_dateAndTime','flux_units'
+                    ];
+        data1_nestkeys = ['simulation_id'];
+        data1_keymap = {'data':'values'};
+        data2_keys = ['model_id','eschermap_id'
+                    ];
+        data2_nestkeys = ['model_id'];
+        data2_keymap = {'data':'eschermap_json'};
+        # make the data object
+        dataobject_O = [{"data":flux,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},
+                        {"data":map,"datakeys":data2_keys,"datanestkeys":data2_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters1_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
+        formparameters1_O = {'htmlid':'filtermenuform1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters1_O.update(formparameters1_O);
+        formtileparameters2_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu2",'rowid':"row1",'colid':"col2",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
+        formparameters2_O = {'htmlid':'filtermenuform2',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit2','text':'submit'},"formresetbuttonidtext":{'id':'reset2','text':'reset'},"formupdatebuttonidtext":{'id':'update2','text':'update'}};
+        formtileparameters2_O.update(formparameters2_O);
+        htmlparameters_O = {"htmlkeymap":[data1_keymap,data2_keymap],
+                        'htmltype':'escher_01','htmlid':'html1',
+                        'escherdataindex':{"reactiondata":0,"mapdata":1},
+                        'escherembeddedcss':None,
+                        'escheroptions':None};
+        htmltileparameters_O = {'tileheader':'Escher map','tiletype':'html','tileid':"tile1",'rowid':"row2",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        htmltileparameters_O.update(htmlparameters_O);
+        tableparameters_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'filtermenu1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters_O = {'tileheader':'Flux precision','tiletype':'table','tileid':"tile2",'rowid':"row3",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters_O.update(tableparameters_O);
+        parametersobject_O = [formtileparameters1_O,formtileparameters2_O,htmltileparameters_O,tabletileparameters_O];
+        tile2datamap_O = {"filtermenu1":[0],"filtermenu2":[1],"tile1":[0,1],"tile2":[0]};
+        filtermenuobject_O = [{"filtermenuid":"filtermenu1","filtermenuhtmlid":"filtermenuform1",
+                "filtermenusubmitbuttonid":"submit1","filtermenuresetbuttonid":"reset1",
+                "filtermenuupdatebuttonid":"update1"},{"filtermenuid":"filtermenu2","filtermenuhtmlid":"filtermenuform2",
+                "filtermenusubmitbuttonid":"submit2","filtermenuresetbuttonid":"reset2",
+                "filtermenuupdatebuttonid":"update2"}];
+        # dump the data to a json file
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        filtermenu_str = 'var ' + 'filtermenu' + ' = ' + json.dumps(filtermenuobject_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage02_isotopomer_fittedNetFluxes' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str + '\n' + filtermenu_str;
+            return data_json_O;
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);
+            file.write(filtermenu_str);
+
+        
+
+
+
     

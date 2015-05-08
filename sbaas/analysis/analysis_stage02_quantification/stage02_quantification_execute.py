@@ -731,6 +731,8 @@ class stage02_quantification_execute():
             concentrations = None;
             concentrations_glog = None;
             data_glog, concentrations, concentrations_glog = self.r_calc.calculate_glogNormalization(data)
+            for i,d in enumerate(data_glog):
+                data_glog[i]['calculated_concentration_units']=cu+'_glog_normalized'
             ## plot original values:
             #self.matplot.densityPlot(concentrations);
             #self.matplot.densityPlot(concentrations_glog);

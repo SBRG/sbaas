@@ -49,10 +49,12 @@ d3_data.prototype.filter_stringdata = function () {
     for (var i = 0; i < listdatacopy.length; i++) {
         for (var filter in this.filters) {
             //console.log(filter);
-            var str_compare = listdatacopy[i][filter].toString(); //ensure that the value is a string
-            var str_filter = this.filters[filter].join('|');  //breaks for 'mmol*gDCW*hr-1' because * is a regular expression
-            if (!str_compare.match(str_filter)) {
-                listdatacopy[i]['used_'] = false;
+            if (typeof listdatacopy[i][filter] !== "undefined"){
+                var str_compare = listdatacopy[i][filter].toString(); //ensure that the value is a string
+                var str_filter = this.filters[filter].join('|');  //breaks for 'mmol*gDCW*hr-1' because * is a regular expression
+                if (!str_compare.match(str_filter)) {
+                    listdatacopy[i]['used_'] = false;
+                };
             };
         };
     };

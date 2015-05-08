@@ -425,12 +425,14 @@ d3_html.prototype.add_headerandlistgroup_href = function(){
         .attr("class","list-group-item-heading")
         .attr("id", function(d){return id + "h4" + d.key;})
         //.attr("aria-expanded", "false")
-        .text(function(d){return d.key;});
+        //specific text replace for sbaas:
+        .text(function(d){return d.key.replace("export_data","").replace("_js","");});
 
     this.header.selectAll("h4")
         .attr("class","list-group-item-heading")
         .attr("id", function(d){return id + "h4" + d.key;})
-        .text(function(d){return d.key;});
+        //specific text replace for sbaas:
+        .text(function(d){return d.key.replace("export_data","").replace("_js","");});
 
     this.header.exit().remove();
 
