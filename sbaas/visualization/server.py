@@ -203,8 +203,10 @@ class ProjectHandler(BaseHandler):
         template = env.get_template(template_dir)
         data = template.render(d3=url.get_url('d3', source),
                                colorbrewer=url.get_url('colorbrewer', source),
-                               #filename_css=url.get_url(filename_css, source),
-                               #filename_js=url.get_url(filename_js, source),
+                               jquery=url.get_url('jquery', 'web'),
+                               boot_js=url.get_url('boot_js', 'web'),
+                               escher_css=url.get_url('escher_css', source),
+                               escher_js=url.get_url('escher_js', source),
                                container_js=url.get_url('container_js', source),
                                title_header=titlename,
                                title=titlename,
@@ -242,6 +244,9 @@ class ProjectHandler(BaseHandler):
         elif table_id_I=='export_dataStage02IsotopomerFittedNetFluxes_js':
             io = stage02_isotopomer_io(session);
             data_json_O = io.export_dataStage02IsotopomerFittedNetFluxes_js(analysis_id_I,data_dir_I='data_json');
+        elif table_id_I=='export_dataStage02IsotopomerFluxMap_js':
+            io = stage02_isotopomer_io(session);
+            data_json_O = io.export_dataStage02IsotopomerFluxMap_js(analysis_id_I,data_dir_I='data_json');
         elif table_id_I=='export_dataStage02QuantificationPairWiseTest_js':
             io = stage02_quantification_io(session);
             data_json_O = io.export_dataStage02QuantificationPairWiseTest_js(analysis_id_I,data_dir_I='data_json');

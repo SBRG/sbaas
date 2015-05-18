@@ -1848,6 +1848,25 @@ class stage02_isotopomer_query(base_analysis):
             return flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O;
         except SQLAlchemyError as e:
             print(e);   
+    def get_fluxes_simulationIDAndSimulationDateAndTimeAndFluxUnits_dataStage02IsotopomerfittedFluxes(self,simulation_id_I,simulation_dateAndTime_I,flux_units_I):
+        '''query flux_average, flux_stdev, flux_lb, and flux_ub from data_stage02_isotopomer_fittedNetFluxes'''
+        try:
+            data = self.session.query(data_stage02_isotopomer_fittedFluxes).filter(
+                    data_stage02_isotopomer_fittedFluxes.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_fittedFluxes.flux_units.like(flux_units_I),
+                    data_stage02_isotopomer_fittedFluxes.simulation_dateAndTime==simulation_dateAndTime_I,
+                    data_stage02_isotopomer_fittedFluxes.used_.is_(True)).all();
+            flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=[],[],[],[],[];
+            if data: 
+                for d in data:
+                    flux_O.append(d.flux)
+                    flux_stdev_O.append(d.flux_stdev)
+                    flux_lb_O.append(d.flux_lb)
+                    flux_ub_O.append(d.flux_ub)
+                    flux_units_O.append(d.flux_units);
+            return flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O;
+        except SQLAlchemyError as e:
+            print(e);   
     # query fluxes from data_stage02_isotopomer_fittedFluxes
     def get_fluxMinAndMax_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedFluxes(self,simulation_id_I,simulation_dateAndTime_I):
         '''query the minimum and maximum flux from data_stage02_isotopomer_fittedFluxes'''
@@ -2053,6 +2072,25 @@ class stage02_isotopomer_query(base_analysis):
             if data: 
                 for d in data:
                     flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O = d.flux,d.flux_stdev,d.flux_lb,d.flux_ub,d.flux_units;
+            return flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O;
+        except SQLAlchemyError as e:
+            print(e);   
+    def get_fluxes_simulationIDAndSimulationDateAndTimeAndFluxUnits_dataStage02IsotopomerfittedNetFluxes(self,simulation_id_I,simulation_dateAndTime_I,flux_units_I):
+        '''query flux_average, flux_stdev, flux_lb, and flux_ub from data_stage02_isotopomer_fittedNetFluxes'''
+        try:
+            data = self.session.query(data_stage02_isotopomer_fittedNetFluxes).filter(
+                    data_stage02_isotopomer_fittedNetFluxes.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_fittedNetFluxes.flux_units.like(flux_units_I),
+                    data_stage02_isotopomer_fittedNetFluxes.simulation_dateAndTime==simulation_dateAndTime_I,
+                    data_stage02_isotopomer_fittedNetFluxes.used_.is_(True)).all();
+            flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=[],[],[],[],[];
+            if data: 
+                for d in data:
+                    flux_O.append(d.flux)
+                    flux_stdev_O.append(d.flux_stdev)
+                    flux_lb_O.append(d.flux_lb)
+                    flux_ub_O.append(d.flux_ub)
+                    flux_units_O.append(d.flux_units);
             return flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O;
         except SQLAlchemyError as e:
             print(e);   

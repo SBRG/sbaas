@@ -2938,6 +2938,9 @@ class stage01_isotopomer_execute():
                                 panelLabels_tmp = sna+'_'+met+'_'+fragment+'_'+str(rep+1)
                                 xticklabels_tmp = [];
                                 mean_tmp = [];
+                                if not spectrum.has_key(fragment): 
+                                    print 'no spectrum found for fragment ' + fragment;
+                                    continue;
                                 for mass,intensity in spectrum[fragment].iteritems():
                                     intensity_tmp = intensity;
                                     if not intensity_tmp: intensity_tmp=0.0

@@ -3038,15 +3038,6 @@ class stage02_isotopomer_io(base_analysis):
         # wrap into a dictionary
         fluxes_O_dict = dict(zip(rxns_O,fluxes_O));
         return fluxes_O_dict;
-    def convert_datetime2string(self,datetime_I):
-        '''convert datetime to string date time 
-        e.g. time.strftime('%Y/%m/%d %H:%M:%S') = '2014-04-15 15:51:01' '''
-
-        from time import mktime,strftime
-
-        time_str = datetime_I.strftime('%Y-%m-%d %H:%M:%S')
-        
-        return time_str
 
     # Visualization
     def export_fluxomicsAnalysis_escher(self,experiment_id_I,model_ids_I=[],
@@ -3253,7 +3244,11 @@ class stage02_isotopomer_io(base_analysis):
 
         # Get the flux information
         flux = [];
-        flux = self.stage02_isotopomer_query.get_rowsEscherFluxList_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I);
+        #flux = self.stage02_isotopomer_query.get_rowsEscherFluxList_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I);
+        flux = self.stage02_isotopomer_query.get_rows_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I);
+        for i,row in enumerate(flux):
+            flux[i]['simulation_dateAndTime'] = self.convert_datetime2string(row['simulation_dateAndTime']);
+            flux[i]['flux_units'] = self.remove_jsRegularExpressions(row['flux_units']);
         # Get the map information
         map = [];
         map = iomod.get_rows_modelID_modelsEschermaps('iJO1366');
@@ -3261,7 +3256,7 @@ class stage02_isotopomer_io(base_analysis):
         data1_keys = ['simulation_id','rxn_id','simulation_dateAndTime','flux_units'
                     ];
         data1_nestkeys = ['simulation_id'];
-        data1_keymap = {'data':'values'};
+        data1_keymap = {'values':'flux','key':'rxn_id'};
         data2_keys = ['model_id','eschermap_id'
                     ];
         data2_nestkeys = ['model_id'];
@@ -3318,9 +3313,3 @@ class stage02_isotopomer_io(base_analysis):
             file.write(parameters_str);
             file.write(tile2datamap_str);
             file.write(filtermenu_str);
-
-        
-
-
-
-    

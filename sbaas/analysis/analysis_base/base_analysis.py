@@ -28,4 +28,14 @@ class base_analysis():
         string_O = p.sub('_',string_I);
         return string_O;
 
+    def convert_datetime2string(self,datetime_I):
+        '''convert datetime to string date time 
+        e.g. time.strftime('%Y/%m/%d %H:%M:%S') = '2014-04-15 15:51:01' '''
+
+        from time import mktime,strftime
+
+        time_str = datetime_I.strftime('%Y-%m-%d %H:%M:%S')
+        
+        return time_str
+
     

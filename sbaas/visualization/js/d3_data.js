@@ -166,3 +166,17 @@ d3_data.prototype.change_nestkeys = function(nestkey_I) {
     var listdatafiltered = this.listdatafiltered;
     this.nestdatafiltered = this.convert_list2nestlist(listdatafiltered,nestkey_I);
 };
+d3_data.prototype.convert_listdatafiltered2escherobjectlist = function(key_I,values_I){
+    // convert list data to escher object
+    // i.e. convert [{key_I:data,value_I:data},{key_I:data,value_I:data},{key_I:data,value_I:data},...]
+    //      to [{key_I_data:value_I_data,key_I_data:value_I_data,...}]
+    
+    //var escherobjectlist_O = [];
+    var escherobject = {};
+    this.listdatafiltered.forEach(function(d){
+        escherobject[d[key_I]]=d[values_I];
+    });
+    //escherobjectlist_O.push(escherobject);
+    //return escherobjectlist_O;
+    return escherobject;
+};

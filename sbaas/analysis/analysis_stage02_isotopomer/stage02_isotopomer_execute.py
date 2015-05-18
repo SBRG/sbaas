@@ -46,6 +46,8 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_fittedFluxRatios.__table__.drop(engine,True);
             data_stage02_isotopomer_fittedFluxSplits.__table__.drop(engine,True);
             data_stage02_isotopomer_analysis_id.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedFluxStatistics.__table__.drop(engine,True);
+            data_stage02_isotopomer_fittedNetFluxStatistics.__table__.drop(engine,True);
         except SQLAlchemyError as e:
             print(e);
     def reset_datastage02(self,experiment_id_I = None,simulation_id_I = None):
@@ -130,6 +132,28 @@ class stage02_isotopomer_execute():
                     data_stage02_isotopomer_fittedFluxSplits.simulation_dateAndTime==self.convert_string2datetime(simulation_dateAndTime_I)).delete(synchronize_session=False);
             else:
                 reset = self.session.query(data_stage02_isotopomer_fittedFluxSplits).filter(data_stage02_isotopomer_fittedFluxSplits.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_datastage02_isotopomer_fittedFluxStatistics(self,simulation_id_I = None,simulation_dateAndTime_I=None):
+        try:
+            if simulation_id_I and simulation_dateAndTime_I:
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxStatistics).filter(
+                    data_stage02_isotopomer_fittedFluxStatistics.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_fittedFluxStatistics.simulation_dateAndTime==self.convert_string2datetime(simulation_dateAndTime_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage02_isotopomer_fittedFluxStatistics).filter(data_stage02_isotopomer_fittedFluxStatistics.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
+            self.session.commit();
+        except SQLAlchemyError as e:
+            print(e);
+    def reset_datastage02_isotopomer_fittedNetFluxStatistics(self,simulation_id_I = None,simulation_dateAndTime_I=None):
+        try:
+            if simulation_id_I and simulation_dateAndTime_I:
+                reset = self.session.query(data_stage02_isotopomer_fittedNetFluxStatistics).filter(
+                    data_stage02_isotopomer_fittedNetFluxStatistics.simulation_id.like(simulation_id_I),
+                    data_stage02_isotopomer_fittedNetFluxStatistics.simulation_dateAndTime==self.convert_string2datetime(simulation_dateAndTime_I)).delete(synchronize_session=False);
+            else:
+                reset = self.session.query(data_stage02_isotopomer_fittedNetFluxStatistics).filter(data_stage02_isotopomer_fittedNetFluxStatistics.simulation_id.like(simulation_id_I)).delete(synchronize_session=False);
             self.session.commit();
         except SQLAlchemyError as e:
             print(e);
@@ -249,6 +273,8 @@ class stage02_isotopomer_execute():
             data_stage02_isotopomer_fittedFluxRatios.__table__.create(engine,True);
             data_stage02_isotopomer_fittedFluxSplits.__table__.create(engine,True);
             data_stage02_isotopomer_analysis.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedFluxStatistics.__table__.create(engine,True);
+            data_stage02_isotopomer_fittedNetFluxStatistics.__table__.create(engine,True);
         except SQLAlchemyError as e:
             print(e);
     #analysis
@@ -469,7 +495,8 @@ class stage02_isotopomer_execute():
                             None);
                         self.session.add(row);
         self.session.commit();
-    def execute_makeMeasuredFluxes(self,experiment_id_I, metID2RxnID_I = {}, sample_name_abbreviations_I = [], met_ids_I = [],snaIsotopomer2snaPhysiology_I={}):
+    def execute_makeMeasuredFluxes(self,experiment_id_I, metID2RxnID_I = {}, sample_name_abbreviations_I = [], met_ids_I = [],snaIsotopomer2snaPhysiology_I={},
+                                   correct_EX_glc_LPAREN_e_RPAREN_I = True):
         '''Collect and flux data from data_stage01_physiology_ratesAverages for fluxomics simulation'''
         #Input:
         #   metID2RxnID_I = e.g. {'glc-D':{'model_id':'140407_iDM2014','rxn_id':'EX_glc_LPAREN_e_RPAREN_'},
@@ -513,6 +540,11 @@ class stage02_isotopomer_execute():
                 rate_stdev = sqrt(rate_var);
                 model_id = metID2RxnID_I[met]['model_id'];
                 rxn_id = metID2RxnID_I[met]['rxn_id'];
+                # correct for glucose uptake
+                if rxn_id == 'EX_glc_LPAREN_e_RPAREN_' and correct_EX_glc_LPAREN_e_RPAREN_I:
+                    rate_lb = min(abs([rate_lb,rate_ub]));
+                    rate_ub = max(abs([rate_lb,rate_ub]));
+                    rate_average = abs(rate_average);
                 # record the data
                 data_tmp = {'experiment_id':experiment_id_I,
                         'model_id':model_id,
@@ -853,7 +885,203 @@ class stage02_isotopomer_execute():
                                 d['comment_']);
             self.session.add(row);
         self.session.commit();
+    def execute_calculateFluxStatistics(self,simulation_id_I,simulation_dateAndTimes_I=[],flux_units_I=[]):
+        '''Calculate:
+        1. # of unresolved fluxes per total # of reactions
+        2. average flux precision per resolved flux'''
+
+        data_O = [];
+        print 'calculating fit statistics...'
+        # simulation_dateAndTime
+        if simulation_dateAndTimes_I:
+            simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
+        else:
+            simulation_dateAndTimes = [];
+            simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
+        for simulation_dateAndTime in simulation_dateAndTimes:
+            print 'calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime)
+            # get all flux_units
+            if flux_units_I:
+                flux_units = flux_units_I;
+            else:
+                flux_units = [];
+                flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
+            for flux_unit_cnt,flux_unit in enumerate(flux_units):
+                print 'calculating fit statistics for flux_units ' + str(flux_unit)
+                # get the net fluxes
+                flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=[],[],[],[],[];
+                flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=self.stage02_isotopomer_query.get_fluxes_simulationIDAndSimulationDateAndTimeAndFluxUnits_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime,flux_unit);
+                total_fluxes,observable_fluxes,relative_nObservableFluxes = self.calculate_relativeNObservableFluxes(flux_O,flux_lb_O,flux_ub_O);
+                average_fluxPrecision,average_observable_fluxPrecision = self.calculate_averageFluxPrecision(flux_O,flux_stdev_O,flux_lb_O,flux_ub_O);
+                total_fluxPrecision,total_observable_fluxPrecision = self.calculate_totalFluxPrecision(flux_O,flux_stdev_O,flux_lb_O,flux_ub_O);
+                tmp = {};
+                tmp['simulation_id'] = simulation_id_I;
+                tmp['simulation_dateAndTime'] = simulation_dateAndTime;
+                tmp['n_fluxes'] = total_fluxes
+                tmp['n_observableFluxes'] = observable_fluxes
+                tmp['total_precision'] = total_fluxPrecision
+                tmp['total_observablePrecision'] = total_observable_fluxPrecision
+                tmp['relative_nObservableFluxes']= relative_nObservableFluxes;
+                tmp['average_observableFluxPrecision'] = average_observable_fluxPrecision;
+                tmp['average_fluxPrecision'] = average_fluxPrecision
+                tmp['flux_units'] = flux_unit;
+                tmp['used_'] = True;
+                tmp['comment_'] = None;
+                data_O.append(tmp);
+        for d in data_O:
+            row = None;
+            row = data_stage02_isotopomer_fittedFluxStatistics(
+                d['simulation_id'],
+                d['simulation_dateAndTime'],
+                d['n_fluxes'],
+                d['n_observableFluxes'],
+                d['total_precision'],
+                d['total_observablePrecision'],
+                d['relative_nObservableFluxes'],
+                d['average_observableFluxPrecision'],
+                d['average_fluxPrecision'],
+                d['flux_units'],
+                d['used_'],
+                d['comment_']);
+            self.session.add(row);
+        self.session.commit();
+    def execute_calculateNetFluxStatistics(self,simulation_id_I,simulation_dateAndTimes_I=[],flux_units_I=[],rxn_ids_I=[]):
+        '''Calculate:
+        1. # of unresolved fluxes per total # of reactions
+        2. average flux precision per resolved flux'''
+
+        data_O = [];
+        print 'calculating fit statistics...'
+        # simulation_dateAndTime
+        if simulation_dateAndTimes_I:
+            simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
+        else:
+            simulation_dateAndTimes = [];
+            simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
+        for simulation_dateAndTime in simulation_dateAndTimes:
+            print 'calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime)
+            # get all flux_units
+            if flux_units_I:
+                flux_units = flux_units_I;
+            else:
+                flux_units = [];
+                flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
+            for flux_unit_cnt,flux_unit in enumerate(flux_units):
+                print 'calculating fit statistics for flux_units ' + str(flux_unit)
+                # get the net fluxes
+                flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=[],[],[],[],[];
+                if rxn_ids_I:
+                    for rxn_id in rxn_ids_I:
+                        flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,rxn_id);
+                        flux_O.append(flux_average_2);
+                        flux_stdev_O.append(flux_stdev_2);
+                        flux_lb_O.append(flux_lb_2);
+                        flux_ub_O.append(flux_ub_2);
+                        flux_units_O.append(flux_units_2);     
+                else:           
+                    flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=self.stage02_isotopomer_query.get_fluxes_simulationIDAndSimulationDateAndTimeAndFluxUnits_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit);
+                total_fluxes,observable_fluxes,relative_nObservableFluxes = self.calculate_relativeNObservableNetFluxes(flux_O,flux_lb_O,flux_ub_O);
+                average_fluxPrecision,average_observable_fluxPrecision = self.calculate_averageNetFluxPrecision(flux_O,flux_stdev_O,flux_lb_O,flux_ub_O);
+                total_fluxPrecision,total_observable_fluxPrecision = self.calculate_totalFluxPrecision(flux_O,flux_stdev_O,flux_lb_O,flux_ub_O);
+                tmp = {};
+                tmp['simulation_id'] = simulation_id_I;
+                tmp['simulation_dateAndTime'] = simulation_dateAndTime;
+                tmp['n_fluxes'] = total_fluxes
+                tmp['n_observableFluxes'] = observable_fluxes
+                tmp['total_precision'] = total_fluxPrecision
+                tmp['total_observablePrecision'] = total_observable_fluxPrecision
+                tmp['relative_nObservableFluxes']= relative_nObservableFluxes;
+                tmp['average_observableFluxPrecision'] = average_observable_fluxPrecision;
+                tmp['average_fluxPrecision'] = average_fluxPrecision
+                tmp['flux_units'] = flux_unit;
+                tmp['used_'] = True;
+                tmp['comment_'] = None;
+                data_O.append(tmp);
+        for d in data_O:
+            row = None;
+            row = data_stage02_isotopomer_fittedNetFluxStatistics(
+                d['simulation_id'],
+                d['simulation_dateAndTime'],
+                d['n_fluxes'],
+                d['n_observableFluxes'],
+                d['total_precision'],
+                d['total_observablePrecision'],
+                d['relative_nObservableFluxes'],
+                d['average_observableFluxPrecision'],
+                d['average_fluxPrecision'],
+                d['flux_units'],
+                d['used_'],
+                d['comment_']);
+            self.session.add(row);
+        self.session.commit();
     #internal functions
+    def calculate_totalFluxPrecision(self,flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1):
+        '''calculate the total flux precision'''
+        total_observable_stdev = 0.0;
+        total_stdev = 0.0;
+        for flux_cnt,flux_stdev in enumerate(flux_stdev_1):
+            observable_1 = self.check_observableNetFlux(flux_average_1[flux_cnt],flux_lb_1[flux_cnt],flux_ub_1[flux_cnt])
+            if observable_1 and flux_stdev:
+                total_observable_stdev += flux_stdev;
+            if flux_stdev:
+                total_stdev += flux_stdev;
+        return total_stdev,total_observable_stdev;
+    def calculate_relativeNObservableNetFluxes(self,flux_average_1,flux_lb_1,flux_ub_1):
+        '''calculate the number of unresolved fluxes'''
+        cnt = 0;
+        for flux_cnt,flux in enumerate(flux_average_1):
+            observable_1 = self.check_observableNetFlux(flux_average_1[flux_cnt],flux_lb_1[flux_cnt],flux_ub_1[flux_cnt])
+            if observable_1:
+                cnt+=1;
+        total_fluxes = len(flux_average_1);
+        observable_fluxes = cnt;
+        relative_n_observable_fluxes = float(cnt)/float(len(flux_average_1))
+        return total_fluxes,observable_fluxes,relative_n_observable_fluxes;
+    def calculate_averageNetFluxPrecision(self,flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1):
+        '''calculate the average flux precision per reaction'''
+        observable_total_stdev = 0.0;
+        observable_cnt = 0;
+        total_stdev = 0.0;
+        cnt = 0;
+        for flux_cnt,flux_stdev in enumerate(flux_stdev_1):
+            observable_1 = self.check_observableNetFlux(flux_average_1[flux_cnt],flux_lb_1[flux_cnt],flux_ub_1[flux_cnt])
+            if observable_1 and flux_stdev:
+                observable_total_stdev += flux_stdev;
+                observable_cnt+=1;
+            if flux_stdev:
+                total_stdev += flux_stdev;
+                cnt+=1;
+        average_observable_flux_precision = observable_total_stdev/float(observable_cnt);
+        average_flux_precision = total_stdev/float(cnt);
+        return average_flux_precision,average_observable_flux_precision;
+    def calculate_relativeNObservableFluxes(self,flux_average_1,flux_lb_1,flux_ub_1):
+        '''calculate the number of unresolved fluxes'''
+        cnt = 0;
+        for flux_cnt,flux in enumerate(flux_average_1):
+            observable_1 = self.check_observableFlux(flux_average_1[flux_cnt],flux_lb_1[flux_cnt],flux_ub_1[flux_cnt])
+            if observable_1:
+                cnt+=1;
+        total_fluxes = len(flux_average_1);
+        observable_fluxes = cnt;
+        relative_n_observable_fluxes = float(cnt)/float(len(flux_average_1))
+        return total_fluxes,observable_fluxes,relative_n_observable_fluxes;
+    def calculate_averageFluxPrecision(self,flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1):
+        '''calculate the average flux precision per reaction'''
+        observable_total_stdev = 0.0;
+        observable_cnt = 0;
+        total_stdev = 0.0;
+        cnt = 0;
+        for flux_cnt,flux_stdev in enumerate(flux_stdev_1):
+            observable_1 = self.check_observableFlux(flux_average_1[flux_cnt],flux_lb_1[flux_cnt],flux_ub_1[flux_cnt])
+            if observable_1 and flux_stdev:
+                observable_total_stdev += flux_stdev;
+                observable_cnt+=1;
+            if flux_stdev:
+                total_stdev += flux_stdev;
+                cnt+=1;
+        average_observable_flux_precision = observable_total_stdev/float(observable_cnt);
+        average_flux_precision = total_stdev/float(cnt);
+        return average_flux_precision,average_observable_flux_precision;
     def simulate_model(self,model_id_I,ko_list=[],flux_dict={},measured_flux_list=[],description=None):
         '''simulate a cobra model'''
         
@@ -1103,6 +1331,19 @@ class stage02_isotopomer_execute():
         if flux_I==0.0 and flux_lb_I==0.0 and flux_ub_I==0.0:
             observable = False;
         elif flux_span > 4*flux_I:
+            observable = False;
+        else:
+            observable = True;
+        return observable;
+    def check_observableNetFlux(self,flux_I,flux_lb_I,flux_ub_I):
+        '''Determine if a flux is observable
+        based on the criteria in doi:10.1016/j.ymben.2010.11.006'''
+        if not flux_I:
+            flux_I = 0.0;
+        flux_span = max([flux_ub_I,flux_lb_I])-min([flux_ub_I,flux_lb_I]);
+        if flux_I==0.0 and flux_lb_I==0.0 and flux_ub_I==0.0:
+            observable = False;
+        elif abs(flux_span) > 4*abs(flux_I):
             observable = False;
         else:
             observable = True;
@@ -1963,8 +2204,8 @@ class inca_api(stage02_isotopomer_execute):
                 rxn_ids_INCA[rxn['rxn_id']] = ('R'+str(cnt+1));
                 cnt+=1;
                 if rxn['rxn_id'] == 'Ec_biomass_iJO1366_WT_53p95M':
-                    #tmp_script = tmp_script + "'" + self.biomass_INCA + "';...\n"
-                    tmp_script = tmp_script + "'" + self.biomass_INCA_iJS2012 + "';...\n"
+                    tmp_script = tmp_script + "'" + self.biomass_INCA + "';...\n"
+                    #tmp_script = tmp_script + "'" + self.biomass_INCA_iJS2012 + "';...\n"
                 else:
                     tmp_script = tmp_script + "'" + rxn['rxn_equation'] + "';...\n"
                 #tmp_script = tmp_script + "'" + rxn['rxn_equation'] + "';...\n"
@@ -2199,15 +2440,15 @@ class inca_api(stage02_isotopomer_execute):
                                     ave = ms_data['intensity_normalized_average'][cnt]
                                     stdev = ms_data['intensity_normalized_stdev'][cnt]
                                     # remove 0.0000 values and replace with NaN
-                                    if ave < 1e-9: 
+                                    if ave < 1e-6: 
                                         ave = 'NaN';
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %s;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,ave));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %f;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,ave));
-                                    if stdev < 1e-9:
+                                    if stdev < 1e-3:
                                         # check if the ave is NaN
                                         if ave=='NaN': stdev = 'NaN';
-                                        else: stdev = 0.0001;
+                                        else: stdev = 0.001;
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %s;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,stdev));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %f;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,stdev));
@@ -2353,12 +2594,12 @@ class inca_api(stage02_isotopomer_execute):
             #if not(rxn['upper_bound']==0.0 and rxn['lower_bound']==0.0):
                 rxn_ids_INCA[rxn['rxn_id']] = ('R'+str(cnt+1));
                 cnt+=1;
-                #if rxn['rxn_id'] == 'Ec_biomass_iJO1366_WT_53p95M':
-                #    tmp_script = tmp_script + "'" + self.biomass_INCA + "';...\n"
+                if rxn['rxn_id'] == 'Ec_biomass_iJO1366_WT_53p95M':
+                    tmp_script = tmp_script + "'" + self.biomass_INCA + "';...\n"
                 #    #tmp_script = tmp_script + "'" + self.biomass_INCA_iJS2012 + "';...\n"
-                #else:
-                #    tmp_script = tmp_script + "'" + rxn['rxn_equation'] + "';...\n"
-                tmp_script = tmp_script + "'" + rxn['rxn_equation'] + "';...\n"
+                else:
+                    tmp_script = tmp_script + "'" + rxn['rxn_equation'] + "';...\n"
+                #tmp_script = tmp_script + "'" + rxn['rxn_equation'] + "';...\n"
             #else:
             #    print 'rxn_id ' + rxn['rxn_id'] + ' will be excluded from INCA' 
         tmp_script = tmp_script + '});\n';
@@ -2390,6 +2631,7 @@ class inca_api(stage02_isotopomer_execute):
         for met in modelMetabolite_data_I:
             if '.balance' in met['met_id']:
                 tmp_script = tmp_script + "m.states{'" + met['met_id']  + "'}.bal = false";
+                tmp_script = tmp_script + ";\n";
         mat_script = mat_script + tmp_script;
 
         # Add in initial fluxes (values lb/ub) and define the reaction ids
@@ -2477,7 +2719,9 @@ class inca_api(stage02_isotopomer_execute):
     def writeScript_experiment_INCA(self, modelReaction_data_I,modelMetabolite_data_I,
                                         measuredFluxes_data_I,experimentalMS_data_I,tracer_I,
                                         parallel_I = 'experiment_id'):
-        '''Generate the experimental information for INCA'''##3. Define the experiment
+        '''Generate the experimental information for INCA'''
+        
+        ##3. Define the experiment
 
         # write out the measured fragment information
         # (actual MS measurements will be written to the script later)
@@ -2583,15 +2827,15 @@ class inca_api(stage02_isotopomer_execute):
                                     ave = ms_data['intensity_normalized_average'][cnt]
                                     stdev = ms_data['intensity_normalized_stdev'][cnt]
                                     # remove 0.0000 values and replace with NaN
-                                    if ave < 1e-9: 
+                                    if ave < 1e-6: 
                                         ave = 'NaN';
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %s;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,ave));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %f;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,ave));
-                                    if stdev < 1e-9:
+                                    if stdev < 1e-3:
                                         # check if the ave is NaN
                                         if ave=='NaN': stdev = 'NaN';
-                                        else: stdev = 0.0001;
+                                        else: stdev = 0.001;
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %s;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,stdev));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %f;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,stdev));
@@ -2696,15 +2940,15 @@ class inca_api(stage02_isotopomer_execute):
                                     ave = ms_data['intensity_normalized_average'][cnt]
                                     stdev = ms_data['intensity_normalized_stdev'][cnt]
                                     # remove 0.0000 values and replace with NaN
-                                    if ave < 1e-9: 
+                                    if ave < 1e-6: 
                                         ave = 'NaN';
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %s;\n' %(sna_cnt+1,i+1,cnt+1,j+1,ave));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %f;\n' %(sna_cnt+1,i+1,cnt+1,j+1,ave));
-                                    if stdev < 1e-9:
+                                    if stdev < 1e-3:
                                         # check if the ave is NaN
                                         if ave=='NaN': stdev = 'NaN';
-                                        else: stdev = 0.0001;
+                                        else: stdev = 0.001;
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %s;\n' %(sna_cnt+1,i+1,cnt+1,j+1,stdev));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %f;\n' %(sna_cnt+1,i+1,cnt+1,j+1,stdev));
@@ -3145,7 +3389,7 @@ class inca_api(stage02_isotopomer_execute):
                 ## dump the experiment to a matlab script to generate the matlab files in matlab
                 # Matlab script file to make the structures
                 filename_mat = settings.workspace_data + '/_output/' + re.sub('[.\/]','',simulation_info['simulation_id'][0]);
-                filename_mat_model = filename_mat + "_model" + '.m';
+                filename_mat_model = filename_mat + '.m';
                 mat_script = '';
                 mat_script += self.writeScript_model_INCA(modelReaction_data,modelMetabolite_data,
                                                 measuredFluxes_data,experimentalMS_data,tracers)
