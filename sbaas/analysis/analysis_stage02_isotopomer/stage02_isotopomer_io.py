@@ -2196,12 +2196,13 @@ class stage02_isotopomer_io(base_analysis):
                     atomMappingReactions_row['reactants_mapping'].append(rxn_mapping_str);
                     rxn_mapping_str='';
                     pos_cnt=0;
+                    positions = [];
+                    elements = [];
                 elif rxn_mapping_bool:
                     #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
+                    rxn_mapping = rxn_token;
                     if ':' in rxn_mapping:
                         rxn_mapping = rxn_mapping.split(':')[1];
-                    atomMappingReactions_row['reactants_ids_tracked'].append(met_id_tmp);
-                    atomMappingReactions_row['reactants_stoichiometry_tracked'].append(met_stoichiometry_tmp);
                     rxn_mapping_str+= '['+rxn_mapping+']';
                     elements.append(element_tracked_I);
                     positions.append(pos_cnt);
@@ -2211,8 +2212,6 @@ class stage02_isotopomer_io(base_analysis):
                     #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
                     if ':' in rxn_mapping:
                         rxn_mapping = rxn_mapping.split(':')[1];
-                    atomMappingReactions_row['reactants_ids_tracked'].append(met_id_tmp);
-                    atomMappingReactions_row['reactants_stoichiometry_tracked'].append(met_stoichiometry_tmp);
                     rxn_mapping_str+= '['+rxn_mapping+']';
                     elements.append(element_tracked_I);
                     positions.append(pos_cnt);
@@ -2264,12 +2263,13 @@ class stage02_isotopomer_io(base_analysis):
                     atomMappingReactions_row['products_mapping'].append(rxn_mapping_str);
                     rxn_mapping_str='';
                     pos_cnt=0;
+                    positions = [];
+                    elements = [];
                 elif rxn_mapping_bool:
+                    rxn_mapping = rxn_token;
                     #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
                     if ':' in rxn_mapping:
                         rxn_mapping = rxn_mapping.split(':')[1];
-                    atomMappingReactions_row['products_ids_tracked'].append(met_id_tmp);
-                    atomMappingReactions_row['products_stoichiometry_tracked'].append(met_stoichiometry_tmp);
                     rxn_mapping_str+= '['+rxn_mapping+']';
                     elements.append(element_tracked_I);
                     positions.append(pos_cnt);
@@ -2279,8 +2279,6 @@ class stage02_isotopomer_io(base_analysis):
                     #TODO: will break on use cases such as '(C1:a C2:b1 C3:c2)'
                     if ':' in rxn_mapping:
                         rxn_mapping = rxn_mapping.split(':')[1];
-                    atomMappingReactions_row['products_ids_tracked'].append(met_id_tmp);
-                    atomMappingReactions_row['products_stoichiometry_tracked'].append(met_stoichiometry_tmp);
                     rxn_mapping_str+= '['+rxn_mapping+']';
                     elements.append(element_tracked_I);
                     positions.append(pos_cnt);

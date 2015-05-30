@@ -1024,6 +1024,7 @@ class stage02_quantification_execute():
         # get concentration units
         if concentration_units_I:
             concentration_units = concentration_units_I;
+            concentration_units_original = [x.split('_glog_normalized')[0] for x in concentration_units];
         else:
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
@@ -1049,7 +1050,8 @@ class stage02_quantification_execute():
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_analysisIDAndUnitsAndComponentNames_dataStage02GlogNormalized(analysis_id_I,cu, cn)
                 for sna_1_cnt,sna_1 in enumerate(sample_name_abbreviations):
-                    for sna_2_cnt,sna_2 in enumerate(sample_name_abbreviations[sna_1_cnt:]):
+                    for sna_2_cnt,sna_2 in enumerate(sample_name_abbreviations):
+                    #for sna_2_cnt,sna_2 in enumerate(sample_name_abbreviations[sna_1_cnt:]): #prevents redundancy
                         if sna_1 != sna_2:
                             print 'calculating pairwiseTTest for sample_name_abbreviations ' + sna_1 + ' vs. ' + sna_2;
                             # get data:

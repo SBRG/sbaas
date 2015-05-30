@@ -542,8 +542,8 @@ class stage02_isotopomer_execute():
                 rxn_id = metID2RxnID_I[met]['rxn_id'];
                 # correct for glucose uptake
                 if rxn_id == 'EX_glc_LPAREN_e_RPAREN_' and correct_EX_glc_LPAREN_e_RPAREN_I:
-                    rate_lb = min(abs([rate_lb,rate_ub]));
-                    rate_ub = max(abs([rate_lb,rate_ub]));
+                    rate_lb = min([abs(x) for x in [rate_lb,rate_ub]]);
+                    rate_ub = max([abs(x) for x in [rate_lb,rate_ub]]);
                     rate_average = abs(rate_average);
                 # record the data
                 data_tmp = {'experiment_id':experiment_id_I,
@@ -1132,12 +1132,12 @@ class stage02_isotopomer_execute():
         #pfba = optimize_minimal_flux(cobra_model,True,solver='gurobi');
 
         return cobra_model;
-    def make_Model(self,model_id_I=None,model_id_O=None,date_I=None,model_file_name_I=None,ko_list=[],flux_dict={},description=None):
+    def make_Model(self,model_id_I=None,model_id_O=None,date_O=None,model_file_name_I=None,ko_list=[],flux_dict={},description=None):
         '''make a new model'''
 
         qio02 = stage02_isotopomer_io();
 
-        if model_id_I and model_id_O: #make a new model based off of a modification of an existing model in the database
+        if model_id_I and model_id_O and date_O: #make a new model based off of a modification of an existing model in the database
             cobra_model_sbml = None;
             cobra_model_sbml = self.stage02_isotopomer_query.get_row_modelID_dataStage02IsotopomerModels(model_id_I);
             # write the model to a temporary file
@@ -1172,8 +1172,8 @@ class stage02_isotopomer_execute():
                 with open(settings.workspace_data + '/cobra_model_tmp.xml','wb') as file:
                     file.write(cobra_model);
                 # upload the model to the database
-                qio02.import_dataStage02Model_sbml(model_id_I, date_I, settings.workspace_data + '/cobra_model_tmp.xml');
-        elif model_file_name_I and model_id_O: #modify an existing model in not in the database
+                qio02.import_dataStage02Model_sbml(model_id_O, date_O, settings.workspace_data + '/cobra_model_tmp.xml');
+        elif model_file_name_I and model_id_O and date_O: #modify an existing model in not in the database
             # check for the file type
             if '.json' in model_file_name_I:
                 # Read in the sbml file and define the model conditions
@@ -1209,7 +1209,7 @@ class stage02_isotopomer_execute():
                         file.close()
                 else: print 'file type not supported'
                 # upload the model to the database
-                qio02.import_dataStage02Model_sbml(model_id_I, date_I, filename);
+                qio02.import_dataStage02Model_sbml(model_id_O, date_O, filename);
         else:
             print 'need to specify either an existing model_id or model_file_name!'
         return
@@ -1241,7 +1241,7 @@ class stage02_isotopomer_execute():
             else:
                 print 'file_type not supported'
             self.models[model_id]=cobra_model;
-    def make_modelFromRxnsAndMetsTables(self,model_id_I=None,model_id_O=None,date_I=None,ko_list=[],flux_dict={},description=None):
+    def make_modelFromRxnsAndMetsTables(self,model_id_I=None,model_id_O=None,date_O=None,ko_list=[],flux_dict={},description=None):
         '''make/update the model using the modelReactions and modelMetabolites table'''
 
         qio02 = stage02_isotopomer_io();
@@ -1274,7 +1274,7 @@ class stage02_isotopomer_execute():
                 dataStage02IsotopomerModelMets_data = [];
                 dataStage02IsotopomerModels_data,\
                     dataStage02IsotopomerModelRxns_data,\
-                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_O, date_I, settings.workspace_data+'/cobra_model_tmp.json')
+                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_O, date_O, settings.workspace_data+'/cobra_model_tmp.json')
                 qio02.add_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
         elif model_id_I and not model_id_O:  #update an existing model in the database
             # get the model reactions and metabolites from the database
@@ -1305,7 +1305,7 @@ class stage02_isotopomer_execute():
                 dataStage02IsotopomerModelMets_data = [];
                 dataStage02IsotopomerModels_data,\
                     dataStage02IsotopomerModelRxns_data,\
-                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_I, date_I, settings.workspace_data+'/cobra_model_tmp.json')
+                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_I, date_O, settings.workspace_data+'/cobra_model_tmp.json')
                 qio02.update_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
 
         else:
@@ -1493,7 +1493,7 @@ class stage02_isotopomer_execute():
                 elements_O.append(element_I[i]);
             cmap_cnt += 1;
         return positions_O,elements_O;
-    def make_modelAndMappingFromRxnsAndMetsTables(self,model_id_I=None,model_id_O=None,mapping_id_I=None,mapping_id_O=None,date_I=None,ko_list=[],flux_dict={},description=None):
+    def make_modelAndMappingFromRxnsAndMetsTables(self,model_id_I=None,model_id_O=None,mapping_id_I=None,mapping_id_O=None,date_O=None,ko_list=[],flux_dict={},description=None):
         '''make/update the model AND model mappings using the modelReactions and modelMetabolites table'''
 
         qio02 = stage02_isotopomer_io();
@@ -1540,7 +1540,7 @@ class stage02_isotopomer_execute():
                 dataStage02IsotopomerModelMets_data = [];
                 dataStage02IsotopomerModels_data,\
                     dataStage02IsotopomerModelRxns_data,\
-                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_O, date_I, settings.workspace_data+'/cobra_model_tmp.json')
+                    dataStage02IsotopomerModelMets_data = qio02._parse_model_json(model_id_O, date_O, settings.workspace_data+'/cobra_model_tmp.json')
                 qio02.add_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
                 # add the metabolite and reaction information to the database
                 qio02.add_data_stage02_isotopomer_modelReactions(reactions);
@@ -2448,6 +2448,7 @@ class inca_api(stage02_isotopomer_execute):
                                     if stdev < 1e-3:
                                         # check if the ave is NaN
                                         if ave=='NaN': stdev = 'NaN';
+                                        elif stdev == 0.0: stdev = 0.05;
                                         else: stdev = 0.001;
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %s;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,stdev));
                                     else:
@@ -2557,10 +2558,11 @@ class inca_api(stage02_isotopomer_execute):
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %s;\n' %(sna_cnt+1,i+1,cnt+1,j+1,ave));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.val(%d,%d) = %f;\n' %(sna_cnt+1,i+1,cnt+1,j+1,ave));
-                                    if stdev < 1e-4:
+                                    if stdev < 1e-3:
                                         # check if the ave is NaN
                                         if ave=='NaN': stdev = 'NaN';
-                                        else: stdev = 0.0001;
+                                        elif stdev == 0.0: stdev = 0.05;
+                                        else: stdev = 0.001;
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %s;\n' %(sna_cnt+1,i+1,cnt+1,j+1,stdev));
                                     else:
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %f;\n' %(sna_cnt+1,i+1,cnt+1,j+1,stdev));
@@ -2835,6 +2837,7 @@ class inca_api(stage02_isotopomer_execute):
                                     if stdev < 1e-3:
                                         # check if the ave is NaN
                                         if ave=='NaN': stdev = 'NaN';
+                                        elif stdev == 0.0: stdev = 0.05;
                                         else: stdev = 0.001;
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %s;\n' %(experiment_cnt+1,i+1,cnt+1,j+1,stdev));
                                     else:
@@ -2948,6 +2951,7 @@ class inca_api(stage02_isotopomer_execute):
                                     if stdev < 1e-3:
                                         # check if the ave is NaN
                                         if ave=='NaN': stdev = 'NaN';
+                                        elif stdev == 0.0: stdev = 0.05;
                                         else: stdev = 0.001;
                                         tmp_script = tmp_script + ('m.expts(%d).data_ms(%d).mdvs.std(%d,%d) = %s;\n' %(sna_cnt+1,i+1,cnt+1,j+1,stdev));
                                     else:

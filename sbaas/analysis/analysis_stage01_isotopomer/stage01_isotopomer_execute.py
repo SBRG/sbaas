@@ -339,7 +339,7 @@ class stage01_isotopomer_execute():
 
                         met_all_cnt = met_cnt
             self.session.commit();
-    def execute_updateNormalizedSpectrum(self,experiment_id_I, sample_names_I = None, sample_name_abbreviations_I = None, met_ids_I = None):
+    def execute_updateNormalizedSpectrum(self,experiment_id_I, sample_names_I = None, sample_name_abbreviations_I = None, met_ids_I = None, scan_types_I = None):
         '''re-calculate intensity_normalized from intensity_corrected and used'''
         
         print 'execute_updateNormalizedSpectrum...'
@@ -374,8 +374,11 @@ class stage01_isotopomer_execute():
                 for sna_cnt,sna in enumerate(sample_abbreviations):
                     print 'Building precursor and product spectrum from isotopomer normalized for sample name abbreviation ' + sna;
                     # get the scan_types
-                    scan_types = [];
-                    scan_types = self.stage01_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndDilutionAndSampleAbbreviations_dataStage01Normalized(experiment_id_I,tp,dil,sna);
+                    if scan_types_I:
+                        scan_types = scan_types_I;
+                    else:
+                        scan_types = [];
+                        scan_types = self.stage01_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndDilutionAndSampleAbbreviations_dataStage01Normalized(experiment_id_I,tp,dil,sna);
                     for scan_type in scan_types:
                         print 'Building precursor and product spectrum for scan type ' + scan_type
                         # met_ids
@@ -981,7 +984,8 @@ class stage01_isotopomer_execute():
                                             row = None;
                                             row = data_stage01_isotopomer_normalized(experiment_id_I,sample_name,sna,sample_types_lst[sna_cnt],tp,dilution,rep,
                                                                                          met,frag,int(numpy.round(k)),
-                                                                                         None,'cps',None,'cps',
+                                                                                         #None,'cps',None,'cps',
+                                                                                         None,'cps',peakSpectrum_normalized[frag][k],'normMax', #allows for spectrum updates
                                                                                          peakSpectrum_normalized[frag][k],'normMax',
                                                                                          v,peakSpectrum_stats[frag][k]['absDev'],scantype,True,None);
                                             self.session.add(row);
@@ -2913,6 +2917,7 @@ class stage01_isotopomer_execute():
                                 experiment_id_I,sna,tp,scan_type,met);
                         peakSpectrum_normalized_lst = [];
                         fragment_formulas_lst = [];
+                        if not(replicate_numbers): continue; #no replicates found
                         for rep in replicate_numbers:
                             print 'Plotting precursor and product spectrum for replicate_number ' + str(rep);
                             #get data

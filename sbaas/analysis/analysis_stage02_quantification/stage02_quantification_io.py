@@ -658,7 +658,7 @@ class stage02_quantification_io(base_analysis):
                                 "svgx1axislabel":data2_O[0]['axislabel'+str(PC[0])],
                                 "svgy1axislabel":data2_O[0]['axislabel'+str(PC[1])],
     						    'svgformtileid':'filtermenu2','svgresetbuttonid':'reset1','svgsubmitbuttonid':'submit1'};
-            svgtileparameters2_O = {'tileheader':'Loadings','tiletype':'svg','tileid':"laodingstile"+str(PC_cnt),'rowid':"row2",'colid':"col"+str(PC_cnt+1),
+            svgtileparameters2_O = {'tileheader':'Loadings','tiletype':'svg','tileid':"loadingstile"+str(PC_cnt),'rowid':"row2",'colid':"col"+str(PC_cnt+1),
                 'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
             svgtileparameters2_O.update(svgparameters2_O);
             parametersobject_O.append(svgtileparameters2_O);

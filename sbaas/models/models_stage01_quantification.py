@@ -77,6 +77,21 @@ class data_stage01_quantification_QCs(Base):
         self.calculated_concentration_average = calculated_concentration_average_I;
         self.calculated_concentration_CV = calculated_concentration_CV_I;
         self.calculated_concentration_units = calculated_concentration_units_I;
+
+    def __repr__dict__(self):
+        return {'id':self.id,
+        'experiment_id':self.experiment_id,
+        'sample_name_abbreviation':self.sample_name_abbreviation,
+        'sample_dilution':self.sample_dilution,
+        'component_group_name':self.component_group_name,
+        'component_name':self.component_name,
+        'n_replicates':self.n_replicates,
+        'calculated_concentration_average':self.calculated_concentration_average,
+        'calculated_concentration_CV':self.calculated_concentration_CV,
+        'calculated_concentration_units':self.calculated_concentration_units}
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())
 class data_stage01_quantification_normalized(Base):
     __tablename__ = 'data_stage01_quantification_normalized'
     id = Column(Integer, Sequence('data_stage01_quantification_normalized_id_seq'), primary_key=True)
