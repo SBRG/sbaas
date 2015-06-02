@@ -489,6 +489,25 @@ class stage01_resequencing_query(base_analysis):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
+    # query mutation information from data_stage01_resequencing_lineage
+    def get_mutationData_experimentIDAndSampleName_dataStage01ResequencingMutationsAnnotated(self,experiment_id_I,sample_name_I):
+        '''Query mutation information from resequencing lineage'''
+        try:
+            data = self.session.query(data_stage01_resequencing_mutationsAnnotated).filter(
+                    data_stage01_resequencing_mutationsAnnotated.experiment_id.like(experiment_id_I),
+                    data_stage01_resequencing_mutationsAnnotated.sample_name.like(sample_name_I)).all();
+            data_O = [];
+            for d in data: 
+                data_tmp_str = '';
+                mutation_genes_str = '';
+                for gene in d.mutation_genes:
+                    mutation_genes_str = mutation_genes_str + gene + '-/-'
+                mutation_genes_str = mutation_genes_str[:-3];
+                data_tmp_str = d.mutation_type+'_'+mutation_genes_str+'_'+str(d.mutation_position)
+                data_O.append(data_tmp_str);
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);
 
     # query data from data_stage01_resequencing_analysis
     def get_analysis_analysisID_dataStage01ResequencingAnalysis(self,analysis_id_I):

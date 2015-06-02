@@ -238,6 +238,7 @@ class stage01_isotopomer_io(base_analysis):
                         cnt = 0;
                 except SQLAlchemyError as e:
                     print(e);
+                    self.session.rollback();
             self.session.commit();
     
     def import_dataStage01MQResultsTable_update(self,filename):
