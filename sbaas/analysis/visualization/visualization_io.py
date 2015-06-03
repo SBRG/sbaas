@@ -175,10 +175,14 @@ class visualization_io(base_analysis):
             colid = "col" + str(col_cnt);
             tileheader = v[0]['pipeline_id'];
             htmlid = "html" + str(tile_cnt);
+            #tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
+            #    'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
+            #hrefparameters = {"hrefurl":'project.html',"htmlkeymap":[data1_keymap],
+            #                'htmltype':'href_01','htmlid':htmlid};
             tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
-                'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"};
+                'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6","formsubmitbuttonidtext":{'id':'submit1','text':'submit'}};
             hrefparameters = {"hrefurl":'project.html',"htmlkeymap":[data1_keymap],
-                            'htmltype':'href_01','htmlid':htmlid};
+                            'htmltype':'href_02','htmlid':htmlid};
             tileparameters.update(hrefparameters);
             parametersobject_O.append(tileparameters);
             dataobject_O.append({"data":v,"datakeys":data1_keys,"datanestkeys":data1_nestkeys});

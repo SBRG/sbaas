@@ -496,13 +496,31 @@ class stage01_resequencing_io(base_analysis):
             for mutation in mutation_data_O:
                 if mutation_id == mutation['mutation_id']:
                     tmp = {};
-                    tmp['mutation_id']=mutation['mutation_id']
+                    #tmp['mutation_id']=mutation['mutation_id']
+                    #tmp['mutation_frequency']=mutation['mutation_frequency'];
+                    #tmp['mutation_genes']=mutation['mutation_genes'];
+                    #tmp['mutation_position']=mutation['mutation_position'];
+                    #tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    #tmp['mutation_locations']=mutation['mutation_locations'];
+                    #tmp['mutation_links']=mutation['mutation_links'];
+                    #tmp['mutation_type']=mutation['mutation_type'];
+                    tmp['mutation_id']=mutation['mutation_id'];
                     tmp['mutation_frequency']=mutation['mutation_frequency'];
-                    tmp['mutation_genes']=mutation['mutation_genes'];
-                    tmp['mutation_position']=mutation['mutation_position'];
-                    tmp['mutation_annotations']=mutation['mutation_annotations'];
-                    tmp['mutation_locations']=mutation['mutation_locations'];
-                    tmp['mutation_links']=mutation['mutation_links'];
+                    if mutation['mutation_genes']:
+                        tmp['mutation_genes']=";".join([x for x in mutation['mutation_genes'] if x is not None]);
+                    else: tmp['mutation_genes']=mutation['mutation_genes'];
+                    if mutation['mutation_position']:
+                        tmp['mutation_position']=mutation['mutation_position'];
+                    else: tmp['mutation_position']=mutation['mutation_position'];
+                    if mutation['mutation_annotations']:
+                        tmp['mutation_annotations']=";".join([x for x in mutation['mutation_annotations'] if x is not None]);
+                    else: tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    if mutation['mutation_locations']:
+                        tmp['mutation_locations']=";".join([x for x in mutation['mutation_locations'] if x is not None]);
+                    else: tmp['mutation_locations']=mutation['mutation_locations'];
+                    if mutation['mutation_links']:
+                        tmp['mutation_links']=";".join([x for x in mutation['mutation_links'] if x is not None]);
+                    else: tmp['mutation_links']=mutation['mutation_links'];
                     tmp['mutation_type']=mutation['mutation_type'];
                     tmp['used_']=mutation['used_'];
                     tmp['comment_']=mutation['comment_'];
@@ -688,13 +706,31 @@ class stage01_resequencing_io(base_analysis):
             for mutation in lineage_data:
                 if mutation_id == mutation['mutation_id']:
                     tmp = {};
-                    tmp['mutation_id']=mutation['mutation_id']
+                    #tmp['mutation_id']=mutation['mutation_id']
+                    #tmp['mutation_frequency']=mutation['mutation_frequency'];
+                    #tmp['mutation_genes']=mutation['mutation_genes'];
+                    #tmp['mutation_position']=mutation['mutation_position'];
+                    #tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    #tmp['mutation_locations']=mutation['mutation_locations'];
+                    #tmp['mutation_links']=mutation['mutation_links'];
+                    #tmp['mutation_type']=mutation['mutation_type'];
+                    tmp['mutation_id']=mutation['mutation_id'];
                     tmp['mutation_frequency']=mutation['mutation_frequency'];
-                    tmp['mutation_genes']=mutation['mutation_genes'];
-                    tmp['mutation_position']=mutation['mutation_position'];
-                    tmp['mutation_annotations']=mutation['mutation_annotations'];
-                    tmp['mutation_locations']=mutation['mutation_locations'];
-                    tmp['mutation_links']=mutation['mutation_links'];
+                    if mutation['mutation_genes']:
+                        tmp['mutation_genes']=";".join([x for x in mutation['mutation_genes'] if x is not None]);
+                    else: tmp['mutation_genes']=mutation['mutation_genes'];
+                    if mutation['mutation_position']:
+                        tmp['mutation_position']=mutation['mutation_position'];
+                    else: tmp['mutation_position']=mutation['mutation_position'];
+                    if mutation['mutation_annotations']:
+                        tmp['mutation_annotations']=";".join([x for x in mutation['mutation_annotations'] if x is not None]);
+                    else: tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    if mutation['mutation_locations']:
+                        tmp['mutation_locations']=";".join([x for x in mutation['mutation_locations'] if x is not None]);
+                    else: tmp['mutation_locations']=mutation['mutation_locations'];
+                    if mutation['mutation_links']:
+                        tmp['mutation_links']=";".join([x for x in mutation['mutation_links'] if x is not None]);
+                    else: tmp['mutation_links']=mutation['mutation_links'];
                     tmp['mutation_type']=mutation['mutation_type'];
                     tmp['used_']=True;
                     tmp['comment_']=None;
@@ -785,4 +821,341 @@ class stage01_resequencing_io(base_analysis):
             file.write(data_str);
             file.write(parameters_str);
             file.write(tile2datamap_str);
+        tile2datamap_O = {"tile1":[0],"tile2":[0]};
         
+        tile2datamap_O = {"tile1":[0],"tile2":[0]};
+        
+    def export_dataStage01ResequencingMutationsAnnotatedTable_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
+        '''export data_stage01_resequencing_mutationsAnnotated to js file'''
+        
+        print 'exportingdataStage01ResequencingMutationsAnnotated...'
+        # get the analysis information
+        experiment_ids,sample_names,time_points = [],[],[];
+        experiment_ids,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
+        # convert time_point to intermediates
+        time_points_int = [int(x) for x in time_points];
+        intermediates,time_points,experiment_ids,sample_names = (list(t) for t in zip(*sorted(zip(time_points_int,time_points,experiment_ids,sample_names))))
+        intermediates = [i for i,x in enumerate(intermediates)];
+        mutation_data_O = [];
+        mutation_ids = [];
+        for sample_name_cnt,sample_name in enumerate(sample_names):
+            # query mutation data:
+            mutations = [];
+            mutations = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsAnnotated(experiment_ids[sample_name_cnt],sample_name);
+            for end_cnt,mutation in enumerate(mutations):
+                if mutation['mutation_position'] > 4000000: #ignore positions great than 4000000
+                    continue;
+                if mutation['mutation_frequency']<frequency_threshold:
+                    continue;
+                # mutation id
+                mutation_genes_str = '';
+                for gene in mutation['mutation_genes']:
+                    mutation_genes_str = mutation_genes_str + gene + '-/-'
+                mutation_genes_str = mutation_genes_str[:-3];
+                mutation_id = mutation_genes_str + '_' + mutation['mutation_type'] + '_' + str(mutation['mutation_position'])
+                tmp = {};
+                tmp.update(mutation);
+                tmp.update({'mutation_id':mutation_id});
+                mutation_data_O.append(tmp);
+                mutation_ids.append(mutation_id);
+        # screen out mutations
+        mutation_ids_screened = [x for x in mutation_ids if x not in mutation_id_exclusion_list];
+        mutation_ids_unique = list(set(mutation_ids_screened));
+        # get mutation information for all unique mutations
+        mutation_ids_uniqueInfo = [];
+        for mutation_id in mutation_ids_unique:
+            for mutation in mutation_data_O:
+                if mutation_id == mutation['mutation_id']:
+                    tmp = {};
+                    #tmp['mutation_id']=mutation['mutation_id'].replace(',',';').replace("'",';').replace("u",'').replace("[",'').replace("]",'');
+                    #tmp['mutation_frequency']=mutation['mutation_frequency'];
+                    #tmp['mutation_genes']=str(mutation['mutation_genes']).replace(',',';').replace("'",';').replace("u",'').replace("[",'').replace("]",'');
+                    #tmp['mutation_position']=str(mutation['mutation_position']).replace(',',';').replace("'",';').replace("u",'').replace("[",'').replace("]",'');
+                    #tmp['mutation_annotations']=str(mutation['mutation_annotations']).replace(',',';').replace("'",';').replace("u",'').replace("[",'').replace("]",'');
+                    #tmp['mutation_locations']=str(mutation['mutation_locations']).replace(',',';').replace("'",';').replace("u",'').replace("[",'').replace("]",'');
+                    #tmp['mutation_links']=str(mutation['mutation_links']).replace(',',';').replace("'",';').replace("u",'').replace("[",'').replace("]",'');
+                    #tmp['mutation_type']=str(mutation['mutation_type']).replace(',',';').replace("'",';').replace("u",'').replace("[",'').replace("]",'');
+
+                    #tmp['mutation_id']=mutation['mutation_id'];
+                    #tmp['mutation_frequency']=mutation['mutation_frequency'];
+                    #tmp['mutation_genes']=mutation['mutation_genes'];
+                    #tmp['mutation_position']=mutation['mutation_position'];
+                    #tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    #tmp['mutation_locations']=mutation['mutation_locations'];
+                    #tmp['mutation_links']=mutation['mutation_links'];
+                    #tmp['mutation_type']=mutation['mutation_type'];
+
+                    tmp['mutation_id']=mutation['mutation_id'];
+                    tmp['mutation_frequency']=mutation['mutation_frequency'];
+                    if mutation['mutation_genes']:
+                        tmp['mutation_genes']=";".join([x for x in mutation['mutation_genes'] if x is not None]);
+                    else: tmp['mutation_genes']=mutation['mutation_genes'];
+                    if mutation['mutation_position']:
+                        tmp['mutation_position']=mutation['mutation_position'];
+                    else: tmp['mutation_position']=mutation['mutation_position'];
+                    if mutation['mutation_annotations']:
+                        tmp['mutation_annotations']=";".join([x for x in mutation['mutation_annotations'] if x is not None]);
+                    else: tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    if mutation['mutation_locations']:
+                        tmp['mutation_locations']=";".join([x for x in mutation['mutation_locations'] if x is not None]);
+                    else: tmp['mutation_locations']=mutation['mutation_locations'];
+                    if mutation['mutation_links']:
+                        tmp['mutation_links']=";".join([x for x in mutation['mutation_links'] if x is not None]);
+                    else: tmp['mutation_links']=mutation['mutation_links'];
+                    tmp['mutation_type']=mutation['mutation_type'];
+                    tmp['used_']=mutation['used_'];
+                    tmp['comment_']=mutation['comment_'];
+                    mutation_ids_uniqueInfo.append(tmp);         
+        data_O = [];
+        # add in 0.0 frequency for mutations that are not found
+        for sample_name_cnt,sample_name in enumerate(sample_names):
+            for mutation_id in mutation_ids_uniqueInfo:
+                tmp = {};
+                tmp_fitted = {};
+                tmp['mutation_id']=mutation_id['mutation_id']
+                tmp['time_point']=time_points[sample_name_cnt]
+                tmp['intermediate']=intermediates[sample_name_cnt]
+                tmp['experiment_id']=experiment_ids[sample_name_cnt]
+                tmp['sample_name']=sample_name
+                tmp['mutation_frequency']=0.0;  
+                tmp['mutation_genes']=mutation_id['mutation_genes'];
+                tmp['mutation_position']=mutation_id['mutation_position'];
+                tmp['mutation_annotations']=mutation_id['mutation_annotations'];
+                tmp['mutation_locations']=mutation_id['mutation_locations'];
+                tmp['mutation_links']=mutation_id['mutation_links'];
+                tmp['mutation_type']=mutation_id['mutation_type'];
+                tmp['used_']=mutation_id['used_'];
+                tmp['comment_']=mutation_id['comment_'];
+                for mutation in mutation_data_O:
+                    if sample_name == mutation['sample_name'] and mutation_id['mutation_id'] == mutation['mutation_id']:
+                        tmp['mutation_frequency']=mutation['mutation_frequency'];
+                        tmp['comment_']=mutation['comment_'];
+                        break;
+                data_O.append(tmp);
+        # dump chart parameters to a js files
+        data1_keys = [
+                    #'experiment_id',
+                    'sample_name',
+                    'mutation_id',
+                    #'mutation_frequency',
+                    'mutation_type',
+                    'mutation_position',
+                    #'mutation_data',
+                    'mutation_annotations',
+                    'mutation_genes',
+                    #'mutation_links',
+                    'mutation_locations'
+                    ];
+        data1_nestkeys = ['mutation_id'];
+        data1_keymap = {'xdata':'intermediate',
+                        'ydata':'mutation_frequency',
+                        'serieslabel':'mutation_id',
+                        'featureslabel':''};
+        parameters = {"chart1margin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                    "chart1width":500,"chart1height":350,
+                  "chart1title":"Population mutation frequency", "chart1x1axislabel":"jump_time_point","chart1y1axislabel":"frequency"}
+        # make the data object
+        dataobject_O = [{"data":data_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys}];
+        # make the tile parameter objects
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters_O = {'htmlid':'filtermenuform1','htmltype':'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters_O.update(formparameters_O);
+        tableparameters_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'filtermenu1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'table','tileid':"tile2",'rowid':"row2",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters_O.update(tableparameters_O);
+        parametersobject_O = [formtileparameters_O,tabletileparameters_O];
+        tile2datamap_O = {"filtermenu1":[0],"tile2":[0]};
+        # dump the data to a json file
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_mutationsAnnotated' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);
+
+    def export_dataStage01ResequencingHeatmap_v1_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
+        """export heatmap to js file"""
+
+        #get the heatmap data for the analysis
+        data1_O = self.stage01_resequencing_query.get_rows_analysisID_dataStage01ResequencingHeatmap(analysis_id_I);
+        # dump chart parameters to a js files
+        data1_keys = [
+            'analysis_id',
+                      'row_label','col_label','row_index','col_index','row_leaves','col_leaves',
+                'col_pdist_metric','row_pdist_metric','col_linkage_method','row_linkage_method',
+                'value_units']
+        data1_nestkeys = ['analysis_id'];
+        data1_keymap = {'xdata':'row_leaves','ydata':'col_leaves','zdata':'value',
+                'rowslabel':'row_label','columnslabel':'col_label',
+                'rowsindex':'row_index','columnsindex':'col_index',
+                'rowsleaves':'row_leaves','columnsleaves':'col_leaves'};
+        # get the analysis information
+        experiment_ids,sample_names,time_points = [],[],[];
+        experiment_ids,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
+        # convert time_point to intermediates
+        time_points_int = [int(x) for x in time_points];
+        intermediates,time_points,experiment_ids,sample_names = (list(t) for t in zip(*sorted(zip(time_points_int,time_points,experiment_ids,sample_names))))
+        intermediates = [i for i,x in enumerate(intermediates)];
+        mutation_data_O = [];
+        mutation_ids = [];
+        for sample_name_cnt,sample_name in enumerate(sample_names):
+            # query mutation data:
+            mutations = [];
+            mutations = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsAnnotated(experiment_ids[sample_name_cnt],sample_name);
+            for end_cnt,mutation in enumerate(mutations):
+                if mutation['mutation_position'] > 4000000: #ignore positions great than 4000000
+                    continue;
+                if mutation['mutation_frequency']<frequency_threshold:
+                    continue;
+                # mutation id
+                mutation_genes_str = '';
+                for gene in mutation['mutation_genes']:
+                    mutation_genes_str = mutation_genes_str + gene + '-/-'
+                mutation_genes_str = mutation_genes_str[:-3];
+                mutation_id = mutation_genes_str + '_' + mutation['mutation_type'] + '_' + str(mutation['mutation_position'])
+                tmp = {};
+                tmp.update(mutation);
+                tmp.update({'mutation_id':mutation_id});
+                mutation_data_O.append(tmp);
+                mutation_ids.append(mutation_id);
+        # screen out mutations
+        mutation_ids_screened = [x for x in mutation_ids if x not in mutation_id_exclusion_list];
+        mutation_ids_unique = list(set(mutation_ids_screened));
+        # get mutation information for all unique mutations
+        mutation_ids_uniqueInfo = [];
+        for mutation_id in mutation_ids_unique:
+            for mutation in mutation_data_O:
+                if mutation_id == mutation['mutation_id']:
+                    tmp = {};
+                    tmp['mutation_id']=mutation['mutation_id'];
+                    tmp['mutation_frequency']=mutation['mutation_frequency'];
+                    if mutation['mutation_genes']:
+                        tmp['mutation_genes']=";".join([x for x in mutation['mutation_genes'] if x is not None]);
+                    else: tmp['mutation_genes']=mutation['mutation_genes'];
+                    if mutation['mutation_position']:
+                        tmp['mutation_position']=mutation['mutation_position'];
+                    else: tmp['mutation_position']=mutation['mutation_position'];
+                    if mutation['mutation_annotations']:
+                        tmp['mutation_annotations']=";".join([x for x in mutation['mutation_annotations'] if x is not None]);
+                    else: tmp['mutation_annotations']=mutation['mutation_annotations'];
+                    if mutation['mutation_locations']:
+                        tmp['mutation_locations']=";".join([x for x in mutation['mutation_locations'] if x is not None]);
+                    else: tmp['mutation_locations']=mutation['mutation_locations'];
+                    if mutation['mutation_links']:
+                        tmp['mutation_links']=";".join([x for x in mutation['mutation_links'] if x is not None]);
+                    else: tmp['mutation_links']=mutation['mutation_links'];
+                    tmp['mutation_type']=mutation['mutation_type'];
+                    tmp['used_']=mutation['used_'];
+                    tmp['comment_']=mutation['comment_'];
+                    mutation_ids_uniqueInfo.append(tmp);         
+        data2_O = [];
+        # add in 0.0 frequency for mutations that are not found
+        for sample_name_cnt,sample_name in enumerate(sample_names):
+            for mutation_id in mutation_ids_uniqueInfo:
+                tmp = {};
+                tmp_fitted = {};
+                tmp['mutation_id']=mutation_id['mutation_id']
+                tmp['time_point']=time_points[sample_name_cnt]
+                tmp['intermediate']=intermediates[sample_name_cnt]
+                tmp['experiment_id']=experiment_ids[sample_name_cnt]
+                tmp['sample_name']=sample_name
+                tmp['mutation_frequency']=0.0;  
+                tmp['mutation_genes']=mutation_id['mutation_genes'];
+                tmp['mutation_position']=mutation_id['mutation_position'];
+                tmp['mutation_annotations']=mutation_id['mutation_annotations'];
+                tmp['mutation_locations']=mutation_id['mutation_locations'];
+                tmp['mutation_links']=mutation_id['mutation_links'];
+                tmp['mutation_type']=mutation_id['mutation_type'];
+                tmp['used_']=mutation_id['used_'];
+                tmp['comment_']=mutation_id['comment_'];
+                for mutation in mutation_data_O:
+                    if sample_name == mutation['sample_name'] and mutation_id['mutation_id'] == mutation['mutation_id']:
+                        tmp['mutation_frequency']=mutation['mutation_frequency'];
+                        tmp['comment_']=mutation['comment_'];
+                        break;
+                data2_O.append(tmp);
+        # dump chart parameters to a js files
+        data2_keys = [
+                    #'experiment_id',
+                    'sample_name',
+                    'mutation_id',
+                    #'mutation_frequency',
+                    'mutation_type',
+                    'mutation_position',
+                    #'mutation_data',
+                    'mutation_annotations',
+                    'mutation_genes',
+                    #'mutation_links',
+                    'mutation_locations'
+                    ];
+        data2_nestkeys = ['mutation_id'];
+        data2_keymap = {'xdata':'intermediate',
+                        'ydata':'mutation_frequency',
+                        'serieslabel':'mutation_id',
+                        'featureslabel':''};
+        # make the data object
+        dataobject_O = [{"data":data1_O,"datakeys":data1_keys,"datanestkeys":data1_nestkeys},{"data":data2_O,"datakeys":data2_keys,"datanestkeys":data2_nestkeys}];
+        # make the tile parameter objects
+        svgparameters_O = {"svgtype":'heatmap2d_01',"svgkeymap":[data1_keymap],
+                            'svgid':'svg1',
+                             'svgcellsize':18,'svgmargin':{ 'top': 200, 'right': 50, 'bottom': 100, 'left': 200 },
+                            'svgcolorscale':'quantile',
+                            'svgcolorcategory':'heatmap10',
+                            'svgcolordomain':[0,1],
+                            'svgcolordatalabel':'value',
+                            'svgdatalisttileid':'tile1'};
+        svgtileparameters_O = {'tileheader':'heatmap','tiletype':'svg','tileid':"tile2",'rowid':"row2",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        svgtileparameters_O.update(svgparameters_O);
+        datalisttileparameters_O = {'tileheader':'filter menu','tiletype':'html','tileid':"tile1",'rowid':"row1",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"
+            
+            };
+        datalistparameters_O = {'htmlid':'datalist1','htmltype':'datalist_01','datalist': [{'value':'hclust','text':'by cluster'},
+                            {'value':'probecontrast','text':'by row and column'},
+                            {'value':'probe','text':'by row'},
+                            {'value':'contrast','text':'by column'},
+                            {'value':'custom','text':'by value'}]}
+        datalisttileparameters_O.update(datalistparameters_O);
+        formtileparameters_O = {'tileheader':'Filter menu','tiletype':'html','tileid':"filtermenu1",'rowid':"row3",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        formparameters_O = {'htmlid':'filtermenuform1','htmltype':'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
+        formtileparameters_O.update(formparameters_O);
+        tableparameters_O = {"tabletype":'responsivetable_01',
+                    'tableid':'table1',
+                    "tablefilters":None,
+                    "tableclass":"table  table-condensed table-hover",
+    			    'tableformtileid':'filtermenu1','tableresetbuttonid':'reset1','tablesubmitbuttonid':'submit1'};
+        tabletileparameters_O = {'tileheader':'Population mutation frequency','tiletype':'table','tileid':"tile4",'rowid':"row4",'colid':"col1",
+            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+        tabletileparameters_O.update(tableparameters_O);
+        parametersobject_O = [datalisttileparameters_O,svgtileparameters_O,formtileparameters_O,tabletileparameters_O];
+        tile2datamap_O = {"tile1":[0],"tile2":[0],"filtermenu1":[1],"tile4":[1]};
+        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
+        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
+        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        if data_dir_I=='tmp':
+            filename_str = settings.visualization_data + '/tmp/ddt_data.js'
+        elif data_dir_I=='project':
+            filename_str = settings.visualization_data + '/project/' + analysis_id_I + '_data_stage01_resequencing_heatmap' + '.js'
+        elif data_dir_I=='data_json':
+            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            return data_json_O;
+        with open(filename_str,'w') as file:
+            file.write(data_str);
+            file.write(parameters_str);
+            file.write(tile2datamap_str);

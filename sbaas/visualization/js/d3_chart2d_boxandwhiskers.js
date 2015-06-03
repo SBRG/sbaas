@@ -446,21 +446,41 @@ d3_chart2d.prototype.add_boxandwhiskersdata1tooltipandfill_box = function () {
     var colorscale = this.colorscale;
     var id = this.id;
 
+    // set the tooltip
+    this.tooltip = d3.tip().attr('class', 'd3-tip')
+        .html(function(d){
+            return (d[series_label] + ': ' + "median: " + d[y_data_median].toFixed(2) + ', ' + "iq1/3: " + d[y_data_iq1].toFixed(2) + "/" + d[y_data_iq3].toFixed(2) + ', ' + "min/max: " + d[y_data_min].toFixed(2) + "/" + d[y_data_max].toFixed(2));
+            })
+        .style({
+           'line-height': '1',
+           'font-weight': 'bold',
+           'padding': '12px',
+           'background': 'rgba(0, 0, 0, 0.8)',
+           'color': '#fff',
+           'border-radius': '2px'
+        });
+    //this.set_d3tooltipstyle(); //not functional
+    this.svgg.call(this.tooltip);
+    var tip = this.tooltip;
+
     this.boxandwhiskersboxesenter.on("mouseover", function (d) {
             //change color of the bar
             d3.select(this).style('fill', 'black');
-            //Update the tooltip position and value
-            d3.select("#" + id + "tooltip")
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY - 10) + "px")
-                .select("#" + id + "value")
-                .text(d[series_label] + ': ' + "median: " + d[y_data_median].toFixed(2) + ', ' + "iq1/3: " + d[y_data_iq1].toFixed(2) + "/" + d[y_data_iq3].toFixed(2) + ', ' + "min/max: " + d[y_data_min].toFixed(2) + "/" + d[y_data_max].toFixed(2));
-            //Show the tooltip
-            d3.select("#" + id + "tooltip").classed("hidden", false);
+            //show the tooltip
+            tip.show(d);
+//             //Update the tooltip position and value
+//             d3.select("#" + id + "tooltip")
+//                 .style("left", (d3.event.pageX + 10) + "px")
+//                 .style("top", (d3.event.pageY - 10) + "px")
+//                 .select("#" + id + "value")
+//                 .text(d[series_label] + ': ' + "median: " + d[y_data_median].toFixed(2) + ', ' + "iq1/3: " + d[y_data_iq1].toFixed(2) + "/" + d[y_data_iq3].toFixed(2) + ', ' + "min/max: " + d[y_data_min].toFixed(2) + "/" + d[y_data_max].toFixed(2));
+//             //Show the tooltip
+//             d3.select("#" + id + "tooltip").classed("hidden", false);
         })
         .on("mouseout", function (d) {
             d3.select(this).style("fill", "none");
-            d3.select("#" + id + "tooltip").classed("hidden", true);
+            tip.hide(d);
+//             d3.select("#" + id + "tooltip").classed("hidden", true);
         });
 };
 d3_chart2d.prototype.add_boxandwhiskersdata1tooltipandfill_mean = function () {
@@ -483,29 +503,40 @@ d3_chart2d.prototype.add_boxandwhiskersdata1tooltipandfill_mean = function () {
     var colorscale = this.colorscale;
     var id = this.id;
 
-//     this.boxandwhiskersmeancirclesenter
-//         .attr("data-toggle","tooltip")
-//         .attr("data-placement","top")
-//         .attr("title","Tooltip on top");
-        
-//     $(function () {
-//         $('[data-toggle="tooltip"]').tooltip()
-//     }); 
+    // set the tooltip
+    this.tooltip = d3.tip().attr('class', 'd3-tip')
+        .html(function(d){
+            return (d[series_label] + ': ' + "mean: " + d[y_data_mean].toFixed(2) + ', ' + "ci 95%: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
+            })
+        .style({
+           'line-height': '1',
+           'font-weight': 'bold',
+           'padding': '12px',
+           'background': 'rgba(0, 0, 0, 0.8)',
+           'color': '#fff',
+           'border-radius': '2px'
+        });
+    //this.set_d3tooltipstyle(); //not functional
+    this.svgg.call(this.tooltip);
+    var tip = this.tooltip;
 
     this.boxandwhiskersmeancirclesenter.on("mouseover", function (d) {
             //change color of the bar
             d3.select(this).style('fill', 'black');
-            //Update the tooltip position and value
-            d3.select("#" + id + "tooltip")
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY - 10) + "px")
-                .select("#" + id + "value")
-                .text(d[series_label] + ': ' + "mean: " + d[y_data_mean].toFixed(2) + ', ' + "ci 95%: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
-            //Show the tooltip
-             d3.select("#" + id + "tooltip").classed("hidden", false);
+            //show the tooltip
+            tip.show(d);
+//             //Update the tooltip position and value
+//             d3.select("#" + id + "tooltip")
+//                 .style("left", (d3.event.pageX + 10) + "px")
+//                 .style("top", (d3.event.pageY - 10) + "px")
+//                 .select("#" + id + "value")
+//                 .text(d[series_label] + ': ' + "mean: " + d[y_data_mean].toFixed(2) + ', ' + "ci 95%: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
+//             //Show the tooltip
+//              d3.select("#" + id + "tooltip").classed("hidden", false);
         })
         .on("mouseout", function (d) {
             d3.select(this).style("fill", colorscale(d[series_label]));
-            d3.select("#" + id + "tooltip").classed("hidden", true);
+            tip.hide(d);
+            //d3.select("#" + id + "tooltip").classed("hidden", true);
         });
 };

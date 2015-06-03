@@ -568,6 +568,10 @@ d3_chart2d.prototype.set_tooltip = function () {
         .append('p')
         .attr('id', this.id + 'value');
 
+//     $(document).ready(function(){
+//         $('[data-toggle="tooltip"]').tooltip();   
+//     });
+
 //     this.tooltip = d3.select("#" + this.tileid + "panel-body")
 //         .append("div")
 //         .attr('class', 'tooltip hidden')
@@ -586,14 +590,6 @@ d3_chart2d.prototype.set_tooltip = function () {
 d3_chart2d.prototype.set_tooltipstyle = function () {
     //set tooltip css properties
     var tooltipselector = "#" + this.id + 'tooltip';
-    //var tooltipstyle = {
-    //        'line-height': '1',
-    //        'font-weight': 'bold',
-    //        'padding': '12px',
-    //        'background': 'rgba(0, 0, 0, 0.8)',
-    //        'color': '#fff',
-    //        'border-radius': '2px'
-    //};
     var tooltipstyle = {
         'position': 'fixed',
         'width': 'auto',
@@ -610,6 +606,40 @@ d3_chart2d.prototype.set_tooltipstyle = function () {
     };
     var selectionstyle = [{ 'selection': tooltipselector, 'style': tooltipstyle }];
     this.set_d3css(selectionstyle);
+};
+d3_chart2d.prototype.set_d3tooltipstyle = function () {
+    //set tooltip css properties
+    var tooltipselector1 = '.d3-tip';
+    var tooltipstyle1 = {
+           'line-height': '1',
+           'font-weight': 'bold',
+           'padding': '12px',
+           'background': 'rgba(0, 0, 0, 0.8)',
+           'color': '#fff',
+           'border-radius': '2px'
+    };
+    var tooltipselector2 = '.d3-tip:after';
+    var tooltipstyle2 = {
+          'box-sizing': 'border-box',
+          'display': 'inline',
+          'font-size': '10px',
+          'width': '100%',
+          'line-height': '1',
+          'color': 'rgba(0, 0, 0, 0.8)',
+          //'content': '"\25BC"',
+          'position': 'absolute',
+          'text-align': 'center'
+    };
+    var tooltipselector3 = '.d3-tip.n:after';
+    var tooltipstyle3 = {
+           'margin': '-1px 0 0 0',
+          'top': '100%',
+          'left': '0'
+    };
+    var selectionstyle = [{ 'selection': tooltipselector1, 'style': tooltipstyle1 },
+                        { 'selection': tooltipselector2, 'style': tooltipstyle2 },
+                        { 'selection': tooltipselector3, 'style': tooltipstyle3 }];
+    this.set_svggcss(selectionstyle);
 };
 d3_chart2d.prototype.add_legenddata1filter = function () {
     //filter the data on click

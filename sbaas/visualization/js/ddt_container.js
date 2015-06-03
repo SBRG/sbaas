@@ -237,5 +237,15 @@ ddt_container.prototype.add_datafiltermenubuttons = function(datafiltermenu_I){
         this.add_datafiltermenuresetbutton(datafiltermenu[i].filtermenuid,datafiltermenu[i].filtermenuresetbuttonid);
         this.add_datafiltermenuupdatebutton(datafiltermenu[i].filtermenuid,datafiltermenu[i].filtermenuupdatebuttonid);
     };
-
+};
+ddt_container.prototype.__main__ = function(parameters,data,tile2datamap){
+    //run
+    //ddt_test = new ddt_container();
+    this.set_parameters(parameters);
+    this.add_data(data);
+    this.set_tile2datamap(tile2datamap);
+    this.make_container();
+    this.add_datafiltermenuresetbutton()
+    this.add_datafiltermenusubmitbutton()
+    this.add_datafiltermenuupdatebutton()
 }

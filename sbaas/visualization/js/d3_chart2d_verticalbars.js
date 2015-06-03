@@ -63,22 +63,42 @@ d3_chart2d.prototype.add_verticalbarsdata1tooltipandfill = function () {
     var y_data_ub = this.data1keymap.ydataub;
     var id = this.id;
 
+    // set the tooltip
+    this.tooltip = d3.tip().attr('class', 'd3-tip')
+        .html(function(d){
+            return (d[series_label] + ': ' + "value: " + d[y_data].toFixed(2) + ', ' + "95% ci: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
+            })
+        .style({
+           'line-height': '1',
+           'font-weight': 'bold',
+           'padding': '12px',
+           'background': 'rgba(0, 0, 0, 0.8)',
+           'color': '#fff',
+           'border-radius': '2px'
+        });
+    //this.set_d3tooltipstyle(); //not functional
+    this.svgg.call(this.tooltip);
+    var tip = this.tooltip;
+
     this.barsrectenter.on("mouseover", function (d) {
             //change color of the bar
             d3.select(this).style('fill', 'black');
-            //Update the tooltip position and value
-            d3.select("#" + id + "tooltip")
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY - 10) + "px")
-                .select("#" + id + "value")
-                //.text("series_label: " + d[series_label] + ', ' + "met_id: " + d[met_id] + ', ' + "Value: " + d[y_data].toFixed(2) + ', ' + "95% CI: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
-                .text(d[series_label] + ': ' + "value: " + d[y_data].toFixed(2) + ', ' + "95% ci: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
-            //Show the tooltip
-            d3.select("#" + id + "tooltip").classed("hidden", false);
+            //show the tooltip
+//             tip.show(d);
+//             //Update the tooltip position and value
+//             d3.select("#" + id + "tooltip")
+//                 .style("left", (d3.event.pageX + 10) + "px")
+//                 .style("top", (d3.event.pageY - 10) + "px")
+//                 .select("#" + id + "value")
+//                 //.text("series_label: " + d[series_label] + ', ' + "met_id: " + d[met_id] + ', ' + "Value: " + d[y_data].toFixed(2) + ', ' + "95% CI: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
+//                 .text(d[series_label] + ': ' + "value: " + d[y_data].toFixed(2) + ', ' + "95% ci: " + d[y_data_lb].toFixed(2) + "/" + d[y_data_ub].toFixed(2));
+//             //Show the tooltip
+//             d3.select("#" + id + "tooltip").classed("hidden", false);
         })
         .on("mouseout", function (d) {
             d3.select(this).style("fill", colorscale(d[series_label]));
-            d3.select("#" + id + "tooltip").classed("hidden", true);
+            tip.hide(d);
+            //d3.select("#" + id + "tooltip").classed("hidden", true);
         });
 };
 d3_chart2d.prototype.add_verticalbarsdata1errorbars = function () {

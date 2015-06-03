@@ -204,6 +204,8 @@ ddt_tile_html.prototype.get_html = function(htmltype_I){
         return new ddt_html_datalist_01();
     } else if (htmltype_I=='href_01'){
         return new ddt_html_href_01();
+    } else if (htmltype_I=='href_02'){
+        return new ddt_html_href_02();
     } else if (htmltype_I=='media_01'){
         return new ddt_html_media_01();
     } else if (htmltype_I=='escher_01'){

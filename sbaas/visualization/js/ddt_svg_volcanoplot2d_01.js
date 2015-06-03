@@ -26,8 +26,8 @@ ddt_svg_volcanoplot2d_01.prototype.make_svg = function(data_I,parameters_I){
     this.ddtsvg.set_height(parameters_I.svgheight);
     this.ddtsvg.set_colorscale(); //color for series_label will remain consistent
     this.ddtsvg.add_svgexportbutton2tile();
-    this.ddtsvg.set_tooltip();
-    this.ddtsvg.set_tooltipstyle();
+    //this.ddtsvg.set_tooltip();
+    //this.ddtsvg.set_tooltipstyle();
     this.ddtsvg.set_zoom();
     this.ddtsvg.render = function () {
         this.add_chart2d2tile();

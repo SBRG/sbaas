@@ -163,17 +163,19 @@ d3_table.prototype.add_data = function(data_I){
 };
 d3_table.prototype.partition_listdatafiltered2tableheaderandelements = function(){
     // partition list data to an array of headers and an array of values
-    this.tableheaders = [];
-    this.tableelements = [];
+    var tableheaders = [];
+    var tableelements = [];
     var datalistdatafiltered = this.data.listdatafiltered;
     for (var i=0;i<datalistdatafiltered.length;i++){
+        tableelements.push([]);
         for (var key in datalistdatafiltered[i]){
             if (i===0){
-                this.tableheaders.push(key);
+                tableheaders.push(key);
             };
-            this.tableelements.push(datalistdatafiltered[i][key])
+            tableelements[i].push(datalistdatafiltered[i][key])
         };
     };
+    return {tableheaders:tableheaders,tableelements:tableelements};
 };
 d3_table.prototype.extract_tableheaders = function(){
     // extract out headers from listdatafiltered
@@ -232,6 +234,17 @@ d3_table.prototype.add_jsonexportbutton2tile = function () {
 };
 d3_table.prototype.add_csvandjsonexportbutton2tile = function () {
     // add button to export the table element
+    var this_ = this;
+
+    function exporttableelementjson(){
+        this_.export_tableelementjson(); //necessary to pass svg as "this"
+    };
+
+    function exporttableelementcsv(){
+        this_.export_tableelementcsv(); //necessary to pass svg as "this"
+    };
+
+
     var exportbutton = d3.select('#'+this.tileid+"panel-footer").append("form")
         .attr("class","form-group")
         .append("div")
@@ -240,12 +253,12 @@ d3_table.prototype.add_csvandjsonexportbutton2tile = function () {
     var csvexportbutton_input = exportbutton.append("input");
     csvexportbutton_input.attr("type", "button")
         .attr("value", "Download CSV");
-    csvexportbutton_input.on("click", this.export_tableelementcsv);
+    csvexportbutton_input.on("click", exporttableelementcsv);
 
     var jsonexportbutton_input = exportbutton.append("input");
     jsonexportbutton_input.attr("type", "button")
         .attr("value", "Download JSON");
-    jsonexportbutton_input.on("click", this.export_tableelementjson);
+    jsonexportbutton_input.on("click", exporttableelementjson);
 
 };
 d3_table.prototype.export_tableelementjson = function () {
@@ -253,10 +266,10 @@ d3_table.prototype.export_tableelementjson = function () {
     //TODO:...
 
     var a = document.createElement('a');
-    a.download = name + '.json'; // file name
-    var j = JSON.stringify(json);
+    a.download ="table" + '.json'; // file name
+    var j = JSON.stringify(this.data.listdatafiltered);
     a.setAttribute("href-lang", "application/json");
-    a.href = 'data:application/json,' + j;
+    a.href = 'data:application/json;charset=utf-8,' + j;
     // <a> constructed, simulate mouse click on it
     var ev = document.createEvent("MouseEvents");
     ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -266,6 +279,28 @@ d3_table.prototype.export_tableelementjson = function () {
     function utf8_to_b64(str) {
         return window.btoa(unescape(encodeURIComponent(str)));
     }
+};
+d3_table.prototype.export_tableelementcsv = function () {
+    // export the table element as csv
+    //TODO:...
+
+    var a = document.createElement('a');
+    a.download ="table" + '.csv'; // file name
+    //generate the csv string
+    var c = "";
+    var tableheaderstableelements = this.partition_listdatafiltered2tableheaderandelements(this.data.listdatafiltered);
+    c = tableheaderstableelements.tableheaders.join(",");
+    c += '\n';
+    tableheaderstableelements.tableelements.forEach(function(infoArray,index){
+        var dataString = infoArray.join(",");
+        c += index < tableheaderstableelements.tableelements.length ? dataString+ '\n' : dataString;
+    }); 
+    a.setAttribute("href-lang", "application/csv");
+    a.href = 'data:application/csv;charset=utf-8,' + encodeURI(c);
+    // <a> constructed, simulate mouse click on it
+    var ev = document.createEvent("MouseEvents");
+    ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    a.dispatchEvent(ev);
 };
 d3_table.prototype.set_tablecss = function (selectionstyle_I) {
     //set custom css style to table

@@ -83,20 +83,39 @@ d3_chart2d.prototype.add_linedata1tooltipandstroke = function () {
     var colorscale = this.colorscale;
     var id = this.id;
 
+    // set the tooltip
+    this.tooltip = d3.tip().attr('class', 'd3-tip')
+        .html(function(d){
+            return ("series_label" + ": " + d.key);
+            })
+        .style({
+           'line-height': '1',
+           'font-weight': 'bold',
+           'padding': '12px',
+           'background': 'rgba(0, 0, 0, 0.8)',
+           'color': '#fff',
+           'border-radius': '2px'
+        });
+    //this.set_d3tooltipstyle(); //not functional
+    this.svgg.call(this.tooltip);
+    var tip = this.tooltip;
+
     this.linedata1enter.on('mouseover', function (d, i) {
         d3.select(this)
             .style("stroke", 'black');
-        d3.select("#" + id + "tooltip")
-            .style("left", (d3.event.pageX + 10) + "px")
-            .style("top", (d3.event.pageY - 10) + "px")
-            .select("#value")
-            .text("series_label" + ": " + d.key);
-        //Show the tooltip
-        d3.select("#" + id + "tooltip").classed("hidden", false);
+        tip.show(d);
+//         d3.select("#" + id + "tooltip")
+//             .style("left", (d3.event.pageX + 10) + "px")
+//             .style("top", (d3.event.pageY - 10) + "px")
+//             .select("#value")
+//             .text("series_label" + ": " + d.key);
+//         //Show the tooltip
+//         d3.select("#" + id + "tooltip").classed("hidden", false);
     })
         .on("mouseout", function (d) {
             d3.select(this).style("stroke", colorscale(d.key));
-            d3.select("#"+id+"tooltip").classed("hidden", true);
+            tip.hide(d);
+//             d3.select("#"+id+"tooltip").classed("hidden", true);
         });
 };
 d3_chart2d.prototype.add_linedata1onstroke = function () {
@@ -126,17 +145,36 @@ d3_chart2d.prototype.add_linedata1tooltip = function () {
     var colorscale = this.colorscale;
     var id = this.id;
 
+    // set the tooltip
+    this.tooltip = d3.tip().attr('class', 'd3-tip')
+        .html(function(d){
+            return ("series_label" + ": " + d.key);
+            })
+        .style({
+           'line-height': '1',
+           'font-weight': 'bold',
+           'padding': '12px',
+           'background': 'rgba(0, 0, 0, 0.8)',
+           'color': '#fff',
+           'border-radius': '2px'
+        });
+    //this.set_d3tooltipstyle(); //not functional
+    this.svgg.call(this.tooltip);
+    var tip = this.tooltip;
+
     this.linedata1enter.on('mouseover', function (d, i) {
-        d3.select("#" + id + "tooltip")
-            .style("left", (d3.event.pageX + 10) + "px")
-            .style("top", (d3.event.pageY - 10) + "px")
-            .select("#value")
-            .text("series_label" + ": " + d.key);
-        //Show the tooltip
-        d3.select("#" + id + "tooltip").classed("hidden", false);
+        tip.show(d);
+//         d3.select("#" + id + "tooltip")
+//             .style("left", (d3.event.pageX + 10) + "px")
+//             .style("top", (d3.event.pageY - 10) + "px")
+//             .select("#value")
+//             .text("series_label" + ": " + d.key);
+//         //Show the tooltip
+//         d3.select("#" + id + "tooltip").classed("hidden", false);
     })
         .on("mouseout", function (d) {
-            d3.select("#" + id + "tooltip").classed("hidden", true);
+            tip.hide(d);
+//             d3.select("#"+id+"tooltip").classed("hidden", true);
         });
 };
 d3_chart2d.prototype.add_linedata1filter = function () {

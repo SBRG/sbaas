@@ -774,4 +774,138 @@ d3_html.prototype.set_escher = function(escherdataindex_I,escherembeddedcss_I,es
         this.escheroptions = null;
     };
 
-}
+};
+d3_html.prototype.add_headeranddatalist_href = function(){
+    // adds data lists groups with individual headers to the tile body
+    // each list element will have an href of the form:
+    //      url_I?buttonparametername=buttontext&lliparametername=litextoption1
+
+    var listdatafiltered = this.data.listdatafiltered;
+    var nestdatafiltered = this.data.nestdatafiltered;
+    var buttonparameter = this.datakeymap.buttonparameter;
+    var liparameter = this.datakeymap.liparameter;
+    var litext = this.datakeymap.litext;
+    var hrefurl = this.url;
+
+    var id = this.id;
+    var tileid = this.tileid;;
+
+    this.headergroup = this.html.selectAll("#" + id + "header-group")
+        .data(nestdatafiltered)
+
+    this.headergroupenter = this.headergroup.enter()
+        .append("div")
+        .attr("class","list-group-item")
+//         .append("div")
+//         .attr("class","row")
+//         .append("div")
+//         .attr("class","col-sm-6")
+        .attr("id", id + "header-group");
+
+    this.headergroup.exit().remove();
+
+    this.header = this.headergroup.selectAll("#" + id + "header")
+        .data(function(row){
+            var keys = [];
+            keys.push({key:row.key});
+            return keys;
+        });
+
+    this.headerenter = this.header.enter()
+        .append("h4")
+        .attr("class","list-group-item-heading")
+        //.attr("id",id + "header")
+        .attr("id", function(d){return id + "h4" + d.key;})
+        //specific text replace for sbaas:
+        .text(function(d){return d.key.replace("export_data","").replace("_js","");});
+
+    this.header.selectAll("h4")
+        .attr("class","list-group-item-heading")
+        //.attr("id",id + "header")
+        .attr("id", function(d){return id + "h4" + d.key;})
+        //specific text replace for sbaas:
+        .text(function(d){return d.key.replace("export_data","").replace("_js","");});
+
+    this.header.exit().remove();
+
+    this.select = this.headergroup.selectAll("select")
+        .data(function(row){
+            var keyvalues = [];
+            keyvalues.push({key:row.key,values:row.values});
+            return keyvalues;
+            });
+
+    this.selectenter = this.select.enter()
+        .append("select")
+        .attr("class","form-control")
+        //.attr("id",function(d){return id + "select"+ d.key;});
+        .attr("id",id + "select");
+
+    this.select.selectAll("select")
+        .attr("class","form-control")
+        //.attr("id",function(d){return id + "select"+ d.key;});
+        .attr("id",id + "select");
+
+    this.select.exit().remove();
+
+    this.option = this.select.selectAll("option")
+        .data(function(row){
+            var buttonlitext = [];
+            var key = row.key;
+            row.values.forEach(function(d){
+                buttonlitext.push({buttontext:key, litext:d[litext],buttonparameter:buttonparameter,liparameter:liparameter});
+                });
+            return buttonlitext;
+            });
+    
+    this.optionenter = this.option.enter()
+        .append("option")
+        .attr("id",id + "option")
+        .attr("value",function(d,i){
+            var url = hrefurl+"?";
+            url += d.buttonparameter + "=" +d.buttontext+"&";
+            url += d.liparameter + "=" + d.litext;
+            return url;
+            })
+        .text(function(d,i){return d.litext;});
+
+    this.option.select("option")
+        .attr("value",function(d,i){
+            var url = hrefurl+"?";
+            url += d.buttonparameter + "=" +d.buttontext+"&";
+            url += d.liparameter + "=" + d.litext;
+            return url;
+            })
+        .text(function(d,i){return d.litext;});
+
+    this.option.exit().remove();
+};
+d3_html.prototype.add_headeranddatalistsubmit_href = function(){
+    // add submit button trigger even for header and datalist html
+
+    var button_idtext = this.button_idtext;
+    var id = this.id;
+    var tileid = this.tileid;
+	
+	function go2url(){
+	    window.location.href = d3.select("#"+ id + "select").node().value;
+        // submit on enter
+        var selection = d3.select(window),
+        kc = 13;
+        selection.on('keydown.' + kc, function () {
+            if (d3.event.keyCode == kc) {
+                submit();
+            }
+        });
+	};
+
+    d3.select("#"+ tileid + 'submitbutton'+button_idtext.id).on("click",go2url);
+
+};
+d3_html.prototype.set_formsubmitbuttonidtext = function(button_idtext_I) {
+    // set submit button
+    // INPUT:
+    //e.g. {'id':'submit1','text':'submit'};
+    if (!button_idtext_I){this.button_idtext = {'id':'submit1','text':'submit'};}
+    else{this.button_idtext = button_idtext_I;}
+};
