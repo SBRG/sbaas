@@ -7,7 +7,9 @@ class visualization_query(base_analysis):
         try:
             data = self.session.query(visualization_project).filter(
                     visualization_project.project_id.like(project_id_I),
-                    visualization_project.used_.is_(True)).all();
+                    visualization_project.used_.is_(True)).order_by(
+                    visualization_project.pipeline_id.asc(),
+                    visualization_project.data_export_id.asc()).all();
             project_id_O = []
             pipeline_id_O = []
             analysis_id_O = []

@@ -84,7 +84,7 @@ d3_chart2d.prototype.add_verticalbarsdata1tooltipandfill = function () {
             //change color of the bar
             d3.select(this).style('fill', 'black');
             //show the tooltip
-//             tip.show(d);
+            tip.show(d);
 //             //Update the tooltip position and value
 //             d3.select("#" + id + "tooltip")
 //                 .style("left", (d3.event.pageX + 10) + "px")

@@ -169,11 +169,14 @@ class visualization_io(base_analysis):
             data1_dict[data_export_id]=[];
         for d in data1_O:
             data1_dict[d['data_export_id']].append(d);
+        data1_keys = data1_dict.keys();
+        data1_keys.sort();
         col_cnt = 0;
-        for k,v in data1_dict.iteritems():
+        #for k,v in data1_dict.iteritems():
+        for k in data1_keys:
             tileid = "tile" + str(tile_cnt);
             colid = "col" + str(col_cnt);
-            tileheader = v[0]['pipeline_id'];
+            tileheader = data1_dict[k][0]['pipeline_id'];
             htmlid = "html" + str(tile_cnt);
             #tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
             #    'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
@@ -185,7 +188,7 @@ class visualization_io(base_analysis):
                             'htmltype':'href_02','htmlid':htmlid};
             tileparameters.update(hrefparameters);
             parametersobject_O.append(tileparameters);
-            dataobject_O.append({"data":v,"datakeys":data1_keys,"datanestkeys":data1_nestkeys});
+            dataobject_O.append({"data":data1_dict[k],"datakeys":data1_keys,"datanestkeys":data1_nestkeys});
             tile2datamap_O.update({tileid:[tile_cnt]});
             tile_cnt+=1;
             col_cnt+=1;

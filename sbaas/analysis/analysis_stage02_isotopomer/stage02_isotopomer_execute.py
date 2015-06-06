@@ -365,7 +365,10 @@ class stage02_isotopomer_execute():
                                 stdev = 0.0;
                                 stderr = 0.0;
                                 if data_mat_cv[i]: 
-                                    stdev = data_mat[i]*data_mat_cv[i]/100;
+                                    if data_mat_n[i]==1:
+                                        stdev = 0.05;
+                                    else:
+                                        stdev = data_mat[i]*data_mat_cv[i]/100;
                                     stderr = stdev/sqrt(data_mat_n[i]);
                                 data_names.append(fragname+str(i));
                                 data_stdev.append(stdev);

@@ -454,7 +454,7 @@ class stage01_resequencing_io(base_analysis):
                     print(e);
             self.session.commit();
 
-    def export_dataStage01ResequencingMutationsAnnotated_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
+    def export_dataStage01ResequencingMutationsAnnotatedLineage_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
         '''export data_stage01_resequencing_mutationsAnnotated to js file'''
         
         print 'exportingdataStage01ResequencingMutationsAnnotated...'
@@ -825,7 +825,7 @@ class stage01_resequencing_io(base_analysis):
         
         tile2datamap_O = {"tile1":[0],"tile2":[0]};
         
-    def export_dataStage01ResequencingMutationsAnnotatedTable_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
+    def export_dataStage01ResequencingMutationsAnnotated_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
         '''export data_stage01_resequencing_mutationsAnnotated to js file'''
         
         print 'exportingdataStage01ResequencingMutationsAnnotated...'
@@ -905,7 +905,8 @@ class stage01_resequencing_io(base_analysis):
                     tmp['mutation_type']=mutation['mutation_type'];
                     tmp['used_']=mutation['used_'];
                     tmp['comment_']=mutation['comment_'];
-                    mutation_ids_uniqueInfo.append(tmp);         
+                    mutation_ids_uniqueInfo.append(tmp);     
+                    break;    
         data_O = [];
         # add in 0.0 frequency for mutations that are not found
         for sample_name_cnt,sample_name in enumerate(sample_names):
@@ -930,8 +931,8 @@ class stage01_resequencing_io(base_analysis):
                     if sample_name == mutation['sample_name'] and mutation_id['mutation_id'] == mutation['mutation_id']:
                         tmp['mutation_frequency']=mutation['mutation_frequency'];
                         tmp['comment_']=mutation['comment_'];
+                        data_O.append(tmp);
                         break;
-                data_O.append(tmp);
         # dump chart parameters to a js files
         data1_keys = [
                     #'experiment_id',
