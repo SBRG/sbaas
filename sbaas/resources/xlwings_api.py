@@ -24,8 +24,8 @@ class xlwings_workbook():
         excelList = [];
         for i,d in enumerate(ormclass_I):
             if i==0:
-                excelList.append(d.__repr__dict__().keys())
-            excelList.append(d.__repr__dict__().values())
+                excelList.append(list(d.__repr__dict__().keys()))
+            excelList.append(list(d.__repr__dict__().values()))
         return excelList;
 
     def convert_tableDictList2ExcelList(self,tableDictList_I):
@@ -34,8 +34,8 @@ class xlwings_workbook():
         excelList = [];
         for i,d in enumerate(tableDictList_I):
             if i==0:
-                excelList.append(d.keys())
-            excelList.append(d.values())
+                excelList.append(list(d.keys()))
+            excelList.append(list(d.values()))
         return excelList;
 
     def read_workbook(self,sheet_I='Sheet1',cell_I='A1'):
@@ -52,7 +52,7 @@ class xlwings_workbook():
         # reformat the data into a list of dictionaries
         tableDictList_O = []
         for row in table:
-            row_dict = dict(zip(header,row))
+            row_dict = dict(list(zip(header,row)))
             tableDictList_O.append(row_dict)
         return tableDictList_O;
 

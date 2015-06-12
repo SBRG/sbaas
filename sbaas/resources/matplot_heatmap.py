@@ -141,7 +141,7 @@ class HiearchicalHeatmap(object):
             self.frame = self.frame.iloc[:,idx2]
             ### reorder the flat cluster to match the order of the leaves the dendrogram
             ind2 = ind2[idx2]
-        else: idx2 = range(self.frame.shape[1])
+        else: idx2 = list(range(self.frame.shape[1]))
 
         # Compute and plot left dendrogram #
         if self.row_method:
@@ -158,7 +158,7 @@ class HiearchicalHeatmap(object):
             self.frame = self.frame.iloc[idx1,:]
             ### reorder the flat cluster to match the order of the leaves the dendrogram
             ind1 = ind1[idx1]
-        else: idx1 = range(self.frame.shape[0])
+        else: idx1 = list(range(self.frame.shape[0]))
 
         # Plot distance matrix #
         axm = fig.add_axes([axm_x, axm_y, axm_w, axm_h])

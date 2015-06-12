@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from models_query import models_query
+from .models_query import models_query
 
 class models_io(base_analysis):
 

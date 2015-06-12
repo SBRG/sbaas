@@ -1,6 +1,6 @@
 from analysis.analysis_base import *
 from analysis.analysis_stage01_resequencing.stage01_resequencing_io import stage01_resequencing_io
-from stage02_resequencing_query import stage02_resequencing_query
+from .stage02_resequencing_query import stage02_resequencing_query
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 import json
 

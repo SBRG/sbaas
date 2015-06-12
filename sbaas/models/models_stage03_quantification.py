@@ -2,7 +2,7 @@
 # i.e. thermodynamics
 
 # ORMs
-from models_base import *
+from .models_base import *
 from sqlalchemy.orm import relationship
 
 # ORM classes

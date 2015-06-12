@@ -206,7 +206,7 @@ class cobra_methods():
 
         # Reduce model
         rxns_noflux = [];
-        for k,v in fva_data.iteritems():
+        for k,v in fva_data.items():
             if v['minimum'] == 0.0 and v['maximum'] == 0.0:
                 cobra_model.reactions.get_by_id(k).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(k).upper_bound = 0.0;
@@ -220,9 +220,9 @@ class cobra_methods():
 
         # Check that the reduced model is consistent with the original model
         if not sol_f == sol_reduced_f:
-            print 'reduced model is inconsistent with the original model'
-            print 'original model solution: ' + str(sol_f)
-            print 'reduced model solution: ' + str(sol_reduced_f)
+            print('reduced model is inconsistent with the original model')
+            print('original model solution: ' + str(sol_f))
+            print('reduced model solution: ' + str(sol_reduced_f))
     def reduce_model_pfba(self,cobra_model,cobra_model_outFileName=None,fba_outFileName=None,subs=[]):
         '''reduce model using pfba'''
         # Input: cobra_model
@@ -240,7 +240,7 @@ class cobra_methods():
         # Reduce model
         rxns_noflux = [];
         # set lb and ub for all reactions with 0 flux to 0;
-        for k,v in cobra_model.solution.x_dict.iteritems():
+        for k,v in cobra_model.solution.x_dict.items():
             if (v < 0.0 or v == 0.0) and cobra_model.reactions.get_by_id(k).subsystem in subs:
                 cobra_model.reactions.get_by_id(k).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(k).upper_bound = 0.0;
@@ -254,7 +254,7 @@ class cobra_methods():
             with open(pfba_outFileName,mode='wb') as outfile:
                 writer = csv.writer(outfile)
                 writer.writerow(['Reaction','Flux'])
-                for k,v in cobra_model.solution.x_dict.iteritems():
+                for k,v in cobra_model.solution.x_dict.items():
                     writer.writerow([k,v]);
 
         cobra_model.optimize()
@@ -262,9 +262,9 @@ class cobra_methods():
 
         # Check that the reduced model is consistent with the original model
         if not sol_f == sol_reduced_f:
-            print 'reduced model is inconsistent with the original model'
-            print 'original model solution: ' + str(sol_f)
-            print 'reduced model solution: ' + str(sol_reduced_f)
+            print('reduced model is inconsistent with the original model')
+            print('original model solution: ' + str(sol_f))
+            print('reduced model solution: ' + str(sol_reduced_f))
     def add_net_reaction(self,cobra_model_IO, rxn_dict_I,remove_reverse=False):
         '''add a net reaction to the model after removing
         the individual reactions'''
@@ -275,30 +275,30 @@ class cobra_methods():
 
         cobra_model_IO.optimize();
         sol_orig = cobra_model_IO.solution.f;
-        print "original model solution", sol_orig
+        print("original model solution", sol_orig)
 
         try:
             cobra_model_tmp = cobra_model_IO.copy2();
         except KeyError as e:
-            print e; 
+            print(e); 
 
         # make net reactions:
         rxn_dict_net = {};
-        for k,v in rxn_dict_I.iteritems():
+        for k,v in rxn_dict_I.items():
             rxn_net = make_net_reaction(cobra_model_tmp, k, v['reactions'],v['stoichiometry']);
             if rxn_net:
                 rxn_net.lower_bound = 0.0;
                 rxn_net.upper_bound = 1000.0;
                 rxn_net.objective_coefficient = 0.0;
             else:
-                print 'an error occured in add_net_reaction'
+                print('an error occured in add_net_reaction')
                 exit(-1)
 
             #rxn_net.reversibility = False;
             rxn_dict_net[k] = (v['reactions'],rxn_net);
 
         # add replace individual reactions with net reaction
-        for k,v in rxn_dict_net.iteritems():
+        for k,v in rxn_dict_net.items():
             cobra_model_IO.remove_reactions(v[0]);
             # remove the reverse reaction if it exists for irreversible models
             if remove_reverse:
@@ -312,7 +312,7 @@ class cobra_methods():
             cobra_model_IO.add_reaction(v[1]);
             cobra_model_IO.optimize();
             sol_new = cobra_model_IO.solution.f;
-            print k, sol_new
+            print(k, sol_new)
     def make_net_reaction(self,cobra_model_I, rxn_id_I, rxn_list_I,stoich_list_I):
         '''generate a net reaction from a list of individual reactions'''
         # input: rxn_list_I = list of reaction IDs
@@ -328,7 +328,7 @@ class cobra_methods():
 
         # check input:
         if not len(stoich_list_I) == len(rxn_list_I):
-            print "error in " + rxn_id_I + ": there are " + str(len(rxn_list_I)) + " rxn ids and " + str(len(stoich_list_I)) + " coefficients";
+            print("error in " + rxn_id_I + ": there are " + str(len(rxn_list_I)) + " rxn ids and " + str(len(stoich_list_I)) + " coefficients");
             exit(-1);
 
         rxn_net_O = Reaction(rxn_id_I);
@@ -351,25 +351,25 @@ class cobra_methods():
     def get_solBySub(self,cobra_model_I,sol_I,sub_I):
 
         sol_O = {};
-        for k,v in sol_I.iteritems():
+        for k,v in sol_I.items():
             try:
                 if cobra_model_I.reactions.get_by_id(k).subsystem == sub_I:
                     sol_O[k] = v;
             except:
-                print k + ' reaction not found'
+                print(k + ' reaction not found')
 
         return sol_O;
     def groupBySameFlux(self,cobra_model_I,sol_I):
 
         flux_list = [];
-        for r,f in sol_I.iteritems():
+        for r,f in sol_I.items():
             if not f in flux_list and float(f)>0.0:
                 flux_list.append(f)
             
         sameFlux_O = {};
         for f in flux_list:
             rxn_list = [];
-            for r,v in sol_I.iteritems():
+            for r,v in sol_I.items():
                 if v==f:
                     rxn_list.append(r);
             stoich = [1]*len(rxn_list)
@@ -404,12 +404,12 @@ class cobra_methods():
             sol = get_solBySub(cobra_model_IO,sol_I,s)
             sameFlux = groupBySameFlux(cobra_model_IO,sol)
             netRxns = {};
-            for k,v in sameFlux.iteritems():
+            for k,v in sameFlux.items():
                 if len(v['reactions'])>1: 
                     netRxns[k] = v;
             add_net_reaction(cobra_model_IO,netRxns);
             # add subsystem information back in
-            for k in sameFlux.iterkeys():
+            for k in sameFlux.keys():
                 cobra_model_IO.reactions.get_by_id(k).subsystem = s
             remove_noflux_reactions(cobra_model_IO,sol_I,subs_I)
     def remove_noflux_reactions(self,cobra_model,sol=None,subs=[]):
@@ -428,7 +428,7 @@ class cobra_methods():
         # set lb and ub for all reactions with 0 flux to 0;
         if sol:
             if subs:
-                for k,v in sol.iteritems():
+                for k,v in sol.items():
                     try:
                         if (float(v) < 0.0 or float(v) == 0.0) and cobra_model.reactions.get_by_id(k).subsystem in subs:
                             cobra_model.reactions.get_by_id(k).lower_bound = 0.0;
@@ -436,9 +436,9 @@ class cobra_methods():
                             cobra_model.remove_reactions(k)
                             rxns_noflux.append(k);
                     except:
-                        print 'reaction is not in model: ' + k
+                        print('reaction is not in model: ' + k)
             else:
-                for k,v in sol.iteritems():
+                for k,v in sol.items():
                     try:
                         if (float(v) < 0.0 or float(v) == 0.0):
                             cobra_model.reactions.get_by_id(k).lower_bound = 0.0;
@@ -446,7 +446,7 @@ class cobra_methods():
                             cobra_model.remove_reactions(k)
                             rxns_noflux.append(k);
                     except:
-                        print 'reaction is not in model: ' + k
+                        print('reaction is not in model: ' + k)
         else:
             if subs:
                 for r in cobra_model.reactions:
@@ -462,9 +462,9 @@ class cobra_methods():
 
         # Check that the reduced model is consistent with the original model
         if not sol_f == sol_reduced_f:
-            print 'reduced model is inconsistent with the original model'
-            print 'original model solution: ' + str(sol_f)
-            print 'reduced model solution: ' + str(sol_reduced_f)
+            print('reduced model is inconsistent with the original model')
+            print('original model solution: ' + str(sol_f))
+            print('reduced model solution: ' + str(sol_reduced_f))
     def get_reactionsInfo(self,cobra_model):
         '''return the number of reactions and the number of reactions 
         that cannot carry a flux (i.e. lb and ub of 0.0)'''

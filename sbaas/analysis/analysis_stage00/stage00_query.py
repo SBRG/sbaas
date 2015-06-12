@@ -13,7 +13,7 @@ class stage00_query(base_analysis):
                 struct_file_O = structure[0][0];
                 struct_file_ext_O = structure[0][1];
             else: 
-                print 'no structure file found for ' + met_id_I;
+                print('no structure file found for ' + met_id_I);
                 exit(-1);
             return struct_file_O, struct_file_ext_O
         except SQLAlchemyError as e:
@@ -31,7 +31,7 @@ class stage00_query(base_analysis):
                 mass_O = massformula[0][0];
                 formula_O = massformula[0][1];
             else: 
-                print 'no mass and formula found for ' + met_id_I;
+                print('no mass and formula found for ' + met_id_I);
                 exit(-1);
             return mass_O, formula_O
         except SQLAlchemyError as e:
@@ -84,8 +84,8 @@ class stage00_query(base_analysis):
                     MS_components.ms_methodtype.like(ms_methodtype_I)).all();
             mscomponents_O = [];
             if not mscomponents:
-                print 'bad query for row in ms_components: '
-                print 'met_id: ' + met_id_I + ', ms_mode_I: ' + ms_mode_I + ', ms_methodtype_I: ' + ms_methodtype_I;
+                print('bad query for row in ms_components: ')
+                print('met_id: ' + met_id_I + ', ms_mode_I: ' + ms_mode_I + ', ms_methodtype_I: ' + ms_methodtype_I);
                 exit(-1)
             for msc in mscomponents: 
                 mscomponents_1 = {};
@@ -160,8 +160,8 @@ class stage00_query(base_analysis):
                     MS_components.ms_methodtype.like(ms_methodtype_I)).all();
             mscomponents_O = [];
             if not mscomponents:
-                print 'bad query for row in ms_components: '
-                print 'met_id: ' + met_id_I + ', precursor_formula_I: ' + precursor_formula_I + ', product_formula_I: ' + product_formula_I + ', ms_methodtype_I: ' + ms_methodtype_I;
+                print('bad query for row in ms_components: ')
+                print('met_id: ' + met_id_I + ', precursor_formula_I: ' + precursor_formula_I + ', product_formula_I: ' + product_formula_I + ', ms_methodtype_I: ' + ms_methodtype_I);
                 exit(-1)
             for msc in mscomponents: 
                 mscomponents_1 = {};
@@ -223,7 +223,7 @@ class stage00_query(base_analysis):
             if bioReps:
                 maxBioReps_O = max(bioReps[0]);
             else: 
-                print 'no biological replicates found for experiment ' + experiment_id_I;
+                print('no biological replicates found for experiment ' + experiment_id_I);
                 exit(-1);
             return maxBioReps_O;
         except SQLAlchemyError as e:
@@ -276,7 +276,7 @@ class stage00_query(base_analysis):
                     data_tmp['sample_replicate']=d.sample_replicate;
                     data_O.append(data_tmp);
             else: 
-                print 'no data found for experiment ' + experiment_id_I + ' and sample_type' + sample_type_I;
+                print('no data found for experiment ' + experiment_id_I + ' and sample_type' + sample_type_I);
             return data_O;
         except SQLAlchemyError as e:
             print(e);
@@ -328,7 +328,7 @@ class stage00_query(base_analysis):
                     data_tmp['sample_replicate']=d.sample_replicate;
                     data_O.append(data_tmp);
             else: 
-                print 'no data found for experiment ' + experiment_id_I + ' and sample_type' + sample_type_I;
+                print('no data found for experiment ' + experiment_id_I + ' and sample_type' + sample_type_I);
             return data_O;
         except SQLAlchemyError as e:
             print(e);
@@ -344,8 +344,8 @@ class stage00_query(base_analysis):
                         experiment.sample_name.like(sample.sample_name)).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);
@@ -362,8 +362,8 @@ class stage00_query(base_analysis):
                         experiment.sample_name.like(sample.sample_name)).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);
@@ -381,8 +381,8 @@ class stage00_query(base_analysis):
                         sample_description.sample_id.like(sample.sample_id)).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);
@@ -400,8 +400,8 @@ class stage00_query(base_analysis):
                         sample_storage.sample_id.like(sample.sample_id)).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);
@@ -419,8 +419,8 @@ class stage00_query(base_analysis):
                         sample_physiologicalParameters.sample_id.like(sample.sample_id)).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);
@@ -439,7 +439,7 @@ class stage00_query(base_analysis):
                 id_O = calibratorInfo[0][0];
                 level_O = calibratorInfo[0][1];
             else: 
-                print 'no calibrator id nor level found for sample_name/sample_type ' + sample_name_I + ' / ' + sample_type_I;
+                print('no calibrator id nor level found for sample_name/sample_type ' + sample_name_I + ' / ' + sample_type_I);
             return id_O, level_O
         except SQLAlchemyError as e:
             print(e);
@@ -458,7 +458,7 @@ class stage00_query(base_analysis):
             if calibratorID:
                 calibrator_id_O = calibratorID[0][0];
             else: 
-                print 'no calibrator ID nor unit found for met_id ' + met_id_I;
+                print('no calibrator ID nor unit found for met_id ' + met_id_I);
         except SQLAlchemyError as e:
             print(e);
         # 2. check if the calibrator id matches
@@ -474,7 +474,7 @@ class stage00_query(base_analysis):
                     concentration_O = calibratorInfo[0][0];
                     unit_O = calibratorInfo[0][1];
                 else: 
-                    print 'no calibrator concentration nor unit found for met_id/calibrator_id/calibrator_level ' + met_id_I + ' / ' + str(calibrator_id_I) + ' / ' + str(calibrator_level_I);
+                    print('no calibrator concentration nor unit found for met_id/calibrator_id/calibrator_level ' + met_id_I + ' / ' + str(calibrator_id_I) + ' / ' + str(calibrator_level_I));
                 return concentration_O, unit_O
             except SQLAlchemyError as e:
                 print(e);
@@ -531,8 +531,8 @@ class stage00_query(base_analysis):
                     MS_components.component_name.asc()).all();
             mscomponents_O = [];
             if not mscomponents:
-                print 'bad query for row in ms_components: '
-                print 'lc_method_I: ' + lc_method_I + ', ms_mode_I: ' + ms_mode_I + ', ms_methodtype_I: ' + ms_methodtype_I;
+                print('bad query for row in ms_components: ')
+                print('lc_method_I: ' + lc_method_I + ', ms_mode_I: ' + ms_mode_I + ', ms_methodtype_I: ' + ms_methodtype_I);
                 exit(-1)
             for msc in mscomponents: 
                 mscomponents_1 = {};
@@ -567,8 +567,8 @@ class stage00_query(base_analysis):
                         experiment.id.like(d['experiment_id'])).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);
@@ -584,8 +584,8 @@ class stage00_query(base_analysis):
                         experiment.sample_name.like(sample.sample_name)).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);
@@ -606,7 +606,7 @@ class stage00_query(base_analysis):
             if bioReps:
                 maxBioReps_O = max(bioReps[0]);
             else: 
-                print 'no biological replicates found for experiment ' + experiment_id_I;
+                print('no biological replicates found for experiment ' + experiment_id_I);
                 exit(-1);
             return maxBioReps_O;
         except SQLAlchemyError as e:
@@ -628,7 +628,7 @@ class stage00_query(base_analysis):
             if bioReps:
                 maxBioReps_O = max(bioReps[0]);
             else: 
-                print 'no biological replicates found for experiment ' + experiment_id_I;
+                print('no biological replicates found for experiment ' + experiment_id_I);
                 exit(-1);
             return maxBioReps_O;
         except SQLAlchemyError as e:
@@ -651,7 +651,7 @@ class stage00_query(base_analysis):
             if bioReps:
                 maxBioReps_O = max(bioReps[0]);
             else: 
-                print 'no biological replicates found for experiment ' + experiment_id_I;
+                print('no biological replicates found for experiment ' + experiment_id_I);
                 exit(-1);
             return maxBioReps_O;
         except SQLAlchemyError as e:
@@ -675,7 +675,7 @@ class stage00_query(base_analysis):
             if bioReps:
                 maxBioReps_O = max(bioReps[0]);
             else: 
-                print 'no biological replicates found for experiment ' + experiment_id_I;
+                print('no biological replicates found for experiment ' + experiment_id_I);
                 exit(-1);
             return maxBioReps_O;
         except SQLAlchemyError as e:

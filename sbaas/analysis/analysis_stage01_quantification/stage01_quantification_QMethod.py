@@ -203,7 +203,7 @@ class stage01_quantification_QMethod(base_analysis):
                         wts.append(1/abs(c));
 
             else:
-                print("weighting " + weighting_I + " not yet supported");
+                print(("weighting " + weighting_I + " not yet supported"));
                 print("linear weighting used instead");
                 for c in concentration:
                     wts.append(1.0);
@@ -221,7 +221,7 @@ class stage01_quantification_QMethod(base_analysis):
             elif fit_I == 'Power':
                 fmla = robjects.Formula('log(y) ~ log(x)'); # generate the R formula for lm
             else:
-                print("fit " + fit_I + " not yet supported");
+                print(("fit " + fit_I + " not yet supported"));
                 print("linear model used instead");
                 fmla = robjects.Formula('y ~ x');
 

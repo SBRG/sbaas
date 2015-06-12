@@ -1,3 +1,3 @@
-from stage02_resequencing_query import stage02_resequencing_query
-from stage02_resequencing_execute import stage02_resequencing_execute
-from stage02_resequencing_io import stage02_resequencing_io
+from .stage02_resequencing_query import stage02_resequencing_query
+from .stage02_resequencing_execute import stage02_resequencing_execute
+from .stage02_resequencing_io import stage02_resequencing_io

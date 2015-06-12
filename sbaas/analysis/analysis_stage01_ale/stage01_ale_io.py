@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from stage01_ale_query import stage01_ale_query
+from .stage01_ale_query import stage01_ale_query
 from scipy.io import loadmat
 
 class stage01_ale_io(base_analysis):
@@ -249,7 +249,7 @@ class stage01_ale_io(base_analysis):
     def export_dataStage01AleTrajectories_js(self,analysis_id_I,fit_func_I='lowess',data_dir_I="tmp"):
         """export data_stage01_ale_trajectories for visualization"""
 
-        print "exporting data_stage01_ale_trajectories..."
+        print("exporting data_stage01_ale_trajectories...")
 
         # query the analysis info
         experiment_ids,sample_name_abbreviations = [],[];

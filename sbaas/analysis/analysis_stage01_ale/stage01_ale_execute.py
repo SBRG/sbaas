@@ -1,6 +1,6 @@
 from analysis.analysis_base import *
-from stage01_ale_query import *
-from stage01_ale_io import *
+from .stage01_ale_query import *
+from .stage01_ale_io import *
 
 class stage01_ale_execute():
     '''class for ale analysis'''

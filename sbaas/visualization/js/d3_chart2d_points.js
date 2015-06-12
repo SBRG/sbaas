@@ -42,6 +42,8 @@ d3_chart2d.prototype.add_pointsdata1tooltipandfill = function () {
     //NOTE: both must be within the same "on" method
     var colorscale = this.colorscale;
     var series_label = this.data1keymap.serieslabel;
+    var feature_label = this.data1keymap.featureslabel;
+    
     var x_data = this.data1keymap.xdata;
     var y_data = this.data1keymap.ydata;
     var id = this.id;
@@ -49,8 +51,12 @@ d3_chart2d.prototype.add_pointsdata1tooltipandfill = function () {
     // set the tooltip
     this.tooltip = d3.tip().attr('class', 'd3-tip')
         .html(function(d){
-            if (typeof(d[x_data]) === 'string'){
+            if (typeof(d[x_data]) === 'string' && typeof(feature_label) !== "undefined"){
+                return(d[feature_label] + '\nx: ' + d[x_data] + '; y: ' + d[y_data].toFixed(2));
+            } else if (typeof(d[x_data]) === 'string'){
                 return('x: ' + d[x_data] + '; y: ' + d[y_data].toFixed(2));
+            } else if (typeof(d[x_data]) !== 'string' && typeof(feature_label) !== "undefined"){
+                return(d[feature_label] + '\nx: ' + d[x_data].toFixed(2) + '; y: ' + d[y_data].toFixed(2));
             } else {
                 return ('x: ' + d[x_data].toFixed(2) + '; y: ' + d[y_data].toFixed(2));
                     };
@@ -204,6 +210,19 @@ d3_chart2d.prototype.set_pointsdata1featurestyle = function(){
         'font-size': '10px',
         'font-style': 'normal',
         'font-family': 'arial'
+    };
+    var selectorstyle = [{ 'selection': featuresselector, 'style': featuresstyle }]
+    this.set_svggcss(selectorstyle);
+    
+}
+d3_chart2d.prototype.set_pointsdata1featurestyle_notext = function(){
+    // predefined css style for featur labels
+    var featuresselector = '#' + this.id + ' .featureslabels';
+    var featuresstyle = {
+        'font-size': '10px',
+        'font-style': 'normal',
+        'font-family': 'arial',
+        'opacity':'0.0'
     };
     var selectorstyle = [{ 'selection': featuresselector, 'style': featuresstyle }]
     this.set_svggcss(selectorstyle);

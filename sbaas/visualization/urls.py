@@ -1,4 +1,4 @@
-from version import __version__
+from .version import __version__
 import json
 from data import sbaas_settings as settings
 
@@ -23,7 +23,7 @@ class urls():
         self._links = json.load(open(settings.visualization_resources+'/urls_links.json'));
 
         # external dependencies
-        self.names = self._visualization_css.keys() + self._visualization_js.keys() + self._visualization_data_dir.keys() + self._resources.keys() + self._dependencies.keys() + self._links.keys()
+        self.names = list(self._visualization_css.keys()) + list(self._visualization_js.keys()) + list(self._visualization_data_dir.keys()) + list(self._resources.keys()) + list(self._dependencies.keys()) + list(self._links.keys())
 
     def get_url(self, name, source='web', local_host=None, protocol=None):
         """Get a url.

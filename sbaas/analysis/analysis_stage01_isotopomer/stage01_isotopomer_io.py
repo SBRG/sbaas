@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from stage01_isotopomer_query import stage01_isotopomer_query
+from .stage01_isotopomer_query import stage01_isotopomer_query
 
 class stage01_isotopomer_io(base_analysis):
     def __init__(self,session_I=None):
@@ -14,7 +14,7 @@ class stage01_isotopomer_io(base_analysis):
         # get time points
         time_points = self.stage01_isotopomer_query.get_timePoint_experimentID_dataStage01Averages(experiment_id_I);
         for tp in time_points:
-            print 'Reporting average precursor and product spectrum from isotopomer normalized for time-point ' + str(tp);
+            print('Reporting average precursor and product spectrum from isotopomer normalized for time-point ' + str(tp));
             if sample_name_abbreviations_I:
                 sample_abbreviations = sample_name_abbreviations_I;
                 # query sample types from sample name abbreviations and time-point from _dataStage01Averages
@@ -29,7 +29,7 @@ class stage01_isotopomer_io(base_analysis):
                     sample_abbreviations.extend(sample_abbreviations_tmp);
                     sample_types_lst.extend([st for i in range(len(sample_abbreviations_tmp))]);
             for sna_cnt,sna in enumerate(sample_abbreviations):
-                print 'Reporting average precursor and product spectrum from isotopomer normalized for sample name abbreviation ' + sna;
+                print('Reporting average precursor and product spectrum from isotopomer normalized for sample name abbreviation ' + sna);
                 # get the scan_types
                 if scan_types_I:
                     scan_types = [];
@@ -40,7 +40,7 @@ class stage01_isotopomer_io(base_analysis):
                     scan_types = [];
                     scan_types = self.stage01_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01Averages(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
                 for scan_type in scan_types:
-                    print 'Reporting average precursor and product spectrum for scan type ' + scan_type
+                    print('Reporting average precursor and product spectrum for scan type ' + scan_type)
                     # met_ids
                     if not met_ids_I:
                         met_ids = [];
@@ -50,7 +50,7 @@ class stage01_isotopomer_io(base_analysis):
                         met_ids = met_ids_I;
                     if not(met_ids): continue #no component information was found
                     for met in met_ids:
-                        print 'Reporting average precursor and product spectrum for metabolite ' + met;
+                        print('Reporting average precursor and product spectrum for metabolite ' + met);
                         data_tmp = [];
                         data_tmp = self.stage01_isotopomer_query.get_dataPrecursorFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01Averages(\
                                 experiment_id_I,sna,tp,sample_types_lst[sna_cnt],scan_type,met);
@@ -80,7 +80,7 @@ class stage01_isotopomer_io(base_analysis):
         # get time points
         time_points = self.stage01_isotopomer_query.get_timePoint_experimentID_dataStage01AveragesNormSum(experiment_id_I);
         for tp in time_points:
-            print 'Reporting average precursor and product spectrum from isotopomer normalized for time-point ' + str(tp);
+            print('Reporting average precursor and product spectrum from isotopomer normalized for time-point ' + str(tp));
             if sample_name_abbreviations_I:
                 sample_abbreviations = sample_name_abbreviations_I;
                 # query sample types from sample name abbreviations and time-point from data_stage01_isotopomer_normalized
@@ -95,7 +95,7 @@ class stage01_isotopomer_io(base_analysis):
                     sample_abbreviations.extend(sample_abbreviations_tmp);
                     sample_types_lst.extend([st for i in range(len(sample_abbreviations_tmp))]);
             for sna_cnt,sna in enumerate(sample_abbreviations):
-                print 'Reporting average precursor and product spectrum from isotopomer normalized for sample name abbreviation ' + sna;
+                print('Reporting average precursor and product spectrum from isotopomer normalized for sample name abbreviation ' + sna);
                 # get the scan_types
                 if scan_types_I:
                     scan_types = [];
@@ -106,7 +106,7 @@ class stage01_isotopomer_io(base_analysis):
                     scan_types = [];
                     scan_types = self.stage01_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01AveragesNormSum(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
                 for scan_type in scan_types:
-                    print 'Reporting average precursor and product spectrum for scan type ' + scan_type
+                    print('Reporting average precursor and product spectrum for scan type ' + scan_type)
                     # met_ids
                     if not met_ids_I:
                         met_ids = [];
@@ -116,7 +116,7 @@ class stage01_isotopomer_io(base_analysis):
                         met_ids = met_ids_I;
                     if not(met_ids): continue #no component information was found
                     for met in met_ids:
-                        print 'Reporting average precursor and product spectrum for metabolite ' + met;
+                        print('Reporting average precursor and product spectrum for metabolite ' + met);
                         data_tmp = [];
                         data_tmp = self.stage01_isotopomer_query.get_dataPrecursorFragment_experimentIDAndTimePointSampleAbbreviationAndSampleTypeAndScanTypeAndMetID_dataStage01AveragesNormSum(\
                                 experiment_id_I,sna,tp,sample_types_lst[sna_cnt],scan_type,met);
@@ -334,8 +334,8 @@ class stage01_isotopomer_io(base_analysis):
                             'use_calculated_concentration':d['Use_Calculated_Concentration']},
                             synchronize_session=False);
                     if data_update == 0:
-                        print 'row not found.'
-                        print d;
+                        print('row not found.')
+                        print(d);
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
@@ -354,7 +354,7 @@ class stage01_isotopomer_io(base_analysis):
                               mass_units_I,intensity_units_I, scan_type_I);
             data.clear_data();
         except IOError as e:
-            print e;
+            print(e);
 
     def add_peakData(self, data_I, experiment_id, samplename, precursor_formula, met_id,
                           mass_units_I,intensity_units_I, scan_type_I):
@@ -500,8 +500,8 @@ class stage01_isotopomer_io(base_analysis):
                         'comment_':d['comment_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
@@ -550,8 +550,8 @@ class stage01_isotopomer_io(base_analysis):
                         'comment_':d['comment_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
@@ -584,8 +584,8 @@ class stage01_isotopomer_io(base_analysis):
                         'comment_':d['comment_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
@@ -652,8 +652,8 @@ class stage01_isotopomer_io(base_analysis):
                         'comment_':d['comment_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
@@ -685,8 +685,8 @@ class stage01_isotopomer_io(base_analysis):
                         'comment_':d['comment_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();

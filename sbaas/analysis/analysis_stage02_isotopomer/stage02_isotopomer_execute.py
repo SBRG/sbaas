@@ -2,9 +2,9 @@
 
 from analysis.analysis_base import *
 from analysis.analysis_base.base_exportData import base_exportData
-from stage02_isotopomer_query import *
-from stage02_isotopomer_io import *
-from stage02_isotopomer_dependencies import *
+from .stage02_isotopomer_query import *
+from .stage02_isotopomer_io import *
+from .stage02_isotopomer_dependencies import *
 import re
 from math import sqrt
 from datetime import datetime as dt
@@ -302,7 +302,7 @@ class stage02_isotopomer_execute():
                 sample_abbreviations.extend(sample_abbreviations_tmp);
                 sample_types_lst.extend([st for i in range(len(sample_abbreviations_tmp))]);
         for sna_cnt,sna in enumerate(sample_abbreviations):
-            print 'Collecting experimental MS data for sample name abbreviation ' + sna;
+            print('Collecting experimental MS data for sample name abbreviation ' + sna);
             # get time points
             if time_points_I:
                 time_points = time_points_I;
@@ -310,7 +310,7 @@ class stage02_isotopomer_execute():
                 time_points = [];
                 time_points = self.stage02_isotopomer_query.get_timePoint_experimentIDAndSampleNameAbbreviation_dataStage01AveragesNormSum(experiment_id_I,sna);
             for tp in time_points:
-                print 'Collecting experimental MS data for time-point ' + str(tp);
+                print('Collecting experimental MS data for time-point ' + str(tp));
                 # get the scan_types
                 if scan_types_I:
                     scan_types = [];
@@ -321,7 +321,7 @@ class stage02_isotopomer_execute():
                     scan_types = [];
                     scan_types = self.stage02_isotopomer_query.get_scanTypes_experimentIDAndTimePointAndSampleAbbreviationsAndSampleType_dataStage01AveragesNormSum(experiment_id_I,tp,sna,sample_types_lst[sna_cnt]);
                 for scan_type in scan_types:
-                    print 'Collecting experimental MS data for scan type ' + scan_type
+                    print('Collecting experimental MS data for scan type ' + scan_type)
                     # met_ids
                     if not met_ids_I:
                         met_ids = [];
@@ -331,9 +331,9 @@ class stage02_isotopomer_execute():
                         met_ids = met_ids_I;
                     if not(met_ids): continue #no component information was found
                     for met in met_ids:
-                        print 'Collecting experimental MS data for metabolite ' + met;
+                        print('Collecting experimental MS data for metabolite ' + met);
                         # format the metabolite
-                        if met in met_id_conv_dict.keys():
+                        if met in list(met_id_conv_dict.keys()):
                             met_formatted = met_id_conv_dict[met];
                         else: met_formatted = met;
                         met_formatted = re.sub('-','_DASH_',met_formatted)
@@ -436,9 +436,9 @@ class stage02_isotopomer_execute():
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_isotopomer_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage02IstopomerSimulation(experiment_id_I,model_id);
             for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                print 'Adding experimental fluxes for sample name abbreviation ' + sna;
+                print('Adding experimental fluxes for sample name abbreviation ' + sna);
                 if flux_dict:
-                    for k,v in flux_dict[model_id][sna].iteritems():
+                    for k,v in flux_dict[model_id][sna].items():
                         # record the data
                         data_tmp = {'experiment_id':experiment_id_I,
                                 'model_id':model_id,
@@ -525,7 +525,7 @@ class stage02_isotopomer_execute():
             sample_name_abbreviations = [];
             sample_name_abbreviations = self.stage02_isotopomer_query.get_sampleNameAbbreviations_experimentID_dataStage02IsotopomerSimulation(experiment_id_I);
         for sna in sample_name_abbreviations:
-            print 'Collecting experimental fluxes for sample name abbreviation ' + sna;
+            print('Collecting experimental fluxes for sample name abbreviation ' + sna);
             query_sna = sna;
             if snaIsotopomer2snaPhysiology_I: query_sna = snaIsotopomer2snaPhysiology_I[sna];
             # get met_ids
@@ -536,7 +536,7 @@ class stage02_isotopomer_execute():
                 met_ids = met_ids_I;
             if not(met_ids): continue #no component information was found
             for met in met_ids:
-                print 'Collecting experimental fluxes for metabolite ' + met;
+                print('Collecting experimental fluxes for metabolite ' + met);
                 # get rateData
                 slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = None,None,None,None,None,None,None;
                 slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = self.stage02_isotopomer_query.get_rateData_experimentIDAndSampleNameAbbreviationAndMetID_dataStage01PhysiologyRatesAverages(experiment_id_I,query_sna,met);
@@ -593,15 +593,15 @@ class stage02_isotopomer_execute():
 
         # extract model/mapping info
         if len(simulation_info['model_id'])>1 or len(simulation_info['mapping_id'])>1:
-            print 'multiple model and mapping ids found for the simulation!';
-            print 'only the first model/mapping id will be used';
+            print('multiple model and mapping ids found for the simulation!');
+            print('only the first model/mapping id will be used');
         # determine if the simulation is a parallel labeling experiment, non-stationary, or both
         multiple_experiment_ids = False;
         multiple_snas = False;
         multiple_time_points = False;
         if len(simulation_info['experiment_id'])>1 and len(simulation_info['sample_name_abbreviation'])>1:
-            print 'multiple experiment_ids and sample_name_abbreviations found for the simulation!'
-            print 'only 1 experiment_ids and with multiple sample_name_abbreviations or 1 sample_name_abbreviation with multiple experiments can be specified'
+            print('multiple experiment_ids and sample_name_abbreviations found for the simulation!')
+            print('only 1 experiment_ids and with multiple sample_name_abbreviations or 1 sample_name_abbreviation with multiple experiments can be specified')
         elif len(simulation_info['experiment_id'])>1:
             multiple_experiment_ids = True;
         elif len(simulation_info['sample_name_abbreviation'])>1:
@@ -668,7 +668,7 @@ class stage02_isotopomer_execute():
                     min_flux = max_flux_tmp
             # calculate the net reaction flux average, stdev, lb and ub
             unique_rxn_ids = []; #add only unique rxn_ids
-            for k,v in rxns_pairs.iteritems():
+            for k,v in rxns_pairs.items():
                 flux_average_1 = 0.0
                 flux_average_2 = 0.0
                 flux_stdev_1 = 0.0
@@ -764,7 +764,7 @@ class stage02_isotopomer_execute():
         #   flux_ratios_I = dict, {ratio_id:[rxn_id_1,rxn_id_2]}
 
         data_O = [];
-        print 'calculating flux ratios...'
+        print('calculating flux ratios...')
         # simulation_dateAndTime
         if simulation_dateAndTimes_I:
             simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
@@ -772,17 +772,17 @@ class stage02_isotopomer_execute():
             simulation_dateAndTimes = [];
             simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
         for simulation_dateAndTime in simulation_dateAndTimes:
-            print 'calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime)
+            print('calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime))
             # get all flux_units
             flux_units = [];
             flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
             for flux_unit_cnt,flux_unit in enumerate(flux_units):
-                print 'calculating flux ratios for flux_units ' + str(flux_unit)
+                print('calculating flux ratios for flux_units ' + str(flux_unit))
                 # check for more than 1 flux_unit
                 if flux_unit_cnt>0:
                     break; #ratios do not depend on the flux_unit
-                for k,v in flux_ratios_I.iteritems():
-                    print 'calculating flux ratios for flux_ratio ' + str(k)
+                for k,v in flux_ratios_I.items():
+                    print('calculating flux ratios for flux_ratio ' + str(k))
                     # get the fluxes
                     flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,v[0]);
                     flux_average_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2 = self.stage02_isotopomer_query.get_flux_simulationIDAndSimulationDateAndTimeAndFluxUnitsAndRxnID_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime,flux_unit,v[1]);
@@ -824,12 +824,12 @@ class stage02_isotopomer_execute():
         #   flux_splits_I = dict, {split_id:[rxn_id_1,rxn_id_2]}
 
         if not flux_splits_I:
-            from stage02_isotopomer_dependencies import isotopomer_fluxSplits
+            from .stage02_isotopomer_dependencies import isotopomer_fluxSplits
             flux_splits = isotopomer_fluxSplits();
             flux_splits_I=flux_splits.isotopomer_splits;
 
         data_O = [];
-        print 'calculating flux splits...'
+        print('calculating flux splits...')
         # simulation_dateAndTime
         if simulation_dateAndTimes_I:
             simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
@@ -837,7 +837,7 @@ class stage02_isotopomer_execute():
             simulation_dateAndTimes = [];
             simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
         for simulation_dateAndTime in simulation_dateAndTimes:
-            print 'calculating flux splits for simulation_dateAndTime ' + str(simulation_dateAndTime)
+            print('calculating flux splits for simulation_dateAndTime ' + str(simulation_dateAndTime))
             # get all flux_units
             flux_units = [];
             flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
@@ -845,9 +845,9 @@ class stage02_isotopomer_execute():
                 # check for more than 1 flux_unit
                 if flux_unit_cnt>0:
                     break; #splits do not depend on the flux_unit
-                print 'calculating flux splits for flux_unit ' + str(flux_unit)
-                for k,v in flux_splits_I.iteritems():
-                    print 'flux_split ' + str(k)
+                print('calculating flux splits for flux_unit ' + str(flux_unit))
+                for k,v in flux_splits_I.items():
+                    print('flux_split ' + str(k))
                     # get the fluxes
                     flux_average_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1=[],[],[],[],[]
                     for rxn_id in v:
@@ -894,7 +894,7 @@ class stage02_isotopomer_execute():
         2. average flux precision per resolved flux'''
 
         data_O = [];
-        print 'calculating fit statistics...'
+        print('calculating fit statistics...')
         # simulation_dateAndTime
         if simulation_dateAndTimes_I:
             simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
@@ -902,7 +902,7 @@ class stage02_isotopomer_execute():
             simulation_dateAndTimes = [];
             simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
         for simulation_dateAndTime in simulation_dateAndTimes:
-            print 'calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime)
+            print('calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime))
             # get all flux_units
             if flux_units_I:
                 flux_units = flux_units_I;
@@ -910,7 +910,7 @@ class stage02_isotopomer_execute():
                 flux_units = [];
                 flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
             for flux_unit_cnt,flux_unit in enumerate(flux_units):
-                print 'calculating fit statistics for flux_units ' + str(flux_unit)
+                print('calculating fit statistics for flux_units ' + str(flux_unit))
                 # get the net fluxes
                 flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=[],[],[],[],[];
                 flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=self.stage02_isotopomer_query.get_fluxes_simulationIDAndSimulationDateAndTimeAndFluxUnits_dataStage02IsotopomerfittedFluxes(simulation_id_I,simulation_dateAndTime,flux_unit);
@@ -954,7 +954,7 @@ class stage02_isotopomer_execute():
         2. average flux precision per resolved flux'''
 
         data_O = [];
-        print 'calculating fit statistics...'
+        print('calculating fit statistics...')
         # simulation_dateAndTime
         if simulation_dateAndTimes_I:
             simulation_dateAndTimes = [self.convert_string2datetime(x) for x in simulation_dateAndTimes_I];
@@ -962,7 +962,7 @@ class stage02_isotopomer_execute():
             simulation_dateAndTimes = [];
             simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxes(simulation_id_I);
         for simulation_dateAndTime in simulation_dateAndTimes:
-            print 'calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime)
+            print('calculating flux ratios for simulation_dataAndTime ' + str(simulation_dateAndTime))
             # get all flux_units
             if flux_units_I:
                 flux_units = flux_units_I;
@@ -970,7 +970,7 @@ class stage02_isotopomer_execute():
                 flux_units = [];
                 flux_units = self.stage02_isotopomer_query.get_fluxUnits_simulationIDAndSimulationDateAndTime_dataStage02IsotopomerfittedNetFluxes(simulation_id_I,simulation_dateAndTime)
             for flux_unit_cnt,flux_unit in enumerate(flux_units):
-                print 'calculating fit statistics for flux_units ' + str(flux_unit)
+                print('calculating fit statistics for flux_units ' + str(flux_unit))
                 # get the net fluxes
                 flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=[],[],[],[],[];
                 if rxn_ids_I:
@@ -1113,12 +1113,12 @@ class stage02_isotopomer_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
         # implement optimal KOs and flux constraints:
         for ko in ko_list:
             cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
             cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
-        for rxn,flux in flux_dict.iteritems():
+        for rxn,flux in flux_dict.items():
             cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
             cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
         for flux in measured_flux_list:
@@ -1130,7 +1130,7 @@ class stage02_isotopomer_execute():
         # test for a solution:
         cobra_model.optimize(solver='gurobi');
         if not cobra_model.solution.f:
-            print "model does not converge to a solution";
+            print("model does not converge to a solution");
         ##find minimal flux solution:
         #pfba = optimize_minimal_flux(cobra_model,True,solver='gurobi');
 
@@ -1157,13 +1157,13 @@ class stage02_isotopomer_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -1184,13 +1184,13 @@ class stage02_isotopomer_execute():
             elif '.xml' in model_file_name_I:
                 # Read in the sbml file and define the model conditions
                 cobra_model = create_cobra_model_from_sbml_file(model_file_name_I, print_time=True);
-            else: print 'file type not supported'
+            else: print('file type not supported')
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -1210,11 +1210,11 @@ class stage02_isotopomer_execute():
                     with open(filename,'wb') as file:
                         file.write(cobra_model);
                         file.close()
-                else: print 'file type not supported'
+                else: print('file type not supported')
                 # upload the model to the database
                 qio02.import_dataStage02Model_sbml(model_id_O, date_O, filename);
         else:
-            print 'need to specify either an existing model_id or model_file_name!'
+            print('need to specify either an existing model_id or model_file_name!')
         return
     def load_models(self,experiment_id_I,model_ids_I=[]):
         '''pre-load all models for the experiment_id'''
@@ -1242,7 +1242,7 @@ class stage02_isotopomer_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
             self.models[model_id]=cobra_model;
     def make_modelFromRxnsAndMetsTables(self,model_id_I=None,model_id_O=None,date_O=None,ko_list=[],flux_dict={},description=None):
         '''make/update the model using the modelReactions and modelMetabolites table'''
@@ -1262,7 +1262,7 @@ class stage02_isotopomer_execute():
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -1292,7 +1292,7 @@ class stage02_isotopomer_execute():
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -1312,7 +1312,7 @@ class stage02_isotopomer_execute():
                 qio02.update_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
 
         else:
-            print 'need to specify either an existing model_id!'
+            print('need to specify either an existing model_id!')
         return
     def test_model(self,cobra_model):
         '''simulate a cobra model'''
@@ -1323,10 +1323,10 @@ class stage02_isotopomer_execute():
         # test for a solution:
         cobra_model.optimize(solver='gurobi');
         if not cobra_model.solution.f:
-            print "model does not converge to a solution";
+            print("model does not converge to a solution");
             return False,
         else:
-            print 'solution = ' + str(cobra_model.solution.f)
+            print('solution = ' + str(cobra_model.solution.f))
             return True;
     def check_fluxRange(self,flux_I,flux_lb_I,flux_ub_I):
         '''Check the flux range'''
@@ -1369,7 +1369,7 @@ class stage02_isotopomer_execute():
         try:
             flux_stdev = (flux_ub_I - flux_lb_I)/4;
         except TypeError as te:
-            print te;
+            print(te);
         return flux_stdev;
     def calculate_netFlux(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1,
                           flux_2,flux_stdev_2,flux_lb_2,flux_ub_2,flux_units_2,
@@ -1387,7 +1387,7 @@ class stage02_isotopomer_execute():
         if observable_1 and observable_2:
             # note that both fluxes cannot be unbounded
             if flux_1 > upper_bound_I-upper_bound_I*tolerance_I and flux_2 > upper_bound_I-upper_bound_I*tolerance_I:
-                print 'both fluxes are unbounded'
+                print('both fluxes are unbounded')
                 flux_average = None;
                 flux_lb = lower_bound_I;
                 flux_ub = upper_bound_I;
@@ -1528,7 +1528,7 @@ class stage02_isotopomer_execute():
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -1564,7 +1564,7 @@ class stage02_isotopomer_execute():
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -1584,7 +1584,7 @@ class stage02_isotopomer_execute():
                 qio02.update_data_stage02_isotopomer_models(dataStage02IsotopomerModels_data);
 
         else:
-            print 'need to specify an existing model_id/mapping_id!'
+            print('need to specify an existing model_id/mapping_id!')
         return
     def convert_netRxn2IndividualRxns(self,net_rxn_I,flux_I,flux_stdev_I,flux_lb_I,flux_ub_I,flux_units_I):
         '''Convert a net rxn into individual rxns,
@@ -1599,7 +1599,7 @@ class stage02_isotopomer_execute():
         #   fluxes_O = list, floats
         #   fluxes_O_dict = dict, rxn_id:flux
 
-        from stage02_isotopomer_dependencies import isotopomer_netRxns
+        from .stage02_isotopomer_dependencies import isotopomer_netRxns
         netRxns = isotopomer_netRxns();
 
         rxns_O = [];
@@ -1609,7 +1609,7 @@ class stage02_isotopomer_execute():
         if not flux_I:
             #print 'reaction has no flux';
             return rxns_O,fluxes_O,fluxes_stdev_O,fluxes_lb_O,fluxes_ub_O,fluxes_units_O;
-        elif net_rxn_I in netRxns.isotopomer_rxns_net.keys():
+        elif net_rxn_I in list(netRxns.isotopomer_rxns_net.keys()):
             rxns_O = netRxns.isotopomer_rxns_net[net_rxn_I]['reactions'];
             stoichiometry = netRxns.isotopomer_rxns_net[net_rxn_I]['stoichiometry'];
             # change the direction of the fluxes according to the stoichiometry of the reactions
@@ -1643,7 +1643,7 @@ class stage02_isotopomer_execute():
             flux_lb_O = flux_lb_1/flux_norm
             flux_ub_O = flux_ub_1/flux_norm
         else:
-            print "reaction does not have a flux!"
+            print("reaction does not have a flux!")
             return flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O
 
         flux_units_O = rxn_id_norm + '_normalized'
@@ -1680,7 +1680,7 @@ class stage02_isotopomer_execute():
             ratio_stdev=self.correct_fluxStdev(ratio_lb,ratio_ub);
             ratio_units=flux_units_1+'/'+flux_units_2;
         else:
-            print 'invalid flux_1 or flux_2'
+            print('invalid flux_1 or flux_2')
 
         return ratio,ratio_stdev,ratio_lb,ratio_ub,ratio_units
     def calculate_fluxSplit(self,flux_1,flux_stdev_1,flux_lb_1,flux_ub_1,flux_units_1):
@@ -1831,7 +1831,7 @@ class stage02_isotopomer_execute():
             simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
             data_O[simulation_id] = {};
             if len(simulation_dateAndTimes) > 1:
-                print 'more than 1 simulation date and time found!'
+                print('more than 1 simulation date and time found!')
                 continue;
             else:
                 simulation_dataAndTime = simulation_dateAndTimes[0];
@@ -1844,7 +1844,7 @@ class stage02_isotopomer_execute():
             # get the flux information for each simulation
             for rxn_id in rxn_ids:
                 data_O[simulation_id][rxn_id] = {}
-                if exclude_I and exclude_I.has_key(rxn_id) and exclude_I[rxn_id] == simulation_id:
+                if exclude_I and rxn_id in exclude_I and exclude_I[rxn_id] == simulation_id:
                     data_O[simulation_id][rxn_id] = {};
                 else:
                     flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
@@ -1859,8 +1859,8 @@ class stage02_isotopomer_execute():
         # reorder the data for plotting
         if plot_by_rxn_id_I:
             rxn_ids_all = [];
-            for k1,v1 in data_O.iteritems():
-                for k in v1.keys():
+            for k1,v1 in data_O.items():
+                for k in list(v1.keys()):
                     rxn_ids_all.append(k);
             rxn_ids = list(set(rxn_ids_all));
             if individual_plots_I:
@@ -1922,7 +1922,7 @@ class stage02_isotopomer_execute():
             simulation_dateAndTimes = self.stage02_isotopomer_query.get_simulationDateAndTimes_simulationID_dataStage02IsotopomerfittedFluxSplits(simulation_id);
             data_O[simulation_id] = {};
             if len(simulation_dateAndTimes) > 1:
-                print 'more than 1 simulation date and time found!'
+                print('more than 1 simulation date and time found!')
                 continue;
             else:
                 simulation_dataAndTime = simulation_dateAndTimes[0];
@@ -1935,7 +1935,7 @@ class stage02_isotopomer_execute():
             # get the split information for each simulation
             for split_id in split_ids:
                 data_O[simulation_id][split_id] = {}
-                if exclude_I and exclude_I.has_key(split_id) and exclude_I[split_id] == simulation_id:
+                if exclude_I and split_id in exclude_I and exclude_I[split_id] == simulation_id:
                     data_O[simulation_id][split_id] = {};
                 else:
                     split_rxn_id_O,split_O,split_stdev_O,split_lb_O,split_ub_O,split_units_O=[],[],[],[],[],[];
@@ -1953,22 +1953,22 @@ class stage02_isotopomer_execute():
         # reorder the data for plotting
         if plot_by_split_id_I:
             split_ids_all = [];
-            for k1,v1 in data_O.iteritems():
-                for k in v1.keys():
+            for k1,v1 in data_O.items():
+                for k in list(v1.keys()):
                     split_ids_all.append(k);
             split_ids = list(set(split_ids_all));
             split_rxn_ids_all = {};
             for split_id in split_ids:
                 split_rxn_ids_all[split_id]=[];
-            for k1,v1 in data_O.iteritems():
-                for k2,v2 in v1.iteritems():
-                    for k in v2.keys():
+            for k1,v1 in data_O.items():
+                for k2,v2 in v1.items():
+                    for k in list(v2.keys()):
                         split_rxn_ids_all[k2].append(k)
             split_rxn_ids = {};
-            for k1,v1 in split_rxn_ids_all.iteritems():
+            for k1,v1 in split_rxn_ids_all.items():
                 split_rxn_ids[k1] = list(set(v1));                
             if individual_plots_I:
-                for split_id,rxn_ids in split_rxn_ids.iteritems():
+                for split_id,rxn_ids in split_rxn_ids.items():
                     title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I = '',[],'','',[],[],[];
                     for simulation_id in simulation_ids_I:
                         for rxn_id in rxn_ids:
@@ -1987,7 +1987,7 @@ class stage02_isotopomer_execute():
                     plot.boxAndWhiskersPlot(title_I,xticklabels_I,ylabel_I,xlabel_I,data_I=data_I,mean_I=mean_I,ci_I=ci_I)
             else:
                 title_I,xticklabels_I,ylabel_I,xlabel_I,data_I,mean_I,ci_I = '',[],'','',[],[],[];
-                for split_id,rxn_ids in split_rxn_ids.iteritems():
+                for split_id,rxn_ids in split_rxn_ids.items():
                     for simulation_id in simulation_ids_I:
                         for rxn_id in rxn_ids:
                             if data_O[simulation_id][split_id] and data_O[simulation_id][split_id][rxn_id]:
@@ -2030,7 +2030,7 @@ class stage02_isotopomer_execute():
             sample_abbreviations = self.stage02_isotopomer_query.get_sampleNameAbbreviations_experimentID_dataStage02IsotopomerSimulation(experiment_id_I);
             #sample_abbreviations = self.stage02_isotopomer_query.get_sampleNameAbbreviations_experimentID_dataStage02IsotopomerMeasuredFragments(experiment_id_I);
         for sna_cnt,sna in enumerate(sample_abbreviations):
-            print 'Collecting and writing experimental and model data for sample name abbreviation ' + sna;
+            print('Collecting and writing experimental and model data for sample name abbreviation ' + sna);
             # get the model_ids
             if model_id_I:
                 model_ids = model_id_I;
@@ -2045,7 +2045,7 @@ class stage02_isotopomer_execute():
                     mapping_ids = [];
                     mapping_ids = self.stage02_isotopomer_query.get_mappingID_experimentIDAndSampleNameAbbreviationsAndModelID_dataStage02IsotopomerSimulation(experiment_id_I,sna,model_id);
                 for mapping_id in mapping_ids:
-                    print 'Collecting and exporting tracer information for sample name abbreviation ' + sna;
+                    print('Collecting and exporting tracer information for sample name abbreviation ' + sna);
                     ## get substrate labeling (i.e. tracer) information
                     if parallel_I:
                         tracers = [];
@@ -2071,7 +2071,7 @@ class stage02_isotopomer_execute():
                         atomMapping = self.stage02_isotopomer_query.get_row_mappingIDAndRxnID_dataStage02IsotopomerAtomMappingReactions(mapping_id,row['rxn_id']);
                         #generate reaction equations
                         rxn_equation = '';
-                        print row['rxn_id']
+                        print(row['rxn_id'])
                         #if row['rxn_id'] == 'EX_glc_LPAREN_e_RPAREN_':
                         #    print 'check'
                         if atomMapping:
@@ -2121,7 +2121,7 @@ class stage02_isotopomer_execute():
                             if row['rxn_id'] == ko:
                                 modelReaction_data[i]['lower_bound'] = 0.0;
                                 modelReaction_data[i]['upper_bound'] = 0.0;
-                        for rxn,flux in flux_dict_I.iteritems():  # implement flux constraints:
+                        for rxn,flux in flux_dict_I.items():  # implement flux constraints:
                             if row['rxn_id'] == rxn:
                                 modelReaction_data[i]['lower_bound'] = flux['lb'];
                                 modelReaction_data[i]['upper_bound'] = flux['ub'];
@@ -3063,7 +3063,7 @@ class inca_api(stage02_isotopomer_execute):
                     atomMapping = self.stage02_isotopomer_query.get_row_mappingIDAndRxnID_dataStage02IsotopomerAtomMappingReactions(mapping_id,row['rxn_id']);
                     #generate reaction equations
                     rxn_equation = '';
-                    print row['rxn_id']
+                    print(row['rxn_id'])
                     #if row['rxn_id'] == 'EX_glc_LPAREN_e_RPAREN_':
                     #    print 'check'
                     if atomMapping:
@@ -3113,7 +3113,7 @@ class inca_api(stage02_isotopomer_execute):
                         if row['rxn_id'] == ko:
                             modelReaction_data[i]['lower_bound'] = 0.0;
                             modelReaction_data[i]['upper_bound'] = 0.0;
-                    for rxn,flux in flux_dict_I.iteritems():  # implement flux constraints:
+                    for rxn,flux in flux_dict_I.items():  # implement flux constraints:
                         if row['rxn_id'] == rxn:
                             modelReaction_data[i]['lower_bound'] = flux['lb'];
                             modelReaction_data[i]['upper_bound'] = flux['ub'];
@@ -3191,7 +3191,7 @@ class inca_api(stage02_isotopomer_execute):
                     atomMapping = self.stage02_isotopomer_query.get_row_mappingIDAndRxnID_dataStage02IsotopomerAtomMappingReactions(mapping_id,row['rxn_id']);
                     #generate reaction equations
                     rxn_equation = '';
-                    print row['rxn_id']
+                    print(row['rxn_id'])
                     #if row['rxn_id'] == 'EX_glc_LPAREN_e_RPAREN_':
                     #    print 'check'
                     if atomMapping:
@@ -3241,7 +3241,7 @@ class inca_api(stage02_isotopomer_execute):
                         if row['rxn_id'] == ko:
                             modelReaction_data[i]['lower_bound'] = 0.0;
                             modelReaction_data[i]['upper_bound'] = 0.0;
-                    for rxn,flux in flux_dict_I.iteritems():  # implement flux constraints:
+                    for rxn,flux in flux_dict_I.items():  # implement flux constraints:
                         if row['rxn_id'] == rxn:
                             modelReaction_data[i]['lower_bound'] = flux['lb'];
                             modelReaction_data[i]['upper_bound'] = flux['ub'];
@@ -3289,7 +3289,7 @@ class inca_api(stage02_isotopomer_execute):
         sample_name_abbreviations = simulation_info['sample_name_abbreviation']
         for experiment_id in experiment_ids:
             for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                print 'Collecting and writing experimental and model data for sample name abbreviation ' + sna;
+                print('Collecting and writing experimental and model data for sample name abbreviation ' + sna);
                 # get the tracers
                 tracers = [];
                 tracers = self.stage02_isotopomer_query.get_rows_experimentIDAndSampleNameAbbreviation_dataStage02IsotopomerTracers(experiment_id,sna);
@@ -3317,7 +3317,7 @@ class inca_api(stage02_isotopomer_execute):
                     atomMapping = self.stage02_isotopomer_query.get_row_mappingIDAndRxnID_dataStage02IsotopomerAtomMappingReactions(mapping_id,row['rxn_id']);
                     #generate reaction equations
                     rxn_equation = '';
-                    print row['rxn_id']
+                    print(row['rxn_id'])
                     #if row['rxn_id'] == 'EX_glc_LPAREN_e_RPAREN_':
                     #    print 'check'
                     if atomMapping:
@@ -3367,12 +3367,12 @@ class inca_api(stage02_isotopomer_execute):
                         if row['rxn_id'] == ko:
                             modelReaction_data[i]['lower_bound'] = 0.0;
                             modelReaction_data[i]['upper_bound'] = 0.0;
-                    for rxn,flux in flux_dict_I.iteritems():  # implement flux constraints:
+                    for rxn,flux in flux_dict_I.items():  # implement flux constraints:
                         if row['rxn_id'] == rxn:
                             modelReaction_data[i]['lower_bound'] = flux['lb'];
                             modelReaction_data[i]['upper_bound'] = flux['ub'];
                     # add in a flux_val field to supply an initial starting guess for the MFA solver
-                    if cobra_model.solution.f and cobra_model.solution.x_dict.has_key(row['rxn_id']):
+                    if cobra_model.solution.f and row['rxn_id'] in cobra_model.solution.x_dict:
                         modelReaction_data[i]['flux_val'] = cobra_model.solution.x_dict[row['rxn_id']];
                     else:
                         modelReaction_data[i]['flux_val'] = 0;
@@ -3498,7 +3498,7 @@ class inca_api(stage02_isotopomer_execute):
                             rxn_equations_INCA += '+ ';
                             reactants_stoichiometry -= abs(reactants_stoichiometry_tracked_I[reactant_tracked_cnt]) # subtract out the stoichiometry of the tracked reactant from the reactant and continue
                     elif not reactant_tracked in reactants_ids_I:
-                        print 'unaccounted for reactant_tracked: ' + reactant_tracked;
+                        print('unaccounted for reactant_tracked: ' + reactant_tracked);
                         if reactants_stoichiometry_tracked_I[reactant_tracked_cnt]==-1e-13 and not reactant_tracked in pseudo_mets:
                             #add in the pseudo-metabolite used to complete the atom mapping
                             rxn_equations_INCA += '0.0000000000001' + '*' + reactant_tracked + ' ';
@@ -3578,7 +3578,7 @@ class inca_api(stage02_isotopomer_execute):
                             rxn_equations_INCA += '+ ';
                             products_stoichiometry -= abs(products_stoichiometry_tracked_I[product_tracked_cnt])
                     elif not product_tracked in products_ids_I:
-                        print 'unaccounted for product_tracked: ' + product_tracked;
+                        print('unaccounted for product_tracked: ' + product_tracked);
                         if '.balance' in product_tracked and not product_tracked in pseudo_mets:
                             #add in the pseudo-metabolite used to complete the atom mapping
                             rxn_equations_INCA += str(products_stoichiometry_tracked_I[product_tracked_cnt]) + '*' + product_tracked + ' ';

@@ -160,7 +160,7 @@ class stage03_quantification_query(base_analysis):
                     data_stage03_quantification_models.model_id.asc()).all();
             rows_O = {};
             if len(data)>1:
-                print 'multiple rows retrieved!';
+                print('multiple rows retrieved!');
             if data: 
                 for d in data:
                     row_tmp = {'model_id':d.model_id,
@@ -324,7 +324,7 @@ class stage03_quantification_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.KEGG_id):
+                    if d.KEGG_id in rows_O:
                         rows_O[d.KEGG_id].append({
                             'reference_id':d.reference_id,
                             'priority':d.priority,
@@ -381,8 +381,8 @@ class stage03_quantification_query(base_analysis):
             sra_data_O = {};
             if data: 
                 for d in data:
-                    if fva_data_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_id found!';
+                    if d.rxn_id in fva_data_O:
+                        print('duplicate rxn_id found!');
                     else:
                         fva_data_O[d.rxn_id]={
                             'minimum':d.fva_minimum,
@@ -458,8 +458,8 @@ class stage03_quantification_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.met_id):
-                        print 'duplicate met_ids found!';
+                    if d.met_id in rows_O:
+                        print('duplicate met_ids found!');
                     else:
                         rows_O[d.met_id]={'concentration':d.concentration,
                             'concentration_var':d.concentration_var,
@@ -557,8 +557,8 @@ class stage03_quantification_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.met_id):
-                        print 'duplicate met_ids found!';
+                    if d.met_id in rows_O:
+                        print('duplicate met_ids found!');
                     else:
                         rows_O[d.met_id]={'dG_f':d.dG_f,
                             'dG_f_var':d.dG_f_var,
@@ -593,8 +593,8 @@ class stage03_quantification_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_id found!';
+                    if d.rxn_id in rows_O:
+                        print('duplicate rxn_id found!');
                     else:
                         rows_O[d.rxn_id]={
                         'Keq_lb':d.Keq_lb,
@@ -707,8 +707,8 @@ class stage03_quantification_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_id found!';
+                    if d.rxn_id in rows_O:
+                        print('duplicate rxn_id found!');
                     else:
                         rows_O[d.rxn_id]={
                         'Keq_lb':d.Keq_lb,
@@ -940,8 +940,8 @@ class stage03_quantification_query(base_analysis):
             feasible_O = {};
             if data: 
                 for d in data:
-                    if measured_concentration_coverage_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_id found!';
+                    if d.rxn_id in measured_concentration_coverage_O:
+                        print('duplicate rxn_id found!');
                     else:
                         measured_concentration_coverage_O[d.rxn_id]={
                         'measured_concentration_coverage':d.measured_concentration_coverage
@@ -991,8 +991,8 @@ class stage03_quantification_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.pathway_id):
-                        print 'duplicate pathway_ids found!';
+                    if d.pathway_id in rows_O:
+                        print('duplicate pathway_ids found!');
                     else:
                         rows_O[d.pathway_id]={'reactions':d.reactions,
                             'stoichiometry':d.stoichiometry};
@@ -1109,8 +1109,8 @@ class stage03_quantification_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_ids found!';
+                    if d.rxn_id in rows_O:
+                        print('duplicate rxn_ids found!');
                     else:
                         rows_O[d.rxn_id]={'sampling_ave':d.sampling_ave,
                 'sampling_var':d.sampling_var,

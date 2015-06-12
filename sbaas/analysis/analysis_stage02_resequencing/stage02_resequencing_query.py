@@ -20,7 +20,7 @@ class stage02_resequencing_query(stage01_resequencing_query,stage01_physiology_q
                     sample_description.sample_name_abbreviation).all();
             sample_name_abbreviation_O = None;
             if len(data)>2:
-                print 'more than 1 sample name abbreviation found!'
+                print('more than 1 sample name abbreviation found!')
             if data: 
                 sample_name_abbreviation_O=data[0].sample_name_abbreviation;
             return sample_name_abbreviation_O;

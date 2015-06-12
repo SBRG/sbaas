@@ -1,5 +1,5 @@
 import itertools, os, csv
-import StringIO
+import io
 from subprocess import Popen, PIPE
     
 cxcalc_bin = 'C:/Program Files (x86)/ChemAxon/MarvinBeans/bin/cxcalc'

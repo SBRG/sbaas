@@ -262,5 +262,5 @@ def query_metabolite_data():
     return
             
 if __name__ == "__main__":
-    print 'word'
+    print('word')
     session = Session()    

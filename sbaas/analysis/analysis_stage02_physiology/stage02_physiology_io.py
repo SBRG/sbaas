@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from stage02_physiology_query import stage02_physiology_query
+from .stage02_physiology_query import stage02_physiology_query
 from resources.molmass import Formula
 from resources.sampling import cobra_sampling_n
 import scipy.stats
@@ -85,7 +85,7 @@ class stage02_physiology_io(base_analysis):
             metabolite_data_tmp['met_name'] = met.name;
             metabolite_data_tmp['met_id'] = met.id;
             formula = {};
-            for k,v in met.formula.elements.iteritems():
+            for k,v in met.formula.elements.items():
                 formula[k] = {0:v};
             tmp = Formula()
             tmp._elements=formula
@@ -451,7 +451,7 @@ class stage02_physiology_io(base_analysis):
             metabolite_data_tmp['met_name'] = met.name;
             metabolite_data_tmp['met_id'] = met.id;
             formula = {};
-            for k,v in met.formula.elements.iteritems():
+            for k,v in met.formula.elements.items():
                 formula[k] = {0:v};
             tmp = Formula()
             tmp._elements=formula
@@ -551,7 +551,7 @@ class stage02_physiology_io(base_analysis):
         for model_id in model_ids:
             filter_mi_str = 'model_id/'+ model_id;
             filter_O['model_id'].append(filter_mi_str);
-            print 'exporting sampling analysis for model_id ' + model_id;
+            print('exporting sampling analysis for model_id ' + model_id);
             # get the cobra model
             if model_ids_dict_I:
                 cobra_model = model_ids_dict_I[model_id];
@@ -572,7 +572,7 @@ class stage02_physiology_io(base_analysis):
             for sna in sample_name_abbreviations:
                 filter_sna_str = 'model_id/'+ model_id +'/sample/'+sna;
                 filter_O['sample'].append(filter_sna_str);
-                print 'exporting sampling analysis for sample_name_abbreviation ' + sna;
+                print('exporting sampling analysis for sample_name_abbreviation ' + sna);
                 # get sampled data 
                 sampling_ave = {}
                 sampling_ave = self.stage02_physiology_query.get_rowsEscher_experimentIDAndModelIDAndSampleNameAbbreviations_dataStage02PhysiologySampledData(experiment_id_I,model_id,sna)
@@ -584,7 +584,7 @@ class stage02_physiology_io(base_analysis):
                     'Nucleotide Metabolism']:
                     filter_map_str = 'model_id/'+ model_id +'/sample/'+sna+'/map_id/'+map_id;
                     filter_O['map_id'].append(filter_map_str);
-                    print 'exporting sampling analysis for map_id ' + map_id;
+                    print('exporting sampling analysis for map_id ' + map_id);
                     # generate the map html using escher
                     map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                     map = Builder(map_json=json.dumps(map_json), reaction_data=sampling_ave);
@@ -618,7 +618,7 @@ class stage02_physiology_io(base_analysis):
         for model_id in model_ids:
             filter_mi_str = 'model_id/'+ model_id;
             filter_O['model_id'].append(filter_mi_str);
-            print 'exporting sampling analysis for model_id ' + model_id;
+            print('exporting sampling analysis for model_id ' + model_id);
             # get the cobra model
             if model_ids_dict_I:
                 cobra_model = model_ids_dict_I[model_id];
@@ -643,7 +643,7 @@ class stage02_physiology_io(base_analysis):
             for sna in sample_name_abbreviations:
                 filter_sna_str = 'model_id/'+ model_id +'/sample/'+sample_name_abbreviation_base+'_vs_'+sna;
                 filter_O['sample'].append(filter_sna_str);
-                print 'exporting sampling analysis for sample_name_abbreviation ' + sample_name_abbreviation_base+'_vs_'+sna;
+                print('exporting sampling analysis for sample_name_abbreviation ' + sample_name_abbreviation_base+'_vs_'+sna);
                 # get sampleddata
                 sampling_ave = {}
                 sampling_ave = self.stage02_physiology_query.get_rowsEscher_experimentIDAndModelIDAndSampleNameAbbreviations_dataStage02PhysiologySampledData(experiment_id_I,model_id,sna)
@@ -657,7 +657,7 @@ class stage02_physiology_io(base_analysis):
                     'Nucleotide Metabolism']:
                     filter_map_str = 'model_id/'+ model_id +'/sample/'+sample_name_abbreviation_base+'_vs_'+sna+'/map_id/'+map_id;
                     filter_O['map_id'].append(filter_map_str);
-                    print 'exporting sampling analysis for map_id ' + map_id;
+                    print('exporting sampling analysis for map_id ' + map_id);
                     # generate the map html using escher
                     map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                     map = Builder(map_json=json.dumps(map_json), reaction_data=sampling_diff);
@@ -689,7 +689,7 @@ class stage02_physiology_io(base_analysis):
             model_ids = [];
             model_ids = self.stage02_physiology_query.get_modelID_experimentID_datastage02physiologyExperiment(experiment_id_I);
         for model_id in model_ids:
-            print 'exporting sampling analysis for model_id ' + model_id;
+            print('exporting sampling analysis for model_id ' + model_id);
             # get the cobra model
             if model_ids_dict_I:
                 cobra_model = model_ids_dict_I[model_id];
@@ -708,7 +708,7 @@ class stage02_physiology_io(base_analysis):
                 time_points = [];
                 time_points = self.stage02_physiology_query.get_timePoints_experimentIDAndModelID_datastage02physiologyExperiment(experiment_id_I,model_id);
             for tp in time_points:
-                print 'exporting sampling analysis for time_point ' + tp;
+                print('exporting sampling analysis for time_point ' + tp);
                 # get sample_name_abbreviations
                 if sample_name_abbreviations_I:
                     sample_name_abbreviations = sample_name_abbreviations_I;
@@ -723,7 +723,7 @@ class stage02_physiology_io(base_analysis):
                 tcc_base = [];
                 tcc_base = self.stage02_physiology_query.get_rows_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_datastage02physiologyTCC(experiment_id_I,model_id,tp,sample_name_abbreviation_base,measured_concentration_coverage_criteria_I,measured_dG_f_coverage_criteria_I);
                 for sna in sample_name_abbreviations:
-                    print 'exporting sampling analysis for sample_name_abbreviation ' + sample_name_abbreviation_base+'_vs_'+sna;
+                    print('exporting sampling analysis for sample_name_abbreviation ' + sample_name_abbreviation_base+'_vs_'+sna);
                     for tcc_b in tcc_base:
                         # get tcc
                         tcc = {};
@@ -775,7 +775,7 @@ class stage02_physiology_io(base_analysis):
                                 filename=[settings.visualization_data,'/physiology/scatterplot/','volcanoplot/']):
         '''generate a volcano plot from pairwiseTest table'''
 
-        print 'exporting volcanoPlot...'
+        print('exporting volcanoPlot...')
         filter_O={}
         filter_O['sample'] = [];
         # get all simulations for a given experiment
@@ -816,7 +816,7 @@ class stage02_physiology_io(base_analysis):
                     if data_1:
                         filter_sna_str = 'sample/'+sna_1 + '_' + sna_2;
                         filter_O['sample'].append(filter_sna_str);
-                        print 'exporting a volcano plot for sample_name_abbreviation ' + sna_1 + ' vs. ' + sna_2;
+                        print('exporting a volcano plot for sample_name_abbreviation ' + sna_1 + ' vs. ' + sna_2);
                         # filter out specific reactions
                         if rxn_ids_I:
                             data_1 = [x for x in data_1 if x['rxn_id'] in rxn_ids_I];
@@ -872,7 +872,7 @@ class stage02_physiology_io(base_analysis):
                             filename=[settings.visualization_data,'/physiology/histogram/','sampling/']):
         '''Export data for viewing using d3'''
         
-        print 'Exporting sampled data for d3 histogram plot'
+        print('Exporting sampled data for d3 histogram plot')
 
         # local variables:
         sampling_n = cobra_sampling_n();
@@ -890,7 +890,7 @@ class stage02_physiology_io(base_analysis):
             simulation_info_1_all = [];
             simulation_info_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id);
             if not simulation_info_1_all:
-                print 'simulation not found!'
+                print('simulation not found!')
                 return;
             simulation_1_info = simulation_info_1_all[0]; # unique constraint guarantees only 1 row will be returned
             simulation_info_all.append(simulation_1_info);
@@ -900,7 +900,7 @@ class stage02_physiology_io(base_analysis):
             sampledPoints_1_all = [];
             sampledPoints_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySampledPoints(simulation_id);
             if not sampledPoints_1_all:
-                print 'simulation not found!'
+                print('simulation not found!')
                 return;
             sampledPoints_1_info = sampledPoints_1_all[0]; # unique constraint guarantees only 1 row will be returned
             sampledPoints_all.append(sampledPoints_1_info);
@@ -910,7 +910,7 @@ class stage02_physiology_io(base_analysis):
             simulation_parameters_1_all = [];
             simulation_parameters_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulationParameters(simulation_id);
             if not simulation_parameters_1_all:
-                print 'simulation not found!'
+                print('simulation not found!')
                 return;
             simulation_1_parameters = simulation_parameters_1_all[0]; # unique constraint guarantees only 1 row will be returned
             simulation_parameters_all.append(simulation_1_parameters);
@@ -918,7 +918,7 @@ class stage02_physiology_io(base_analysis):
         model_ids_all = [x['model_id'] for x in simulation_info_all]
         model_ids_unique = list(set(model_ids_all));
         if len(model_ids_unique) != 1:
-            print 'more than 1 model_id found'
+            print('more than 1 model_id found')
             return
         else:
             model_id = model_ids_unique[0];
@@ -963,12 +963,12 @@ class stage02_physiology_io(base_analysis):
                                       control_I = False);
         sampling_n.get_points(filename_points,remove_loops_I=True,remove_no_flux_I=True,normalize_I=False);
         for rxn_id in rxn_ids:
-            print 'exporting d3 histogram plot for rxn_id ' + rxn_id
+            print('exporting d3 histogram plot for rxn_id ' + rxn_id)
             # determine the max/min of the data
             max_all=[];
             min_all=[];
             for sna_cnt,points in enumerate(sampling_n.points):
-                if points.has_key(rxn_id):
+                if rxn_id in points:
                     max_all.append(max(points[rxn_id]));
                     min_all.append(min(points[rxn_id]));
             if not max_all and not min_all: continue; # check that the reaction has points
@@ -985,7 +985,7 @@ class stage02_physiology_io(base_analysis):
                 #if rxn_id == 'CAT':
                 #    print 'check'
                 # calculate the kde
-                if not points.has_key(rxn_id): continue;
+                if rxn_id not in points: continue;
                 x_grid,pdf=self.calculate.pdf_kde(points[rxn_id],min_point,max_point,1000,0.2);
                 if len(x_grid)>0:
                     for i in range(len(x_grid)):

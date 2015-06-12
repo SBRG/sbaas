@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from visualization_query import visualization_query
+from .visualization_query import visualization_query
 
 class visualization_io(base_analysis):
 
@@ -121,7 +121,7 @@ class visualization_io(base_analysis):
     def export_visualizationProject_js(self,project_id_I,data_dir_I="tmp"):
         """export visualization_project for visualization"""
 
-        print "exporting visualization_project..."
+        print("exporting visualization_project...")
 
         # query the project info
         data1_project = {};
@@ -169,7 +169,7 @@ class visualization_io(base_analysis):
             data1_dict[data_export_id]=[];
         for d in data1_O:
             data1_dict[d['data_export_id']].append(d);
-        data1_keys = data1_dict.keys();
+        data1_keys = list(data1_dict.keys());
         data1_keys.sort();
         col_cnt = 0;
         #for k,v in data1_dict.iteritems():

@@ -206,7 +206,7 @@ class r_calculate(base_analysis):
                         #data_tmp['component_name'] = cgn_sorted[r]
                         #data_tmp['calculated_concentration'] = concentrations_1d_ave[c*len(sns_sorted)+r];
                         #data_O.append(data_tmp);
-                        if isinstance(concentrations_1d_ave[c*len(cgn_sorted)+r], (int, long, float)) and not numpy.isnan(concentrations_1d_ave[c*len(cgn_sorted)+r]):
+                        if isinstance(concentrations_1d_ave[c*len(cgn_sorted)+r], (int, float)) and not numpy.isnan(concentrations_1d_ave[c*len(cgn_sorted)+r]):
                             sns_O.append(sns_sorted[c]);
                             cn_O.append(cgn_sorted[r]);
                             cc_O.append(concentrations_1d_ave[c*len(cgn_sorted)+r]);
@@ -345,7 +345,7 @@ class r_calculate(base_analysis):
                 cnt = 0;
                 for c in range(len(cgn_sorted)):
                     for s in range(len(sns_sorted)):
-                        if isinstance(concentrations_glog[c,s], (int, long, float, complex)):
+                        if isinstance(concentrations_glog[c,s], (int, float, complex)):
                             data_tmp = {};
                             data_tmp['sample_name_short'] = sns_sorted[s]
                             data_tmp['component_name'] = cgn_sorted[c]
@@ -373,7 +373,7 @@ class r_calculate(base_analysis):
             concentrations = concentrations_original.reshape(len(cgn_sorted),len(sns_sorted));
             return data_O, concentrations, concentrations_glog;
         else:
-            print 'missing values found in data!';
+            print('missing values found in data!');
     def calculate_anova(self,data_I):
         '''calculate the 1-way anova using R's built in Stats package
         Note: 1-way anova is equivalent to an independent t-test'''
@@ -407,7 +407,7 @@ class r_calculate(base_analysis):
                 cnt_bool = False;
         # check that there is only one component_name:
         if len(cn_sorted)>1:
-            print 'more than one component detected!'
+            print('more than one component detected!')
             return None,None;
         #check if there were any missing values in the data set in the first place
         mv = 0;
@@ -579,7 +579,7 @@ class r_calculate(base_analysis):
                     cnt = cnt+1
                 cnt_bool = False;
         if len(cn_sorted)>0:
-            print 'more than one component detected!'
+            print('more than one component detected!')
             return None;
         # check if there were any missing values in the data set in the first place
         mv = 0;
@@ -975,7 +975,7 @@ class r_calculate(base_analysis):
                 exit(-1);
             return data_scores,data_loadings
         else:
-            print 'missing values found!'
+            print('missing values found!')
     def calculate_svm(self):
         # TODO
         # Call to R

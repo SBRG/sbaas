@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from stage01_physiology_query import stage01_physiology_query
+from .stage01_physiology_query import stage01_physiology_query
 
 class stage01_physiology_io(base_analysis):
 

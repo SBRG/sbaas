@@ -23,7 +23,7 @@ Getting started:
 
 Dependencies:
 ------------
-Python 2.7+
+Python 3.4+
 
 R 2.12+
 
@@ -31,20 +31,66 @@ Postgresql 9.0+
 
 Python-dependencies:
 -------------------
-cobrapy
+windows: 
+install winpython (http://winpython.github.io/)
+download individual installations for cobrapy, escher, openbabel, xlwings and libsbml and use the winpython package manager to install
+OR
+install packages individually from pip from vc10++ command line
 
-escher
+linux: requires pip installation
 
-numpy
+macox: requires pip installation
 
-scipy
+python-libsbml (http://www.lfd.uci.edu/~gohlke/pythonlibs/)
 
-matplotlib
+cobrapy (https://pypi.python.org/pypi/cobra/)
 
-r2py
+escher (https://github.com/zakandrewking/escher/)
 
-sqlalchemy
+numpy (pip)
 
-h5py
+pywin32 (pip;windows)
+
+
+scipy (pip)
+
+matplotlib (pip)
+
+pandas (pip)
+
+rpy2 (pip)
+
+sqlalchemy (pip)
+
+h5py (http://www.lfd.uci.edu/~gohlke/pythonlibs/)
+
+jinja2 (pip)
+
+tornado (pip)
+
+pywin32 (http://www.lfd.uci.edu/~gohlke/pythonlibs/)
+requires running the following script: python C:\Python34\Scripts\pywin32_postinstall.py -install
+
+PyQt (http://www.lfd.uci.edu/~gohlke/pythonlibs/)
+
+pyzmq (pip)
+
+pytz (pip)
+
+ipython (pip)
+
+openbabel (http://www.lfd.uci.edu/~gohlke/pythonlibs/)
+
+oct2py (pip)
+
+biopython (pip)
+
+gurobipy (not found for current version)
+
+beautifulsoup (bs4) (not found for current version)
+
+psycopg2 (http://www.lfd.uci.edu/~gohlke/pythonlibs/)
+
+xlwings (pip)
 
 thermodynamics (https://github.com/dmccloskey/thermodynamics.git)

@@ -1444,8 +1444,8 @@ class stage02_quantification_query(base_analysis):
                         'calculated_concentration':d['calculated_concentration']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
                 updates.append(data_update);
             except SQLAlchemyError as e:
                 print(e);
@@ -1466,8 +1466,8 @@ class stage02_quantification_query(base_analysis):
                         'calculated_concentration':d['calculated_concentration']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
                 updates.append(data_update);
             except SQLAlchemyError as e:
                 print(e);
@@ -1487,8 +1487,8 @@ class stage02_quantification_query(base_analysis):
                         'calculated_concentration_units':d['calculated_concentration_units']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
                 updates.append(data_update);
             except SQLAlchemyError as e:
                 print(e);

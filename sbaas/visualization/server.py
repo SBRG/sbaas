@@ -14,9 +14,9 @@ import tornado.escape
 from tornado.options import define, options, parse_command_line
 from jinja2 import Environment, PackageLoader
 from mimetypes import guess_type
-from urls import urls
+from .urls import urls
 # visualization dependencies
-from version import __version__
+from .version import __version__
 # sbaas dependencies
 from data import sbaas_settings as sbaas_settings
 from analysis import *
@@ -39,12 +39,12 @@ def run(port=PORT, public=PUBLIC):
     global PUBLIC
     PORT = port
     PUBLIC = public
-    print 'serving directory %s on port %d' % (directory, PORT)
+    print('serving directory %s on port %d' % (directory, PORT))
     application.listen(port, None if public else "localhost")
     try:
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
-        print "Thank you!  Come again!"
+        print("Thank you!  Come again!")
 
 def stop():
     tornado.ioloop.IOLoop.instance().stop()
@@ -69,7 +69,7 @@ class BaseHandler(RequestHandler):
         self.finish();
 
     def get_login_url(self):
-        return u"/login"
+        return "/login"
 
     def get_current_user(self):
         user_json = self.get_secure_cookie("user")
@@ -105,15 +105,15 @@ class LoginHandler(BaseHandler):
         # to a username and password hash in the database users table.
         login = {};
         login['language']='biochemistry';
-        print username, password
+        print(username, password)
         auth = False;
-        if login.has_key(username) and login[username]==login['language']: auth = True;
+        if username in login and login[username]==login['language']: auth = True;
         if auth:
             self.set_current_user(username)
-            self.redirect(u"/")
+            self.redirect("/")
         else:
-            error_msg = u"?error=" + tornado.escape.url_escape("Login incorrect.")
-            self.redirect(u"/login" + error_msg)
+            error_msg = "?error=" + tornado.escape.url_escape("Login incorrect.")
+            self.redirect("/login" + error_msg)
 
     def set_current_user(self, user):
         if user:
@@ -125,7 +125,7 @@ class LogoutHandler(BaseHandler):
 
     def get(self):
         self.clear_cookie("user")
-        self.redirect(u"/login")
+        self.redirect("/login")
 
 class IndexHandler(BaseHandler):
     @asynchronous
@@ -136,12 +136,11 @@ class IndexHandler(BaseHandler):
         #response = yield gen.Task(AsyncHTTPClient().fetch,
         #                          '/'.join([url.get_url('index_filter', source='local',protocol='https')]));
         #json_data = response.body if response.body is not None else json.dumps(None)
-        with open(sbaas_settings.visualization_resources+'/'+url.get_url('index_filter', source='local',protocol='https'), "rb") as file:
+        with open(sbaas_settings.visualization_resources+'/'+url.get_url('index_filter', source='local',protocol='https'), "r") as file:
             json_data = file.read();
         # render the template
         template = env.get_template('index.html')
         source = 'local'
-        url = urls();
         data = template.render(d3=url.get_url('d3', source),
             boot_css=url.get_url('boot_css', source),
             boot_js=url.get_url('boot_js', source),
@@ -182,13 +181,13 @@ class ProjectHandler(BaseHandler):
                 visualization_kwargs[arg] = args[0];
                 arguments.append(args[0]);
         # get the data to visualize
-        if visualization_kwargs.has_key('analysis_id') and visualization_kwargs.has_key('data_export_id'):
+        if 'analysis_id' in visualization_kwargs and 'data_export_id' in visualization_kwargs:
             #visualization data
             data_json = '';
             data_json = self.get_datajson_analysis(visualization_kwargs['analysis_id'],visualization_kwargs['data_export_id']);
             # make the title name
             titlename = ' '.join([visualization_kwargs['analysis_id']]);
-        elif visualization_kwargs.has_key('project_id'):
+        elif 'project_id' in visualization_kwargs:
             #landing page data
             data_json = '';
             data_json = self.get_datajson_project(visualization_kwargs['project_id']);
@@ -196,7 +195,7 @@ class ProjectHandler(BaseHandler):
             titlename = ' '.join([visualization_kwargs['project_id']]);
         else:
             # re-direct to 404 page
-            print 'bad GET';
+            print('bad GET');
         # get the template directory
         template_dir = 'container' + '.html';
         # render the template
@@ -267,7 +266,7 @@ class ProjectHandler(BaseHandler):
             data_json_O = io.export_dataStage01PhysiologyRatesAverages_js(analysis_id_I,data_dir_I='data_json');
         else:
             #re-direct to 404
-            print 'table not found'
+            print('table not found')
         return data_json_O;
 
     def get_datajson_project(self,project_id_I):
@@ -358,8 +357,8 @@ class VisualizationHandler(BaseHandler):
         filename = '_'.join(arguments);
         # build up the data directory
         #boxandwhiskers and histogram
-        if visualization_kwargs.has_key('feature_name'):
-            if visualization_kwargs.has_key('time_point_name'):
+        if 'feature_name' in visualization_kwargs:
+            if 'time_point_name' in visualization_kwargs:
                 filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['feature_name'] + '.js';
             else:
                 filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['feature_name'] + '.js';
@@ -370,7 +369,7 @@ class VisualizationHandler(BaseHandler):
             except:
                 data_json = '';
         #volcanoplot
-        elif visualization_kwargs.has_key('concentration_unit_name') and visualization_kwargs.has_key('sample_name'):
+        elif 'concentration_unit_name' in visualization_kwargs and 'sample_name' in visualization_kwargs:
             filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['concentration_unit_name'] + '_' + visualization_kwargs['sample_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
@@ -379,7 +378,7 @@ class VisualizationHandler(BaseHandler):
             except:
                 data_json = '';
         #pcaplot
-        elif visualization_kwargs.has_key('concentration_unit_name') and visualization_kwargs.has_key('component_name') and visualization_kwargs.has_key('score_loading_name'):
+        elif 'concentration_unit_name' in visualization_kwargs and 'component_name' in visualization_kwargs and 'score_loading_name' in visualization_kwargs:
             filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['concentration_unit_name'] + '_' + visualization_kwargs['component_name'] + '_' + visualization_kwargs['score_loading_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
@@ -388,8 +387,8 @@ class VisualizationHandler(BaseHandler):
             except:
                 data_json = '';
         #metabolicmap
-        elif visualization_kwargs.has_key('model_id_name') and visualization_kwargs.has_key('sample_name') and visualization_kwargs.has_key('map_id_name'):
-            if visualization_kwargs.has_key('time_point_name'): filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['model_id_name'] + '_' + visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['sample_name'] + '_' + visualization_kwargs['map_id_name']+ '.html';
+        elif 'model_id_name' in visualization_kwargs and 'sample_name' in visualization_kwargs and 'map_id_name' in visualization_kwargs:
+            if 'time_point_name' in visualization_kwargs: filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['model_id_name'] + '_' + visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['sample_name'] + '_' + visualization_kwargs['map_id_name']+ '.html';
             else: filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['model_id_name'] + '_' + visualization_kwargs['mapping_id_name'] + '_' + visualization_kwargs['sample_name'] + '_' + visualization_kwargs['map_id_name']+ '.html';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
@@ -398,7 +397,7 @@ class VisualizationHandler(BaseHandler):
             except:
                 data_json = '';
         #heatmap_hcluster
-        elif visualization_kwargs.has_key('concentration_unit_name'):
+        elif 'concentration_unit_name' in visualization_kwargs:
             filename_data_id = visualization_kwargs['data_name'] + '/'+ visualization_kwargs['time_point_name'] + '_' + visualization_kwargs['concentration_unit_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
@@ -407,7 +406,7 @@ class VisualizationHandler(BaseHandler):
             except:
                 data_json = '';
         #pcaplot
-        elif visualization_kwargs.has_key('sample_name'):
+        elif 'sample_name' in visualization_kwargs:
             filename_data_id = visualization_kwargs['data_name'] + '/' + visualization_kwargs['sample_name'] + '.js';
             data_dir = '/'.join([visualization_kwargs['experiment_id_name'],visualization_kwargs['experiment_type_name'],visualization_kwargs['template_name']]);
             try:
@@ -478,7 +477,7 @@ class LibHandler(BaseHandler):
 class StaticHandler(BaseHandler):
     def get(self, path):
         path = join(directory, path)
-        print 'getting path %s' % path
+        print('getting path %s' % path)
         self.serve_path(path)
 
 settings = {"debug": "False",

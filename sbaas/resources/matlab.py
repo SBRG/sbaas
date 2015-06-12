@@ -39,8 +39,8 @@ class matlab_calculate(base_calculate):
         with open(filename_I,'wb') as file:
             file.write(mat_cmd);
         #wait for user to execute matlab script
-        print "Press any key to continue once script has been executed"
-        a=raw_input();
+        print("Press any key to continue once script has been executed")
+        a=input();
         #read in the data from file:
         xx = scipy.io.loadmat(filename_O)['xx'][0][0];
         yy = scipy.io.loadmat(filename_O)['yy'][0][0];

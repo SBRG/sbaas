@@ -26,7 +26,7 @@ def load_isotopomer_matlab(matlab_data,isotopomer_data=None):
         measured_ave = [];
         measured_stdev = [];
         # extract data to lists
-        for frag,data in measured_dict['fragments'].iteritems():
+        for frag,data in measured_dict['fragments'].items():
             for name in data['data_names']:
                 measured_names.append(name);
             for ave in data['data_ave']:
@@ -43,7 +43,7 @@ def load_isotopomer_matlab(matlab_data,isotopomer_data=None):
         measured_stdev = [];
         residuals = [];
         for i,name in enumerate(names):
-            if measured_dict.has_key(name[0][0]):
+            if name[0][0] in measured_dict:
                 measured_ave.append(measured_dict[name[0][0]]['measured_ave']);
                 measured_stdev.append(measured_dict[name[0][0]]['measured_stdev']);
                 residuals.append(measured_dict[name[0][0]]['measured_ave']-calculated_ave[i][0]);
@@ -100,7 +100,7 @@ def compare_isotopomers_calculated(isotopomer_1, isotopomer_2):
     calculatedAve_2_list = [];
     measuredStdev_1_list = [];
     measuredStdev_2_list = [];
-    for frag,data in isotopomer_1.iteritems():
+    for frag,data in isotopomer_1.items():
         absDif = 0.0;
         sr_1 = 0.0;
         sr_2 = 0.0;
@@ -141,14 +141,14 @@ def compare_isotopomers_calculated(isotopomer_1, isotopomer_2):
 
     # wrap stats into a dictionary
     isotopomer_comparison_stats = {};
-    isotopomer_comparison_stats = dict(zip(('r_measuredVsCalculated_1', 'p_measuredVsCalculated_1',
+    isotopomer_comparison_stats = dict(list(zip(('r_measuredVsCalculated_1', 'p_measuredVsCalculated_1',
         'r_measuredVsCalculated_2', 'p_measuredVsCalculated_2',
         'r_measured1VsMeasured2', 'p_measured1VsMeasured2',
         'ssr_1,ssr_2'),
                                            (r_measuredVsCalculated_1, p_measuredVsCalculated_1,
         r_measuredVsCalculated_2, p_measuredVsCalculated_2,
         r_measured1VsMeasured2, p_measured1VsMeasured2,
-        ssr_1,ssr_2)));
+        ssr_1,ssr_2))));
 
     ## zip, sort, unzip # does not appear to sort correctly!
     #zipped = zip(absDif_list,ssr_1_list,ssr_2_list,bestFit_list,frag_list,
@@ -190,7 +190,7 @@ def compare_ci_calculated(ci_1,ci_2):
     cirange_1_sum = 0.0;
     cirange_2_sum = 0.0;
     # ci_1:
-    for k,v in ci_1.iteritems():
+    for k,v in ci_1.items():
         rxns_1_list.append(k);
         ciminv_1_list.append(v['minv']);
         cimaxv_1_list.append(v['maxv']);
@@ -201,7 +201,7 @@ def compare_ci_calculated(ci_1,ci_2):
     #zipped1.sort();
     #rxns_1_list,ciminv_1_list,cimaxv_1_list,cirange_1_list = zip(*zipped1);
     # ci_2:
-    for k,v in ci_2.iteritems():
+    for k,v in ci_2.items():
         rxns_2_list.append(k);
         ciminv_2_list.append(v['minv']);
         cimaxv_2_list.append(v['maxv']);
@@ -266,7 +266,7 @@ def plot_ci_calculated(ci):
     data = [];
     flux1 = {};
     flux2 = {};
-    for k,v in ci.iteritems():
+    for k,v in ci.items():
         flux1[k] = v['minv'];
         flux2[k] = v['maxv'];
     data.append(flux1);
@@ -287,9 +287,9 @@ def export_modelWithFlux(cobra_model_xml_I,ci_list_I,cobra_model_xml_O):
     objectives = [x.id for x in cobra_model.reactions if x.objective_coefficient == 1];
 
     for i,ci_I in enumerate(ci_list_I):
-        print 'add flux from ci ' + str(i);
+        print('add flux from ci ' + str(i));
         for rxn in cobra_model.reactions:
-            if rxn.id in ci_I.keys() and not(rxn.id in system_boundaries)\
+            if rxn.id in list(ci_I.keys()) and not(rxn.id in system_boundaries)\
                 and not(rxn.id in objectives):
                 cobra_model_copy = cobra_model.copy();
                 # check for reactions that break the model:
@@ -299,7 +299,7 @@ def export_modelWithFlux(cobra_model_xml_I,ci_list_I,cobra_model_xml_O):
                     cobra_model_copy.reactions.get_by_id(rxn.id).upper_bound = ci_I[rxn.id]['maxv'];
                 cobra_model_copy.optimize(solver='gurobi');
                 if not cobra_model_copy.solution.f:
-                    print rxn.id + ' broke the model!'
+                    print(rxn.id + ' broke the model!')
                     rxns_break.append(rxn.id);
                 else: 
                     if ci_I[rxn.id]['minv'] > 0:

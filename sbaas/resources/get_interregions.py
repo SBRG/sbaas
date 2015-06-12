@@ -9,7 +9,7 @@ import os
 # Released under Biopython license. http://www.biopython.org/DIST/LICENSE
 # Do not remove this comment
 def get_interregions(genbank_path,intergene_length=1):
-    seq_record = SeqIO.parse(open(genbank_path), "genbank").next()
+    seq_record = next(SeqIO.parse(open(genbank_path), "genbank"))
     cds_list_plus = []
     cds_list_minus = []
     intergenic_records = []
@@ -75,5 +75,5 @@ if __name__ == '__main__':
     elif len(sys.argv) == 3:
          get_interregions(sys.argv[1],int(sys.argv[2]))
     else:
-         print "Usage: get_intergenic.py gb_file [intergenic_length]"
+         print("Usage: get_intergenic.py gb_file [intergenic_length]")
          sys.exit(0)

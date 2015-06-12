@@ -2,8 +2,8 @@
 
 from analysis.analysis_base import *
 from analysis.analysis_stage01_resequencing.stage01_resequencing_execute import *
-from stage02_resequencing_query import *
-from stage02_resequencing_io import *
+from .stage02_resequencing_query import *
+from .stage02_resequencing_io import *
 
 class stage02_resequencing_execute(stage01_resequencing_execute):
     '''class for resequencing analysis'''
@@ -106,7 +106,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
         #Input:
         #   experiment_id = id for the experiment
 
-        print 'Executing mapResequencingPysiology_population...'
+        print('Executing mapResequencingPysiology_population...')
         genotype_phenotype_O = [];
         # query sample names
         if sample_names_I:
@@ -115,13 +115,13 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
             sample_names = [];
             sample_names = self.stage02_resequencing_query.get_sampleNames_experimentID_dataStage01ResequencingMutationsAnnotated(experiment_id);
         for sn in sample_names:
-            print 'analyzing sample_name ' + sn;
+            print('analyzing sample_name ' + sn);
             # query mutation data:
             mutations = [];
             mutations = self.stage02_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsAnnotated(experiment_id,sn);
             mutation_data_O = [];
             for end_cnt,mutation in enumerate(mutations):
-                print 'analyzing mutations'
+                print('analyzing mutations')
                 data_tmp = {};
                 data_tmp['mutation_genes'] = mutation['mutation_genes']
                 data_tmp['mutation_locations'] = mutation['mutation_locations']
@@ -145,7 +145,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
                 met_ids = self.stage02_resequencing_query.get_metIDs_experimentID_dataStage01PhysiologyRatesAverages(experiment_id,sna);
             phenotype_data_O = [];
             for met in met_ids: 
-                print 'analyzing met_id ' + met;
+                print('analyzing met_id ' + met);
                 # query rate data
                 slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = None,None,None,None,None,None,None;
                 slope_average, intercept_average, \
@@ -159,7 +159,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
                             'rate_units':rate_units,
                             'rate_var':rate_var});
             # construct the initial genotype/phenotype matrix
-            print 'constructing the initial genotype/phenotype matrix';
+            print('constructing the initial genotype/phenotype matrix');
             for mutation in mutation_data_O:
                 for phenotype in phenotype_data_O:
                     tmp = {};
@@ -209,10 +209,10 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
         #   sample_count = int;
         #   reduce_criteria = string
 
-        print 'Executing reduceResequencingPhysiology...'
+        print('Executing reduceResequencingPhysiology...')
         data_O = [];
-        for gn,sample_names in group_names.iteritems():
-            print 'Reducing group_name ' + gn;
+        for gn,sample_names in group_names.items():
+            print('Reducing group_name ' + gn);
             group_data = [];
             # get all data for the group
             for sn in sample_names:
@@ -283,7 +283,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
                                     break;
             group_data.extend(group_data_add);
             mets_max = {};
-            for k,v in mets.iteritems():
+            for k,v in mets.items():
                 mets_max[k]=0.0;
                 mets_max[k] = max(v['ave']);
             # assign a category to each sample
@@ -332,7 +332,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
                     data_O_tmp['rate_ubs'] = [];
                     data_O_tmp['rate_units'] = [];
                     for gd in group_data:
-                        if gd.has_key('resequencing_id') and gd.has_key('physiology_id') and\
+                        if 'resequencing_id' in gd and 'physiology_id' in gd and\
                             gd['resequencing_id'] == mutation_id and gd['physiology_id'] == physiology_id:
                             data_O_tmp['sample_names'].append(gd['sample_name']);
                             data_O_tmp['sample_name_abbreviations'].append(gd['sample_name_abbreviation']);
@@ -397,7 +397,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
         #   sample_count = int;
         #   reduce_criteria = string
 
-        print 'Executing reduceResequencingPhysiology...'
+        print('Executing reduceResequencingPhysiology...')
         # get the analysis info:
         analysis_info = [];
         analysis_info = self.stage02_resequencing_query.get_rows_analysisID_dataStage02ResequencingAnalysis(analysis_id_I);
@@ -476,7 +476,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
                                 break;
         group_data.extend(group_data_add);
         mets_max = {};
-        for k,v in mets.iteritems():
+        for k,v in mets.items():
             mets_max[k]=0.0;
             mets_max[k] = max(v['ave']);
         # assign a category to each sample
@@ -525,7 +525,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
                 data_O_tmp['rate_ubs'] = [];
                 data_O_tmp['rate_units'] = [];
                 for gd in group_data:
-                    if gd.has_key('resequencing_id') and gd.has_key('physiology_id') and\
+                    if 'resequencing_id' in gd and 'physiology_id' in gd and\
                         gd['resequencing_id'] == mutation_id and gd['physiology_id'] == physiology_id:
                         data_O_tmp['sample_names'].append(gd['sample_name']);
                         data_O_tmp['sample_name_abbreviations'].append(gd['sample_name_abbreviation']);
@@ -577,7 +577,7 @@ class stage02_resequencing_execute(stage01_resequencing_execute):
                 col_pdist_metric_I='euclidean',col_linkage_method_I='complete'):
         '''perform a double cluster on the reduced resequencing and physioloy data'''
         
-        print 'executing heatmap...';
+        print('executing heatmap...');
         # get data for the group
         group_data = [];
         #group_data = self.stage02_resequencing_query.get_row_experimentIDAndGroupName_dataStage02ResequencingReduceResequencingPhysiology(experiment_id,gn);

@@ -98,7 +98,7 @@ class matplot():
         ha = ['right', 'center', 'left']
         try:
             fig, ax = plt.subplots()
-            pos = numpy.array(range(len(data_I)))+1
+            pos = numpy.array(list(range(len(data_I))))+1
             bp = ax.boxplot(data_I, sym='k+', #whis=whiskers_I,
                             positions=pos,
                             notch=notch_I, bootstrap=bootstrap_I,
@@ -118,7 +118,7 @@ class matplot():
             if show_plot_I:
                 plt.show();
         except IndexError as e:
-            print e;
+            print(e);
     def _extractPCAScores(self,data_I,axis1_I=1,axis2_I=2):
         '''extract out pca data from [{},{},{}] format'''
         x_data = [];

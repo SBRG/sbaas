@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from stage01_resequencing_query import stage01_resequencing_query
+from .stage01_resequencing_query import stage01_resequencing_query
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from analysis.analysis_stage01_resequencing import gdparse
 import json
@@ -17,7 +17,7 @@ class stage01_resequencing_io(base_analysis):
         gd = gdparse.GDParser(file_handle=open(filename, 'rb'))
         # extract out ids
         mutation_ids = [];
-        mutation_ids = gd.data['mutation'].keys()
+        mutation_ids = list(gd.data['mutation'].keys())
         parent_ids = [];
         for mid in mutation_ids:
             parents = [];
@@ -309,7 +309,7 @@ class stage01_resequencing_io(base_analysis):
                     for row in rows_lineage:
                         if row['mutation_id'] == mutation and row['intermediate'] == intermediate and row['lineage_name'] == lineage_name:
                             data_O[col_cnt,mutation_cnt] = row['mutation_frequency'];
-                            print col_cnt,mutation_cnt
+                            print(col_cnt,mutation_cnt)
                 col_cnt+=1;
         # generate the clustering for the heatmap
         json_O = {};
@@ -329,20 +329,20 @@ class stage01_resequencing_io(base_analysis):
     def export_dataStage01ResequencingMutationsAnnotated_d3(self,experiment_id,strain_lineage,mutation_id_exclusion_list=[],frequency_threshold=0.1):
         '''Plot the mutation frequency accross the strain lineage for all filtered mutations'''
         
-        print 'Executing plotMutationFrequency_population...'
-        for analysis_id,strain in strain_lineage.iteritems():
-            print 'analyzing lineage ' + analysis_id;
-            intermediates = strain.keys();
+        print('Executing plotMutationFrequency_population...')
+        for analysis_id,strain in strain_lineage.items():
+            print('analyzing lineage ' + analysis_id);
+            intermediates = list(strain.keys());
             intermediates.sort();
             mutation_data_O = [];
             mutation_ids = [];
             for intermediate in intermediates:
-                print 'analyzing intermediate ' + str(intermediate);
+                print('analyzing intermediate ' + str(intermediate));
                 # query mutation data:
                 mutations = [];
                 mutations = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsAnnotated(experiment_id,strain[intermediate]);
                 for end_cnt,mutation in enumerate(mutations):
-                    print 'analyzing mutations'
+                    print('analyzing mutations')
                     if mutation['mutation_position'] > 4000000: #ignore positions great than 4000000
                         continue;
                     if mutation['mutation_frequency']<frequency_threshold:
@@ -457,7 +457,7 @@ class stage01_resequencing_io(base_analysis):
     def export_dataStage01ResequencingMutationsAnnotatedLineage_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
         '''export data_stage01_resequencing_mutationsAnnotated to js file'''
         
-        print 'exportingdataStage01ResequencingMutationsAnnotated...'
+        print('exportingdataStage01ResequencingMutationsAnnotated...')
         # get the analysis information
         experiment_ids,sample_names,time_points = [],[],[];
         experiment_ids,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
@@ -677,7 +677,7 @@ class stage01_resequencing_io(base_analysis):
 
         #(self,analysis_id_I,mutation_id_exclusion_list=[],data_dir_I="tmp")
         
-        print 'exportingdataStage01ResequencingLineage...'
+        print('exportingdataStage01ResequencingLineage...')
         # get the analysis information
         #analysis_info = {};
         #analysis_info = self.stage01_resequencing_query.get_analysis_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
@@ -828,7 +828,7 @@ class stage01_resequencing_io(base_analysis):
     def export_dataStage01ResequencingMutationsAnnotated_js(self,analysis_id_I,mutation_id_exclusion_list=[],frequency_threshold=0.1,data_dir_I="tmp"):
         '''export data_stage01_resequencing_mutationsAnnotated to js file'''
         
-        print 'exportingdataStage01ResequencingMutationsAnnotated...'
+        print('exportingdataStage01ResequencingMutationsAnnotated...')
         # get the analysis information
         experiment_ids,sample_names,time_points = [],[],[];
         experiment_ids,sample_names,time_points = self.stage01_resequencing_query.get_experimentIDAndSampleNameAndTimePoint_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);

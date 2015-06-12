@@ -1,6 +1,6 @@
 # Dependencies
 from analysis.analysis_base import *
-from stage03_quantification_query import stage03_quantification_query
+from .stage03_quantification_query import stage03_quantification_query
 from resources.molmass import Formula
 # Dependencies from cobra
 from cobra.io.sbml import create_cobra_model_from_sbml_file, write_cobra_model_to_sbml_file
@@ -449,7 +449,7 @@ class stage03_quantification_io(base_analysis):
             #        self.session.add(data_add);
             #    except SQLAlchemyError as e:
             #        print(e);
-            for k,v in data_I.iteritems():
+            for k,v in data_I.items():
                 for d in v:
                     try:
                         data_add = data_stage03_quantification_dG0_f(d['source'],
@@ -756,7 +756,7 @@ class stage03_quantification_io(base_analysis):
             metabolite_data_tmp['met_name'] = met.name;
             metabolite_data_tmp['met_id'] = met.id;
             formula = {};
-            for k,v in met.formula.elements.iteritems():
+            for k,v in met.formula.elements.items():
                 formula[k] = {0:v};
             tmp = Formula()
             tmp._elements=formula
@@ -1153,7 +1153,7 @@ class stage03_quantification_io(base_analysis):
         for model_id in model_ids:
             filter_mi_str = 'model_id/'+ model_id;
             filter_O['model_id'].append(filter_mi_str);
-            print 'exporting thermodynamic analysis for model_id ' + model_id;
+            print('exporting thermodynamic analysis for model_id ' + model_id);
             # get the cobra model
             if model_ids_dict_I:
                 cobra_model = model_ids_dict_I[model_id];
@@ -1174,7 +1174,7 @@ class stage03_quantification_io(base_analysis):
             for tp in time_points:
                 filter_tp_str = 'model_id/'+ model_id +'/time_point/'+tp;
                 filter_O['time_point'].append(filter_tp_str);
-                print 'exporting thermodynamic analysis for time_point ' + tp;
+                print('exporting thermodynamic analysis for time_point ' + tp);
                 # get sample_name_abbreviations
                 if sample_name_abbreviations_I:
                     sample_name_abbreviations = sample_name_abbreviations_I;
@@ -1184,7 +1184,7 @@ class stage03_quantification_io(base_analysis):
                 for sna in sample_name_abbreviations:
                     filter_sna_str = 'model_id/'+ model_id +'/time_point/'+tp+'/sample/'+sna;
                     filter_O['sample'].append(filter_sna_str);
-                    print 'exporting thermodynamic analysis for sample_name_abbreviation ' + sna;
+                    print('exporting thermodynamic analysis for sample_name_abbreviation ' + sna);
                     # get metabolomicsData
                     #concentrations_lbub = [];
                     #concentrations_lbub = self.stage03_quantification_query.get_rowsEscherLbUb_experimentIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationMetabolomicsData(experiment_id_I,tp,sna);
@@ -1203,7 +1203,7 @@ class stage03_quantification_io(base_analysis):
                         'Nucleotide Metabolism']:
                         filter_map_str = 'model_id/'+ model_id +'/time_point/'+tp+'/sample/'+sna+'/map_id/'+map_id;
                         filter_O['map_id'].append(filter_map_str);
-                        print 'exporting thermodynamic analysis for map_id ' + map_id;
+                        print('exporting thermodynamic analysis for map_id ' + map_id);
                         # generate the map html using escher
                         map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                         #map = Builder(map_json=, metabolite_data=concentrations_lbub, reaction_data=dG_r_lbub)
@@ -1243,7 +1243,7 @@ class stage03_quantification_io(base_analysis):
         for model_id in model_ids:
             filter_mi_str = 'model_id/'+ model_id;
             filter_O['model_id'].append(filter_mi_str);
-            print 'exporting thermodynamic analysis for model_id ' + model_id;
+            print('exporting thermodynamic analysis for model_id ' + model_id);
             # get the cobra model
             if model_ids_dict_I:
                 cobra_model = model_ids_dict_I[model_id];
@@ -1264,7 +1264,7 @@ class stage03_quantification_io(base_analysis):
             for tp in time_points:
                 filter_tp_str = 'model_id/'+ model_id +'/time_point/'+tp;
                 filter_O['time_point'].append(filter_tp_str);
-                print 'exporting thermodynamic analysis for time_point ' + tp;
+                print('exporting thermodynamic analysis for time_point ' + tp);
                 # get sample_name_abbreviations
                 if sample_name_abbreviations_I:
                     sample_name_abbreviations = sample_name_abbreviations_I;
@@ -1283,7 +1283,7 @@ class stage03_quantification_io(base_analysis):
                 for sna in sample_name_abbreviations:
                     filter_sna_str = 'model_id/'+ model_id +'/time_point/'+tp+'/sample/'+sample_name_abbreviation_base+'_vs_'+sna;
                     filter_O['sample'].append(filter_sna_str);
-                    print 'exporting thermodynamic analysis for sample_name_abbreviation ' + sample_name_abbreviation_base+'_vs_'+sna;
+                    print('exporting thermodynamic analysis for sample_name_abbreviation ' + sample_name_abbreviation_base+'_vs_'+sna);
                     # get metabolomicsData
                     #concentrations_lbub = [];
                     #concentrations_lbub = self.stage03_quantification_query.get_rowsEscherLbUb_experimentIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationMetabolomicsData(experiment_id_I,tp,sna);
@@ -1305,7 +1305,7 @@ class stage03_quantification_io(base_analysis):
                         'Nucleotide Metabolism']:
                         filter_map_str = 'model_id/'+ model_id +'/time_point/'+tp+'/sample/'+sample_name_abbreviation_base+'_vs_'+sna+'/map_id/'+map_id;
                         filter_O['map_id'].append(filter_map_str);
-                        print 'exporting thermodynamic analysis for map_id ' + map_id;
+                        print('exporting thermodynamic analysis for map_id ' + map_id);
                         # generate the map html using escher
                         map_json = json.load(open('data/escher_maps/' + map_id + '.json','rb'));
                         #map = Builder(map_json=, metabolite_data=concentrations_lbub, reaction_data=dG_r_lbub)
@@ -1339,7 +1339,7 @@ class stage03_quantification_io(base_analysis):
             model_ids = [];
             model_ids = self.stage03_quantification_query.get_modelID_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
         for model_id in model_ids:
-            print 'exporting thermodynamic analysis for model_id ' + model_id;
+            print('exporting thermodynamic analysis for model_id ' + model_id);
             # get the cobra model
             if model_ids_dict_I:
                 cobra_model = model_ids_dict_I[model_id];
@@ -1358,7 +1358,7 @@ class stage03_quantification_io(base_analysis):
                 time_points = [];
                 time_points = self.stage03_quantification_query.get_timePoints_experimentIDAndModelID_dataStage03QuantificationSimulation(experiment_id_I,model_id);
             for tp in time_points:
-                print 'exporting thermodynamic analysis for time_point ' + tp;
+                print('exporting thermodynamic analysis for time_point ' + tp);
                 # get sample_name_abbreviations
                 if sample_name_abbreviations_I:
                     sample_name_abbreviations = sample_name_abbreviations_I;
@@ -1373,7 +1373,7 @@ class stage03_quantification_io(base_analysis):
                 tcc_base = [];
                 tcc_base = self.stage03_quantification_query.get_rows_experimentIDAndModelIDAndTimePointAndSampleNameAbbreviations_dataStage03QuantificationTCC(experiment_id_I,model_id,tp,sample_name_abbreviation_base,measured_concentration_coverage_criteria_I,measured_dG_f_coverage_criteria_I);
                 for sna in sample_name_abbreviations:
-                    print 'exporting thermodynamic analysis for sample_name_abbreviation ' + sample_name_abbreviation_base+'_vs_'+sna;
+                    print('exporting thermodynamic analysis for sample_name_abbreviation ' + sample_name_abbreviation_base+'_vs_'+sna);
                     for tcc_b in tcc_base:
                         # get tcc
                         tcc = {};

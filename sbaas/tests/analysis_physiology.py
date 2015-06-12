@@ -300,9 +300,9 @@ def data_stage02():
                                          model_ids_dict_I=ex02.models);
     
 def run_all_tests():
-    print 'testing data_stage00_physiology...'
+    print('testing data_stage00_physiology...')
     data_stage00();
-    print 'testing data_stage01_physiology...'
+    print('testing data_stage01_physiology...')
     data_stage01();
     #print 'testing data_stage02_physiology...'
     #data_stage02();

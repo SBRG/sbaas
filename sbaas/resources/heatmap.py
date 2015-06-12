@@ -3,7 +3,7 @@ from scipy.cluster.hierarchy import linkage, dendrogram
 
 import pandas as pd
 import numpy as np
-import cPickle as pickle
+import pickle as pickle
 
 def heatmap(data_I,row_labels_I,column_labels_I):
 

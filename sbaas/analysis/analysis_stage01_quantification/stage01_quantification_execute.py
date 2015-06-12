@@ -1,8 +1,8 @@
 '''quantitative metabolomics analysis class'''
 
 from analysis.analysis_base import *
-from stage01_quantification_query import *
-from stage01_quantification_io import *
+from .stage01_quantification_query import *
+from .stage01_quantification_io import *
 from resources.matplot import matplot
 
 from time import mktime,strptime
@@ -42,7 +42,7 @@ class stage01_quantification_execute():
         against the calculated concentration
         NOTE: a table is used to store the view'''
 
-        print 'execute_LLOQAndULOQ...'
+        print('execute_LLOQAndULOQ...')
         # query data for the view
         check = [];
         check = self.stage01_quantification_query.get_LLOQAndULOQ(experiment_id_I);
@@ -65,13 +65,13 @@ class stage01_quantification_execute():
                     self.session.commit();
                 except IntegrityError as e:
                     self.session.rollback();
-                    print e;
+                    print(e);
     def execute_checkLLOQAndULOQ(self,experiment_id_I):
         '''check the lloq and uloq from the calibrators
         against the calculated concentration
         NOTE: a table is used to store the view'''
         
-        print 'execute_checkLLOQAndULOQ...'
+        print('execute_checkLLOQAndULOQ...')
         # query data for the view
         check = [];
         check = self.stage01_quantification_query.get_checkLLOQAndULOQ(experiment_id_I);
@@ -116,7 +116,7 @@ class stage01_quantification_execute():
           NOT data_stage01_quantification_mqresultstable.is_ AND
           data_stage01_quantification_mqresultstable.is_name NOT LIKE quantitation_method.is_name;'''
 
-        print 'execute_checkISMatch...'
+        print('execute_checkISMatch...')
         # query data for the view
         check = [];
         check = self.stage01_quantification_query.get_checkISMatch(experiment_id_I);
@@ -145,7 +145,7 @@ class stage01_quantification_execute():
         #   conc_CV
         #   conc_units
         
-        print 'execute_analyzeQCs...'
+        print('execute_analyzeQCs...')
         # get sample name abbreviations
         sample_name_abbreviations = [];
         sample_types = ['QC'];
@@ -190,7 +190,7 @@ class stage01_quantification_execute():
                     self.session.add(row);
         self.session.commit();
     def execute_checkCV_QCs(self,experiment_id_I):
-        print 'execute_checkCV_QCs...'
+        print('execute_checkCV_QCs...')
         return;
     def execute_analyzeDilutions(self,experiment_id_I):
         '''calculate the average and coefficient of variation for analytical
@@ -208,7 +208,7 @@ class stage01_quantification_execute():
         #   conc_CV
         #   conc_units
         
-        print 'execute_analyzeDilutions...'
+        print('execute_analyzeDilutions...')
         # get sample names
         sample_ids = [];
         sample_types = ['Unknown','QC'];
@@ -218,7 +218,7 @@ class stage01_quantification_execute():
             sample_ids.extend(sample_ids_tmp);
         # create database table
         for si in sample_ids:
-            print 'analyzing dilutions for sample id ' + si;
+            print('analyzing dilutions for sample id ' + si);
             # get sample names
             sample_names = [];
             sample_names = self.stage01_quantification_query.get_sampleNames_experimentIDAndSampleID(experiment_id_I,si);
@@ -227,12 +227,12 @@ class stage01_quantification_execute():
             component_names = [];
             component_names = self.stage01_quantification_query.get_componentsNames_experimentIDAndSampleID(experiment_id_I,si);
             for cn in component_names:
-                print 'analyzing dilutions for component_name ' + cn;
+                print('analyzing dilutions for component_name ' + cn);
                 concs = [];
                 conc_units = None;
                 component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName(experiment_id_I,cn);
                 for sn in sample_names:
-                    print 'analyzing dilutions for sample_name ' + sn;
+                    print('analyzing dilutions for sample_name ' + sn);
                     # concentrations and units
                     conc = None;
                     conc_unit = None;
@@ -255,7 +255,7 @@ class stage01_quantification_execute():
         '''check the CV of the dilutions table
         NOTE: a table is used to store the view'''
         
-        print 'execute_checkCV_dilutions...'
+        print('execute_checkCV_dilutions...')
         # query data for the view
         check = [];
         check = self.stage01_quantification_query.get_checkCV_dilutions(experiment_id_I);
@@ -281,7 +281,7 @@ class stage01_quantification_execute():
         #   experiment_id_I = experiment
         #   component_names_dil_I = component names for which the dilution will be prioritized
         
-        print 'execute_removeDuplicateDilutions...'
+        print('execute_removeDuplicateDilutions...')
         # get sample names
         sample_ids = [];
         sample_ids = self.stage01_quantification_query.get_sampleIDs_experimentID_dataStage01Normalized(experiment_id_I);
@@ -346,7 +346,7 @@ class stage01_quantification_execute():
         #   calculated_concentration_units
         #   used_
         
-        print 'execute_normalizeSamples2Biomass...'
+        print('execute_normalizeSamples2Biomass...')
         # get sample names
         if sample_names_I:
             sample_names = sample_names_I;
@@ -359,7 +359,7 @@ class stage01_quantification_execute():
                 sample_names.extend(sample_names_tmp);
         # create database table
         for sn in sample_names:
-            print 'normalizing samples2Biomass for sample_name ' + sn;
+            print('normalizing samples2Biomass for sample_name ' + sn);
             # get component names
             if component_names_I:
                 component_names = component_names_I;
@@ -391,7 +391,7 @@ class stage01_quantification_execute():
                     #cell_volume, cell_volume_units = self.calculate.calculate_cellVolume_CVSAndCVSUnitsAndODAndConversionAndConversionUnits(cvs,cvs_units,od600,conversion,conversion_units);
                     cell_volume, cell_volume_units = self.calculate.calculate_biomass_CVSAndCVSUnitsAndODAndConversionAndConversionUnits(cvs,cvs_units,od600,conversion,conversion_units);
                 for cn in component_names:
-                    print 'normalizing samples2Biomass for component_name ' + cn;
+                    print('normalizing samples2Biomass for component_name ' + cn);
                     # get component group name
                     #component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName(experiment_id_I,cn);
                     component_group_name = self.stage01_quantification_query.get_msGroup_componentName_MSComponents(cn);
@@ -413,7 +413,7 @@ class stage01_quantification_execute():
                         self.session.add(row);
             else:
                 for cn in component_names:
-                    print 'normalizing samples2Biomass for component_name ' + cn;
+                    print('normalizing samples2Biomass for component_name ' + cn);
                     # get component group name
                     #component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName(experiment_id_I,cn);
                     component_group_name = self.stage01_quantification_query.get_msGroup_componentName_MSComponents(cn);
@@ -439,7 +439,7 @@ class stage01_quantification_execute():
         #   concentration
         #   concentration units
         
-        print 'execute_analyzeReplicates...'
+        print('execute_analyzeReplicates...')
         # get sample_name_abbreviations
         if sample_name_abbreviations_I:
             sample_name_abbreviations = sample_name_abbreviations_I
@@ -448,7 +448,7 @@ class stage01_quantification_execute():
             sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Normalized(experiment_id_I);
         # create database table
         for sna in sample_name_abbreviations:
-            print 'analyzing replicates for sample_name_abbreviation ' + sna;
+            print('analyzing replicates for sample_name_abbreviation ' + sna);
             # get component names
             if component_names_I:
                 component_names = component_names_I
@@ -456,12 +456,12 @@ class stage01_quantification_execute():
                 component_names = [];
                 component_names = self.stage01_quantification_query.get_componentsNames_experimentIDAndSampleNameAbbreviation_dataStage01Normalized(experiment_id_I,sna);
             for cn in component_names:
-                print 'analyzing replicates for component_name ' + cn;
+                print('analyzing replicates for component_name ' + cn);
                 component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName_dataStage01Normalized(experiment_id_I,cn);
                 # get time points
                 time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndSampleNameAbbreviation_dataStage01Normalized(experiment_id_I,sna);
                 for tp in time_points:
-                    print 'analyzing replicates for time_point ' + tp;
+                    print('analyzing replicates for time_point ' + tp);
                     # get filtrate sample names
                     sample_names = [];
                     sample_description = 'Filtrate';
@@ -495,7 +495,7 @@ class stage01_quantification_execute():
                     if sample_names_I: # screen out sample names that are not in the input
                         sample_names = [x for x in sample_names if x in sample_names_I];
                     for sn in sample_names:
-                        print 'analyzing replicates for sample_name ' + sn;
+                        print('analyzing replicates for sample_name ' + sn);
                         # query concentrations and units
                         conc = None;
                         conc_unit = None;
@@ -530,7 +530,7 @@ class stage01_quantification_execute():
         #   concentration units
         #   % extracellular
         
-        print 'execute_analyzeAverages...'
+        print('execute_analyzeAverages...')
         # get sample_name_abbreviations
         if sample_name_abbreviations_I:
             sample_name_abbreviations = sample_name_abbreviations_I
@@ -538,7 +538,7 @@ class stage01_quantification_execute():
             sample_name_abbreviations = [];
             sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Normalized(experiment_id_I);
         for sna in sample_name_abbreviations:
-            print 'analyzing averages for sample_name_abbreviation ' + sna;
+            print('analyzing averages for sample_name_abbreviation ' + sna);
             # get component names
             if component_names_I:
                 component_names = component_names_I
@@ -546,12 +546,12 @@ class stage01_quantification_execute():
                 component_names = [];
                 component_names = self.stage01_quantification_query.get_componentsNames_experimentIDAndSampleNameAbbreviation_dataStage01Normalized(experiment_id_I,sna);
             for cn in component_names:
-                print 'analyzing averages for component_name ' + cn;
+                print('analyzing averages for component_name ' + cn);
                 component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName_dataStage01Normalized(experiment_id_I,cn);
                 # get time points
                 time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndSampleNameAbbreviation_dataStage01Normalized(experiment_id_I,sna);
                 for tp in time_points:
-                    print 'analyzing averages for time_point ' + tp;
+                    print('analyzing averages for time_point ' + tp);
                     # get filtrate sample names
                     sample_names = [];
                     sample_description = 'Filtrate';
@@ -594,7 +594,7 @@ class stage01_quantification_execute():
                     concs = [];
                     conc_units = None;
                     for sn in sample_names:
-                        print 'analyzing averages for sample_name ' + sn;
+                        print('analyzing averages for sample_name ' + sn);
                         # query concentrations and units
                         conc = None;
                         conc_unit = None;
@@ -639,7 +639,7 @@ class stage01_quantification_execute():
         '''check the CV and % Extracellular of the averages table
         NOTE: a table is used to store the view'''
         
-        print 'execute_checkCVAndExtracelluar_averages...'
+        print('execute_checkCVAndExtracelluar_averages...')
         # query data for the view
         check = [];
         check = self.stage01_quantification_query.get_checkCVAndExtracellular_averages(experiment_id_I);
@@ -672,7 +672,7 @@ class stage01_quantification_execute():
         
         r_calc = r_calculate();
 
-        print 'execute_calculateMissingValues_replicates...'
+        print('execute_calculateMissingValues_replicates...')
         # get sample name abbreviations
         if sample_name_abbreviations_I:
             sample_names_abbreviation = sample_name_abbreviations_I;
@@ -681,18 +681,18 @@ class stage01_quantification_execute():
             sample_names_abbreviation = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01Replicates(experiment_id_I);
         # for each sample name abbreviation
         for sna in sample_names_abbreviation:
-            print 'calculating missing values for sample_name_abbreviation ' + sna;
+            print('calculating missing values for sample_name_abbreviation ' + sna);
             # get time points
             time_points = [];
             time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndSampleNameAbbreviation_dataStage01Replicates(experiment_id_I,sna);
             for tp in time_points:
-                print 'calculating missing values for time_point ' + tp;
+                print('calculating missing values for time_point ' + tp);
                 # get sample names short
                 sample_names_short = []
                 sample_names_short = self.stage01_quantification_query.get_SampleNameShort_experimentIDAndSampleNameAbbreviationAndTimePoint_dataStage01Replicates(experiment_id_I,sna,tp);
                 data = [];
                 for sns in sample_names_short:
-                    print 'calculating missing values for sample_name_abbreviation ' + sns;
+                    print('calculating missing values for sample_name_abbreviation ' + sns);
                     # get sample names short, component names, and concentrations
                     data_tmp = [];
                     data_tmp = self.stage01_quantification_query.get_data_experimentIDAndSampleNameShortAndTimePoint_dataStage01Replicates(experiment_id_I,sns,tp);
@@ -716,7 +716,7 @@ class stage01_quantification_execute():
         
         io = stage01_quantification_io();
 
-        print 'execute_calculateMissingComponents_replicates...'
+        print('execute_calculateMissingComponents_replicates...')
         # get all sample names short
         if sample_names_short_I:
             sample_names_short = sample_names_short_I;
@@ -730,14 +730,14 @@ class stage01_quantification_execute():
         time_points = [];
         time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01ReplicatesMI(experiment_id_I);
         for tp in time_points:
-            print 'calculating missing components for time_point ' + tp;
+            print('calculating missing components for time_point ' + tp);
             for cn in component_names:
-                print 'calculating missing components for component_name ' + cn;
+                print('calculating missing components for component_name ' + cn);
                 component_group_name = None;
                 calculated_concentration_units = None;
                 component_group_name, calculated_concentration_units = self.stage01_quantification_query.get_componentGroupNameAndConcUnits_experimentIDAndComponentName_dataStage01Replicates(experiment_id_I,cn);
                 for sns in sample_names_short:
-                    print 'calculating missing components for sample_name_short ' + sns;
+                    print('calculating missing components for sample_name_short ' + sns);
                     # get calculated concentration
                     calculated_concentration = None;
                     calculated_concentration = self.stage01_quantification_query.get_calculatedConcentration_experimentIDAndSampleNameShortAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id_I,sns,tp,cn);
@@ -747,7 +747,7 @@ class stage01_quantification_execute():
                     conc_units = None;
                     lloq, conc_units = self.stage01_quantification_query.get_lloq_ExperimentIDAndComponentName_dataStage01LLOQAndULOQ(experiment_id_I,cn);
                     if not lloq:
-                        print 'lloq not found'; 
+                        print('lloq not found'); 
                         continue
                     # normalize the lloq
                     if (biological_material_I and conversion_name_I):
@@ -811,7 +811,7 @@ class stage01_quantification_execute():
     def execute_calculateAverages_replicates(self,experiment_id_I,sample_name_abbreviations_I=[]):
         '''Calculate the averages from replicates MI'''
         
-        print 'execute_calculateAverages_replicates...'
+        print('execute_calculateAverages_replicates...')
         # get sample_name_abbreviations
         if sample_name_abbreviations_I:
             sample_name_abbreviations = sample_name_abbreviations_I;
@@ -819,17 +819,17 @@ class stage01_quantification_execute():
             sample_name_abbreviations = [];
             sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01ReplicatesMI(experiment_id_I);
         for sna in sample_name_abbreviations:
-            print 'calculating averages from replicates for sample_name_abbreviation ' + sna;
+            print('calculating averages from replicates for sample_name_abbreviation ' + sna);
             # get component names
             component_names = [];
             component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndSampleNameAbbreviation_dataStage01ReplicatesMI(experiment_id_I,sna);
             for cn in component_names:
-                print 'calculating averages from replicates for component_name ' + cn;
+                print('calculating averages from replicates for component_name ' + cn);
                 component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName_dataStage01Normalized(experiment_id_I,cn);
                 # get time points
                 time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndSampleNameAbbreviation_dataStage01ReplicatesMI(experiment_id_I,sna);
                 for tp in time_points:
-                    print 'calculating averages from replicates for time_point ' + tp;
+                    print('calculating averages from replicates for time_point ' + tp);
                     # get sample names short
                     sample_names_short = [];
                     sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndComponentNameAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,sna,cn,tp);
@@ -867,7 +867,7 @@ class stage01_quantification_execute():
     def execute_calculateGeoAverages_replicates(self,experiment_id_I,sample_name_abbreviations_I=[]):
         '''Calculate the averages from replicates MI in ln space'''
 
-        print ' execute_calculateGeoAverages_replicates...'
+        print(' execute_calculateGeoAverages_replicates...')
         # get sample_name_abbreviations
         if sample_name_abbreviations_I:
             sample_name_abbreviations = sample_name_abbreviations_I;
@@ -875,17 +875,17 @@ class stage01_quantification_execute():
             sample_name_abbreviations = [];
             sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01ReplicatesMI(experiment_id_I);
         for sna in sample_name_abbreviations:
-            print 'calculating the geometric average from replicates for sample_name_abbreviation ' + sna;
+            print('calculating the geometric average from replicates for sample_name_abbreviation ' + sna);
             # get component names
             component_names = [];
             component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndSampleNameAbbreviation_dataStage01ReplicatesMI(experiment_id_I,sna);
             for cn in component_names:
-                print 'calculating the geometric average from replicates for component_names ' + cn;
+                print('calculating the geometric average from replicates for component_names ' + cn);
                 component_group_name = self.stage01_quantification_query.get_componentGroupName_experimentIDAndComponentName_dataStage01Normalized(experiment_id_I,cn);
                 # get time points
                 time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndSampleNameAbbreviation_dataStage01ReplicatesMI(experiment_id_I,sna);
                 for tp in time_points:
-                    print 'calculating the geometric average from replicates for time_points ' + tp;
+                    print('calculating the geometric average from replicates for time_points ' + tp);
                     # get sample names short
                     sample_names_short = [];
                     sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndComponentNameAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,sna,cn,tp);
@@ -914,7 +914,7 @@ class stage01_quantification_execute():
                         elif (conc_unit == 'height_ratio' or conc_unit == 'area_ratio'):
                             continue;
                         else:
-                            print 'units of ' + str(conc_unit) + ' are not supported'
+                            print('units of ' + str(conc_unit) + ' are not supported')
                             exit(-1);
                         concs.append(conc);
                     n_replicates = len(concs);
@@ -938,20 +938,20 @@ class stage01_quantification_execute():
     def execute_physiologicalRatios_replicates(self,experiment_id_I):
         '''Calculate physiologicalRatios from replicates MI'''
         
-        print 'calculate_physiologicalRatios_replicates...'
+        print('calculate_physiologicalRatios_replicates...')
         # get sample names short
         sample_names_short = [];
         sample_names_short = self.stage01_quantification_query.get_SampleNameShort_experimentID_dataStage01ReplicatesMI(experiment_id_I);
         ratios_calc_O = [];
         for sns in sample_names_short:
-            print 'calculating physiologicalRatios from replicates for sample_names_short ' + sns;
+            print('calculating physiologicalRatios from replicates for sample_names_short ' + sns);
             # get time points
             time_points = [];
             time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndSampleNameShort_dataStage01ReplicatesMI(experiment_id_I,sns);
             for tp in time_points:
-                print 'calculating physiologicalRatios from replicates for time_point ' + tp;
-                for k,v in self.ratios.iteritems():
-                    print 'calculating physiologicalRatios from replicates for ratio ' + k;
+                print('calculating physiologicalRatios from replicates for time_point ' + tp);
+                for k,v in self.ratios.items():
+                    print('calculating physiologicalRatios from replicates for ratio ' + k);
                     ratios_data={};
                     calcratios=True;
                     for cgn in v['component_group_name']:
@@ -1002,23 +1002,23 @@ class stage01_quantification_execute():
     def execute_physiologicalRatios_averages(self,experiment_id_I):
         '''Calculate physiologicalRatios_averages from physiologicalRatios_replicates'''
         
-        print 'calculate_physiologicalRatios_averages...'
+        print('calculate_physiologicalRatios_averages...')
         # get sample_name_abbreviations
         sample_name_abbreviations = [];
         sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage01PhysiologicalRatiosReplicates(experiment_id_I);
         for sna in sample_name_abbreviations:
-            print 'calculating physiologicalRatios from replicates for sample_name_abbreviation ' + sna;
+            print('calculating physiologicalRatios from replicates for sample_name_abbreviation ' + sna);
             # get time points
             time_points = [];
             time_points = self.stage01_quantification_query.get_timePoint_experimentIDAndSampleNameAbbreviation_dataStage01PhysiologicalRatiosReplicates(experiment_id_I,sna);
             for tp in time_points:
-                print 'calculating physiologicalRatios from replicates for time_point ' + tp;
+                print('calculating physiologicalRatios from replicates for time_point ' + tp);
                 # get ratio information
                 ratio_info = {};
                 ratio_info = self.stage01_quantification_query.get_ratioIDs_experimentIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id_I,tp)
                 #for k,v in self.ratios.iteritems():
-                for k,v in ratio_info.iteritems():
-                    print 'calculating physiologicalRatios from replicates for ratio ' + k;
+                for k,v in ratio_info.items():
+                    print('calculating physiologicalRatios from replicates for ratio ' + k);
                     # get sample names short
                     sample_names_short = [];
                     sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndRatioIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id_I,sna,k,tp);
@@ -1074,7 +1074,7 @@ class stage01_quantification_execute():
         #   peakInfo_I
         #   acquisition_date_and_time_I = ['%m/%d/%Y %H:%M','%m/%d/%Y %H:%M']
 
-        print 'execute_peakInformation...'
+        print('execute_peakInformation...')
         
         #convert string date time to datetime
         # e.g. time.strptime('4/15/2014 15:51','%m/%d/%Y %H:%M')
@@ -1101,9 +1101,9 @@ class stage01_quantification_execute():
                 sample_types_tmp = [];
                 sample_types_tmp = [st for sn in sample_names_tmp];
                 sample_types.extend(sample_types_tmp);
-        print str(len(sample_names)) + ' total samples';
+        print(str(len(sample_names)) + ' total samples');
         for sn in sample_names:
-            print 'analyzing peakInformation for sample_name ' + sn;
+            print('analyzing peakInformation for sample_name ' + sn);
             # get sample description
             desc = {};
             desc = self.stage01_quantification_query.get_description_experimentIDAndSampleID_sampleDescription(experiment_id_I,sn);
@@ -1179,7 +1179,7 @@ class stage01_quantification_execute():
         #   component_name_pairs_I = [[component_name_1,component_name_2],...]
         #   acquisition_date_and_time_I = ['%m/%d/%Y %H:%M','%m/%d/%Y %H:%M']
 
-        print 'execute_peakInformation_resolution...'
+        print('execute_peakInformation_resolution...')
         #convert string date time to datetime
         # e.g. time.strptime('4/15/2014 15:51','%m/%d/%Y %H:%M')
         acquisition_date_and_time = [];
@@ -1206,7 +1206,7 @@ class stage01_quantification_execute():
                 sample_types_tmp = [st for sn in sample_names_tmp];
                 sample_types.extend(sample_types_tmp);
         for sn in sample_names:
-            print 'analyzing peakInformation for sample_name ' + sn;
+            print('analyzing peakInformation for sample_name ' + sn);
             for component_name_pair in component_name_pairs_I:
                 # get critical pair data
                 cpd1 = {};
@@ -1442,7 +1442,7 @@ class stage01_quantification_execute():
         '''delete rows in data_stage01_MQResultsTable by sample name and sample type 
         (default = Quality Control and Unknown) from the experiment'''
         
-        print 'deleting rows in data_stage01_MQResultsTable by sample_name and sample_type...';
+        print('deleting rows in data_stage01_MQResultsTable by sample_name and sample_type...');
         dataDeletes = [];
         # get sample_names
         if sample_names_I:
@@ -1455,7 +1455,7 @@ class stage01_quantification_execute():
                 sample_names.extend(sample_names_tmp);
         for sn in sample_names:
             # format into a dictionary list
-            print 'deleting sample_name ' + sn;
+            print('deleting sample_name ' + sn);
             dataDeletes.append({'sample_name':sn});
         # delete rows based on sample_names
         self.stage01_quantification_query.delete_row_sampleName(dataDeletes);
@@ -1546,25 +1546,25 @@ class stage01_quantification_execute():
             den_O = ratio_mets_I["nadp"]+ratio_mets_I["nadph"]+ratio_mets_I["nad"]+ratio_mets_I["nadh"]
             ratio_O = (ratio_mets_I["nadph"]+ratio_mets_I["nadh"])/(ratio_mets_I["nadp"]+ratio_mets_I["nadph"]+ratio_mets_I["nad"]+ratio_mets_I["nadh"])
         else:
-            print 'ratio_id not recognized'
+            print('ratio_id not recognized')
         return ratio_O,num_O,den_O;
     #  visualizations
     def execute_boxAndWhiskersPlot_physiologicalRatios(self,experiment_id_I,sample_name_abbreviations_I=[],ratio_ids_I=[]):
         '''generate a boxAndWhiskers plot from physiological ratios table'''
 
-        print 'execute_boxAndWhiskersPlot...'
+        print('execute_boxAndWhiskersPlot...')
         # get time points
         time_points = [];
         time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01PhysiologicalRatiosAverages(experiment_id_I);
         for tp in time_points:
-            print 'generating boxAndWhiskersPlot for time_point ' + tp;
+            print('generating boxAndWhiskersPlot for time_point ' + tp);
             if ratio_ids_I:
                 ratio_ids = ratio_ids_I;
             else:
-                ratio_ids = self.ratios.keys();
+                ratio_ids = list(self.ratios.keys());
             for k in ratio_ids:
             #for k,v in self.ratios.iteritems():
-                print 'generating boxAndWhiskersPlot for ratio ' + k; # get sample_name_abbreviations
+                print('generating boxAndWhiskersPlot for ratio ' + k); # get sample_name_abbreviations
                 data_plot_mean = [];
                 data_plot_var = [];
                 data_plot_ci = [];
@@ -1578,7 +1578,7 @@ class stage01_quantification_execute():
                     sample_name_abbreviations = [];
                     sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndRatioID_dataStage01PhysiologicalRatiosAverages(experiment_id_I,tp,k);
                 for sna in sample_name_abbreviations:
-                    print 'generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna;
+                    print('generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna);
                     # get the data 
                     data = {};
                     data = self.stage01_quantification_query.get_data_experimentIDAndTimePointAndRatioIDAndSampleNameAbbreviation_dataStage01PhysiologicalRatiosAverages(experiment_id_I,tp,k,sna)
@@ -1598,7 +1598,7 @@ class stage01_quantification_execute():
     def execute_boxAndWhiskersPlot_averages(self,experiment_id_I,sample_name_abbreviations_I=[],component_names_I=[],time_points_I=[],time_course_I=False,show_95_ci_I=False,filename_I=None):
         '''generate a boxAndWhiskers plot from averagesMIGeo table'''
 
-        print 'execute_boxAndWhiskersPlot...'
+        print('execute_boxAndWhiskersPlot...')
         if time_course_I:
             if component_names_I:
                 component_names = component_names_I;
@@ -1606,7 +1606,7 @@ class stage01_quantification_execute():
                 component_names = [];
                 component_names = self.stage01_quantification_query.get_componentNames_experimentID_dataStage01AveragesMIgeo(experiment_id_I);
             for cn in component_names:
-                print 'generating boxAndWhiskersPlot for component_name ' + cn; 
+                print('generating boxAndWhiskersPlot for component_name ' + cn); 
                 # get time points
                 if time_points_I:
                     time_points = time_points_I;
@@ -1621,7 +1621,7 @@ class stage01_quantification_execute():
                 data_plot_data = [];
                 data_plot_calculated_concentration_units = [];
                 for tp in time_points:
-                    print 'generating boxAndWhiskersPlot for time_point ' + tp;
+                    print('generating boxAndWhiskersPlot for time_point ' + tp);
                     # get sample_name_abbreviations
                     if sample_name_abbreviations_I:
                         sample_name_abbreviations = sample_name_abbreviations_I;
@@ -1629,7 +1629,7 @@ class stage01_quantification_execute():
                         sample_name_abbreviations = [];
                         sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,tp,cn);
                     for sna in sample_name_abbreviations:
-                        print 'generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna;
+                        print('generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna);
                         # get the data 
                         data = {};
                         data = self.stage01_quantification_query.get_data_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,sna,tp,cn)
@@ -1657,7 +1657,7 @@ class stage01_quantification_execute():
                         else:
                             self.matplot.boxAndWhiskersPlot(data_plot_component_names[0],data_plot_sna,data_plot_calculated_concentration_units[0],'samples',data_95,data_plot_mean,data_plot_ci);
                     except IndexError as e:
-                        print e;
+                        print(e);
                 else:
                     data_plot_se = [(x[1]-x[0])/2 for x in data_plot_ci]
                     #self.matplot.barPlot(data_plot_component_names[0],data_plot_sna,data_plot_sna[0],'samples',data_plot_mean,se_I=data_plot_se,add_labels_I=False);
@@ -1670,14 +1670,14 @@ class stage01_quantification_execute():
                 time_points = [];
                 time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01AveragesMIgeo(experiment_id_I);
             for tp in time_points:
-                print 'generating boxAndWhiskersPlot for time_point ' + tp;
+                print('generating boxAndWhiskersPlot for time_point ' + tp);
                 if component_names_I:
                     component_names = component_names_I;
                 else:
                     component_names = [];
                     component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndTimePoint_dataStage01AveragesMIgeo(experiment_id_I,tp);
                 for cn in component_names:
-                    print 'generating boxAndWhiskersPlot for component_name ' + cn; 
+                    print('generating boxAndWhiskersPlot for component_name ' + cn); 
                     data_plot_mean = [];
                     data_plot_var = [];
                     data_plot_ci = [];
@@ -1692,7 +1692,7 @@ class stage01_quantification_execute():
                         sample_name_abbreviations = [];
                         sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,tp,cn);
                     for sna in sample_name_abbreviations:
-                        print 'generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna;
+                        print('generating boxAndWhiskersPlot for sample_name_abbreviation ' + sna);
                         # get the data 
                         data = {};
                         data = self.stage01_quantification_query.get_data_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,sna,tp,cn)
@@ -1720,19 +1720,19 @@ class stage01_quantification_execute():
     def execute_barPlot_averages(self,experiment_id_I,sample_name_abbreviations_I=[],component_names_I=[]):
         '''generate a bar plot from averagesMIGeo table'''
 
-        print 'execute_barPlot...'
+        print('execute_barPlot...')
         # get time points
         time_points = [];
         time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01AveragesMIgeo(experiment_id_I);
         for tp in time_points:
-            print 'generating barPlot for time_point ' + tp;
+            print('generating barPlot for time_point ' + tp);
             if component_names_I:
                 component_names = component_names_I;
             else:
                 component_names = [];
                 component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndTimePoint_dataStage01AveragesMIgeo(experiment_id_I,tp);
             for cn in component_names:
-                print 'generating barPlot for component_name ' + cn; 
+                print('generating barPlot for component_name ' + cn); 
                 data_plot_mean = [];
                 data_plot_var = [];
                 data_plot_ci = [];
@@ -1747,7 +1747,7 @@ class stage01_quantification_execute():
                     sample_name_abbreviations = [];
                     sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,tp,cn);
                 for sna in sample_name_abbreviations:
-                    print 'generating barPlot for sample_name_abbreviation ' + sna;
+                    print('generating barPlot for sample_name_abbreviation ' + sna);
                     # get the data 
                     data = {};
                     data = self.stage01_quantification_query.get_data_experimentIDAndSampleNameAbbreviationAndTimePointAndComponentName_dataStage01AveragesMIgeo(experiment_id_I,sna,tp,cn)
@@ -1769,20 +1769,20 @@ class stage01_quantification_execute():
         '''Generate a scatter line plot for physiological ratios averages'''
 
 
-        print 'Generating scatterLinePlot for physiologicalRatios'
+        print('Generating scatterLinePlot for physiologicalRatios')
         # get time points
         time_points = [];
         time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01PhysiologicalRatiosReplicates(experiment_id_I);
         for tp in time_points:
-            print 'Generating scatterLinePlot for physiologicalRatios for time_point ' + tp;
+            print('Generating scatterLinePlot for physiologicalRatios for time_point ' + tp);
             # get physiological ratio_ids
             ratios = {};
             ratios = self.stage01_quantification_query.get_ratioIDs_experimentIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id_I,tp);
-            for k,v in ratios.iteritems():
+            for k,v in ratios.items():
                 if ratio_ids_I: 
                     if not k in ratio_ids_I:
                         continue;
-                print 'Generating scatterLinePlot for physiologicalRatios for ratio ' + k;
+                print('Generating scatterLinePlot for physiologicalRatios for ratio ' + k);
                 # get sample_names
                 if sample_name_abbreviations_I:
                     sample_name_abbreviations = sample_name_abbreviations_I;
@@ -1792,7 +1792,7 @@ class stage01_quantification_execute():
                 ratios_num = [];
                 ratios_den = [];
                 for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                    print 'Generating scatterLinePlot for physiologicalRatios for sample name abbreviation ' + sna;
+                    print('Generating scatterLinePlot for physiologicalRatios for sample name abbreviation ' + sna);
                     # get ratios_numerator
                     ratio_num = None;
                     ratio_num = self.stage01_quantification_query.get_ratio_experimentIDAndTimePointAndRatioIDAndSampleNameAbbreviation_dataStage01PhysiologicalRatiosAverages(experiment_id_I,tp,k+'_numerator',sna)
@@ -1826,7 +1826,7 @@ class stage01_quantification_execute():
         #   y_data_type_I = 'acquisition_date_and_time' or 'count'
         #   plot_type_I = 'single', 'multiple', or 'sub'
 
-        print 'execute_peakInformation...'
+        print('execute_peakInformation...')
         
         #convert string date time to datetime
         # e.g. time.strptime('4/15/2014 15:51','%m/%d/%Y %H:%M')
@@ -1854,7 +1854,7 @@ class stage01_quantification_execute():
                 sample_types_tmp = [st for sn in sample_names_tmp];
                 sample_types.extend(sample_types_tmp);
         for sn in sample_names:
-            print 'analyzing peakInformation for sample_name ' + sn;
+            print('analyzing peakInformation for sample_name ' + sn);
             # get sample description
             desc = {};
             desc = self.stage01_quantification_query.get_description_experimentIDAndSampleID_sampleDescription(experiment_id_I,sn);
@@ -1965,7 +1965,7 @@ class stage01_quantification_execute():
         #   component_name_pairs_I = [[component_name_1,component_name_2],...]
         #   acquisition_date_and_time_I = ['%m/%d/%Y %H:%M','%m/%d/%Y %H:%M']
 
-        print 'execute_peakInformation_resolution...'
+        print('execute_peakInformation_resolution...')
         #convert string date time to datetime
         # e.g. time.strptime('4/15/2014 15:51','%m/%d/%Y %H:%M')
         acquisition_date_and_time = [];
@@ -1992,7 +1992,7 @@ class stage01_quantification_execute():
                 sample_types_tmp = [st for sn in sample_names_tmp];
                 sample_types.extend(sample_types_tmp);
         for sn in sample_names:
-            print 'analyzing peakInformation for sample_name ' + sn;
+            print('analyzing peakInformation for sample_name ' + sn);
             for component_name_pair in component_name_pairs_I:
                 # get critical pair data
                 cpd1 = {};
@@ -2090,7 +2090,7 @@ class stage01_quantification_execute():
                                                    component_names_I=[]):
         '''generate a boxAndWhiskers plot from peakInformation table'''
 
-        print 'execute_boxAndWhiskersPlot...'
+        print('execute_boxAndWhiskersPlot...')
         if peakInfo_parameter_I:
             peakInfo_parameter = peakInfo_parameter_I;
         else:
@@ -2110,7 +2110,7 @@ class stage01_quantification_execute():
                 component_names = [];
                 component_names = self.stage01_quantification_query.get_componentNames_experimentIDAndPeakInfoParameter_dataStage01PeakInformation(experiment_id_I,parameter);
             for cn in component_names:
-                print 'generating boxAndWhiskersPlot for component_name ' + cn; 
+                print('generating boxAndWhiskersPlot for component_name ' + cn); 
                 # get the data 
                 data = {};
                 data = self.stage01_quantification_query.get_row_experimentIDAndPeakInfoParameterComponentName_dataStage01PeakInformation(experiment_id_I,parameter,cn)
@@ -2131,7 +2131,7 @@ class stage01_quantification_execute():
                             peakInfo_parameter_I = ['rt_dif','resolution']):
         '''generate a boxAndWhiskers plot from peakResolution table'''
 
-        print 'execute_boxAndWhiskersPlot...'
+        print('execute_boxAndWhiskersPlot...')
         if peakInfo_parameter_I:
             peakInfo_parameter = peakInfo_parameter_I;
         else:

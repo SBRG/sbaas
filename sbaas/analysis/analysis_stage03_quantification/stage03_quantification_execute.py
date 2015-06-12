@@ -1,8 +1,8 @@
 '''quantitative metabolomics analysis class'''
 # Dependencies
 from analysis.analysis_base import *
-from stage03_quantification_query import *
-from stage03_quantification_io import *
+from .stage03_quantification_query import *
+from .stage03_quantification_io import *
 from math import pow
 import re
 import copy
@@ -50,7 +50,7 @@ class stage03_quantification_execute():
             data = [];
             data = self.stage03_quantification_query.get_rows_experimentID_dataStage01AveragesMIgeo(experiment_id_I);
         for d in data:
-            if d['component_group_name'] in met_id_conv_dict.keys():
+            if d['component_group_name'] in list(met_id_conv_dict.keys()):
                 met2conv = d['component_group_name'];
                 for met_conv in met_id_conv_dict[met2conv]:
                     row_tmp = copy.copy(d)
@@ -94,14 +94,14 @@ class stage03_quantification_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
             if convert2irreversible_I: convert_to_irreversible(cobra_model);
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -123,7 +123,7 @@ class stage03_quantification_execute():
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -137,7 +137,7 @@ class stage03_quantification_execute():
                 # upload the model to the database
                 qio03.import_dataStage03QuantificationModel_sbml(model_id_I, date_I, 'data/cobra_model_tmp.xml');
         else:
-            print 'need to specify either an existing model_id or model_file_name!'
+            print('need to specify either an existing model_id or model_file_name!')
         return
     def execute_makeSimulatedData(self,experiment_id_I,model_ids_I = []):
         '''make simulated data'''
@@ -157,7 +157,7 @@ class stage03_quantification_execute():
             simulated_data.generate_fva_data(cobra_model); # perform flux variability analysis
             # upload the results to the database
             data_O = [];
-            for k,v in simulated_data.fva_data.iteritems():
+            for k,v in simulated_data.fva_data.items():
                 data_tmp = {'experiment_id':experiment_id_I,
                 'model_id':model_id,
                 'rxn_id':k,
@@ -186,9 +186,9 @@ class stage03_quantification_execute():
                     self.session.add(row);
                     self.session.commit();
                 except sqlalchemy.exc.IntegrityError as e:
-                    print e;
-                    print "Press any key to continue"
-                    a=raw_input();
+                    print(e);
+                    print("Press any key to continue")
+                    a=input();
                     self.stage03_quantification_query.update_dataStage03SimulatedData([tmp]);
     def execute_adjust_dG_f(self,experiment_id_I,model_ids_I = [],time_points_I=[],sample_name_abbreviations_I=[]):
         '''adjust dG0_f to specified temperature, pH, and ionic strength'''
@@ -232,7 +232,7 @@ class stage03_quantification_execute():
                     dG_f_data = thermodynamics_dG_f_data(id2KEGGID_I=id2kegg);
                     dG_f_data.get_transformed_dG_f(dG0_f,cobra_model,other_data.pH,other_data.temperature,other_data.ionic_strength); # adjust the non-transformed dG0_f data to physiological pH, temperature, and ionic strength (this step has already been completed)
                     # upload to database for later use
-                    for k,v in dG_f_data.dG_f.iteritems():
+                    for k,v in dG_f_data.dG_f.items():
                         compartment = k.split('_')[-1]; #compartment id is appended to the met_id
                         data_tmp={'experiment_id':experiment_id_I,
                             'model_id':model_id,
@@ -351,7 +351,7 @@ class stage03_quantification_execute():
                     tcc.simulate_infeasibleReactions(cobra_model); # simulate thermodynamically inconsistent data
                     tcc.constrain_infeasibleReactions(cobra_model); # remove thermodynamically inconsistent reactions from the model
                     # upload dG0r, dGr, displacements, and results of tcc
-                    for k,v in tcc.dG_r.iteritems():
+                    for k,v in tcc.dG_r.items():
                         dG0_r_tmp = {'experiment_id':experiment_id_I,
                                 'model_id':model_id,
                                 'sample_name_abbreviation':sna,
@@ -448,9 +448,9 @@ class stage03_quantification_execute():
                                     None);
                             self.session.add(row);
                         except sqlalchemy.exc.IntegrityError as e:
-                            print e;
-                            print "Press any key to continue"
-                            a=raw_input();
+                            print(e);
+                            print("Press any key to continue")
+                            a=input();
                     self.session.commit();                   
     def execute_calculate_dG_p(self,experiment_id_I,model_ids_I = [],
                                time_points_I=[],sample_name_abbreviations_I=[]):
@@ -493,7 +493,7 @@ class stage03_quantification_execute():
                     tccp = thermodynamics_dG_p_data(pathways_I=pathways);
                     tccp.calculate_dG_p(cobra_model,tcc.dG0_r,tcc.dG_r);
                     # upload dG_p
-                    for k,v in tccp.dG_p.iteritems():
+                    for k,v in tccp.dG_p.items():
                         dG0_p_tmp = {'experiment_id':experiment_id_I,
                                 'model_id':model_id,
                                 'sample_name_abbreviation':sna,
@@ -548,9 +548,9 @@ class stage03_quantification_execute():
                                     None);
                             self.session.add(row);
                         except sqlalchemy.exc.IntegrityError as e:
-                            print e;
-                            print "Press any key to continue"
-                            a=raw_input();
+                            print(e);
+                            print("Press any key to continue")
+                            a=input();
                     self.session.commit();   
     def execute_thermodynamicSampling(self,simulation_id_I,rxn_ids_I=[],
                     inconsistent_dG_f_I=[],inconsistent_concentrations_I=[],
@@ -565,19 +565,19 @@ class stage03_quantification_execute():
         #   inconsistent_concentrations_I = concentration measured values to be substituted for estimated values
         #   inconsistent_tcc_I = reactions considered feasible to be changed to infeasible so that dG0_r constraints do not break the model
 
-        print 'execute_thermodynamicSampling...'
+        print('execute_thermodynamicSampling...')
         # get simulation information
         simulation_info_all = [];
         simulation_info_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulation(simulation_id_I);
         if not simulation_info_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
         # get simulation parameters
         simulation_parameters_all = [];
         simulation_parameters_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulationParameters(simulation_id_I);
         if not simulation_parameters_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
         # get the cobra model
@@ -651,9 +651,9 @@ class stage03_quantification_execute():
             elif simulation_parameters['sampler_id']=='optGpSampler':
                 return;
             else:
-                print 'sampler_id not recognized';
+                print('sampler_id not recognized');
         else:
-            print 'no solution found!';  
+            print('no solution found!');  
     def execute_addMeasuredFluxes(self,experiment_id_I, ko_list={}, flux_dict={}, model_ids_I=[], sample_name_abbreviations_I=[]):
         '''Add flux data for physiological simulation'''
         #Input:
@@ -681,9 +681,9 @@ class stage03_quantification_execute():
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage03_quantification_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage03QuantificationSimulation(experiment_id_I,model_id);
             for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                print 'Adding experimental fluxes for sample name abbreviation ' + sna;
+                print('Adding experimental fluxes for sample name abbreviation ' + sna);
                 if flux_dict:
-                    for k,v in flux_dict[model_id][sna].iteritems():
+                    for k,v in flux_dict[model_id][sna].items():
                         # record the data
                         data_tmp = {'experiment_id':experiment_id_I,
                                 'model_id':model_id,
@@ -760,7 +760,7 @@ class stage03_quantification_execute():
             sample_name_abbreviations = [];
             sample_name_abbreviations = self.stage03_quantification_query.get_sampleNameAbbreviations_experimentID_dataStage03QuantificationSimulation(experiment_id_I);
         for sna in sample_name_abbreviations:
-            print 'Collecting experimental fluxes for sample name abbreviation ' + sna;
+            print('Collecting experimental fluxes for sample name abbreviation ' + sna);
             # get met_ids
             if not met_ids_I:
                 met_ids = [];
@@ -769,7 +769,7 @@ class stage03_quantification_execute():
                 met_ids = met_ids_I;
             if not(met_ids): continue #no component information was found
             for met in met_ids:
-                print 'Collecting experimental fluxes for metabolite ' + met;
+                print('Collecting experimental fluxes for metabolite ' + met);
                 # get rateData
                 slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = None,None,None,None,None,None,None;
                 slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = self.stage03_quantification_query.get_rateData_experimentIDAndSampleNameAbbreviationAndMetID_dataStage01PhysiologyRatesAverages(experiment_id_I,sna,met);
@@ -990,14 +990,14 @@ class stage03_quantification_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
         elif cobra_model_I:
             cobra_model = cobra_model_I;
         # implement optimal KOs and flux constraints:
         for ko in ko_list:
             cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
             cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
-        for rxn,flux in flux_dict.iteritems():
+        for rxn,flux in flux_dict.items():
             cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
             cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
         # change description, if any:
@@ -1008,7 +1008,7 @@ class stage03_quantification_execute():
         if not cobra_model.solution.f:
             return False;
         else:
-            print cobra_model.solution.f;
+            print(cobra_model.solution.f);
             return True;
     def load_models(self,experiment_id_I,model_ids_I=[]):
         '''pre-load all models for the experiment_id'''
@@ -1034,19 +1034,19 @@ class stage03_quantification_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
             self.models[model_id]=cobra_model;
 
     #TODO:
     def execute_compareThermodynamicStates(self,experiment_id_I):
         '''perform a  pairwise comparison of thermodynamic states'''
 
-        print 'execute_compareThermodynamicStates'
+        print('execute_compareThermodynamicStates')
 
     def execute_visualizeThermodynamicStates(self,experiment_id_I):
         '''exports thermodynamic data for visualization using escher'''
 
-        print 'execute_visualizeThermodynamicStates'
+        print('execute_visualizeThermodynamicStates')
     def execute_makeEstimatedFluxes(self,experimentID2IsotopomerSimulationID_I = {},sample_name_abbreviations_I = [],snaIsotopomer2snaPhysiology_I={}):
         '''Collect estimated flux data from data_stage02_istopomer_netFluxes for thermodynamic simulation'''
         return
@@ -1058,19 +1058,19 @@ class stage03_quantification_execute():
                     n_checks_I = 5,
                     diagnose_solver_I='glpk',diagnose_threshold_I=0.98,diagnose_break_I=0.1):
         
-        print 'check_thermodynamicConstraints...'
+        print('check_thermodynamicConstraints...')
         # get simulation information
         simulation_info_all = [];
         simulation_info_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulation(simulation_id_I);
         if not simulation_info_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
         # get simulation parameters
         simulation_parameters_all = [];
         simulation_parameters_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulationParameters(simulation_id_I);
         if not simulation_parameters_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
         # get the cobra model
@@ -1139,20 +1139,20 @@ class stage03_quantification_execute():
                     measured_dG_f_coverage_criteria_I=0.99):
         '''Load and analyze sampling points'''
 
-        print 'analyzing sampling points';
+        print('analyzing sampling points');
         
         # get simulation information
         simulation_info_all = [];
         simulation_info_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulation(simulation_id_I);
         if not simulation_info_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
         # get simulation parameters
         simulation_parameters_all = [];
         simulation_parameters_all = self.stage03_quantification_query.get_rows_simulationID_dataStage03QuantificationSimulationParameters(simulation_id_I);
         if not simulation_parameters_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
         # get the cobra model
@@ -1228,7 +1228,7 @@ class stage03_quantification_execute():
             elif simulation_parameters['sampler_id']=='optGpSampler':
                 return;
             else:
-                print 'sampler_id not recognized';
+                print('sampler_id not recognized');
             # add data to the database
             row = None;
             row = data_stage03_quantification_sampledPoints(
@@ -1240,7 +1240,7 @@ class stage03_quantification_execute():
                 True,
                 None);
             self.session.add(row);
-            for k,v in self.sampling.points_statistics.iteritems():
+            for k,v in self.sampling.points_statistics.items():
                 row = None;
                 row = data_stage03_quantification_sampledData(
                     simulation_id_I,
@@ -1261,5 +1261,5 @@ class stage03_quantification_execute():
                     None);
                 self.session.add(row);
         else:
-            print 'no solution found!';
+            print('no solution found!');
         self.session.commit()  

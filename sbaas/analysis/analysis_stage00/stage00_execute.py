@@ -1,6 +1,6 @@
 from analysis.analysis_base import *
-from stage00_query import *
-from stage00_io import *
+from .stage00_query import *
+from .stage00_io import *
 from resources.molmass import Formula
 import re
 import io,os
@@ -56,7 +56,7 @@ class stage00_execute():
             trans['ms_methodtype'] = 'isotopomer_13C';
             
             # match precursor to product and add to new mrms list
-            for pre_m,pre_Formula in precursor_ensemble.iteritems(): # loop over each precursor
+            for pre_m,pre_Formula in precursor_ensemble.items(): # loop over each precursor
                 if nCpre-pre_m < nCpro: nUnlabeled = nCpre-pre_m;
                 else: nUnlabeled = nCpro;
                 if pre_m < nCpro: nLabeled = pre_m;
@@ -117,7 +117,7 @@ class stage00_execute():
                 trans_precursor_formula = Formula(re.sub('[+-]', '', trans['precursor_formula'])) # remove '-' or '+'
                 trans['precursor_formula'] = trans_precursor_formula.formula + trans['ms_mode'];
                 trans['precursor_exactmass'] = trans_precursor_formula.isotope.mass;
-                if 'C' in trans_precursor_formula._elements.keys():
+                if 'C' in list(trans_precursor_formula._elements.keys()):
                     nC = trans_precursor_formula._elements['C'][0];
                     tmp = Formula(trans_precursor_formula.formula);
                     tmp._elements['C'] = {13:nC};
@@ -134,7 +134,7 @@ class stage00_execute():
                 trans_product_formula = Formula(re.sub('[+-]', '', trans['product_formula'])) # remove '-' or '+'
                 trans['product_formula'] = trans_product_formula.formula + trans['ms_mode'];
                 trans['product_exactmass'] = trans_product_formula.isotope.mass;
-                if 'C' in trans_product_formula._elements.keys():
+                if 'C' in list(trans_product_formula._elements.keys()):
                     nC = trans_product_formula._elements['C'][0];
                     tmp = Formula(trans_product_formula.formula);
                     tmp._elements['C'] = {13:nC};
@@ -243,7 +243,7 @@ class stage00_execute():
             mscomponents = [];
             mscomponents = self.stage00_query.get_Q1AndQ3MassAndMode_MSComponents(met);
             if len(mscomponents)==0:
-                print ('no component found for ' + met + ' in ms_components')
+                print(('no component found for ' + met + ' in ms_components'))
                 continue;
             # calculate the formula, exact mass, and average mass for the ms_mode
             data_tmp = {};
@@ -266,7 +266,7 @@ class stage00_execute():
                                    'precursor_exactmass':precursor.isotope.mass,
                                    'precursor_formula':precursor.formula + '+'});
                 else:
-                    print ('no ms_mode specified for ' + met)
+                    print(('no ms_mode specified for ' + met))
                     exit(-1);
         # update ms_components table
         io.update_MSComponents_precursorFormulaAndMass(data_O);
@@ -304,9 +304,9 @@ class stage00_execute():
             exp_types = [v['exp_type_id'] for v in experiment_data];
             exp_types_unique = list(set(exp_types));
             if len(experiment_ids_unique)!=1 or len(exp_types_unique)!=1:
-                print 'More than 1 experiment_id and/or more than 1 exp_type found';
-                print 'This should be changed in future iterations';
-                print 'Technical replicates and dilutions will not be made';
+                print('More than 1 experiment_id and/or more than 1 exp_type found');
+                print('This should be changed in future iterations');
+                print('Technical replicates and dilutions will not be made');
                 return;
             # make the technical replicates and dilutions
             sampleDescription_data,samplePhysiologicalParameters_data,\
@@ -387,7 +387,7 @@ class stage00_execute():
         for sc in samplesComponents:
             # if met_id is a pool of metabolites, convert to the metabolite
             # that is logged in calibrator tables and standards tables
-            if sc['met_id'] in met_id_conv_dict.keys():
+            if sc['met_id'] in list(met_id_conv_dict.keys()):
                 met_id_conv = met_id_conv_dict[sc['met_id']];
             else:
                 met_id_conv = sc['met_id'];

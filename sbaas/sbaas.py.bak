@@ -1,0 +1,15 @@
+##Analysis tests:
+#from tests import analysis_ale, analysis_physiology, analysis_resequencing
+#analysis_ale.run_all_tests();
+#analysis_physiology.run_all_tests();
+#analysis_resequencing.run_all_tests();
+
+#Visualization tests:
+from visualization.server import run
+run();
+#run(port=8080,public=True);
+
+##Debug mode:
+#from analysis import *
+#ex01 = stage01_isotopomer_execute();
+#ex01.execute_buildSpectrumFromPeakData('ALEsKOs01','isotopomer_13C');

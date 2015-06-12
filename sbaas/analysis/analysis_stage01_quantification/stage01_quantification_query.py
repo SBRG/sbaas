@@ -672,8 +672,8 @@ class stage01_quantification_query(base_analysis):
                         data_stage01_quantification_MQResultsTable.sample_name.like(d['sample_name'])).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);

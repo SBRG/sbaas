@@ -30,8 +30,8 @@ def data_stage01():
                         filename='visualization/data/ALEsKOs01/ale/scatterlineplot/tpiA.js');
 
 def run_all_tests():
-    print 'testing data_stage00_ale...'
+    print('testing data_stage00_ale...')
     data_stage00();
-    print 'testing data_stage01_ale...'
+    print('testing data_stage01_ale...')
     data_stage01();
     

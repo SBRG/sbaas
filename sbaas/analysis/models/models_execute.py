@@ -1,6 +1,6 @@
 from analysis.analysis_base import *
-from models_query import *
-from models_io import *
+from .models_query import *
+from .models_io import *
 
 class models_execute(base_analysis):
     '''class for analysis models'''

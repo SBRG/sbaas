@@ -45,7 +45,7 @@ Requirements
 
 """
 
-from __future__ import division, print_function
+
 
 import os
 import re
@@ -53,7 +53,7 @@ import sys
 import cgi
 
 if sys.version_info[0] == 2:
-    from urlparse import urlunsplit
+    from urllib.parse import urlunsplit
 else:
     from urllib.parse import urlunsplit
 
@@ -172,7 +172,7 @@ def response(form, template=None, result=None):
 def analyze(formula, maxatoms=250):
     """Return analysis of formula as HTML string."""
 
-    import molmass
+    from . import molmass
 
     def html(formula):
         """Return formula as HTML string."""
@@ -244,7 +244,7 @@ def analyze(formula, maxatoms=250):
                     '<th scope="col" align="right">Fraction %</th>',
                     '<th scope="col" align="right">Intensity</th>',
                     '</tr>'))
-                for mass, fraction in s.values():
+                for mass, fraction in list(s.values()):
                     result.extend((
                         '<tr><td>%.*f</td>' % (prec, mass),
                         '<td align="right">%.6f</td>' % (fraction * 100.0),
@@ -263,7 +263,7 @@ def analyze(formula, maxatoms=250):
 def isotopes():
     """Return table of isotope masses and abundances as HTML string."""
 
-    import molmass
+    from . import molmass
 
     template = """<h3>Isotopic Composition of the Elements</h3>
     <table border="0" cellpadding="2">
@@ -294,7 +294,7 @@ def isotopes():
 def groups():
     """Return table of chemical groups as HTML string."""
 
-    import molmass
+    from . import molmass
 
     template = """<h3>%s</h3>
     <table border="0" cellpadding="2">
@@ -313,7 +313,7 @@ def groups():
         tmp = []
         for key in sorted(groups):
             value = groups[key]
-            if isinstance(value, basestring if sys.version[0] == '2' else str):
+            if isinstance(value, str if sys.version[0] == '2' else str):
                 tmp.append("<tr><td>%s</td><td>%s</td></tr>" % (key, value))
         result.append(template % (title, "\n".join(tmp)))
     return "\n".join(result)
@@ -367,8 +367,8 @@ if __name__ == "__main__":
         import cgitb
         cgitb.enable()
         if sys.version_info[0] == 2:
-            from BaseHTTPServer import HTTPServer
-            from CGIHTTPServer import CGIHTTPRequestHandler
+            from http.server import HTTPServer
+            from http.server import CGIHTTPRequestHandler
         else:
             from http.server import HTTPServer, CGIHTTPRequestHandler
         CGIHTTPRequestHandler.is_cgi = is_cgi

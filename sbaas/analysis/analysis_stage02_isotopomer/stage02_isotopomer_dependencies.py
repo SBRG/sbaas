@@ -1,8 +1,8 @@
 '''isotopomer metabolomics analysis class'''
 
 from analysis.analysis_base import *
-from stage02_isotopomer_query import *
-from stage02_isotopomer_io import *
+from .stage02_isotopomer_query import *
+from .stage02_isotopomer_io import *
 # Dependencies
 import operator, json, csv
 from copy import copy
@@ -328,7 +328,7 @@ class stage02_isotopomer_dependencies():
 
         # Reduce model
         rxns_noflux = [];
-        for k,v in fva_data.iteritems():
+        for k,v in fva_data.items():
             if v['minimum'] == 0.0 and v['maximum'] == 0.0:
                 cobra_model.reactions.get_by_id(k).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(k).upper_bound = 0.0;
@@ -342,9 +342,9 @@ class stage02_isotopomer_dependencies():
 
         # Check that the reduced model is consistent with the original model
         if not sol_f == sol_reduced_f:
-            print 'reduced model is inconsistent with the original model'
-            print 'original model solution: ' + str(sol_f)
-            print 'reduced model solution: ' + str(sol_reduced_f)
+            print('reduced model is inconsistent with the original model')
+            print('original model solution: ' + str(sol_f))
+            print('reduced model solution: ' + str(sol_reduced_f))
     def reduce_model_pfba(self,cobra_model,cobra_model_outFileName=None,fba_outFileName=None,subs=[]):
         '''reduce model using pfba'''
         # Input: cobra_model
@@ -362,7 +362,7 @@ class stage02_isotopomer_dependencies():
         # Reduce model
         rxns_noflux = [];
         # set lb and ub for all reactions with 0 flux to 0;
-        for k,v in cobra_model.solution.x_dict.iteritems():
+        for k,v in cobra_model.solution.x_dict.items():
             if (v < 0.0 or v == 0.0) and cobra_model.reactions.get_by_id(k).subsystem in subs:
                 cobra_model.reactions.get_by_id(k).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(k).upper_bound = 0.0;
@@ -376,7 +376,7 @@ class stage02_isotopomer_dependencies():
             with open(pfba_outFileName,mode='wb') as outfile:
                 writer = csv.writer(outfile)
                 writer.writerow(['Reaction','Flux'])
-                for k,v in cobra_model.solution.x_dict.iteritems():
+                for k,v in cobra_model.solution.x_dict.items():
                     writer.writerow([k,v]);
 
         cobra_model.optimize()
@@ -384,9 +384,9 @@ class stage02_isotopomer_dependencies():
 
         # Check that the reduced model is consistent with the original model
         if not sol_f == sol_reduced_f:
-            print 'reduced model is inconsistent with the original model'
-            print 'original model solution: ' + str(sol_f)
-            print 'reduced model solution: ' + str(sol_reduced_f)
+            print('reduced model is inconsistent with the original model')
+            print('original model solution: ' + str(sol_f))
+            print('reduced model solution: ' + str(sol_reduced_f))
     def add_net_reaction(self,cobra_model_IO, rxn_dict_I,remove_reverse=False):
         '''add a net reaction to the model after removing
         the individual reactions'''
@@ -397,30 +397,30 @@ class stage02_isotopomer_dependencies():
 
         cobra_model_IO.optimize();
         sol_orig = cobra_model_IO.solution.f;
-        print "original model solution", sol_orig
+        print("original model solution", sol_orig)
 
         try:
             cobra_model_tmp = cobra_model_IO.copy2();
         except KeyError as e:
-            print e; 
+            print(e); 
 
         # make net reactions:
         rxn_dict_net = {};
-        for k,v in rxn_dict_I.iteritems():
+        for k,v in rxn_dict_I.items():
             rxn_net = make_net_reaction(cobra_model_tmp, k, v['reactions'],v['stoichiometry']);
             if rxn_net:
                 rxn_net.lower_bound = 0.0;
                 rxn_net.upper_bound = 1000.0;
                 rxn_net.objective_coefficient = 0.0;
             else:
-                print 'an error occured in add_net_reaction'
+                print('an error occured in add_net_reaction')
                 exit(-1)
 
             #rxn_net.reversibility = False;
             rxn_dict_net[k] = (v['reactions'],rxn_net);
 
         # add replace individual reactions with net reaction
-        for k,v in rxn_dict_net.iteritems():
+        for k,v in rxn_dict_net.items():
             cobra_model_IO.remove_reactions(v[0]);
             # remove the reverse reaction if it exists for irreversible models
             if remove_reverse:
@@ -434,7 +434,7 @@ class stage02_isotopomer_dependencies():
             cobra_model_IO.add_reaction(v[1]);
             cobra_model_IO.optimize();
             sol_new = cobra_model_IO.solution.f;
-            print k, sol_new
+            print(k, sol_new)
     def make_net_reaction(self,cobra_model_I, rxn_id_I, rxn_list_I,stoich_list_I):
         '''generate a net reaction from a list of individual reactions'''
         # input: rxn_list_I = list of reaction IDs
@@ -450,7 +450,7 @@ class stage02_isotopomer_dependencies():
 
         # check input:
         if not len(stoich_list_I) == len(rxn_list_I):
-            print "error in " + rxn_id_I + ": there are " + str(len(rxn_list_I)) + " rxn ids and " + str(len(stoich_list_I)) + " coefficients";
+            print("error in " + rxn_id_I + ": there are " + str(len(rxn_list_I)) + " rxn ids and " + str(len(stoich_list_I)) + " coefficients");
             exit(-1);
 
         rxn_net_O = Reaction(rxn_id_I);
@@ -473,25 +473,25 @@ class stage02_isotopomer_dependencies():
     def get_solBySub(self,cobra_model_I,sol_I,sub_I):
 
         sol_O = {};
-        for k,v in sol_I.iteritems():
+        for k,v in sol_I.items():
             try:
                 if cobra_model_I.reactions.get_by_id(k).subsystem == sub_I:
                     sol_O[k] = v;
             except:
-                print k + ' reaction not found'
+                print(k + ' reaction not found')
 
         return sol_O;
     def groupBySameFlux(self,cobra_model_I,sol_I):
 
         flux_list = [];
-        for r,f in sol_I.iteritems():
+        for r,f in sol_I.items():
             if not f in flux_list and float(f)>0.0:
                 flux_list.append(f)
             
         sameFlux_O = {};
         for f in flux_list:
             rxn_list = [];
-            for r,v in sol_I.iteritems():
+            for r,v in sol_I.items():
                 if v==f:
                     rxn_list.append(r);
             stoich = [1]*len(rxn_list)
@@ -528,12 +528,12 @@ class stage02_isotopomer_dependencies():
             sol = get_solBySub(cobra_model_IO,sol_I,s)
             sameFlux = groupBySameFlux(cobra_model_IO,sol)
             netRxns = {};
-            for k,v in sameFlux.iteritems():
+            for k,v in sameFlux.items():
                 if len(v['reactions'])>1: 
                     netRxns[k] = v;
             add_net_reaction(cobra_model_IO,netRxns);
             # add subsystem information back in
-            for k in sameFlux.iterkeys():
+            for k in sameFlux.keys():
                 cobra_model_IO.reactions.get_by_id(k).subsystem = s
             remove_noflux_reactions(cobra_model_IO,sol_I,subs_I)
         # convert model back to reversible
@@ -554,7 +554,7 @@ class stage02_isotopomer_dependencies():
         # set lb and ub for all reactions with 0 flux to 0;
         if sol:
             if subs:
-                for k,v in sol.iteritems():
+                for k,v in sol.items():
                     try:
                         if (float(v) < 0.0 or float(v) == 0.0) and cobra_model.reactions.get_by_id(k).subsystem in subs:
                             cobra_model.reactions.get_by_id(k).lower_bound = 0.0;
@@ -562,9 +562,9 @@ class stage02_isotopomer_dependencies():
                             cobra_model.remove_reactions(k)
                             rxns_noflux.append(k);
                     except:
-                        print 'reaction is not in model: ' + k
+                        print('reaction is not in model: ' + k)
             else:
-                for k,v in sol.iteritems():
+                for k,v in sol.items():
                     try:
                         if (float(v) < 0.0 or float(v) == 0.0):
                             cobra_model.reactions.get_by_id(k).lower_bound = 0.0;
@@ -572,7 +572,7 @@ class stage02_isotopomer_dependencies():
                             cobra_model.remove_reactions(k)
                             rxns_noflux.append(k);
                     except:
-                        print 'reaction is not in model: ' + k
+                        print('reaction is not in model: ' + k)
         else:
             if subs:
                 for r in cobra_model.reactions:
@@ -588,9 +588,9 @@ class stage02_isotopomer_dependencies():
 
         # Check that the reduced model is consistent with the original model
         if not sol_f == sol_reduced_f:
-            print 'reduced model is inconsistent with the original model'
-            print 'original model solution: ' + str(sol_f)
-            print 'reduced model solution: ' + str(sol_reduced_f)
+            print('reduced model is inconsistent with the original model')
+            print('original model solution: ' + str(sol_f))
+            print('reduced model solution: ' + str(sol_reduced_f))
     def get_reactionsInfo(self,cobra_model):
         '''return the number of reactions and the number of reactions 
         that cannot carry a flux (i.e. lb and ub of 0.0)'''
@@ -615,7 +615,7 @@ class stage02_isotopomer_dependencies():
         with open(pfba_file,mode='wb') as outfile:
             writer = csv.writer(outfile)
             writer.writerow(['Reaction','Flux'])
-            for k,v in cobra_model.solution.x_dict.iteritems():
+            for k,v in cobra_model.solution.x_dict.items():
                 writer.writerow([k,v]);
         # Read in pfba solution 
         pfba_sol = {};
@@ -675,7 +675,7 @@ class stage02_isotopomer_dependencies():
         with open(pfba_filename,mode='wb') as outfile:
             writer = csv.writer(outfile)
             writer.writerow(['Reaction','Flux','Subsystem'])
-            for k,v in cobra_model.solution.x_dict.iteritems():
+            for k,v in cobra_model.solution.x_dict.items():
                 writer.writerow([k,v,cobra_model.reactions.get_by_id(k).subsystem]);
         # Read in pfba solution 
         pfba_sol = {};
@@ -725,7 +725,7 @@ class stage02_isotopomer_dependencies():
         while r2 !=0:
             self.remove_noflux_reactions(cobra_model);
             r1,r2 = self.get_reactionsInfo(cobra_model);
-            print r1,r2;
+            print(r1,r2);
         # write model to sbml
         write_cobra_model_to_sbml_file(cobra_model,netrxn_irreversible_model_filename)
         with open(reduced_lbub_filename,mode='wb') as outfile:
@@ -762,7 +762,7 @@ class stage02_isotopomer_dependencies():
             cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
             cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
         # Apply flux constraints, if any:
-        for rxn,flux in flux_dict.iteritems():
+        for rxn,flux in flux_dict.items():
             cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
             cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
         # Change description, if any:
@@ -775,7 +775,7 @@ class stage02_isotopomer_dependencies():
         write_cobra_model_to_sbml_file(cobra_model,xml_filename)
         # Add isotopomer field to model
         for r in cobra_model.reactions:
-            if isotopomer_str.has_key(r.id):
+            if r.id in isotopomer_str:
                 cobra_model.reactions.get_by_id(r.id).isotopomer = isotopomer_str[r.id];
             else:
                 cobra_model.reactions.get_by_id(r.id).isotopomer = '';
@@ -824,7 +824,7 @@ class stage02_isotopomer_dependencies():
                 cobra_model = None;
                 cobra_model = load_json_model('data/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
 
         #get the atomMapping_reactions
         atomMappingReactions = query.get_rows_mappingID_dataStage02IsotopomerAtomMappingReactions(mapping_id_I);
@@ -1224,7 +1224,7 @@ class stage02_isotopomer_dependencies():
                 cobra_model = None;
                 cobra_model = load_json_model('data/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
 
         #get the atomMapping_reactions
         atomMappingReactions = query.get_rows_mappingID_dataStage02IsotopomerAtomMappingReactions(mapping_id_I);
@@ -1992,7 +1992,7 @@ class stage02_isotopomer_dependencies():
                 cobra_model = None;
                 cobra_model = load_json_model('data/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
 
         #get the atomMapping_reactions
         atomMappingReactions = query.get_rows_mappingID_dataStage02IsotopomerAtomMappingReactions(mapping_id_I);
@@ -2283,7 +2283,7 @@ class stage02_isotopomer_dependencies():
             measured_ave = [];
             measured_stdev = [];
             # extract data to lists
-            for frag,data in measured_dict['fragments'].iteritems():
+            for frag,data in measured_dict['fragments'].items():
                 for name in data['data_names']:
                     measured_names.append(name);
                 for ave in data['data_ave']:
@@ -2300,7 +2300,7 @@ class stage02_isotopomer_dependencies():
             measured_stdev = [];
             residuals = [];
             for i,name in enumerate(names):
-                if measured_dict.has_key(name[0][0]):
+                if name[0][0] in measured_dict:
                     measured_ave.append(measured_dict[name[0][0]]['measured_ave']);
                     measured_stdev.append(measured_dict[name[0][0]]['measured_stdev']);
                     residuals.append(measured_dict[name[0][0]]['measured_ave']-calculated_ave[i][0]);
@@ -2355,7 +2355,7 @@ class stage02_isotopomer_dependencies():
         calculatedAve_2_list = [];
         measuredStdev_1_list = [];
         measuredStdev_2_list = [];
-        for frag,data in isotopomer_1.iteritems():
+        for frag,data in isotopomer_1.items():
             absDif = 0.0;
             sr_1 = 0.0;
             sr_2 = 0.0;
@@ -2396,14 +2396,14 @@ class stage02_isotopomer_dependencies():
 
         # wrap stats into a dictionary
         isotopomer_comparison_stats = {};
-        isotopomer_comparison_stats = dict(zip(('r_measuredVsCalculated_1', 'p_measuredVsCalculated_1',
+        isotopomer_comparison_stats = dict(list(zip(('r_measuredVsCalculated_1', 'p_measuredVsCalculated_1',
             'r_measuredVsCalculated_2', 'p_measuredVsCalculated_2',
             'r_measured1VsMeasured2', 'p_measured1VsMeasured2',
             'ssr_1,ssr_2'),
                                                (r_measuredVsCalculated_1, p_measuredVsCalculated_1,
             r_measuredVsCalculated_2, p_measuredVsCalculated_2,
             r_measured1VsMeasured2, p_measured1VsMeasured2,
-            ssr_1,ssr_2)));
+            ssr_1,ssr_2))));
 
         ## zip, sort, unzip # does not appear to sort correctly!
         #zipped = zip(absDif_list,ssr_1_list,ssr_2_list,bestFit_list,frag_list,
@@ -2444,7 +2444,7 @@ class stage02_isotopomer_dependencies():
         cirange_1_sum = 0.0;
         cirange_2_sum = 0.0;
         # ci_1:
-        for k,v in ci_1.iteritems():
+        for k,v in ci_1.items():
             rxns_1_list.append(k);
             ciminv_1_list.append(v['minv']);
             cimaxv_1_list.append(v['maxv']);
@@ -2455,7 +2455,7 @@ class stage02_isotopomer_dependencies():
         #zipped1.sort();
         #rxns_1_list,ciminv_1_list,cimaxv_1_list,cirange_1_list = zip(*zipped1);
         # ci_2:
-        for k,v in ci_2.iteritems():
+        for k,v in ci_2.items():
             rxns_2_list.append(k);
             ciminv_2_list.append(v['minv']);
             cimaxv_2_list.append(v['maxv']);
@@ -2518,7 +2518,7 @@ class stage02_isotopomer_dependencies():
         data = [];
         flux1 = {};
         flux2 = {};
-        for k,v in ci.iteritems():
+        for k,v in ci.items():
             flux1[k] = v['minv'];
             flux2[k] = v['maxv'];
         data.append(flux1);
@@ -2538,9 +2538,9 @@ class stage02_isotopomer_dependencies():
         objectives = [x.id for x in cobra_model.reactions if x.objective_coefficient == 1];
 
         for i,ci_I in enumerate(ci_list_I):
-            print 'add flux from ci ' + str(i);
+            print('add flux from ci ' + str(i));
             for rxn in cobra_model.reactions:
-                if rxn.id in ci_I.keys() and not(rxn.id in system_boundaries)\
+                if rxn.id in list(ci_I.keys()) and not(rxn.id in system_boundaries)\
                     and not(rxn.id in objectives):
                     cobra_model_copy = cobra_model.copy();
                     # check for reactions that break the model:
@@ -2550,7 +2550,7 @@ class stage02_isotopomer_dependencies():
                         cobra_model_copy.reactions.get_by_id(rxn.id).upper_bound = ci_I[rxn.id]['maxv'];
                     cobra_model_copy.optimize(solver='gurobi');
                     if not cobra_model_copy.solution.f:
-                        print rxn.id + ' broke the model!'
+                        print(rxn.id + ' broke the model!')
                         rxns_break.append(rxn.id);
                     else: 
                         if ci_I[rxn.id]['minv'] > 0:
@@ -2641,19 +2641,19 @@ class stage02_isotopomer_metaboliteMapping():
         base_met_symmetry_elements_O = [];
         base_met_symmetry_atompositions_O = [];
         base_met_indices_O = [];
-        for k,v in met_id_element_I.iteritems():
+        for k,v in met_id_element_I.items():
             # check if the metabolite is already in the database
             met_data = {}
             met_data = self.stage02_isotopomer_query.get_rows_mappingIDAndMetID_dataStage02IsotopomerAtomMappingMetabolites(mapping_id_I,k)
             #NOTE: need to add in a constraint to make sure that the elements in the database and the elments in the input match!
-            if met_data and met_data.has_key('met_elements') and v==met_data['met_elements'][0]:
+            if met_data and 'met_elements' in met_data and v==met_data['met_elements'][0]:
                 nElements = len(met_data['met_elements']);
             else:
                 # get the formula for the met_id
                 formula_I = self.stage02_isotopomer_query.get_formula_modelIDAndMetID_dataStage02IsotopomerModelMetabolites(model_id_I,k);
                 # get the number of elements
-                if not Formula(formula_I)._elements.has_key(v): break; #check if the element is even contained in the formula
-                if Formula(formula_I)._elements[v].has_key(0):
+                if v not in Formula(formula_I)._elements: break; #check if the element is even contained in the formula
+                if 0 in Formula(formula_I)._elements[v]:
                     nElements = Formula(formula_I)._elements[v][0]; #get the # of the elements
             # make the tracking
             nMet = 0;
@@ -2698,7 +2698,7 @@ class stage02_isotopomer_metaboliteMapping():
         # get unique met_ids
         met_ids_all = [];
         for row in met_ids_elements_I:
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 met_ids_all.append(k);
         met_ids_unique = list(set(met_ids_all))
         met_ids_cnt = {};
@@ -2708,19 +2708,19 @@ class stage02_isotopomer_metaboliteMapping():
             met_ids_elements[met_id] = [];
         # make the compound mapping
         for row_cnt,row in enumerate(met_ids_elements_I):
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 # check if the metabolite is already in the database
                 met_data = {}
                 met_data = self.stage02_isotopomer_query.get_rows_mappingIDAndMetID_dataStage02IsotopomerAtomMappingMetabolites(mapping_id_I,k)
                 #NOTE: need to add in a constraint to make sure that the elements in the database and the elments in the input match!
-                if met_data and met_data.has_key('met_elements') and v==met_data['met_elements'][0]:
+                if met_data and 'met_elements' in met_data and v==met_data['met_elements'][0]:
                     nElements = len(met_data['met_elements']);
                 else:
                     # get the formula for the met_id
                     formula_I = self.stage02_isotopomer_query.get_formula_modelIDAndMetID_dataStage02IsotopomerModelMetabolites(model_id_I,k);
                     # get the number of elements
-                    if not Formula(formula_I)._elements.has_key(v): break; #check if the element is even contained in the formula
-                    if Formula(formula_I)._elements[v].has_key(0):
+                    if v not in Formula(formula_I)._elements: break; #check if the element is even contained in the formula
+                    if 0 in Formula(formula_I)._elements[v]:
                         nElements = Formula(formula_I)._elements[v][0]; #get the # of the elements
                 # determine the metabolite index
                 nMets = met_ids_cnt[k];
@@ -2766,19 +2766,19 @@ class stage02_isotopomer_metaboliteMapping():
                 met_ids_elements[met_id].append(self.metaboliteMapping['met_elements'][met_id_cnt][0]);
         # add the mapping for the new metabolites
         for row in met_ids_elements_I:
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 # check if the metabolite is already in the database
                 met_data = {}
                 met_data = self.stage02_isotopomer_query.get_rows_mappingIDAndMetID_dataStage02IsotopomerAtomMappingMetabolites(self.metaboliteMapping['mapping_id'],k)
                 #NOTE: need to add in a constraint to make sure that the elements in the database and the elments in the input match!
-                if met_data and met_data.has_key('met_elements') and v==met_data['met_elements'][0]:
+                if met_data and 'met_elements' in met_data and v==met_data['met_elements'][0]:
                     nElements = len(met_data['met_elements']);
                 else:
                     # get the formula for the met_id
                     formula_I = self.stage02_isotopomer_query.get_formula_modelIDAndMetID_dataStage02IsotopomerModelMetabolites(model_id_I,k);
                     # get the number of elements
-                    if not Formula(formula_I)._elements.has_key(v): break; #check if the element is even contained in the formula
-                    if Formula(formula_I)._elements[v].has_key(0):
+                    if v not in Formula(formula_I)._elements: break; #check if the element is even contained in the formula
+                    if 0 in Formula(formula_I)._elements[v]:
                         nElements = Formula(formula_I)._elements[v][0]; #get the # of the elements
                 # adjust the metabolite number if the same metabolite already exists
                 nMets = met_ids_cnt[k];
@@ -2827,7 +2827,7 @@ class stage02_isotopomer_metaboliteMapping():
         self.metaboliteMapping['base_met_indices']=[]
         #self.metaboliteMapping['base_met_symmetry_elements']=[]
         #self.metaboliteMapping['base_met_symmetry_atompositions']=[]
-        for met_id_remove,v in met_id_element_I.iteritems():
+        for met_id_remove,v in met_id_element_I.items():
             removed = False
             for met_cnt,met_id in enumerate(base_met_ids):
                 if met_id_remove == met_id and v==base_met_elements[met_cnt][0] and not removed:
@@ -2873,7 +2873,7 @@ class stage02_isotopomer_metaboliteMapping():
         self.metaboliteMapping['base_met_indices']=[]
         #self.metaboliteMapping['base_met_symmetry_elements']=[]
         #self.metaboliteMapping['base_met_symmetry_atompositions']=[]
-        for met_id_remove,v in met_id_element_I.iteritems():
+        for met_id_remove,v in met_id_element_I.items():
             removed = False
             for met_cnt,met_id in enumerate(base_met_ids):
                 if met_index_I:
@@ -2917,7 +2917,7 @@ class stage02_isotopomer_metaboliteMapping():
         base_met_ids = self.metaboliteMapping['base_met_ids'];
         met_id_remove = {};
         met_index = None
-        for k,v in met_id_element_I.iteritems():
+        for k,v in met_id_element_I.items():
             for met_cnt,met_id in enumerate(base_met_ids):
                 if met_index_I:
                     if met_index_I == self.metaboliteMapping['base_met_indices'][met_cnt] and k == met_id and v==self.metaboliteMapping['base_met_elements'][met_cnt][0]:
@@ -2979,7 +2979,7 @@ class stage02_isotopomer_metaboliteMapping():
                 self.metaboliteMapping['base_met_elements'].append([element]);
                 self.metaboliteMapping['base_met_atompositions'].append([0]);
                 self.metaboliteMapping['base_met_indices'].append(cnt);
-            else: print "element not yet supported"
+            else: print("element not yet supported")
     def convert_arrayMapping2StringMapping(self):
         '''Convert an array representation of a mapping to a string representation'''
         arrayMapping = self.metaboliteMapping['met_mapping']
@@ -3256,7 +3256,7 @@ class stage02_isotopomer_reactionMapping():
         # get unique met_ids
         reactant_ids_all = [];
         for row in reactant_ids_elements_I:
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 reactant_ids_all.append(k);
         reactant_ids_unique = list(set(reactant_ids_all))
         reactant_ids_cnt = {};
@@ -3270,7 +3270,7 @@ class stage02_isotopomer_reactionMapping():
         reactants_mapping_O = [];
         reactants_metaboliteMappings_O = [];
         for row in reactant_ids_elements_I:
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 imm.make_trackedMetabolite(mapping_id_I,model_id_I,{k:v},reactant_ids_cnt[k]);
                 reactants_elements_tracked_O.append(imm.metaboliteMapping['met_elements']);
                 reactants_positions_tracked_O.append(imm.metaboliteMapping['met_atompositions']);
@@ -3368,9 +3368,9 @@ class stage02_isotopomer_reactionMapping():
         # initialize the counter the input
         matched_cnt = 0;      
         for row_cnt,row in enumerate(reactant_ids_elements_I):
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 # initialize new metabolites
-                if not k in reactant_ids_cnt.keys():
+                if not k in list(reactant_ids_cnt.keys()):
                     reactant_ids_cnt[k]=0
                 # make the metabolite mapping
                 imm.make_trackedMetabolite(mapping_id_I,model_id_I,{k:v},reactant_ids_cnt[k]);
@@ -3379,7 +3379,7 @@ class stage02_isotopomer_reactionMapping():
                 # update base_metabolites from the database for reactant that will be partitioned
                 base_found = False;
                 if matched_cnt < len(base_reactant_positions_I):
-                    for k1,v1 in base_reactant_positions_I[matched_cnt].iteritems(): #there will be only 1 key-value pair
+                    for k1,v1 in base_reactant_positions_I[matched_cnt].items(): #there will be only 1 key-value pair
                         if k1 == k and row_cnt == v1:
                             imm.get_baseMetabolites();
                             imm.update_trackedMetabolite_fromBaseMetabolites(model_id_I);
@@ -3389,15 +3389,15 @@ class stage02_isotopomer_reactionMapping():
                 base_met_indices_tmp = copy(imm.metaboliteMapping['base_met_indices']);
                 for cnt1,met_id1 in enumerate(imm.metaboliteMapping['base_met_ids']):
                     # initialize new base metabolites
-                    if not met_id1 in reactants_base_met_ids_cnt.keys():
+                    if not met_id1 in list(reactants_base_met_ids_cnt.keys()):
                         reactants_base_met_ids_cnt[met_id1]=0;
                     # assign the next current base_metabolite_index
                     imm.metaboliteMapping['base_met_indices'][cnt1]=reactants_base_met_ids_cnt[met_id1]
                     # update the base_reactant_indices_I if the corresponding base_met_index was changed
                     if matched_cnt < len(base_reactant_positions_I):
-                        for k1,v1 in base_reactant_positions_I[matched_cnt].iteritems(): #there will be only 1 key-value pair
+                        for k1,v1 in base_reactant_positions_I[matched_cnt].items(): #there will be only 1 key-value pair
                             if k1 == k and row_cnt == v1: # does the met_id and position in the reactant list match?
-                                for k2,v2 in base_reactant_indices_I[matched_cnt].iteritems():
+                                for k2,v2 in base_reactant_indices_I[matched_cnt].items():
                                     if k2==met_id1 and v2==base_met_indices_tmp[cnt1]: # does the base_met_id and previous index match?
                                         base_reactant_indices_I[matched_cnt][k2]=imm.metaboliteMapping['base_met_indices'][cnt1];
                     reactants_base_met_ids_cnt[met_id1]+=1;
@@ -3433,11 +3433,11 @@ class stage02_isotopomer_reactionMapping():
         # extract out the products from the compound product
         base_products = [];
         for cnt,row in enumerate(base_product_ids_elements_I):
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 base_products.append(imm_product.extract_baseMetabolite_fromMetabolite(model_id_I,{k:v},base_reactant_indices_I[cnt][k]));
         # remove the base_products from the compound product
         for cnt,row in enumerate(base_product_ids_elements_I):
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 imm_product.remove_baseMetabolite_fromMetabolite(model_id_I,{k:v},met_id_O=compound_product_id_I,met_index_I=base_reactant_indices_I[cnt][k]);
         # make the final products
         if compound_product_id_I: imm_final_products = [imm_product];
@@ -3516,7 +3516,7 @@ class stage02_isotopomer_reactionMapping():
         matched_cnt = 0;      
         for row_cnt,imm in enumerate(reactant_metaboliteMappings_I):
             # initialize new metabolites
-            if not imm.metaboliteMapping['met_id'] in reactant_ids_cnt.keys():
+            if not imm.metaboliteMapping['met_id'] in list(reactant_ids_cnt.keys()):
                 reactant_ids_cnt[imm.metaboliteMapping['met_id']]=0
             # make the metabolite mapping
             #update the counter for unique met_ids
@@ -3524,7 +3524,7 @@ class stage02_isotopomer_reactionMapping():
             # update base_metabolites from the database for reactant that will be partitioned
             base_found = False;
             if matched_cnt < len(base_reactant_positions_I):
-                for k1,v1 in base_reactant_positions_I[matched_cnt].iteritems(): #there will be only 1 key-value pair
+                for k1,v1 in base_reactant_positions_I[matched_cnt].items(): #there will be only 1 key-value pair
                     if k1 == imm.metaboliteMapping['met_id'] and row_cnt == v1:
                         base_found = True;
                         break;
@@ -3532,15 +3532,15 @@ class stage02_isotopomer_reactionMapping():
             base_met_indices_tmp = copy(imm.metaboliteMapping['base_met_indices']);
             for cnt1,met_id1 in enumerate(imm.metaboliteMapping['base_met_ids']):
                 # initialize new base metabolites
-                if not met_id1 in reactants_base_met_ids_cnt.keys():
+                if not met_id1 in list(reactants_base_met_ids_cnt.keys()):
                     reactants_base_met_ids_cnt[met_id1]=0;
                 # assign the next current base_metabolite_index
                 imm.metaboliteMapping['base_met_indices'][cnt1]=reactants_base_met_ids_cnt[met_id1]
                 # update the base_reactant_indices_I if the corresponding base_met_index was changed
                 if matched_cnt < len(base_reactant_positions_I):
-                    for k1,v1 in base_reactant_positions_I[matched_cnt].iteritems(): #there will be only 1 key-value pair
+                    for k1,v1 in base_reactant_positions_I[matched_cnt].items(): #there will be only 1 key-value pair
                         if k1 == imm.metaboliteMapping['met_id'] and row_cnt == v1: # does the met_id and position in the reactant list match?
-                            for k2,v2 in base_reactant_indices_I[matched_cnt].iteritems():
+                            for k2,v2 in base_reactant_indices_I[matched_cnt].items():
                                 if k2==met_id1 and v2==base_met_indices_tmp[cnt1]: # does the base_met_id and previous index match?
                                     base_reactant_indices_I[matched_cnt][k2]=imm.metaboliteMapping['base_met_indices'][cnt1];
                 reactants_base_met_ids_cnt[met_id1]+=1;
@@ -3574,11 +3574,11 @@ class stage02_isotopomer_reactionMapping():
         # extract out the products from the compound product
         base_products = [];
         for cnt,row in enumerate(base_product_ids_elements_I):
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 base_products.append(imm_product.extract_baseMetabolite_fromMetabolite(model_id_I,{k:v},base_reactant_indices_I[cnt][k]));
         # remove the base_products from the compound product
         for cnt,row in enumerate(base_product_ids_elements_I):
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 imm_product.remove_baseMetabolite_fromMetabolite(model_id_I,{k:v},met_id_O=compound_product_id_I,met_index_I=base_reactant_indices_I[cnt][k]);
         # make the final products
         if compound_product_id_I: imm_final_products = [imm_product];
@@ -3611,13 +3611,13 @@ class stage02_isotopomer_reactionMapping():
 
         # check input
         if len(reactant_ids_elements_I)!=len(product_ids_I):
-            print "length of reactants_ids does not match the length of products_ids";
+            print("length of reactants_ids does not match the length of products_ids");
             return;
         imm = stage02_isotopomer_metaboliteMapping();
         # get unique met_ids
         reactant_ids_all = [];
         for row in reactant_ids_elements_I:
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 reactant_ids_all.append(k);
         reactant_ids_unique = list(set(reactant_ids_all))
         reactant_ids_cnt = {};
@@ -3631,7 +3631,7 @@ class stage02_isotopomer_reactionMapping():
         reactants_mapping_O = [];
         reactants_metaboliteMappings_O = [];
         for row in reactant_ids_elements_I:
-            for k,v in row.iteritems():
+            for k,v in row.items():
                 imm.make_trackedMetabolite(mapping_id_I,model_id_I,{k:v},reactant_ids_cnt[k]);
                 reactants_elements_tracked_O.append(imm.metaboliteMapping['met_elements']);
                 reactants_positions_tracked_O.append(imm.metaboliteMapping['met_atompositions']);
@@ -4080,7 +4080,7 @@ class stage02_isotopomer_reactionMapping():
                 self.reactionMapping['products_metaboliteMappings'].append(copy(imm.copy_metaboliteMapping()));
                 self.reactionMapping['products_stoichiometry_tracked'].append(1);
             else:
-                print 'unbalanced metabolite not found!'
+                print('unbalanced metabolite not found!')
     def check_elementalBalance(self):
         '''
         1. Check that the number of elements tracked in the reactant matches the number of elements tracked
@@ -4095,19 +4095,19 @@ class stage02_isotopomer_reactionMapping():
         #check reactants
         reactants_positions_tracked_cnt = 0;
         for reactant_cnt,reactant in enumerate(self.reactionMapping['reactants_ids_tracked']):
-            print 'checking reactant ' + reactant;
+            print('checking reactant ' + reactant);
             # check that the reactant positions == reactant elements
             if len(self.reactionMapping['reactants_positions_tracked'][reactant_cnt])!=len(self.reactionMapping['reactants_elements_tracked'][reactant_cnt]):
-                print 'inconsistent reactants_positions and reactants_elements';
+                print('inconsistent reactants_positions and reactants_elements');
                 continue;
             reactants_positions_tracked_cnt += len(self.reactionMapping['reactants_positions_tracked'][reactant_cnt]);
         #check products
         products_positions_tracked_cnt = 0;
         for product_cnt,product in enumerate(self.reactionMapping['products_ids_tracked']):
-            print 'checking product ' + product;
+            print('checking product ' + product);
             # check that the product positions == product elements
             if len(self.reactionMapping['products_positions_tracked'][product_cnt])!=len(self.reactionMapping['products_elements_tracked'][product_cnt]):
-                print 'inconsistent products_positions and products_elements';
+                print('inconsistent products_positions and products_elements');
                 continue;
             products_positions_tracked_cnt += len(self.reactionMapping['products_positions_tracked'][product_cnt]);
         #record
@@ -4148,26 +4148,26 @@ class stage02_isotopomer_reactionMapping():
         reactants_mappings = [];
         # check that the reactant stoichiometry == reactant ids
         if len(self.reactionMapping['reactants_ids_tracked'])!=len(self.reactionMapping['reactants_stoichiometry_tracked']):
-            print 'inconsistent reactants_stoichiometry_tracked and reactants_ids_tracked';
+            print('inconsistent reactants_stoichiometry_tracked and reactants_ids_tracked');
             reactants_ids_stoichiometry_check = False;
         reactants_ids_cnt += len(self.reactionMapping['reactants_ids_tracked']);
         reactants_stoichiometry_cnt += len(self.reactionMapping['reactants_stoichiometry_tracked']);
         # check elemental balance
         for reactant_cnt,reactant in enumerate(self.reactionMapping['reactants_ids_tracked']):
-            print 'checking reactant elemental balance ' + reactant;
+            print('checking reactant elemental balance ' + reactant);
             reactant_mapping=[];
             reactant_mapping = self.reactionMapping['reactants_metaboliteMappings'][reactant_cnt].convert_stringMapping2ArrayMapping();
             # check that the reactant positions == reactant elements
             if len(self.reactionMapping['reactants_positions_tracked'][reactant_cnt])!=len(self.reactionMapping['reactants_elements_tracked'][reactant_cnt]):
-                print 'inconsistent reactants_positions and reactants_elements';
+                print('inconsistent reactants_positions and reactants_elements');
                 reactants_elements_positions_check = False;
             # check that the reactant positions == reactant mapping
             if len(self.reactionMapping['reactants_positions_tracked'][reactant_cnt])!=len(reactant_mapping):
-                print 'inconsistent reactants_positions and reactants_mapping';
+                print('inconsistent reactants_positions and reactants_mapping');
                 reactants_elements_mapping_check = False;
             # check that the reactant elements == reactant mapping
             if len(self.reactionMapping['reactants_elements_tracked'][reactant_cnt])!=len(reactant_mapping):
-                print 'inconsistent reactants_elements and reactants_mapping';
+                print('inconsistent reactants_elements and reactants_mapping');
                 reactants_positions_mapping_check = False;
             reactants_positions_tracked_cnt += len(self.reactionMapping['reactants_positions_tracked'][reactant_cnt]);
             reactants_elements_tracked_cnt += len(self.reactionMapping['reactants_elements_tracked'][reactant_cnt]);
@@ -4182,26 +4182,26 @@ class stage02_isotopomer_reactionMapping():
         products_mappings = [];
         # check that the product stoichiometry == product ids
         if len(self.reactionMapping['products_ids_tracked'])!=len(self.reactionMapping['products_stoichiometry_tracked']):
-            print 'inconsistent products_stoichiometry_tracked and products_ids_tracked';
+            print('inconsistent products_stoichiometry_tracked and products_ids_tracked');
             products_ids_stoichiometry_check = False;
         products_ids_cnt += len(self.reactionMapping['products_ids_tracked']);
         products_stoichiometry_cnt += len(self.reactionMapping['products_stoichiometry_tracked']);
         # check elemental balance
         for product_cnt,product in enumerate(self.reactionMapping['products_ids_tracked']):
-            print 'checking product elemental balance ' + product;
+            print('checking product elemental balance ' + product);
             product_mapping=[];
             product_mapping = self.reactionMapping['products_metaboliteMappings'][product_cnt].convert_stringMapping2ArrayMapping();
             # check that the product positions == product elements
             if len(self.reactionMapping['products_positions_tracked'][product_cnt])!=len(self.reactionMapping['products_elements_tracked'][product_cnt]):
-                print 'inconsistent products_positions and products_elements';
+                print('inconsistent products_positions and products_elements');
                 products_elements_positions_check = False;
             # check that the product positions == product mapping
             if len(self.reactionMapping['products_positions_tracked'][product_cnt])!=len(product_mapping):
-                print 'inconsistent products_positions and products_mapping';
+                print('inconsistent products_positions and products_mapping');
                 products_elements_mapping_check = False;
             # check that the product elements == product mapping
             if len(self.reactionMapping['products_elements_tracked'][product_cnt])!=len(product_mapping):
-                print 'inconsistent products_elements and products_mapping';
+                print('inconsistent products_elements and products_mapping');
                 products_positions_mapping_check = False;
             products_positions_tracked_cnt += len(self.reactionMapping['products_positions_tracked'][product_cnt]);
             products_elements_tracked_cnt += len(self.reactionMapping['products_elements_tracked'][product_cnt]);
@@ -4209,13 +4209,13 @@ class stage02_isotopomer_reactionMapping():
             products_mappings.append(product_mapping);
         #check elemental balance
         if reactants_positions_tracked_cnt != products_positions_tracked_cnt:
-            print 'the length of reactants_positions_tracked does not match the length of products_positions_tracked';
+            print('the length of reactants_positions_tracked does not match the length of products_positions_tracked');
             element_balance_check = False;
         if reactants_elements_tracked_cnt != products_elements_tracked_cnt:
-            print 'reactants_elements_tracked does not match the length of products_elements_tracked';
+            print('reactants_elements_tracked does not match the length of products_elements_tracked');
             element_balance_check = False;
         if reactants_mappings_cnt != products_mappings_cnt:
-            print 'the length of reactants_mapping does not match the length of products_mapping';
+            print('the length of reactants_mapping does not match the length of products_mapping');
             element_balance_check = False;
         #check 1-to-1 mapping
         reactants_mappings_list = [];
@@ -4224,7 +4224,7 @@ class stage02_isotopomer_reactionMapping():
         # check for duplicate reactant mappings
         reactants_mappings_unique = list(set(reactants_mappings_list));
         if len(reactants_mappings_list)!=len(reactants_mappings_unique):
-            print 'duplicate reactants_mappings found';
+            print('duplicate reactants_mappings found');
             mapping_check = False;
         products_mappings_list = [];
         for products_mapping in products_mappings:
@@ -4232,23 +4232,23 @@ class stage02_isotopomer_reactionMapping():
         # check for duplicate product mappings
         products_mappings_unique = list(set(products_mappings_list));
         if len(products_mappings_list)!=len(products_mappings_unique):
-            print 'duplicate products_mappings found';
+            print('duplicate products_mappings found');
             mapping_check = False;
         # check that each product mapping has a matching reactant mapping, and vice versa
         for reactant_cnt,reactant in enumerate(reactants_mappings):
-            print 'checking reactant mapping ' + self.reactionMapping['reactants_ids_tracked'][reactant_cnt];
+            print('checking reactant mapping ' + self.reactionMapping['reactants_ids_tracked'][reactant_cnt]);
             for mapping_cnt,mapping in enumerate(reactant):
                 if not mapping in products_mappings_list:
-                    print 'no mapping found for reactant mapping ' + mapping + ' and position ' + str(mapping_cnt);
+                    print('no mapping found for reactant mapping ' + mapping + ' and position ' + str(mapping_cnt));
                     mapping_check = False;
         for product_cnt,product in enumerate(products_mappings):
-            print 'checking product mapping ' + self.reactionMapping['products_ids_tracked'][product_cnt];
+            print('checking product mapping ' + self.reactionMapping['products_ids_tracked'][product_cnt]);
             for mapping_cnt,mapping in enumerate(product):
                 if not mapping in reactants_mappings_list:
-                    print 'no mapping found for product mapping ' + mapping + ' and position ' + str(mapping_cnt);
+                    print('no mapping found for product mapping ' + mapping + ' and position ' + str(mapping_cnt));
                     mapping_check = False;
         if not element_balance_check or not mapping_check:
-            print 'check reaction mapping';
+            print('check reaction mapping');
         return reactants_ids_stoichiometry_check,reactants_elements_positions_check,reactants_elements_mapping_check,reactants_positions_mapping_check,\
                 products_ids_stoichiometry_check,products_elements_positions_check,products_elements_mapping_check,products_positions_mapping_check,\
                 element_balance_check,mapping_check;
@@ -4603,7 +4603,7 @@ class stage02_isotopomer_mappingUtilities():
             for tracked_product in missing_reaction['tracked_products']:
                 script+= tracked_product['met_id']+',';
             script+='\n'
-        print script
+        print(script)
         #missing metabolites
         script = '';
         for missing_metabolite in missing_metabolites_I:
@@ -4614,7 +4614,7 @@ class stage02_isotopomer_mappingUtilities():
             for tracked_product in missing_metabolite['missing_products']:
                 script+= tracked_product['met_id']+',';
             script+='\n'
-        print script
+        print(script)
     def find_inconsistentMetaboliteMappings(self,experiment_id_I,model_id_I=[],mapping_id_I=[]):
         '''Find inconsistencies in the atom mapping by comparing the metabolite information in
         atomMappingMetabolites table to the atom mapping in the atomMappingReactions table'''
@@ -4632,7 +4632,7 @@ class stage02_isotopomer_mappingUtilities():
             model_ids = [];
             model_ids = self.stage02_isotopomer_query.get_modelID_experimentID_dataStage02IsotopomerSimulation(experiment_id_I);
         for model_id in model_ids:
-            print 'checking model_id ' + model_id;
+            print('checking model_id ' + model_id);
             #get mapping ids
             if mapping_id_I:
                 mapping_ids=mapping_id_I;
@@ -4640,15 +4640,15 @@ class stage02_isotopomer_mappingUtilities():
                 mapping_ids=[];
                 mapping_ids=self.stage02_isotopomer_query.get_mappingID_experimentIDAndModelID_dataStage02IsotopomerSimulation(experiment_id_I,model_id);
             for mapping_cnt,mapping_id in enumerate(mapping_ids):
-                print 'checking mapping_id ' + mapping_id;
+                print('checking mapping_id ' + mapping_id);
                 # get the reaction mapping
                 reaction_mappings = [];
                 reaction_mappings = self.stage02_isotopomer_query.get_rows_mappingID_dataStage02IsotopomerAtomMappingReactions(mapping_id);
                 for reaction_cnt,reaction_mapping in enumerate(reaction_mappings):
-                    print 'checking reaction ' + reaction_mapping['rxn_id'];
+                    print('checking reaction ' + reaction_mapping['rxn_id']);
                     #debug:
                     if reaction_mapping['rxn_id'] == 'COFACTOR_3':
-                        print 'check';
+                        print('check');
                     #check reactants
                     rxn_tmp = {};
                     rxn_tmp['mapping_id']=mapping_id
@@ -4671,12 +4671,12 @@ class stage02_isotopomer_mappingUtilities():
                     rxn_tmp['products_metaboliteMappings']=[]
                     bad_reactant = False;
                     for reactant_cnt,reactant in enumerate(reaction_mapping['reactants_ids_tracked']):
-                        print 'checking reactant ' + reactant;
+                        print('checking reactant ' + reactant);
                         # get the metabolite mapping
                         metabolite_mapping = {};
                         metabolite_mapping = self.stage02_isotopomer_query.get_rows_mappingIDAndMetID_dataStage02IsotopomerAtomMappingMetabolites(mapping_id,reactant);
                         if not metabolite_mapping:
-                            print 'metabolite mapping not found'
+                            print('metabolite mapping not found')
                             missing_mets_O.append(reactant);
                             continue;
                         # check the reaction mapping
@@ -4687,17 +4687,17 @@ class stage02_isotopomer_mappingUtilities():
                             reactants_mapping = [m.replace(']','') for m in reactants_mapping];
                         if len(metabolite_mapping['met_atompositions']) != len(reactants_mapping):
                             rxn_tmp['reactants_metaboliteMappings'].append(reaction_mapping['reactants_mapping'][reactant_cnt]);
-                            print 'bad reactants_metaboliteMappings';
+                            print('bad reactants_metaboliteMappings');
                             bad_reactant = True;
                         # check the reaction elements tracked
                         if metabolite_mapping['met_atompositions'] != reaction_mapping['reactants_positions_tracked'][reactant_cnt]:
                             rxn_tmp['reactants_positions_tracked'].append(reaction_mapping['reactants_positions_tracked'][reactant_cnt]);
-                            print 'bad reactants_positions_tracked';
+                            print('bad reactants_positions_tracked');
                             bad_reactant = True;
                         # check the reaction positions tracked
                         if metabolite_mapping['met_elements'] != reaction_mapping['reactants_elements_tracked'][reactant_cnt]:
                             rxn_tmp['reactants_elements_tracked'].append(reaction_mapping['reactants_elements_tracked'][reactant_cnt]);
-                            print 'bad reactants_elements_tracked';
+                            print('bad reactants_elements_tracked');
                             bad_reactant = True;
                         if bad_reactant:
                             rxn_tmp['reactants_ids_tracked'].append(reactant);
@@ -4705,12 +4705,12 @@ class stage02_isotopomer_mappingUtilities():
                     #check products
                     bad_product = False;
                     for product_cnt,product in enumerate(reaction_mapping['products_ids_tracked']):
-                        print 'checking product ' + product;
+                        print('checking product ' + product);
                         # get the metabolite mapping
                         metabolite_mapping = {};
                         metabolite_mapping = self.stage02_isotopomer_query.get_rows_mappingIDAndMetID_dataStage02IsotopomerAtomMappingMetabolites(mapping_id,product);
                         if not metabolite_mapping:
-                            print 'metabolite mapping not found'
+                            print('metabolite mapping not found')
                             missing_mets_O.append(product);
                             continue;
                         # check the reaction mapping
@@ -4721,17 +4721,17 @@ class stage02_isotopomer_mappingUtilities():
                             products_mapping = [m.replace(']','') for m in products_mapping];
                         if len(metabolite_mapping['met_atompositions']) != len(products_mapping):
                             rxn_tmp['products_metaboliteMappings'].append(reaction_mapping['products_mapping'][product_cnt]);
-                            print 'bad products_metaboliteMappings';
+                            print('bad products_metaboliteMappings');
                             bad_product = True;
                         # check the reaction elements tracked
                         if metabolite_mapping['met_atompositions'] != reaction_mapping['products_positions_tracked'][product_cnt]:
                             rxn_tmp['products_positions_tracked'].append(reaction_mapping['products_positions_tracked'][product_cnt]);
-                            print 'bad products_positions_tracked';
+                            print('bad products_positions_tracked');
                             bad_product = True;
                         # check the reaction positions tracked
                         if metabolite_mapping['met_elements'] != reaction_mapping['products_elements_tracked'][product_cnt]:
                             rxn_tmp['products_elements_tracked'].append(reaction_mapping['products_elements_tracked'][product_cnt]);
-                            print 'bad products_elements_tracked';
+                            print('bad products_elements_tracked');
                             bad_product = True;
                         if bad_product:
                             rxn_tmp['products_ids_tracked'].append(product);
@@ -4755,7 +4755,7 @@ class stage02_isotopomer_mappingUtilities():
             model_ids = [];
             model_ids = self.stage02_isotopomer_query.get_modelID_experimentID_dataStage02IsotopomerSimulation(experiment_id_I);
         for model_id in model_ids:
-            print 'checking model_id ' + model_id;
+            print('checking model_id ' + model_id);
             #get mapping ids
             if mapping_id_I:
                 mapping_ids=mapping_id_I;
@@ -4763,28 +4763,28 @@ class stage02_isotopomer_mappingUtilities():
                 mapping_ids=[];
                 mapping_ids=self.stage02_isotopomer_query.get_mappingID_experimentIDAndModelID_dataStage02IsotopomerSimulation(experiment_id_I,model_id);
             for mapping_cnt,mapping_id in enumerate(mapping_ids):
-                print 'checking mapping_id ' + mapping_id;
+                print('checking mapping_id ' + mapping_id);
                 # get the reaction mapping
                 reaction_mappings = [];
                 reaction_mappings = self.stage02_isotopomer_query.get_rows_mappingID_dataStage02IsotopomerAtomMappingReactions(mapping_id);
                 for reaction_cnt,reaction_mapping in enumerate(reaction_mappings):
-                    print 'checking reaction ' + reaction_mapping['rxn_id'];
+                    print('checking reaction ' + reaction_mapping['rxn_id']);
                     #check reactants
                     reactants_positions_tracked_cnt = 0;
                     for reactant_cnt,reactant in enumerate(reaction_mapping['reactants_ids_tracked']):
-                        print 'checking reactant ' + reactant;
+                        print('checking reactant ' + reactant);
                         # check that the reactant positions == reactant elements
                         if len(reaction_mapping['reactants_positions_tracked'][reactant_cnt])!=len(reaction_mapping['reactants_elements_tracked'][reactant_cnt]):
-                            print 'inconsistent reactants_positions and reactants_elements';
+                            print('inconsistent reactants_positions and reactants_elements');
                             continue;
                         reactants_positions_tracked_cnt += len(reaction_mapping['reactants_positions_tracked'][reactant_cnt]);
                     #check products
                     products_positions_tracked_cnt = 0;
                     for product_cnt,product in enumerate(reaction_mapping['products_ids_tracked']):
-                        print 'checking product ' + product;
+                        print('checking product ' + product);
                         # check that the product positions == product elements
                         if len(reaction_mapping['products_positions_tracked'][product_cnt])!=len(reaction_mapping['products_elements_tracked'][product_cnt]):
-                            print 'inconsistent products_positions and products_elements';
+                            print('inconsistent products_positions and products_elements');
                             continue;
                         products_positions_tracked_cnt += len(reaction_mapping['products_positions_tracked'][product_cnt]);
                     #record
@@ -4809,7 +4809,7 @@ class stage02_isotopomer_mappingUtilities():
             model_ids = [];
             model_ids = self.stage02_isotopomer_query.get_modelID_experimentID_dataStage02IsotopomerSimulation(experiment_id_I);
         for model_id in model_ids:
-            print 'checking model_id ' + model_id;
+            print('checking model_id ' + model_id);
             #get mapping ids
             if mapping_id_I:
                 mapping_ids=mapping_id_I;
@@ -4817,12 +4817,12 @@ class stage02_isotopomer_mappingUtilities():
                 mapping_ids=[];
                 mapping_ids=self.stage02_isotopomer_query.get_mappingID_experimentIDAndModelID_dataStage02IsotopomerSimulation(experiment_id_I,model_id);
             for mapping_cnt,mapping_id in enumerate(mapping_ids):
-                print 'checking mapping_id ' + mapping_id;
+                print('checking mapping_id ' + mapping_id);
                 # get the reaction ids
                 reaction_ids = [];
                 reaction_ids = self.stage02_isotopomer_query.get_rxnIDs_mappingID_dataStage02IsotopomerAtomMappingReactions(mapping_id);
                 for reaction_cnt,reaction_id in enumerate(reaction_ids):
-                    print 'checking reaction ' + reaction_id;
+                    print('checking reaction ' + reaction_id);
                     #check each reaction
                     irm.get_reactionMapping(mapping_id,reaction_id);
                     reactants_ids_stoichiometry_check,reactants_elements_positions_check,reactants_elements_mapping_check,reactants_positions_mapping_check,\

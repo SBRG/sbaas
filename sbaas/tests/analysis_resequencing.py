@@ -48,7 +48,7 @@ def data_stage01():
     fileList = iobase.data;
     # read in each data file
     for file in fileList:
-        print 'importing resequencing data for sample ' + file['sample_name']
+        print('importing resequencing data for sample ' + file['sample_name'])
         io.import_resequencingData_add(file['filename'],file['experiment_id'],file['sample_name']);
     iobase.clear_data();
 
@@ -113,9 +113,9 @@ def data_stage02():
     io02.export_dataStage02ResequencingLineage_d3('ALEsKOs01');
 
 def run_all_tests():
-    print 'testing data_stage00_resequencing...'
+    print('testing data_stage00_resequencing...')
     data_stage00();
-    print 'testing data_stage01_resequencing...'
+    print('testing data_stage01_resequencing...')
     data_stage01();
-    print 'testing data_stage02_resequencing...'
+    print('testing data_stage02_resequencing...')
     data_stage02();

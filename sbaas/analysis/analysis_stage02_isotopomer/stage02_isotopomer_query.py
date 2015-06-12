@@ -133,9 +133,9 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_averagesNormSum.met_id.asc()).all();
             met_ids_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn[0]);
@@ -158,9 +158,9 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_averagesNormSum.fragment_formula.asc()).all();
             fragments_O = [];
             if not(fragments):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I);
             else:
                 for cn in fragments:
                     fragments_O.append(cn[0]);
@@ -193,9 +193,9 @@ class stage02_isotopomer_query(base_analysis):
             intensity_normalized_cv_O = [];
             intensity_normalized_n_O = [];
             if not(fragments):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I    fragment_forula_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I,fragment_forula_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I    fragment_forula_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I,fragment_forula_I);
             else:
                 for cn in fragments:
                     fragment_mass_O.append(cn[0]);
@@ -251,7 +251,7 @@ class stage02_isotopomer_query(base_analysis):
             data_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation: ' + sample_name_abbreviation_I;
+                print('sample_name_abbreviation: ' + sample_name_abbreviation_I);
                 return data_O;
             else:
                 # algorithm will break there is no data for a0 mass and there are jumps in the a values (i.e. a0 to a2);
@@ -363,7 +363,7 @@ class stage02_isotopomer_query(base_analysis):
             data_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation: ' + sample_name_abbreviation_I;
+                print('sample_name_abbreviation: ' + sample_name_abbreviation_I);
                 return data_O;
             else:
                 # algorithm will break there is no data for a0 mass and there are jumps in the a values (i.e. a0 to a2);
@@ -958,16 +958,16 @@ class stage02_isotopomer_query(base_analysis):
                 for i,d in enumerate(data):
                     if d.reactants_ids_tracked:
                         for reactant_cnt,reactant in enumerate(d.reactants_ids_tracked):
-                            print d.mapping_id,d.rxn_id,reactant
+                            print(d.mapping_id,d.rxn_id,reactant)
                             if len(d.reactants_elements_tracked)!=len(d.reactants_ids_tracked):
-                                print 'reactants tracked do not match the elements tracked'
-                                raw_input("Press enter to continue")
+                                print('reactants tracked do not match the elements tracked')
+                                input("Press enter to continue")
                             if len(d.reactants_positions_tracked)!=len(d.reactants_ids_tracked):
-                                print 'reactants tracked do not match the positions tracked'
-                                raw_input("Press enter to continue")
+                                print('reactants tracked do not match the positions tracked')
+                                input("Press enter to continue")
                             if len(d.reactants_stoichiometry_tracked)!=len(d.reactants_ids_tracked):
-                                print 'reactants tracked do not match the stoichiometry tracked'
-                                raw_input("Press enter to continue")
+                                print('reactants tracked do not match the stoichiometry tracked')
+                                input("Press enter to continue")
                             data_O.append({
                                     'mapping_id':d.mapping_id,
                                     #'met_name':self.met_name,
@@ -988,16 +988,16 @@ class stage02_isotopomer_query(base_analysis):
                                     'base_met_indices':None})
                     if d.products_ids_tracked:
                         for product_cnt,product in enumerate(d.products_ids_tracked):
-                            print d.mapping_id,d.rxn_id,product
+                            print(d.mapping_id,d.rxn_id,product)
                             if len(d.products_elements_tracked)!=len(d.products_ids_tracked):
-                                print 'products tracked do not match the elements tracked'
-                                raw_input("Press enter to continue")
+                                print('products tracked do not match the elements tracked')
+                                input("Press enter to continue")
                             if len(d.products_positions_tracked)!=len(d.products_ids_tracked):
-                                print 'products tracked do not match the positions tracked'
-                                raw_input("Press enter to continue")
+                                print('products tracked do not match the positions tracked')
+                                input("Press enter to continue")
                             if len(d.products_stoichiometry_tracked)!=len(d.products_ids_tracked):
-                                print 'products tracked do not match the stoichiometry tracked'
-                                raw_input("Press enter to continue")
+                                print('products tracked do not match the stoichiometry tracked')
+                                input("Press enter to continue")
                             data_O.append({
                                     'mapping_id':d.mapping_id,
                                     #'met_name':self.met_name,
@@ -1059,16 +1059,16 @@ class stage02_isotopomer_query(base_analysis):
                 for i,d in enumerate(data):
                     if d.reactants_ids_tracked:
                         for reactant_cnt,reactant in enumerate(d.reactants_ids_tracked):
-                            print d.mapping_id,d.rxn_id,reactant
+                            print(d.mapping_id,d.rxn_id,reactant)
                             if len(d.reactants_elements_tracked)!=len(d.reactants_ids_tracked):
-                                print 'reactants tracked do not match the elements tracked'
-                                raw_input("Press enter to continue")
+                                print('reactants tracked do not match the elements tracked')
+                                input("Press enter to continue")
                             if len(d.reactants_positions_tracked)!=len(d.reactants_ids_tracked):
-                                print 'reactants tracked do not match the positions tracked'
-                                raw_input("Press enter to continue")
+                                print('reactants tracked do not match the positions tracked')
+                                input("Press enter to continue")
                             if len(d.reactants_stoichiometry_tracked)!=len(d.reactants_ids_tracked):
-                                print 'reactants tracked do not match the stoichiometry tracked'
-                                raw_input("Press enter to continue")
+                                print('reactants tracked do not match the stoichiometry tracked')
+                                input("Press enter to continue")
                             data_O.append({
                                     'mapping_id':d.mapping_id,
                                     #'met_name':self.met_name,
@@ -1089,16 +1089,16 @@ class stage02_isotopomer_query(base_analysis):
                                     'base_met_indices':None})
                     if d.products_ids_tracked:
                         for product_cnt,product in enumerate(d.products_ids_tracked):
-                            print d.mapping_id,d.rxn_id,product
+                            print(d.mapping_id,d.rxn_id,product)
                             if len(d.products_elements_tracked)!=len(d.products_ids_tracked):
-                                print 'products tracked do not match the elements tracked'
-                                raw_input("Press enter to continue")
+                                print('products tracked do not match the elements tracked')
+                                input("Press enter to continue")
                             if len(d.products_positions_tracked)!=len(d.products_ids_tracked):
-                                print 'products tracked do not match the positions tracked'
-                                raw_input("Press enter to continue")
+                                print('products tracked do not match the positions tracked')
+                                input("Press enter to continue")
                             if len(d.products_stoichiometry_tracked)!=len(d.products_ids_tracked):
-                                print 'products tracked do not match the stoichiometry tracked'
-                                raw_input("Press enter to continue")
+                                print('products tracked do not match the stoichiometry tracked')
+                                input("Press enter to continue")
                             data_O.append({
                                     'mapping_id':d.mapping_id,
                                     #'met_name':self.met_name,
@@ -1545,7 +1545,7 @@ class stage02_isotopomer_query(base_analysis):
                 for d in data:
                     formula_O=d.formula
             else:
-                print "formula not found"
+                print("formula not found")
             return formula_O;
         except SQLAlchemyError as e:
             print(e);
@@ -1590,7 +1590,7 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage02_isotopomer_modelMetabolites.met_id.asc()).all();
             rows_O = {};
             if len(data)>1:
-                print 'more than 1 model_id/met_id found!'
+                print('more than 1 model_id/met_id found!')
             if data: 
                 for d in data:
                     rows_O = {'model_id':d.model_id,
@@ -1639,7 +1639,7 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage02_physiology_modelMetabolites.met_id.asc()).all();
             rows_O = {};
             if len(data)>1:
-                print 'more than 1 model_id/met_id found!'
+                print('more than 1 model_id/met_id found!')
             if data: 
                 for d in data:
                     rows_O = {'model_id':d.model_id,
@@ -1724,8 +1724,8 @@ class stage02_isotopomer_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_id found!';
+                    if d.rxn_id in rows_O:
+                        print('duplicate rxn_id found!');
                     else:
                         rows_O[d.rxn_id]={
                         'flux':d.flux,
@@ -1822,7 +1822,7 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage02_isotopomer_fittedFluxes.used_.is_(True)).all();
             flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
             if len(data)>1:
-                print 'more than 1 row found'
+                print('more than 1 row found')
                 return;
             if data: 
                 for d in data:
@@ -1840,7 +1840,7 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage02_isotopomer_fittedFluxes.used_.is_(True)).all();
             flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
             if len(data)>1:
-                print 'more than 1 row found'
+                print('more than 1 row found')
                 return;
             if data: 
                 for d in data:
@@ -1927,8 +1927,8 @@ class stage02_isotopomer_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_id found!';
+                    if d.rxn_id in rows_O:
+                        print('duplicate rxn_id found!');
                     else:
                         rows_O[d.rxn_id]={
                         'flux':d.flux,
@@ -2030,7 +2030,7 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage02_isotopomer_fittedNetFluxes.used_.is_(True)).all();
             flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
             if len(data)>1:
-                print 'more than 1 row found'
+                print('more than 1 row found')
                 return;
             if data: 
                 for d in data:
@@ -2048,7 +2048,7 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage02_isotopomer_fittedNetFluxes.used_.is_(True)).all();
             flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
             if len(data)>1:
-                print 'more than 1 row found'
+                print('more than 1 row found')
                 return;
             if data: 
                 for d in data:
@@ -2067,7 +2067,7 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage02_isotopomer_fittedNetFluxes.used_.is_(True)).all();
             flux_O,flux_stdev_O,flux_lb_O,flux_ub_O,flux_units_O=0.0,0.0,0.0,0.0,'';
             if len(data)>1:
-                print 'more than 1 row found'
+                print('more than 1 row found')
                 return;
             if data: 
                 for d in data:
@@ -2127,8 +2127,8 @@ class stage02_isotopomer_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_id found!';
+                    if d.rxn_id in rows_O:
+                        print('duplicate rxn_id found!');
                     else:
                         rows_O[d.rxn_id]={
                         'flux':d.flux,
@@ -2313,7 +2313,7 @@ class stage02_isotopomer_query(base_analysis):
                     data_stage02_isotopomer_fittedFluxSplits.used_.is_(True)).all();
             split_O,split_stdev_O,split_lb_O,split_ub_O,split_units_O=0.0,0.0,0.0,0.0,'';
             if len(data)>1:
-                print 'more than 1 row found'
+                print('more than 1 row found')
                 return;
             if data: 
                 for d in data:
@@ -2355,8 +2355,8 @@ class stage02_isotopomer_query(base_analysis):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.split_id):
-                        print 'duplicate split_id found!';
+                    if d.split_id in rows_O:
+                        print('duplicate split_id found!');
                     else:
                         rows_O[d.split_id]={
                         'split':d.split,

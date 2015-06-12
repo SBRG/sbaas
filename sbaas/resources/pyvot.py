@@ -35,8 +35,8 @@ class ORM2Excel():
         var_O = numpy.var(numpy.array(data_I));
         if (ave_O <= 0): cv_O = 0;
         else: cv_O = sqrt(cv_O)/ave_O*100; 
-        print 'average\tCV'
-        print ave_O,cv_O
+        print('average\tCV')
+        print(ave_O,cv_O)
         return ave_O, cv_O;
 
     def viewQueryExcel(self,dataHeader,dataList):
@@ -67,7 +67,7 @@ class ORM2Excel():
             dataListListUpdated.append(dataRow);
         dataListUpdated = [];
         for j,dh in enumerate(dataHeader):
-            dataListUpdated.append(dict(zip(dataHeader, dataListListUpdated[j]))) #dict(zip(keys, values)
+            dataListUpdated.append(dict(list(zip(dataHeader, dataListListUpdated[j])))) #dict(zip(keys, values)
         return dataListUpdated;
 
     def query_table(self,table_I,experiment_id_I=None):
@@ -81,10 +81,10 @@ class ORM2Excel():
 
         except SQLAlchemyError as e:
             print(e);
-        dataHeader = [col for col in results[0].__table__.columns.keys()];
+        dataHeader = [col for col in list(results[0].__table__.columns.keys())];
         dataList = [];
         for data in results:
-            dataList.append(dict((col, getattr(data, col)) for col in data.__table__.columns.keys()));
+            dataList.append(dict((col, getattr(data, col)) for col in list(data.__table__.columns.keys())));
         return dataHeader,dataList;
 
     def update_data_stage01_isotopomer_normalized(self,dataListUpdated_I):
@@ -103,8 +103,8 @@ class ORM2Excel():
                         'comment_':d['comment_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
@@ -136,8 +136,8 @@ class ORM2Excel():
                         'comment_':d['comment_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
@@ -154,7 +154,7 @@ class ORM2Excel():
         # manipulate the data...
         getInput = True;
         while getInput:
-            cmd = raw_input('1: end session, do not update\n2: end session, update\n3: continue session, update\nEnter a command: ')
+            cmd = input('1: end session, do not update\n2: end session, update\n3: continue session, update\nEnter a command: ')
             if cmd == '1':
                 getInput = False;
             elif cmd == '2':
@@ -170,7 +170,7 @@ class ORM2Excel():
                 # update the database
                 self.update_data_stage01_isotopomer_normalized(dataListUpdated)
             else:
-                print ('Error: Command ' + cmd + ' is not recognized');
+                print(('Error: Command ' + cmd + ' is not recognized'));
                 getInput = True;
 
     def execute_ORM2Excel_data_stage01_isotopomer_peakSpectrum(self,experiment_id_I):
@@ -185,7 +185,7 @@ class ORM2Excel():
         # manipulate the data...
         getInput = True;
         while getInput:
-            cmd = raw_input('1: end session, do not update\n2: end session, update\n3: continue session, update\nEnter a command: ')
+            cmd = input('1: end session, do not update\n2: end session, update\n3: continue session, update\nEnter a command: ')
             if cmd == '1':
                 getInput = False;
             elif cmd == '2':
@@ -193,9 +193,9 @@ class ORM2Excel():
                 # read back the data
                 try:
                     dataListUpdated = self.getActiveExcel(dataHeader,xlColumns);
-                except StandardError:
-                    print e
-                    print "Changes not saved, retry command";
+                except Exception:
+                    print(e)
+                    print("Changes not saved, retry command");
                     getInput = True;
                     continue;
                 # update the database
@@ -205,15 +205,15 @@ class ORM2Excel():
                 # read back the data
                 try:
                     dataListUpdated = self.getActiveExcel(dataHeader,xlColumns);
-                except StandardError as e:
-                    print e
-                    print "Changes not saved, retry command";
+                except Exception as e:
+                    print(e)
+                    print("Changes not saved, retry command");
                     getInput = True;
                     continue;
                 # update the database
                 self.update_data_stage01_isotopomer_peakSpectrum(dataListUpdated)
             else:
-                print ('Error: Command ' + cmd + ' is not recognized');
+                print(('Error: Command ' + cmd + ' is not recognized'));
                 getInput = True;
 
     def execute_ORM2Excel_ms_components(self):
@@ -230,7 +230,7 @@ class ORM2Excel():
         # manipulate the data...
         getInput = True;
         while getInput:
-            cmd = raw_input('1: end session, do not update\n2: end session, update\n3: continue session, update\nEnter a command: ')
+            cmd = input('1: end session, do not update\n2: end session, update\n3: continue session, update\nEnter a command: ')
             if cmd == '1':
                 getInput = False;
             #elif cmd == '2':
@@ -258,7 +258,7 @@ class ORM2Excel():
             #    # update the database
             #    #self.update_data_stage01_isotopomer_peakSpectrum(dataListUpdated)
             else:
-                print ('Error: Command ' + cmd + ' is not recognized');
+                print(('Error: Command ' + cmd + ' is not recognized'));
                 getInput = True;
 
 def __main__():

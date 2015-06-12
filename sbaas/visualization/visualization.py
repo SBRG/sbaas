@@ -6,10 +6,11 @@ from escher.urls import get_url, model_name_to_url, map_name_to_url
 import os
 from os.path import dirname, abspath, join, isfile, isdir
 from warnings import warn
-from urllib2 import urlopen, HTTPError, URLError
+from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
 import json
 import shutil
-import appdirs
+from . import appdirs
 import re
 from jinja2 import Environment, PackageLoader, Template
 import codecs
@@ -49,11 +50,11 @@ def list_cached_data():
     try:
         return [x.replace('.json', '').replace('.js','').replace('.csv','') for x in os.listdir(get_cache_dir(name='data'))]
     except OSError:
-        print 'No cached maps'
+        print('No cached maps')
         return None
     
 def get_an_id():
-    return unicode(''.join(random.choice(string.ascii_lowercase)
+    return str(''.join(random.choice(string.ascii_lowercase)
                            for _ in range(10)))
 
 def load_resource(resource, name, safe=False):
@@ -154,7 +155,7 @@ class Builder(object):
         
         # remove illegal characters from css
         try:
-            self.embedded_css = unicode(embedded_css.replace('\n', ''))
+            self.embedded_css = str(embedded_css.replace('\n', ''))
         except AttributeError:
             self.embedded_css = None
         # make the unique id
@@ -279,42 +280,42 @@ class Builder(object):
             raise Exception(('Could not find builder_embed_css. Be sure to pass '
                              'a local_host argument to Builder if js_source is dev or local '
                              'and you are in an iPython notebook or a static html file.'))
-        return unicode(download.read().replace('\n', ' '))
+        return str(download.read().replace('\n', ' '))
 
     def _initialize_javascript(self, url_source):
-        javascript = (u"var map_data_{the_id} = {map_data};\n"
-                      u"var cobra_model_{the_id} = {cobra_model};\n"
-                      u"var reaction_data_{the_id} = {reaction_data};\n"
-                      u"var metabolite_data_{the_id} = {metabolite_data};\n"
-                      u"var css_string_{the_id} = '{style}';\n").format(
+        javascript = ("var map_data_{the_id} = {map_data};\n"
+                      "var cobra_model_{the_id} = {cobra_model};\n"
+                      "var reaction_data_{the_id} = {reaction_data};\n"
+                      "var metabolite_data_{the_id} = {metabolite_data};\n"
+                      "var css_string_{the_id} = '{style}';\n").format(
                           the_id=self.the_id,
                           map_data=(self.loaded_map_json if self.loaded_map_json else
-                                    u'null'),
+                                    'null'),
                           cobra_model=(self.loaded_model_json if self.loaded_model_json else
-                                       u'null'),
+                                       'null'),
                           reaction_data=(json.dumps(self.reaction_data) if self.reaction_data else
-                                         u'null'),
+                                         'null'),
                           metabolite_data=(json.dumps(self.metabolite_data) if self.metabolite_data else
-                                           u'null'),
+                                           'null'),
                           style=self._embedded_css(url_source))
         return javascript
 
     def _draw_js(self, the_id, enable_editing, menu, enable_keys, dev,
                  fill_screen, scroll_behavior, auto_set_data_domain,
                  never_ask_before_quit, js_url_parse):
-        draw = (u"options = {{ selection: d3.select('#{the_id}'),\n"
-                u"enable_editing: {enable_editing},\n"
-                u"menu: {menu},\n"
-                u"enable_keys: {enable_keys},\n"
-                u"scroll_behavior: {scroll_behavior},\n"
-                u"fill_screen: {fill_screen},\n"
-                u"map: map_data_{the_id},\n"
-                u"cobra_model: cobra_model_{the_id},\n"
-                u"auto_set_data_domain: {auto_set_data_domain},\n"
-                u"reaction_data: reaction_data_{the_id},\n"
-		u"metabolite_data: metabolite_data_{the_id},\n"
-                u"never_ask_before_quit: {never_ask_before_quit},\n"
-                u"css: css_string_{the_id},\n").format(
+        draw = ("options = {{ selection: d3.select('#{the_id}'),\n"
+                "enable_editing: {enable_editing},\n"
+                "menu: {menu},\n"
+                "enable_keys: {enable_keys},\n"
+                "scroll_behavior: {scroll_behavior},\n"
+                "fill_screen: {fill_screen},\n"
+                "map: map_data_{the_id},\n"
+                "cobra_model: cobra_model_{the_id},\n"
+                "auto_set_data_domain: {auto_set_data_domain},\n"
+                "reaction_data: reaction_data_{the_id},\n"
+		"metabolite_data: metabolite_data_{the_id},\n"
+                "never_ask_before_quit: {never_ask_before_quit},\n"
+                "css: css_string_{the_id},\n").format(
                     the_id=the_id,
                     enable_editing=json.dumps(enable_editing),
                     menu=json.dumps(menu),
@@ -327,16 +328,16 @@ class Builder(object):
         for option in self.options:
             val = getattr(self, option)
             if val is None: continue
-            draw = draw + u"{option}: {value},\n".format(
+            draw = draw + "{option}: {value},\n".format(
                 option=option,
                 value=json.dumps(val)) 
-        draw = draw + u"};\n\n"
+        draw = draw + "};\n\n"
             
         # dev needs escher.
         dev_str = '' if dev else 'escher.'
         # parse the url in javascript
         if js_url_parse:
-            o = u'options = %sutils.parse_url_components(window, options);\n' % (dev_str)
+            o = 'options = %sutils.parse_url_components(window, options);\n' % (dev_str)
             draw = draw + o;
         # make the builder
         draw = draw + '%sBuilder(options);\n' % dev_str
@@ -405,11 +406,11 @@ class Builder(object):
 
         # if height is not a string
         if type(height) is int:
-            height = u"%dpx" % height
+            height = "%dpx" % height
         elif type(height) is float:
-            height = u"%fpx" % height
+            height = "%fpx" % height
         elif type(height) is str:
-            height = unicode(height)
+            height = str(height)
             
         # set the proper urls 
         url_source = 'local' if (js_source=='local' or js_source=='dev') else 'web'
@@ -602,7 +603,7 @@ class Builder(object):
             from tempfile import mkstemp
             from os import write, close
             os_file, filename = mkstemp(suffix=".html")
-            write(os_file, unicode(html).encode('utf-8'))
+            write(os_file, str(html).encode('utf-8'))
             close(os_file)
             return filename
     

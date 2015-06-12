@@ -1,6 +1,6 @@
 from analysis.analysis_base import *
-from stage02_physiology_query import *
-from stage02_physiology_io import *
+from .stage02_physiology_query import *
+from .stage02_physiology_io import *
 import datetime
 from resources.sampling import cobra_sampling,cobra_sampling_n
 # Dependencies from cobra
@@ -42,14 +42,14 @@ class stage02_physiology_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
             if convert2irreversible_I: convert_to_irreversible(cobra_model);
             # Apply KOs, if any:
             for ko in ko_list:
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -71,7 +71,7 @@ class stage02_physiology_execute():
                 cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
                 cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
             # Apply flux constraints, if any:
-            for rxn,flux in flux_dict.iteritems():
+            for rxn,flux in flux_dict.items():
                 cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
                 cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
             # Change description, if any:
@@ -85,7 +85,7 @@ class stage02_physiology_execute():
                 # upload the model to the database
                 qio02.import_dataStage02PhysiologyModel_sbml(model_id_I, date_I, settings.workspace_data + '/cobra_model_tmp.xml');
         else:
-            print 'need to specify either an existing model_id or model_file_name!'
+            print('need to specify either an existing model_id or model_file_name!')
         return
     def execute_addMeasuredFluxes(self,experiment_id_I, ko_list={}, flux_dict={}, model_ids_I=[], sample_name_abbreviations_I=[]):
         '''Add flux data for physiological simulation'''
@@ -114,9 +114,9 @@ class stage02_physiology_execute():
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_physiology_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage02PhysiologySimulation(experiment_id_I,model_id);
             for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                print 'Adding experimental fluxes for sample name abbreviation ' + sna;
+                print('Adding experimental fluxes for sample name abbreviation ' + sna);
                 if flux_dict:
-                    for k,v in flux_dict[model_id][sna].iteritems():
+                    for k,v in flux_dict[model_id][sna].items():
                         # record the data
                         data_tmp = {'experiment_id':experiment_id_I,
                                 'model_id':model_id,
@@ -193,7 +193,7 @@ class stage02_physiology_execute():
             sample_name_abbreviations = [];
             sample_name_abbreviations = self.stage02_physiology_query.get_sampleNameAbbreviations_experimentID_dataStage02PhysiologySimulation(experiment_id_I);
         for sna in sample_name_abbreviations:
-            print 'Collecting experimental fluxes for sample name abbreviation ' + sna;
+            print('Collecting experimental fluxes for sample name abbreviation ' + sna);
             # get met_ids
             if not met_ids_I:
                 met_ids = [];
@@ -202,7 +202,7 @@ class stage02_physiology_execute():
                 met_ids = met_ids_I;
             if not(met_ids): continue #no component information was found
             for met in met_ids:
-                print 'Collecting experimental fluxes for metabolite ' + met;
+                print('Collecting experimental fluxes for metabolite ' + met);
                 # get rateData
                 slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = None,None,None,None,None,None,None;
                 slope_average, intercept_average, rate_average, rate_lb, rate_ub, rate_units, rate_var = self.stage02_physiology_query.get_rateData_experimentIDAndSampleNameAbbreviationAndMetID_dataStage01PhysiologyRatesAverages(experiment_id_I,sna,met);
@@ -243,7 +243,7 @@ class stage02_physiology_execute():
                                rxn_ids_I=[]):
         '''Sample a specified model that is constrained to measured physiological data'''
         
-        print 'executing sampling...';# get simulation information
+        print('executing sampling...');# get simulation information
         # get the model ids:
         if model_ids_I:
             model_ids = model_ids_I;
@@ -251,7 +251,7 @@ class stage02_physiology_execute():
             model_ids = [];
             model_ids = self.stage02_physiology_query.get_modelID_experimentID_dataStage02PhysiologySimulation(experiment_id_I);
         for model_id in model_ids:
-            print 'executing sampling for model_id ' + model_id;
+            print('executing sampling for model_id ' + model_id);
             # get the cobra model
             cobra_model = self.models[model_id];
             ## get the time-points
@@ -268,7 +268,7 @@ class stage02_physiology_execute():
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_physiology_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage02PhysiologySimulation(experiment_id_I,model_id);
             for sna in sample_name_abbreviations:
-                print 'executing sampling for sample_name_abbreviation ' + sna;
+                print('executing sampling for sample_name_abbreviation ' + sna);
                 # copy the model
                 cobra_model_copy = cobra_model.copy();
                 # get rxn_ids
@@ -288,13 +288,13 @@ class stage02_physiology_execute():
                     filename_points = experiment_id_I + '_' + model_id + '_' + sna + '_points' + '.mat';
                     self.sampling.export_sampling_matlab(cobra_model=cobra_model_copy,filename_model=filename_model,filename_script=filename_script,filename_points=filename_points);
                 else:
-                    print 'no solution found!';  
+                    print('no solution found!');  
     def execute_analyzeSamplingPoints_v1(self,experiment_id_I, model_ids_I = [],
                                sample_name_abbreviations_I=[],
                                rxn_ids_I=[]):
         '''Load and analyze sampling points'''
 
-        print 'analyzing sampling points';
+        print('analyzing sampling points');
         # get the model ids:
         if model_ids_I:
             model_ids = model_ids_I;
@@ -302,7 +302,7 @@ class stage02_physiology_execute():
             model_ids = [];
             model_ids = self.stage02_physiology_query.get_modelID_experimentID_dataStage02PhysiologySimulation(experiment_id_I);
         for model_id in model_ids:
-            print 'analyzing sampling points model_id ' + model_id;
+            print('analyzing sampling points model_id ' + model_id);
             # get the cobra model
             cobra_model = self.models[model_id];
             ## get the time-points
@@ -319,7 +319,7 @@ class stage02_physiology_execute():
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_physiology_query.get_sampleNameAbbreviations_experimentIDAndModelID_dataStage02PhysiologySimulation(experiment_id_I,model_id);
             for sna in sample_name_abbreviations:
-                print 'analyzing sampling points for sample_name_abbreviation ' + sna;
+                print('analyzing sampling points for sample_name_abbreviation ' + sna);
                 # copy the model
                 cobra_model_copy = cobra_model.copy();
                 # get rxn_ids
@@ -343,7 +343,7 @@ class stage02_physiology_execute():
                     self.sampling.find_loops(data_fva='data/loops_fva_tmp.json');
                     self.sampling.remove_loopsFromPoints();
                     # add data to the database
-                    for k,v in self.sampling.points.iteritems():
+                    for k,v in self.sampling.points.items():
                         data_tmp = {'experiment_id':experiment_id_I,
                             'model_id':model_id,
                             'sample_name_abbreviation':sna,
@@ -385,25 +385,25 @@ class stage02_physiology_execute():
                             None);
                         self.session.add(row);
                 else:
-                    print 'no solution found!';
+                    print('no solution found!');
         self.session.commit()  
     def execute_sampling(self,simulation_id_I,
                                rxn_ids_I=[]):
         '''Sample a specified model that is constrained to measured physiological data'''
         
-        print 'executing sampling...';
+        print('executing sampling...');
         # get simulation information
         simulation_info_all = [];
         simulation_info_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id_I);
         if not simulation_info_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
         # get simulation parameters
         simulation_parameters_all = [];
         simulation_parameters_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulationParameters(simulation_id_I);
         if not simulation_parameters_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
         # get the cobra model
@@ -435,27 +435,27 @@ class stage02_physiology_execute():
             elif simulation_parameters['sampler_id']=='optGpSampler':
                 return;
             else:
-                print 'sampler_id not recognized';
+                print('sampler_id not recognized');
         else:
-            print 'no solution found!';  
+            print('no solution found!');  
     def execute_analyzeSamplingPoints(self,simulation_id_I,
                                rxn_ids_I=[]):
         '''Load and analyze sampling points'''
 
-        print 'analyzing sampling points';
+        print('analyzing sampling points');
         
         # get simulation information
         simulation_info_all = [];
         simulation_info_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id_I);
         if not simulation_info_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_info = simulation_info_all[0]; # unique constraint guarantees only 1 row will be returned
         # get simulation parameters
         simulation_parameters_all = [];
         simulation_parameters_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulationParameters(simulation_id_I);
         if not simulation_parameters_all:
-            print 'simulation not found!'
+            print('simulation not found!')
             return;
         simulation_parameters = simulation_parameters_all[0]; # unique constraint guarantees only 1 row will be returned
         # get the cobra model
@@ -488,7 +488,7 @@ class stage02_physiology_execute():
             elif simulation_parameters['sampler_id']=='optGpSampler':
                 return;
             else:
-                print 'sampler_id not recognized';
+                print('sampler_id not recognized');
             # add data to the database
             row = None;
             row = data_stage02_physiology_sampledPoints(
@@ -500,7 +500,7 @@ class stage02_physiology_execute():
                 True,
                 None);
             self.session.add(row);
-            for k,v in self.sampling.points_statistics.iteritems():
+            for k,v in self.sampling.points_statistics.items():
                 row = None;
                 row = data_stage02_physiology_sampledData(
                     simulation_id_I,
@@ -521,7 +521,7 @@ class stage02_physiology_execute():
                     None);
                 self.session.add(row);
         else:
-            print 'no solution found!';
+            print('no solution found!');
         self.session.commit()  
     #internal functions:
     def format_metid(self,met_id_I,compartment_id_I):
@@ -552,14 +552,14 @@ class stage02_physiology_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
         elif cobra_model_I:
             cobra_model = cobra_model_I;
         # implement optimal KOs and flux constraints:
         for ko in ko_list:
             cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
             cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
-        for rxn,flux in flux_dict.iteritems():
+        for rxn,flux in flux_dict.items():
             cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
             cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
         # change description, if any:
@@ -570,7 +570,7 @@ class stage02_physiology_execute():
         if not cobra_model.solution.f:
             return False;
         else:
-            print cobra_model.solution.f;
+            print(cobra_model.solution.f);
             return True;
     def load_models(self,experiment_id_I,model_ids_I=[]):
         '''pre-load all models for the experiment_id'''
@@ -596,7 +596,7 @@ class stage02_physiology_execute():
                 cobra_model = None;
                 cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
             else:
-                print 'file_type not supported'
+                print('file_type not supported')
             self.models[model_id]=cobra_model;
     #table initializations:
     def drop_dataStage02(self):
@@ -704,7 +704,7 @@ class stage02_physiology_execute():
             simulation_info_1_all = [];
             simulation_info_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulation(simulation_id);
             if not simulation_info_1_all:
-                print 'simulation not found!'
+                print('simulation not found!')
                 return;
             simulation_1_info = simulation_info_1_all[0]; # unique constraint guarantees only 1 row will be returned
             simulation_info_all.append(simulation_1_info);
@@ -714,7 +714,7 @@ class stage02_physiology_execute():
             sampledPoints_1_all = [];
             sampledPoints_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySampledPoints(simulation_id);
             if not sampledPoints_1_all:
-                print 'simulation not found!'
+                print('simulation not found!')
                 return;
             sampledPoints_1_info = sampledPoints_1_all[0]; # unique constraint guarantees only 1 row will be returned
             sampledPoints_all.append(sampledPoints_1_info);
@@ -724,7 +724,7 @@ class stage02_physiology_execute():
             simulation_parameters_1_all = [];
             simulation_parameters_1_all = self.stage02_physiology_query.get_rows_simulationID_dataStage02PhysiologySimulationParameters(simulation_id);
             if not simulation_parameters_1_all:
-                print 'simulation not found!'
+                print('simulation not found!')
                 return;
             simulation_1_parameters = simulation_parameters_1_all[0]; # unique constraint guarantees only 1 row will be returned
             simulation_parameters_all.append(simulation_1_parameters);
@@ -732,7 +732,7 @@ class stage02_physiology_execute():
         model_ids_all = [x['model_id'] for x in simulation_info_all]
         model_ids_unique = list(set(model_ids_all));
         if len(model_ids_unique) != 1:
-            print 'more than 1 model_id found'
+            print('more than 1 model_id found')
             return
         else:
             model_id = model_ids_unique[0];

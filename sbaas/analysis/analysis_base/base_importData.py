@@ -17,13 +17,16 @@ class base_importData():
             for d in self.data:
                 try:
                     row = {};
-                    for key, value in d.iteritems():
+                    for key, value in d.items():
                         # replace multiquant-specific output
                         if (value == 'N/A' or value == '< 0' or value == '<2 points' or
                            value == 'degenerate' or value == '(No IS)'): value = None;
                         # replace empty strings with None
-                        if not(value): value = None;
-                        else: value.decode('utf-8', "ignore"); # convert to utf-8                    
+                        if not(value):
+                            value = None;
+                        else:
+                            #value.decode('utf-8', "ignore"); # convert to utf-8      
+                            value = value;           
                         row[key] = value;
                     data_cpy.append(row);
                 except BaseException as e:
@@ -34,7 +37,7 @@ class base_importData():
     def read_csv(self, filename):
         """read table data from csv file"""
         try:
-            with open(filename, 'rb') as csvfile:
+            with open(filename, 'r') as csvfile:
                 reader = csv.DictReader(csvfile);
                 try:
                     keys = reader.fieldnames;
@@ -48,7 +51,7 @@ class base_importData():
     def read_tab(self, filename):
         """read table data from tab file"""
         try:
-            with open(filename, 'rb') as csvfile:
+            with open(filename, 'r') as csvfile:
                 reader = csv.DictReader(csvfile,delimiter='\t');
                 try:
                     keys = reader.fieldnames;
@@ -62,7 +65,7 @@ class base_importData():
     def read_tab_fieldnames(self, filename, fieldnames, header=False):
         """read table data from tab file"""
         try:
-            with open(filename, 'rb') as csvfile:
+            with open(filename, 'r') as csvfile:
                 reader = csv.DictReader(csvfile,fieldnames,delimiter='\t');
                 headers = '';
                 try:
@@ -73,7 +76,7 @@ class base_importData():
                     sys.exit('file %s, line %d: %s' % (filename, reader.line_num, e));
         except IOError as e:
             #sys.exit('%s does not exist' % e);
-            print ('%s does not exist' % e); 
+            print(('%s does not exist' % e)); 
 
     def read_json(self, filename):
         '''import values from a json file'''

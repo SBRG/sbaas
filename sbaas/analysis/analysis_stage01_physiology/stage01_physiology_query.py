@@ -369,8 +369,8 @@ class stage01_physiology_query(base_analysis):
                         'wcw_units':d['wcw_units']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d;
+                    print('row not found.')
+                    print(d);
                 updates.append(data_update);
             except SQLAlchemyError as e:
                 print(e);

@@ -1,6 +1,6 @@
 from analysis.analysis_base import *
-from visualization_query import *
-from visualization_io import *
+from .visualization_query import *
+from .visualization_io import *
 
 class visualization_execute():
     '''class for ale analysis'''

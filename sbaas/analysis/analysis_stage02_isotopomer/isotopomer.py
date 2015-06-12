@@ -51,7 +51,7 @@ class convert_ids():
             row = [];
             # will need to recombine cells by a white space if that format is desired
             for c in r:
-                if c in self.metmap.keys():
+                if c in list(self.metmap.keys()):
                     row.append(self.metmap[c]);
                 else:
                     row.append(c);
@@ -73,7 +73,7 @@ def build_isotopomer_str(isotopomer_mapping_I):
     #   isotopomer_str_O = {rxn_id: 'rxn_id ctrack!mapping1!mapping2...'}
 
     isotopomer_str_O = {};
-    for k,v in isotopomer_mapping_I.iteritems():
+    for k,v in isotopomer_mapping_I.items():
         str = '';
         if v['ctrack'].rstrip()!='':
             str = k + ' ' + v['ctrack'];

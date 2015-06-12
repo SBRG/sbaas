@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from stage01_quantification_query import stage01_quantification_query
+from .stage01_quantification_query import stage01_quantification_query
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 class stage01_quantification_io(base_analysis):
@@ -348,8 +348,8 @@ class stage01_quantification_io(base_analysis):
                         'comment_':d['comment_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
@@ -377,8 +377,8 @@ class stage01_quantification_io(base_analysis):
                         'used_':d['used_']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
             except SQLAlchemyError as e:
                 print(e);
         self.session.commit();
@@ -525,7 +525,7 @@ class stage01_quantification_io(base_analysis):
         #Output:
         #   menu for sna, tp, ratio based on index menu
         
-        print 'Exporting physiologicalRatios for d3 boxandwhiskers plot'
+        print('Exporting physiologicalRatios for d3 boxandwhiskers plot')
         data_all_O = [];
         filter_O = {};
         filter_O['time_point'] = [];
@@ -535,8 +535,8 @@ class stage01_quantification_io(base_analysis):
             ratios = {};
             ratios = self.stage01_quantification_query.get_ratioIDs_experimentID_dataStage01PhysiologicalRatiosReplicates(experiment_id);
             record_tp=True;
-            for k,v in ratios.iteritems():
-                print 'exporting physiologicalRatios from replicates for ratio ' + k;
+            for k,v in ratios.items():
+                print('exporting physiologicalRatios from replicates for ratio ' + k);
                 # get time points
                 if time_points_I:
                     time_points = time_points_I;
@@ -548,7 +548,7 @@ class stage01_quantification_io(base_analysis):
                 labels_O['labels']=[];
                 condition_cnt = 0;
                 for tp_cnt,tp in enumerate(time_points):
-                    print 'exporting physiologicalRatios from replicates for time_point ' + tp;
+                    print('exporting physiologicalRatios from replicates for time_point ' + tp);
                     # get sample_names
                     if sample_name_abbreviations_I:
                         sample_name_abbreviations = sample_name_abbreviations_I;
@@ -556,7 +556,7 @@ class stage01_quantification_io(base_analysis):
                         sample_name_abbreviations = [];
                         sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndRatioID_dataStage01PhysiologicalRatiosAverages(experiment_id,tp,k);
                     for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                        print 'exporting physiologicalRatios from replicates for sample name abbreviation ' + sna;
+                        print('exporting physiologicalRatios from replicates for sample name abbreviation ' + sna);
                         # get sample names short
                         sample_names_short = [];
                         sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndRatioIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,sna,k,tp);
@@ -606,17 +606,17 @@ class stage01_quantification_io(base_analysis):
                 time_points = [];
                 time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01PhysiologicalRatiosReplicates(experiment_id);
             for tp in time_points:
-                print 'exporting physiologicalRatios from replicates for time_point ' + tp;
+                print('exporting physiologicalRatios from replicates for time_point ' + tp);
                 filter_tp_str = 'time_point/'+tp;
                 filter_O['time_point'].append(filter_tp_str);
                 # get physiological ratio_ids
                 ratios = {};
                 ratios = self.stage01_quantification_query.get_ratioIDs_experimentIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,tp);
-                for k,v in ratios.iteritems():
+                for k,v in ratios.items():
                     filter_f_str = 'time_point/'+tp+'/feature/'+k;
                     filter_O['feature'].append(filter_f_str);
                     data_O = [];
-                    print 'exporting physiologicalRatios from replicates for ratio ' + k;
+                    print('exporting physiologicalRatios from replicates for ratio ' + k);
                     # get sample_names
                     if sample_name_abbreviations_I:
                         sample_name_abbreviations = sample_name_abbreviations_I;
@@ -624,7 +624,7 @@ class stage01_quantification_io(base_analysis):
                         sample_name_abbreviations = [];
                         sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndRatioID_dataStage01PhysiologicalRatiosAverages(experiment_id,tp,k);
                     for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                        print 'exporting physiologicalRatios from replicates for sample name abbreviation ' + sna;
+                        print('exporting physiologicalRatios from replicates for sample name abbreviation ' + sna);
                         # get sample names short
                         sample_names_short = [];
                         sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndRatioIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,sna,k,tp);
@@ -667,7 +667,7 @@ class stage01_quantification_io(base_analysis):
                                                  filename=[settings.visualization_data,'/quantification/boxandwhiskers/','concentrations/']):
         '''Export data for viewing using d3'''
         
-        print 'Exporting replicatesMI for d3 boxandwhiskers plot'
+        print('Exporting replicatesMI for d3 boxandwhiskers plot')
         data_all_O = [];
         filter_O = {};
         filter_O['time_point'] = [];
@@ -681,7 +681,7 @@ class stage01_quantification_io(base_analysis):
                 component_names = self.stage01_quantification_query.get_componentNames_experimentID_dataStage01ReplicatesMI(experiment_id);
             record_tp=True;
             for cn in component_names:
-                print 'exporting replicatesMI for component_name ' + cn;
+                print('exporting replicatesMI for component_name ' + cn);
                 # get time points
                 if time_points_I:
                     time_points = time_points_I;
@@ -693,7 +693,7 @@ class stage01_quantification_io(base_analysis):
                 labels_O['labels']=[];
                 condition_cnt = 0;
                 for tp in time_points:
-                    print 'exporting replicatesMI for time_point ' + tp;
+                    print('exporting replicatesMI for time_point ' + tp);
                     # get sample_names
                     if sample_name_abbreviations_I:
                         sample_name_abbreviations = sample_name_abbreviations_I;
@@ -701,7 +701,7 @@ class stage01_quantification_io(base_analysis):
                         sample_name_abbreviations = [];
                         sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id,tp,cn);
                     for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                        print 'exporting replicatesMI  for sample name abbreviation ' + sna;
+                        print('exporting replicatesMI  for sample name abbreviation ' + sna);
                         # get sample names short
                         sample_names_short = [];
                         sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndComponentNameAndTimePoint_dataStage01ReplicatesMI(experiment_id,sna,cn,tp);
@@ -753,7 +753,7 @@ class stage01_quantification_io(base_analysis):
                 time_points = [];
                 time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01ReplicatesMI(experiment_id);
             for tp in time_points:
-                print 'exporting replicatesMI for time_point ' + tp;
+                print('exporting replicatesMI for time_point ' + tp);
                 filter_tp_str = 'time_point/'+tp;
                 filter_O['time_point'].append(filter_tp_str);
                 # get component_names
@@ -766,7 +766,7 @@ class stage01_quantification_io(base_analysis):
                     filter_f_str = 'time_point/'+tp+'/feature/'+cn;
                     filter_O['feature'].append(filter_f_str);
                     data_O = [];
-                    print 'exporting replicatesMI for component_name ' + cn;
+                    print('exporting replicatesMI for component_name ' + cn);
                     # get sample_names
                     if sample_name_abbreviations_I:
                         sample_name_abbreviations = sample_name_abbreviations_I;
@@ -774,7 +774,7 @@ class stage01_quantification_io(base_analysis):
                         sample_name_abbreviations = [];
                         sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndComponentName_dataStage01ReplicatesMI(experiment_id,tp,cn);
                     for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                        print 'exporting replicatesMI  for sample name abbreviation ' + sna;
+                        print('exporting replicatesMI  for sample name abbreviation ' + sna);
                         # get sample names short
                         sample_names_short = [];
                         sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndComponentNameAndTimePoint_dataStage01ReplicatesMI(experiment_id,sna,cn,tp);
@@ -824,7 +824,7 @@ class stage01_quantification_io(base_analysis):
         #Output:
         #   menu for sna, tp, ratio based on index menu
         
-        print 'Exporting physiologicalRatios for d3 boxandwhiskers plot'
+        print('Exporting physiologicalRatios for d3 boxandwhiskers plot')
         # get time points
         time_points = [];
         time_points = self.stage01_quantification_query.get_timePoint_experimentID_dataStage01PhysiologicalRatiosReplicates(experiment_id);
@@ -833,17 +833,17 @@ class stage01_quantification_io(base_analysis):
         filter_O['time_point'] = [];
         filter_O['feature'] = [];
         for tp in time_points:
-            print 'exporting physiologicalRatios from replicates for time_point ' + tp;
+            print('exporting physiologicalRatios from replicates for time_point ' + tp);
             filter_tp_str = 'time_point/'+tp;
             filter_O['time_point'].append(filter_tp_str);
             # get physiological ratio_ids
             ratios = {};
             ratios = self.stage01_quantification_query.get_ratioIDs_experimentIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,tp);
-            for k,v in ratios.iteritems():
+            for k,v in ratios.items():
                 filter_f_str = 'time_point/'+tp+'/feature/'+k;
                 filter_O['feature'].append(filter_f_str);
                 data_O = [];
-                print 'exporting physiologicalRatios from replicates for ratio ' + k;
+                print('exporting physiologicalRatios from replicates for ratio ' + k);
                 # get sample_names
                 if sample_name_abbreviations_I:
                     sample_name_abbreviations = sample_name_abbreviations_I;
@@ -851,7 +851,7 @@ class stage01_quantification_io(base_analysis):
                     sample_name_abbreviations = [];
                     sample_name_abbreviations = self.stage01_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndRatioID_dataStage01PhysiologicalRatiosAverages(experiment_id,tp,k);
                 for sna_cnt,sna in enumerate(sample_name_abbreviations):
-                    print 'exporting physiologicalRatios from replicates for sample name abbreviation ' + sna;
+                    print('exporting physiologicalRatios from replicates for sample name abbreviation ' + sna);
                     # get sample names short
                     sample_names_short = [];
                     sample_names_short = self.stage01_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndRatioIDAndTimePoint_dataStage01PhysiologicalRatiosReplicates(experiment_id,sna,k,tp);

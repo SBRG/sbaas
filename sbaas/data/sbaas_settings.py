@@ -1,4 +1,4 @@
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 import os as __os
 from os.path import split as __split, join as __join, abspath as __abspath, \
     isfile as __isfile

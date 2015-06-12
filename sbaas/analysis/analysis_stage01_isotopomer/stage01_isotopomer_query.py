@@ -716,7 +716,7 @@ class stage01_isotopomer_query(base_analysis):
             if not component_names: 
                 print('No component information found for:');
                 print('experiment_id\tsample_name_abbreviation\tms_methodtype\ttime_point,dilution');
-                print experiment_id_I,sample_name_abbreviation_I,ms_methodtype_I,time_point_I,dilution_I;
+                print(experiment_id_I,sample_name_abbreviation_I,ms_methodtype_I,time_point_I,dilution_I);
                 return component_names_O, component_group_names_O,\
                         precursor_formulas_O, precursor_masses_O, product_formulas_O, product_masses_O;
             else:
@@ -776,7 +776,7 @@ class stage01_isotopomer_query(base_analysis):
             if not component_names: 
                 print('No component information found for:');
                 print('experiment_id\tsample_name_abbreviation\tms_methodtype\ttime_point\tdilution\tmet_id');
-                print experiment_id_I,sample_name_abbreviation_I,ms_methodtype_I,time_point_I,dilution_I,met_id_I;
+                print(experiment_id_I,sample_name_abbreviation_I,ms_methodtype_I,time_point_I,dilution_I,met_id_I);
                 return component_names_O, component_group_names_O,\
                         precursor_formulas_O, precursor_masses_O, product_formulas_O, product_masses_O;
             else:
@@ -968,8 +968,8 @@ class stage01_isotopomer_query(base_analysis):
                         data_stage01_isotopomer_MQResultsTable.sample_name.like(d['sample_name'])).delete(
                         synchronize_session=False);
                 if delete == 0:
-                    print 'row not found'
-                    print d;
+                    print('row not found')
+                    print(d);
                 deletes.append(delete);
             except SQLAlchemyError as e:
                 print(e);
@@ -1313,7 +1313,7 @@ class stage01_isotopomer_query(base_analysis):
             dilution_O = None;
             if not sample_name: 
                 print('no sample name and dilution found for experiment_id\ttime_point\tsample_name_abbreviation\tscan_type\tsample_replicate');
-                print(experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I + '\t'+ str(sample_replicate_I));
+                print((experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I + '\t'+ str(sample_replicate_I)));
             else:
                 sample_name_O = sample_name[0][0];
                 dilution_O = sample_name[0][1];
@@ -1334,8 +1334,8 @@ class stage01_isotopomer_query(base_analysis):
                     sample_description.sample_name_abbreviation).order_by(
                     sample_description.sample_name_abbreviation.asc()).all();
             sample_name_abbreviations_O = [];
-            if not sample_name_abbreviations: print('no sample name abbreviations found for experiment: ' + experiment_id_I\
-                + ' and time-point: ' + time_point_I + ' and sample type: ' + sample_type_I);
+            if not sample_name_abbreviations: print(('no sample name abbreviations found for experiment: ' + experiment_id_I\
+                + ' and time-point: ' + time_point_I + ' and sample type: ' + sample_type_I));
             else:
                 for sna in sample_name_abbreviations:
                     sample_name_abbreviations_O.append(sna[0]);
@@ -1410,7 +1410,7 @@ class stage01_isotopomer_query(base_analysis):
                     sample_description.time_point.asc()).all();
             time_points_O = [];
             sample_replicates_O = None;
-            if not timepoints: print ('no time points found for experiment: ' + experiment_id_I);
+            if not timepoints: print(('no time points found for experiment: ' + experiment_id_I));
             else:
                 for tp in timepoints:
                     time_points_O.append(tp[0]);
@@ -1505,7 +1505,7 @@ class stage01_isotopomer_query(base_analysis):
             met_ids_O = [];
             if not component_names:
                 print('no met ids found for experiment_id\ttime_point\tsample_name_abbreviation\tscan_type\tsample_replicate');
-                print(experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I + '\t'+ str(sample_replicate_I));
+                print((experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I + '\t'+ str(sample_replicate_I)));
             else:
                 for cn in component_names:
                     met_ids_O.append(cn[0]);
@@ -1549,7 +1549,7 @@ class stage01_isotopomer_query(base_analysis):
             precursor_mass_O = [];
             if not component_names:
                 print('no precursor formula nor precursor mass found for experiment_id\ttime_point\tsample_name_abbreviation\tscan_type\tsample_replicate\tmet id');
-                print(experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I + '\t'+ str(sample_replicate_I) + '\t'+ met_id_I);
+                print((experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I + '\t'+ str(sample_replicate_I) + '\t'+ met_id_I));
             else:
                 for cn in component_names:
                     precursor_formulas_O.append(cn.precursor_formula);
@@ -1593,7 +1593,7 @@ class stage01_isotopomer_query(base_analysis):
             scan_type_O = [];
             if not scantypes:
                 print('no scan types found for experiment_id\ttime_point\tsample_name_abbreviation');
-                print(experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I);
+                print((experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I));
             else:
                 for st in scantypes:
                     scan_type_O.append(st[0]);
@@ -1631,7 +1631,7 @@ class stage01_isotopomer_query(base_analysis):
             sample_replicates_O = [];
             if not replicates: 
                 print('no replicates found for experiment_id\ttime_point\tsample_name_abbreviation\tscan_type');
-                print(experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I);
+                print((experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I));
             else:
                 for r in replicates:
                     sample_replicates_O.append(r[0]);
@@ -1657,7 +1657,7 @@ class stage01_isotopomer_query(base_analysis):
             product_formulas_O = [];
             if not data:
                 print('no product formulas found for experiment_id\ttime_point\tsample_name_abbreviation\tscan_type\tsample_replicate\tmet id\tprecursor formula');
-                print(experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I + '\t'+ str(sample_replicate_I) + '\t'+ met_id_I + '\t'+ precursor_formula_I);
+                print((experiment_id_I + '\t'+ time_point_I + '\t'+ sample_name_abbreviation_I + '\t'+ scan_type_I + '\t'+ str(sample_replicate_I) + '\t'+ met_id_I + '\t'+ precursor_formula_I));
             else:
                 for d in data:
                     product_formulas_O.append(d.product_formula);
@@ -1678,7 +1678,7 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_peakSpectrum.product_formula.asc()).all();
             product_formulas_O = [];
             if not data:
-                print('No product formulas found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I + ', and precursor_formula: ' + precursor_formula_I);
+                print(('No product formulas found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I + ', and precursor_formula: ' + precursor_formula_I));
                 return product_formulas_O;
             else:
                 for d in data:
@@ -1704,7 +1704,7 @@ class stage01_isotopomer_query(base_analysis):
             intensity_normalized_O = None;
             intensity_normalized_units_O = None;
             if not data:
-                print('No normalized intensities found for sample_name_abbreviation: ' + sample_name_abbreviation_I + ', met_id: ' + met_id_I + ', precursor_formula: ' + precursor_formula_I + ', precursor_mass: ' + str(precursor_mass_I));
+                print(('No normalized intensities found for sample_name_abbreviation: ' + sample_name_abbreviation_I + ', met_id: ' + met_id_I + ', precursor_formula: ' + precursor_formula_I + ', precursor_mass: ' + str(precursor_mass_I)));
                 return intensity_normalized_O;
             else:
                 intensity_normalized_O = data[0][0];
@@ -1737,7 +1737,7 @@ class stage01_isotopomer_query(base_analysis):
             data_O = {};
             mass_O = {};
             if not data:
-                print('No normalized intensities found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I + ', and precursor_formula: ' + precursor_formula_I);
+                print(('No normalized intensities found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I + ', and precursor_formula: ' + precursor_formula_I));
                 return data_O;
             else:
                 for i,d in enumerate(data):
@@ -1780,7 +1780,7 @@ class stage01_isotopomer_query(base_analysis):
             data_O = {};
             mass_O = {};
             if not data:
-                print('No normalized intensities found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I + ', and precursor_formula: ' + precursor_formula_I);
+                print(('No normalized intensities found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I + ', and precursor_formula: ' + precursor_formula_I));
                 return data_O;
             else:
                 for i,d in enumerate(data):
@@ -1820,7 +1820,7 @@ class stage01_isotopomer_query(base_analysis):
             data_O = {};
             mass_O = {};
             if not data:
-                print('No data found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I + ', and precursor_formula: ' + precursor_formula_I);
+                print(('No data found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I + ', and precursor_formula: ' + precursor_formula_I));
                 return data_O;
             else:
                 for i,d in enumerate(data):
@@ -1869,8 +1869,8 @@ class stage01_isotopomer_query(base_analysis):
                         'abs_devFromTheoretical':d['abs_devFromTheoretical']},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
                     #print 'row will be added.'
                     #row = data_stage01_isotopomer_peakSpectrum(d['experiment_id'],
                     #    d['sample_name'],
@@ -1926,8 +1926,8 @@ class stage01_isotopomer_query(base_analysis):
                         'used_':True},
                         synchronize_session=False);
                 if data_update == 0:
-                    print 'row not found.'
-                    print d
+                    print('row not found.')
+                    print(d)
                 updates.append(data_update);
             except SQLAlchemyError as e:
                 print(e);
@@ -1985,9 +1985,9 @@ class stage01_isotopomer_query(base_analysis):
             sample_replicates_O = [];
             sample_types_O = [];
             if not sample_names:
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	met_id_I	time_point_I	sample_dilution_I"
-                print experiment_id_I,sample_name_abbreviation_I,met_id_I,time_point_I,sample_dilution_I
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	met_id_I	time_point_I	sample_dilution_I")
+                print(experiment_id_I,sample_name_abbreviation_I,met_id_I,time_point_I,sample_dilution_I)
                 return sample_names_O,sample_replicates_O,sample_types_O;
             else:
                 for sn in sample_names:
@@ -2019,9 +2019,9 @@ class stage01_isotopomer_query(base_analysis):
             sample_replicates_O = [];
             sample_types_O = [];
             if not sample_names:
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	met_id_I	time_point_I	sample_dilution_I"
-                print experiment_id_I,sample_name_abbreviation_I,met_id_I,time_point_I,sample_dilution_I
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	met_id_I	time_point_I	sample_dilution_I")
+                print(experiment_id_I,sample_name_abbreviation_I,met_id_I,time_point_I,sample_dilution_I)
                 return sample_names_O,sample_replicates_O,sample_types_O;
             else:
                 for sn in sample_names:
@@ -2289,9 +2289,9 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_normalized.met_id.asc()).all();
             met_ids_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	dilution_I	scan_type_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,dilution_I,scan_type_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	dilution_I	scan_type_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,dilution_I,scan_type_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn[0]);
@@ -2312,9 +2312,9 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_normalized.met_id.asc()).all();
             met_ids_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I comment_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,comment_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I comment_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,comment_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn[0]);
@@ -2334,9 +2334,9 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_normalized.met_id.asc()).all();
             met_ids_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn[0]);
@@ -2357,9 +2357,9 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_normalized.met_id.asc()).all();
             met_ids_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn[0]);
@@ -2390,9 +2390,9 @@ class stage01_isotopomer_query(base_analysis):
             fragment_formulas_O = [];
             fragment_masses_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	dilution_I	scan_type_I	met_id_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,dilution_I,scan_type_I,met_id_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	dilution_I	scan_type_I	met_id_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,dilution_I,scan_type_I,met_id_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn.met_id);
@@ -2423,9 +2423,9 @@ class stage01_isotopomer_query(base_analysis):
             fragment_formulas_O = [];
             fragment_masses_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	dilution_I	scan_type_I	met_id_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,dilution_I,scan_type_I,met_id_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	dilution_I	scan_type_I	met_id_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,dilution_I,scan_type_I,met_id_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn.met_id);
@@ -2453,9 +2453,9 @@ class stage01_isotopomer_query(base_analysis):
             fragment_formulas_O = [];
             fragment_masses_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I	met_id_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I	met_id_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I);
             else:
                 for cn in met_ids:
                     fragment_formulas_O.append(cn.fragment_formula);
@@ -2482,9 +2482,9 @@ class stage01_isotopomer_query(base_analysis):
             fragment_formulas_O = [];
             fragment_masses_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I	met_id_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I	met_id_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I);
             else:
                 for cn in met_ids:
                     fragment_formulas_O.append(cn.fragment_formula);
@@ -2567,9 +2567,9 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_normalized.replicate_number.asc()).all();
             replicate_numbers_O = [];
             if not(replicate_numbers):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I);
             else:
                 for cn in replicate_numbers:
                     replicate_numbers_O.append(cn[0]);
@@ -2595,8 +2595,8 @@ class stage01_isotopomer_query(base_analysis):
             intensity_normalized_units_O = None;
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation\ttime_point\treplicate_number\tmet_id\tfragment_formula\tfragment_mass\tscan_type';
-                print (sample_name_abbreviation_I) + '\t' + str(time_point_I) + '\t' + str(replicate_number_I) + '\t' + str(met_id_I) + '\t' + str(fragment_formula_I) + '\t' + str(fragment_mass_I) + '\t' + str(scan_type_I);
+                print('sample_name_abbreviation\ttime_point\treplicate_number\tmet_id\tfragment_formula\tfragment_mass\tscan_type');
+                print((sample_name_abbreviation_I) + '\t' + str(time_point_I) + '\t' + str(replicate_number_I) + '\t' + str(met_id_I) + '\t' + str(fragment_formula_I) + '\t' + str(fragment_mass_I) + '\t' + str(scan_type_I));
                 return intensity_normalized_O;
             else:
                 intensity_normalized_O = data[0][0];
@@ -2621,8 +2621,8 @@ class stage01_isotopomer_query(base_analysis):
             intensity_normalized_units_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation\ttime_point\tmet_id\tfragment_formula\tfragment_mass\tscan_type';
-                print (sample_name_abbreviation_I) + '\t' + str(time_point_I) + '\t' + str(met_id_I) + '\t' + str(fragment_formula_I) + '\t' + str(fragment_mass_I) + '\t' + str(scan_type_I);
+                print('sample_name_abbreviation\ttime_point\tmet_id\tfragment_formula\tfragment_mass\tscan_type');
+                print((sample_name_abbreviation_I) + '\t' + str(time_point_I) + '\t' + str(met_id_I) + '\t' + str(fragment_formula_I) + '\t' + str(fragment_mass_I) + '\t' + str(scan_type_I));
                 return intensity_normalized_O;
             else:
                 for d in data:
@@ -2651,8 +2651,8 @@ class stage01_isotopomer_query(base_analysis):
             intensity_normalized_units_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation\ttime_point\tmet_id\tfragment_formula\tfragment_mass\tscan_type';
-                print (sample_name_abbreviation_I) + '\t' + str(time_point_I) + '\t' + str(met_id_I) + '\t' + str(fragment_formula_I) + '\t' + str(fragment_mass_I) + '\t' + str(scan_type_I);
+                print('sample_name_abbreviation\ttime_point\tmet_id\tfragment_formula\tfragment_mass\tscan_type');
+                print((sample_name_abbreviation_I) + '\t' + str(time_point_I) + '\t' + str(met_id_I) + '\t' + str(fragment_formula_I) + '\t' + str(fragment_mass_I) + '\t' + str(scan_type_I));
                 return intensity_normalized_O;
             else:
                 for d in data:
@@ -2682,7 +2682,7 @@ class stage01_isotopomer_query(base_analysis):
             fragment_formula_old = '';
             data_O = {};
             if not data:
-                print('No data found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I);
+                print(('No data found for sample_name: ' + sample_name_I + ', met_id: ' + met_id_I));
                 return data_O;
             else:
                 mass_O = {};
@@ -2839,7 +2839,7 @@ class stage01_isotopomer_query(base_analysis):
         # update the data_stage01_isotopomer_normalized
         updates = [];
         for d in dataListUpdated_I:
-            if d.has_key('intensity_corrected'):
+            if 'intensity_corrected' in d:
                 try:
                     data_update = self.session.query(data_stage01_isotopomer_normalized).filter(
                             data_stage01_isotopomer_normalized.experiment_id.like(d['experiment_id']),
@@ -2863,8 +2863,8 @@ class stage01_isotopomer_query(base_analysis):
                             'abs_devFromTheoretical':d['abs_devFromTheoretical']},
                             synchronize_session=False);
                     if data_update == 0:
-                        print 'row not found.'
-                        print d
+                        print('row not found.')
+                        print(d)
                         #print 'row will be added.'
                         #row = data_stage01_isotopomer_normalized();
                         #self.session.add(row);
@@ -2874,7 +2874,7 @@ class stage01_isotopomer_query(base_analysis):
                     updates.append(data_update);
                 except SQLAlchemyError as e:
                     print(e);
-            elif d.has_key('used_'):
+            elif 'used_' in d:
                 try:
                     data_update = self.session.query(data_stage01_isotopomer_normalized).filter(
                             data_stage01_isotopomer_normalized.experiment_id.like(d['experiment_id']),
@@ -2896,8 +2896,8 @@ class stage01_isotopomer_query(base_analysis):
                             'comment_':d['comment_']},
                             synchronize_session=False);
                     if data_update == 0:
-                        print 'row not found.'
-                        print d
+                        print('row not found.')
+                        print(d)
                     #elif data_update ==1:
                     #    print 'good update'
                     updates.append(data_update);
@@ -2924,8 +2924,8 @@ class stage01_isotopomer_query(base_analysis):
                             'comment_':d['comment_']},
                             synchronize_session=False);
                     if data_update == 0:
-                        print 'row not found.'
-                        print d
+                        print('row not found.')
+                        print(d)
                         #print 'row will be added.'
                         #row = data_stage01_isotopomer_normalized();
                         #self.session.add(row);
@@ -2952,8 +2952,8 @@ class stage01_isotopomer_query(base_analysis):
                             'comment_':d['comment_']},
                             synchronize_session=False);
                     if data_update == 0:
-                        print 'row not found.'
-                        print d
+                        print('row not found.')
+                        print(d)
                         #print 'row will be added.'
                         #row = data_stage01_isotopomer_normalized();
                         #self.session.add(row);
@@ -2986,8 +2986,8 @@ class stage01_isotopomer_query(base_analysis):
             intensity_normalized_units_O = None;
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation\ttime_point\tmet_id\tfragment_formula\tfragment_mass\tscan_type';
-                print (sample_name_abbreviation_I) + '\t' + str(time_point_I) + '\t' + str(met_id_I) + '\t' + str(fragment_formula_I) + '\t' + str(fragment_mass_I) + '\t' + str(scan_type_I);
+                print('sample_name_abbreviation\ttime_point\tmet_id\tfragment_formula\tfragment_mass\tscan_type');
+                print((sample_name_abbreviation_I) + '\t' + str(time_point_I) + '\t' + str(met_id_I) + '\t' + str(fragment_formula_I) + '\t' + str(fragment_mass_I) + '\t' + str(scan_type_I));
                 return intensity_normalized_average_O,intensity_normalized_cv_O;
             else:
                 intensity_normalized_average_O = data[0][0];
@@ -3063,9 +3063,9 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_averages.met_id.asc()).all();
             met_ids_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn[0]);
@@ -3118,7 +3118,7 @@ class stage01_isotopomer_query(base_analysis):
             data_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation: ' + sample_name_abbreviation_I;
+                print('sample_name_abbreviation: ' + sample_name_abbreviation_I);
                 return data_O;
             else:
                 # algorithm will break there is no data for a0 mass and there are jumps in the a values (i.e. a0 to a2);
@@ -3230,7 +3230,7 @@ class stage01_isotopomer_query(base_analysis):
             data_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation: ' + sample_name_abbreviation_I;
+                print('sample_name_abbreviation: ' + sample_name_abbreviation_I);
                 return data_O;
             else:
                 # algorithm will break there is no data for a0 mass and there are jumps in the a values (i.e. a0 to a2);
@@ -3314,7 +3314,7 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_averages.experiment_id.like(experiment_id_I)).all();
             data_O = [];
             if not data:
-                print('No row information found for experiment_id: ' + experiment_id_I);
+                print(('No row information found for experiment_id: ' + experiment_id_I));
                 return data_O;
             else:
                 for d in data:
@@ -3433,9 +3433,9 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_averagesNormSum.met_id.asc()).all();
             met_ids_O = [];
             if not(met_ids):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I);
             else:
                 for cn in met_ids:
                     met_ids_O.append(cn[0]);
@@ -3458,9 +3458,9 @@ class stage01_isotopomer_query(base_analysis):
                     data_stage01_isotopomer_averagesNormSum.fragment_formula.asc()).all();
             fragments_O = [];
             if not(fragments):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I);
             else:
                 for cn in fragments:
                     fragments_O.append(cn[0]);
@@ -3490,9 +3490,9 @@ class stage01_isotopomer_query(base_analysis):
             intensity_normalized_average_O = [];
             intensity_normalized_cv_O = [];
             if not(fragments):
-                print "no results found"
-                print "experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I    fragment_forula_I";
-                print experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I,fragment_forula_I;
+                print("no results found")
+                print("experiment_id_I	sample_name_abbreviation_I	time_point_I	scan_type_I met_id_I    fragment_forula_I");
+                print(experiment_id_I,sample_name_abbreviation_I,time_point_I,scan_type_I,met_id_I,fragment_forula_I);
             else:
                 for cn in fragments:
                     fragment_mass_O.append(cn[0]);
@@ -3547,7 +3547,7 @@ class stage01_isotopomer_query(base_analysis):
             data_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation: ' + sample_name_abbreviation_I;
+                print('sample_name_abbreviation: ' + sample_name_abbreviation_I);
                 return data_O;
             else:
                 # algorithm will break there is no data for a0 mass and there are jumps in the a values (i.e. a0 to a2);
@@ -3659,7 +3659,7 @@ class stage01_isotopomer_query(base_analysis):
             data_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation: ' + sample_name_abbreviation_I;
+                print('sample_name_abbreviation: ' + sample_name_abbreviation_I);
                 return data_O;
             else:
                 # algorithm will break there is no data for a0 mass and there are jumps in the a values (i.e. a0 to a2);
@@ -3768,7 +3768,7 @@ class stage01_isotopomer_query(base_analysis):
             data_O = [];
             if not data:
                 print('No normalized intensities found for the following:')
-                print 'sample_name_abbreviation: ' + sample_name_abbreviation_I;
+                print('sample_name_abbreviation: ' + sample_name_abbreviation_I);
                 return data_O;
             else:
                 for d in data:

@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from stage02_quantification_query import stage02_quantification_query
+from .stage02_quantification_query import stage02_quantification_query
 from resources.matplot import matplot
 from resources.heatmap import heatmap
 
@@ -16,7 +16,7 @@ class stage02_quantification_io(base_analysis):
                                 filename=[settings.visualization_data,'/quantification/scatterplot/','volcanoplot/']):
         '''generate a volcano plot from pairwiseTest table'''
 
-        print 'exporting volcanoPlot...'
+        print('exporting volcanoPlot...')
         # get time points
         if time_points_I:
             time_points = time_points_I;
@@ -30,7 +30,7 @@ class stage02_quantification_io(base_analysis):
         for tp in time_points:
             filter_tp_str = 'time_point/'+tp;
             filter_O['time_point'].append(filter_tp_str);
-            print 'generating a volcano plot for time_point ' + tp;
+            print('generating a volcano plot for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             if concentration_units_I:
@@ -42,7 +42,7 @@ class stage02_quantification_io(base_analysis):
             for cu in concentration_units:
                 filter_cu_str = 'time_point/'+tp+'/concentration_unit/'+cu;
                 filter_O['concentration_unit'].append(filter_cu_str);
-                print 'exporting a volcano plot for concentration_units ' + cu;
+                print('exporting a volcano plot for concentration_units ' + cu);
                 # get sample_name_abbreviations:
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndUnits_dataStage02pairWiseTest(experiment_id_I, tp, cu)
@@ -51,7 +51,7 @@ class stage02_quantification_io(base_analysis):
                         if sna_1 != sna_2:
                             filter_sna_str = 'time_point/'+tp+'/concentration_unit/'+cu+'/sample/'+sna_1 + '_' + sna_2;
                             filter_O['sample'].append(filter_sna_str);
-                            print 'exporting a volcano plot for sample_name_abbreviation ' + sna_1 + ' vs. ' + sna_2;
+                            print('exporting a volcano plot for sample_name_abbreviation ' + sna_1 + ' vs. ' + sna_2);
                             # get data:
                             data_1 = [];
                             data_1 = self.stage02_quantification_query.get_RDataList_experimentIDAndTimePointAndUnitsAndSampleNameAbbreviations_dataStage02pairWiseTest(experiment_id_I,tp,cu,sna_1,sna_2);
@@ -98,7 +98,7 @@ class stage02_quantification_io(base_analysis):
                             filename=[settings.visualization_data,'/quantification/scatterplot/','pcaplot/']):
         '''generate a pca plot'''
 
-        print 'export_pcaPlot...'
+        print('export_pcaPlot...')
         # query metabolomics data from pca_scores and pca_loadings
         # get time points
         if time_points_I:
@@ -114,7 +114,7 @@ class stage02_quantification_io(base_analysis):
         for tp in time_points:
             filter_tp_str = 'time_point/'+tp;
             filter_O['time_point'].append(filter_tp_str);
-            print 'exporting pca for time_point ' + tp;
+            print('exporting pca for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             if concentration_units_I:
@@ -125,7 +125,7 @@ class stage02_quantification_io(base_analysis):
             for cu in concentration_units:
                 filter_cu_str = 'time_point/'+tp+'/concentration_unit/'+cu;
                 filter_O['concentration_unit'].append(filter_cu_str);
-                print 'exporting pca for concentration_units ' + cu;
+                print('exporting pca for concentration_units ' + cu);
                 # get data:
                 data_scores,data_loadings = [],[];
                 data_scores,data_loadings = self.stage02_quantification_query.get_RExpressionData_experimentIDAndTimePointAndUnits_dataStage02ScoresLoadings(experiment_id_I,tp,cu);
@@ -207,7 +207,7 @@ class stage02_quantification_io(base_analysis):
         #Output:
         #   
 
-        print 'exporting heatmap...'
+        print('exporting heatmap...')
         # get time points
         if time_points_I:
             time_points = time_points_I;
@@ -220,7 +220,7 @@ class stage02_quantification_io(base_analysis):
         for tp in time_points:
             filter_tp_str = 'time_point/'+tp;
             filter_O['time_point'].append(filter_tp_str);
-            print 'generating a heatmap for time_point ' + tp;
+            print('generating a heatmap for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             if concentration_units_I:
@@ -236,7 +236,7 @@ class stage02_quantification_io(base_analysis):
             for cu in concentration_units:
                 filter_cu_str = 'time_point/'+tp+'/concentration_unit/'+cu;
                 filter_O['concentration_unit'].append(filter_cu_str);
-                print 'exporting a heatmap for concentration_units ' + cu;
+                print('exporting a heatmap for concentration_units ' + cu);
                 # get data for the time-point and concentration_units
                 if include_dataStage01ReplicatesMI_I and cu in concentration_units_add:
                     data = [];

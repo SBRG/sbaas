@@ -216,7 +216,7 @@ class stage02_physiology_query(stage01_physiology_query):
                     data_stage02_physiology_models.model_id.asc()).all();
             rows_O = {};
             if len(data)>1:
-                print 'multiple rows retrieved!';
+                print('multiple rows retrieved!');
             if data: 
                 for d in data:
                     row_tmp = {'model_id':d.model_id,
@@ -329,8 +329,8 @@ class stage02_physiology_query(stage01_physiology_query):
             rows_O = {};
             if data: 
                 for d in data:
-                    if rows_O.has_key(d.rxn_id):
-                        print 'duplicate rxn_ids found!';
+                    if d.rxn_id in rows_O:
+                        print('duplicate rxn_ids found!');
                     else:
                         rows_O[d.rxn_id]={'sampling_ave':d.sampling_ave,
                 'sampling_var':d.sampling_var,

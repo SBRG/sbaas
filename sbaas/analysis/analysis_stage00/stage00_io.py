@@ -1,5 +1,5 @@
 from analysis.analysis_base import *
-from stage00_query import stage00_query
+from .stage00_query import stage00_query
 from sqlalchemy.exc import IntegrityError
 
 class stage00_io(base_analysis):

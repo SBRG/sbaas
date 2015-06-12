@@ -91,41 +91,41 @@ class GDParser():
         #read version info
         ver_line=file_handle.readline()
         if ver_line[:13] != '#=GENOME_DIFF':
-            print "Invalid GenomeDiff file, header missing or malformed."
+            print("Invalid GenomeDiff file, header missing or malformed.")
         else:
             self._parseLine(1,ver_line) #process the ver_line to store the version info
             for line_num,line in enumerate(file_handle.readlines()):
                 try:
                     self._parseLine(line_num,line)
                 except GDFieldError as gdfe:
-                    print "Parse error in field {}:{}, could not parse {}:".format(gdfe.field_num,gdfe.field_name,gdfe.field_value)
-                    print "Message: {}".format(gdfe.msg)
+                    print("Parse error in field {}:{}, could not parse {}:".format(gdfe.field_num,gdfe.field_name,gdfe.field_value))
+                    print("Message: {}".format(gdfe.msg))
                     if gdfe.inner_exception_msg:
-                        print "Exception: {}".format(gdfe.inner_exception_msg)
+                        print("Exception: {}".format(gdfe.inner_exception_msg))
                     if not ignore_errors:
                         raise    
                         break
                 except GDParseError as gdpe:
-                    print "There is an error in line {} of the GenomeDiff file.".format(line_num+1)
-                    print "Error returned: {}".format(gdpe.msg)
+                    print("There is an error in line {} of the GenomeDiff file.".format(line_num+1))
+                    print("Error returned: {}".format(gdpe.msg))
                     if gdpe.inner_exception_msg:
-                        print "Exception: {}".format(gdpe.inner_exception_msg)
+                        print("Exception: {}".format(gdpe.inner_exception_msg))
                     if not ignore_errors:
                         raise    
                         break
                 except Exception as ex:
-                    print "Unhandled exception on line {}:".format(line_num)
-                    print ex.message
+                    print("Unhandled exception on line {}:".format(line_num))
+                    print(ex.message)
                     raise
                     break
             try:
                 pass
                 self._qcChecks()
             except GDFieldError as gdfe:
-                print "QC Check failed:"
+                print("QC Check failed:")
                 
             except GDParseError as gdpe:
-                print "QC Check failed:"
+                print("QC Check failed:")
 
     def _qcChecks(self):
         """
@@ -225,7 +225,7 @@ class GDParser():
             var_name=line_elements[0].strip()
             var_value=line_elements[1].strip()
             #add a check for repeated var_names
-            if var_name in self.metadata.keys():
+            if var_name in list(self.metadata.keys()):
                 if type(self.metadata[var_name])=='list':
                     self.metadata[var_name].append(var_value)
                 else:
@@ -599,7 +599,7 @@ class GDParser():
             #=================================================
             # Process any optional key=value pairs
             #=================================================
-            for field_idx in xrange(next_field,len(data_elements)):
+            for field_idx in range(next_field,len(data_elements)):
                 splitfield=data_elements[field_idx].split('=')
                 if len(splitfield)>1:
                     key=splitfield[0].strip()

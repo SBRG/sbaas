@@ -44,7 +44,7 @@ Requirements
 
 """
 
-from __future__ import division, print_function
+
 
 import sys
 import math
@@ -56,7 +56,7 @@ wxversion.ensureMinimal('2.8')
 import wx
 from wx.lib import fancytext, buttons, rcsizer
 
-from elements import ELEMENTS, SERIES
+from .elements import ELEMENTS, SERIES
 
 
 class MainApp(wx.App):

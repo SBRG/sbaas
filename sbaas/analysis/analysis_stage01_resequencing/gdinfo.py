@@ -1,13 +1,13 @@
 #breseq_evidenceTypes
 #script
-import gdparse
+from . import gdparse
 
 gd = gdparse.GDParser(file_handle= open(r'C:\Users\dmccloskey-sbrg\Desktop\reseq_data\Evo04pgiEvo01EP\Evo04pgiEvo01EP\output.gd', 'rb'))
 
 def find_uniqueEvidenceKeys():
     #what are all of the different evidence keys?
     mutation_ids = [];
-    mutation_ids = gd.data['mutation'].keys()
+    mutation_ids = list(gd.data['mutation'].keys())
     parent_ids = [];
     for mid in mutation_ids:
         parents = [];
@@ -16,7 +16,7 @@ def find_uniqueEvidenceKeys():
     evidence_fields = [];
     for pid in parent_ids:
         evidence = [];
-        evidence = gd.data['evidence'][pid].keys()
+        evidence = list(gd.data['evidence'][pid].keys())
         evidence_fields.extend(evidence)
     evidence_fields_unique = [];
     evidence_fields_unique = list(set(evidence_fields))
@@ -26,7 +26,7 @@ def find_uniqueEvidenceKeys():
 def find_uniqueEvidenceKeysByEvidenceType():
     #what are the different evidence keys by evidence type?
     mutation_ids = [];
-    mutation_ids = gd.data['mutation'].keys()
+    mutation_ids = list(gd.data['mutation'].keys())
     parent_ids = [];
     for mid in mutation_ids:
         parents = [];
@@ -39,16 +39,16 @@ def find_uniqueEvidenceKeysByEvidenceType():
     for pid in parent_ids:
         evidence = [];
         if gd.data['evidence'][pid]['type'] == 'RA': 
-            evidence = gd.data['evidence'][pid].keys()
+            evidence = list(gd.data['evidence'][pid].keys())
             RA_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'MC': 
-            evidence = gd.data['evidence'][pid].keys()
+            evidence = list(gd.data['evidence'][pid].keys())
             MC_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'JC': 
-            evidence = gd.data['evidence'][pid].keys()
+            evidence = list(gd.data['evidence'][pid].keys())
             JC_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'UN': 
-            evidence = gd.data['evidence'][pid].keys()
+            evidence = list(gd.data['evidence'][pid].keys())
             UN_evidence_fields.extend(evidence)
     RA_evidence_fields_unique = [];
     RA_evidence_fields_unique = list(set(RA_evidence_fields))
@@ -71,7 +71,7 @@ def find_uniqueEvidenceKeysByEvidenceType():
 def find_uniqueEvidenceKeysAndKeyValueTypeByEvidenceType():
     #what are the different evidence keys and key data types by evidence type?
     mutation_ids = [];
-    mutation_ids = gd.data['mutation'].keys()
+    mutation_ids = list(gd.data['mutation'].keys())
     parent_ids = [];
     for mid in mutation_ids:
         parents = [];
@@ -84,19 +84,19 @@ def find_uniqueEvidenceKeysAndKeyValueTypeByEvidenceType():
     for pid in parent_ids:
         evidence = [];
         if gd.data['evidence'][pid]['type'] == 'RA':
-            for k,v in gd.data['evidence'][pid].iteritems():
+            for k,v in gd.data['evidence'][pid].items():
                 evidence.append((k,type(v)))
             RA_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'MC': 
-            for k,v in gd.data['evidence'][pid].iteritems():
+            for k,v in gd.data['evidence'][pid].items():
                 evidence.append((k,type(v)))
             MC_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'JC': 
-            for k,v in gd.data['evidence'][pid].iteritems():
+            for k,v in gd.data['evidence'][pid].items():
                 evidence.append((k,type(v)))
             JC_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'UN': 
-            for k,v in gd.data['evidence'][pid].iteritems():
+            for k,v in gd.data['evidence'][pid].items():
                 evidence.append((k,type(v)))
             UN_evidence_fields.extend(evidence)
     RA_evidence_fields_unique = [];
@@ -120,7 +120,7 @@ def find_uniqueEvidenceKeysAndKeyValueTypeByEvidenceType():
 def find_uniqueEvidenceKeysAndKeyValueType():
     #what are all unique evidences keys and evidences key data types?
     mutation_ids = [];
-    mutation_ids = gd.data['mutation'].keys()
+    mutation_ids = list(gd.data['mutation'].keys())
     parent_ids = [];
     for mid in mutation_ids:
         parents = [];
@@ -133,19 +133,19 @@ def find_uniqueEvidenceKeysAndKeyValueType():
     for pid in parent_ids:
         evidence = [];
         if gd.data['evidence'][pid]['type'] == 'RA':
-            for k,v in gd.data['evidence'][pid].iteritems():
+            for k,v in gd.data['evidence'][pid].items():
                 evidence.append((k,type(v)))
             RA_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'MC': 
-            for k,v in gd.data['evidence'][pid].iteritems():
+            for k,v in gd.data['evidence'][pid].items():
                 evidence.append((k,type(v)))
             MC_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'JC': 
-            for k,v in gd.data['evidence'][pid].iteritems():
+            for k,v in gd.data['evidence'][pid].items():
                 evidence.append((k,type(v)))
             JC_evidence_fields.extend(evidence)
         elif gd.data['evidence'][pid]['type'] == 'UN': 
-            for k,v in gd.data['evidence'][pid].iteritems():
+            for k,v in gd.data['evidence'][pid].items():
                 evidence.append((k,type(v)))
             UN_evidence_fields.extend(evidence)
     RA_evidence_fields_unique = [];
@@ -168,7 +168,7 @@ def find_uniqueEvidenceKeysAndKeyValueType():
 def find_uniqueMutationKeysAndKeyValueTypeByMutationType():
     #what are the different mutation keys and key data types by mutation type?
     mutation_ids = [];
-    mutation_ids = gd.data['mutation'].keys()
+    mutation_ids = list(gd.data['mutation'].keys())
     SNP_mutation_fields=[]
     SUB_mutation_fields=[]
     DEL_mutation_fields=[]
@@ -180,31 +180,31 @@ def find_uniqueMutationKeysAndKeyValueTypeByMutationType():
     for mid in mutation_ids:
         mutation = [];
         if gd.data['mutation'][mid]['type'] == 'SNP':
-            for k,v in gd.data['mutation'][mid].iteritems():
+            for k,v in gd.data['mutation'][mid].items():
                 mutation.append((k,type(v)))
             SNP_mutation_fields.extend(mutation)
         elif gd.data['mutation'][mid]['type'] == 'SUB': 
-            for k,v in gd.data['mutation'][pid].iteritems():
+            for k,v in gd.data['mutation'][pid].items():
                 mutation.append((k,type(v)))
             SUB_mutation_fields.extend(mutation)
         elif gd.data['mutation'][mid]['type'] == 'DEL': 
-            for k,v in gd.data['mutation'][mid].iteritems():
+            for k,v in gd.data['mutation'][mid].items():
                 mutation.append((k,type(v)))
             DEL_mutation_fields.extend(mutation)
         elif gd.data['mutation'][mid]['type'] == 'INS': 
-            for k,v in gd.data['mutation'][mid].iteritems():
+            for k,v in gd.data['mutation'][mid].items():
                 mutation.append((k,type(v)))
             INS_mutation_fields.extend(mutation)
         elif gd.data['mutation'][mid]['type'] == 'MOB': 
-            for k,v in gd.data['mutation'][mid].iteritems():
+            for k,v in gd.data['mutation'][mid].items():
                 mutation.append((k,type(v)))
             MOB_mutation_fields.extend(mutation)
         elif gd.data['mutation'][mid]['type'] == 'AMP': 
-            for k,v in gd.data['mutation'][mid].iteritems():
+            for k,v in gd.data['mutation'][mid].items():
                 mutation.append((k,type(v)))
             AMP_mutation_fields.extend(mutation)
         elif gd.data['mutation'][mid]['type'] == 'INV': 
-            for k,v in gd.data['mutation'][mid].iteritems():
+            for k,v in gd.data['mutation'][mid].items():
                 mutation.append((k,type(v)))
             INV_mutation_fields.extend(mutation)
     SNP_mutation_fields_unique = [];

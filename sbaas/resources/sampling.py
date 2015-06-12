@@ -47,7 +47,7 @@ class cobra_sampling(base_calculate):
         try:
             st = os.stat(self.data_dir + '/' + numpy_data)
         except IOError:
-            print "failed to get information about", self.data_dir + '/' + numpy_data
+            print("failed to get information about", self.data_dir + '/' + numpy_data)
             return;
         else:
             file_size = st[ST_SIZE]
@@ -78,7 +78,7 @@ class cobra_sampling(base_calculate):
         try:
             st = os.stat(self.data_dir + '/' + matlab_data)
         except IOError:
-            print "failed to get information about", self.data_dir + '/' + matlab_data
+            print("failed to get information about", self.data_dir + '/' + matlab_data)
             return;
         else:
             file_size = st[ST_SIZE]
@@ -274,7 +274,7 @@ class cobra_sampling(base_calculate):
 
         data_loops = json.load(open(data_fva))
         rxn_loops = [];
-        for k,v in data_loops.iteritems():
+        for k,v in data_loops.items():
             if abs(v['minimum'])>1.0 or abs(v['maximum'])>1.0:
                 rxn_loops.append(k);
         #return rxn_loops
@@ -283,7 +283,7 @@ class cobra_sampling(base_calculate):
         '''remove reactions with loops from sampling points'''
 
         points_loopless = {};
-        for k,v in self.points.iteritems():
+        for k,v in self.points.items():
             if k in self.loops: continue
             else: 
                 points_loopless[k] = v;
@@ -294,7 +294,7 @@ class cobra_sampling(base_calculate):
         '''remove reactions that carry 0 flux'''
 
         points_flux = {};
-        for k,v in self.points.iteritems():
+        for k,v in self.points.items():
             # determine the max/min of the data
             max_point = max(v);
             min_point = min(v);
@@ -321,7 +321,7 @@ class cobra_sampling(base_calculate):
         2. median, mode, 1st quartile, 3rd quartile, range'''
 
         points_statistics = {};
-        for k,v in self.points.iteritems():
+        for k,v in self.points.items():
             # calculate the mean and variance
             m,var,lb,ub = self.calculate.calculate_ave_var(self.points[k]['points'],confidence_I = 0.95);
             # directly calculate the 95% CI
@@ -350,7 +350,7 @@ class cobra_sampling(base_calculate):
         '''convert the reaction flux to total flux through each metabolite for each sampling point'''
         metabolite_points = {};
         first_loop = True;
-        for k,v in self.points.iteritems():
+        for k,v in self.points.items():
             if first_loop:
                 for met in self.model.metabolites:
                     metabolite_points[met.id]=numpy.zeros_like(v);
@@ -369,7 +369,7 @@ class cobra_sampling(base_calculate):
             subsystems_all.append(r.subsystem);
         subsystems = list(set(subsystems_all)); 
         first_loop = True;
-        for k,v in self.points.iteritems():
+        for k,v in self.points.items():
             if first_loop:       
                 for sub in subsystems:
                     subsystem_points[sub]=numpy.zeros_like(v);
@@ -382,12 +382,12 @@ class cobra_sampling(base_calculate):
         flux through all reactions for that point'''
         points = self.points;
         points_normalized={};
-        n_points = len(points[points.keys()[0]]);
+        n_points = len(points[list(points.keys())[0]]);
         for i in range(n_points):
             total=0.0;
-            for k,v in points.iteritems():
+            for k,v in points.items():
                 total+=numpy.abs(v[i]);
-            for k,v in points.iteritems():
+            for k,v in points.items():
                 if i==0:
                     points_normalized[k]=numpy.zeros_like(v);
                 points_normalized[k][i] = v[i]/total
@@ -398,10 +398,10 @@ class cobra_sampling(base_calculate):
         points = self.points;
         system_boundaries = [x.id for x in self.model.reactions if x.boundary == 'system_boundary'];
         points_normalized={};
-        n_points = len(points[points.keys()[0]]);
+        n_points = len(points[list(points.keys())[0]]);
         for i in range(n_points):
             total=0.0;
-            for k,v in points.iteritems():
+            for k,v in points.items():
                 if k in system_boundaries:
                     if self.model.reactions.get_by_id(k).reactants and v[i] < 0:
                         # e.g. glc-D -->
@@ -409,7 +409,7 @@ class cobra_sampling(base_calculate):
                         for met in mets:
                             formula_str = met.formula.formula
                             n12C = 0
-                            if not Formula(formula_str)._elements.has_key('C') and Formula(formula_str)._elements['C'].has_key(0):
+                            if 'C' not in Formula(formula_str)._elements and 0 in Formula(formula_str)._elements['C']:
                                 n12C += Formula(formula_str)._elements['C'][0]; #get the # of Carbons
                             total+=numpy.abs(v[i])*n12C;
                     elif self.model.reactions.get_by_id(k).products and v[i] > 0:
@@ -418,10 +418,10 @@ class cobra_sampling(base_calculate):
                         for met in mets:
                             formula_str = met.formula.formula
                             n12C = 0
-                            if not Formula(formula_str)._elements.has_key('C') and Formula(formula_str)._elements['C'].has_key(0):
+                            if 'C' not in Formula(formula_str)._elements and 0 in Formula(formula_str)._elements['C']:
                                 n12C += Formula(formula_str)._elements['C'][0]; #get the # of Carbons
                             total+=numpy.abs(v[i])*n12C;
-            for k,v in points.iteritems():
+            for k,v in points.items():
                 if i==0:
                     points_normalized[k]=numpy.zeros_like(v);
                 points_normalized[k][i] = v[i]/total
@@ -432,10 +432,10 @@ class cobra_sampling(base_calculate):
         points = self.points;
         system_boundaries = [x.id for x in self.model.reactions if x.boundary == 'system_boundary'];
         points_normalized={};
-        n_points = len(points[points.keys()[0]]);
+        n_points = len(points[list(points.keys())[0]]);
         for i in range(n_points):
             total=0.0;
-            for k,v in points.iteritems():
+            for k,v in points.items():
                 if k in system_boundaries:
                     if self.model.reactions.get_by_id(k).reactants and v[i] < 0:
                         # e.g. glc-D -->
@@ -443,7 +443,7 @@ class cobra_sampling(base_calculate):
                     elif self.model.reactions.get_by_id(k).products and v[i] > 0:
                         # e.g. --> glc-D
                         total+=numpy.abs(v[i]);
-            for k,v in points.iteritems():
+            for k,v in points.items():
                 if i==0:
                     points_normalized[k]=numpy.zeros_like(v);
                 points_normalized[k][i] = v[i]/total
@@ -486,7 +486,7 @@ class matlab_sampling(cobra_sampling):
         try:
             st = os.stat(self.matlab_path + '/' + matlab_data)
         except IOError:
-            print "failed to get information about", filename
+            print("failed to get information about", filename)
             return;
         else:
             file_size = st[ST_SIZE]
@@ -611,13 +611,13 @@ class cobra_sampling_n(base_calculate):
                     n_data_1 = len(data_1);
                     n_data_2 = len(data_2);
                     if n_data_1 != n_data_2:
-                        print 'number of sampled points are not consistent'
+                        print('number of sampled points are not consistent')
                     n_points = n_data_1;
-                    if rxn_id in data_1.keys():
+                    if rxn_id in list(data_1.keys()):
                         cond1 = data_1[rxn_id];
                     else:
                         cond1 = np.zeros(n_points);
-                    if rxn_id in data_2.keys():
+                    if rxn_id in list(data_2.keys()):
                         cond2 = data_2[rxn_id];
                     else:
                         cond2 = np.zeros(n_points);
@@ -665,13 +665,13 @@ class cobra_sampling_n(base_calculate):
                     n_data_1 = len(data_1);
                     n_data_2 = len(data_2);
                     if n_data_1 != n_data_2:
-                        print 'number of sampled points are not consistent'
+                        print('number of sampled points are not consistent')
                     n_points = n_data_1;
-                    if met_id in data_1.keys():
+                    if met_id in list(data_1.keys()):
                         cond1 = data_1[met_id];
                     else:
                         cond1 = np.zeros(n_points);
-                    if met_id in data_2.keys():
+                    if met_id in list(data_2.keys()):
                         cond2 = data_2[met_id];
                     else:
                         cond2 = np.zeros(n_points);
@@ -709,7 +709,7 @@ class cobra_sampling_n(base_calculate):
             for j,data_2 in enumerate(self.points_subsystems):
                 sample_id_2 = self.sample_ids[j];
                 if i==j: continue;
-                for sub_id in self.points_subsystems.keys():
+                for sub_id in list(self.points_subsystems.keys()):
                     mean_difference = None
                     median_difference = None
                     pvalue = None
@@ -718,13 +718,13 @@ class cobra_sampling_n(base_calculate):
                     n_data_1 = len(data_1);
                     n_data_2 = len(data_2);
                     if n_data_1 != n_data_2:
-                        print 'number of sampled points are not consistent'
+                        print('number of sampled points are not consistent')
                     n_points = n_data_1;
-                    if sub_id in data_1.keys():
+                    if sub_id in list(data_1.keys()):
                         cond1 = data_1[sub_id];
                     else:
                         cond1 = np.zeros(n_points);
-                    if sub_id in data_2.keys():
+                    if sub_id in list(data_2.keys()):
                         cond2 = data_2[sub_id];
                     else:
                         cond2 = np.zeros(n_points);

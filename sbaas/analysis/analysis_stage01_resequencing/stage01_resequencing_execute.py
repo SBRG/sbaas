@@ -1,8 +1,8 @@
 '''resequencing class'''
 
 from analysis.analysis_base import *
-from stage01_resequencing_query import *
-from stage01_resequencing_io import *
+from .stage01_resequencing_query import *
+from .stage01_resequencing_io import *
 
 class stage01_resequencing_execute():
     '''class for resequencing analysis'''
@@ -15,7 +15,7 @@ class stage01_resequencing_execute():
     def execute_filterMutations_population(self,experiment_id,p_value_criteria=0.01,quality_criteria=6.0,frequency_criteria=0.1,sample_names_I=None):
         '''Filter mutations that do not meet the desired criteria'''
 
-        print 'Executing filterMutations_population...'
+        print('Executing filterMutations_population...')
         data_O = [];
         # query sample names from the experiment
         if sample_names_I:
@@ -24,16 +24,16 @@ class stage01_resequencing_execute():
             sample_names = [];
             sample_names = self.stage01_resequencing_query.get_sampleNames_experimentID_dataStage01ResequencingMetadata(experiment_id,8);
         for sn in sample_names:
-            print 'Filtering mutations for sample_name ' + sn;
+            print('Filtering mutations for sample_name ' + sn);
             #query mutation data filtered by frequency
             data_mutations_list = [];
             data_mutations_list = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutations(experiment_id,sn);
             for data_mutations in data_mutations_list:
-                print 'Filtering mutations for mutation id ' + str(data_mutations['mutation_id']);
+                print('Filtering mutations for mutation id ' + str(data_mutations['mutation_id']));
                 #query data filtered by evidence-specific criteria
                 data_evidence_list = [];
                 for pid in data_mutations['parent_ids']:
-                    print 'Filtering mutations for parent id ' + str(pid);
+                    print('Filtering mutations for parent id ' + str(pid));
                     data_evidence_dict = {};
                     data_evidence_dict = self.stage01_resequencing_query.get_evidence_experimentIDAndSampleNameAndParentID_dataStage01ResequencingEvidence(experiment_id,sn,pid);
                     data_evidence_list.append(data_evidence_dict);
@@ -57,7 +57,7 @@ class stage01_resequencing_execute():
         from Bio import Entrez
         record = SeqIO.read(ref_genome_I,'genbank')
 
-        print 'Executing annotation of filtered mutations...'
+        print('Executing annotation of filtered mutations...')
         genotype_phenotype_O = [];
         # query sample names
         if sample_names_I:
@@ -66,13 +66,13 @@ class stage01_resequencing_execute():
             sample_names = [];
             sample_names = self.stage01_resequencing_query.get_sampleNames_experimentID_dataStage01ResequencingMutationsFiltered(experiment_id);
         for sn in sample_names:
-            print 'analyzing sample_name ' + sn;
+            print('analyzing sample_name ' + sn);
             # query mutation data:
             mutations = [];
             mutations = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsFiltered(experiment_id,sn);
             mutation_data_O = [];
             for end_cnt,mutation in enumerate(mutations):
-                print 'analyzing mutations'
+                print('analyzing mutations')
                 data_tmp = {};
                 # annotate each mutation based on the position
                 annotation = {};
@@ -90,11 +90,11 @@ class stage01_resequencing_execute():
                             ecogene = ecogenes[0];
                             ecogene_link = self.generate_httplink2gene_ecogene(ecogene['ecogene_accession_number']);
                             data_tmp['mutation_links'].append(ecogene_link)
-                        else: print 'no ecogene_accession_number found for ordered_locus_location ' + bnumber;
+                        else: print('no ecogene_accession_number found for ordered_locus_location ' + bnumber);
                 data_tmp['experiment_id'] = mutation['experiment_id'];
                 data_tmp['sample_name'] = mutation['sample_name'];
                 frequency = 1.0;
-                if mutation['mutation_data'].has_key('frequency'):
+                if 'frequency' in mutation['mutation_data']:
                     frequency = mutation['mutation_data']['frequency'];
                 data_tmp['mutation_frequency'] = frequency
                 data_tmp['mutation_position'] = mutation['mutation_data']['position']
@@ -132,11 +132,11 @@ class stage01_resequencing_execute():
         #TODO: convert time-point to lineage
         #       lineage = [i for i,tp in enumerate(time_points)];
 
-        print 'Executing analyzeLineage_population...'
+        print('Executing analyzeLineage_population...')
         data_O = [];
-        for lineage_name,strain in strain_lineage.iteritems():
-            print 'analyzing lineage ' + lineage_name;
-            lineage = strain.keys();
+        for lineage_name,strain in strain_lineage.items():
+            print('analyzing lineage ' + lineage_name);
+            lineage = list(strain.keys());
             end_point = max(lineage)
             # query end data:
             end_mutations = [];
@@ -144,14 +144,14 @@ class stage01_resequencing_execute():
             intermediates = [i for i in lineage if i!=end_point];
             intermediate_mutations = [];
             for intermediate in intermediates:
-                print 'analyzing intermediate ' + str(intermediate);
+                print('analyzing intermediate ' + str(intermediate));
                 # query intermediate data:
                 intermediate_mutations = [];
                 intermediate_mutations = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsFiltered(experiment_id,strain[intermediate]);
                 for end_cnt,end_mutation in enumerate(end_mutations):
-                    print 'end mutation type/position ' + end_mutation['mutation_data']['type'] + '/' + str(end_mutation['mutation_data']['position']);
+                    print('end mutation type/position ' + end_mutation['mutation_data']['type'] + '/' + str(end_mutation['mutation_data']['position']));
                     for inter_cnt,intermediate_mutation in enumerate(intermediate_mutations):
-                        print 'intermediate mutation type/position ' + intermediate_mutation['mutation_data']['type'] + '/' + str(intermediate_mutation['mutation_data']['position']);
+                        print('intermediate mutation type/position ' + intermediate_mutation['mutation_data']['type'] + '/' + str(intermediate_mutation['mutation_data']['position']));
                         if intermediate == 0 and inter_cnt == 0:
                             #copy end_point data (only once per strain lineage)
                             data_tmp = {};
@@ -159,7 +159,7 @@ class stage01_resequencing_execute():
                             data_tmp['sample_name'] = end_mutation['sample_name'];
                             data_tmp['intermediate'] = end_point;
                             frequency = 1.0;
-                            if end_mutation['mutation_data'].has_key('frequency'): frequency = end_mutation['mutation_data']['frequency'];
+                            if 'frequency' in end_mutation['mutation_data']: frequency = end_mutation['mutation_data']['frequency'];
                             data_tmp['mutation_frequency'] = frequency
                             data_tmp['mutation_position'] = end_mutation['mutation_data']['position']
                             data_tmp['mutation_type'] = end_mutation['mutation_data']['type']
@@ -214,14 +214,14 @@ class stage01_resequencing_execute():
                                 end_mutation['mutation_data']['size']==intermediate_mutation['mutation_data']['size']:
                                 match = intermediate_mutation;
                         else:
-                            print 'unknown mutation type';
+                            print('unknown mutation type');
                         if match:
                             data_tmp = {};
                             data_tmp['experiment_id'] = match['experiment_id'];
                             data_tmp['sample_name'] = match['sample_name'];
                             data_tmp['intermediate'] = intermediate;
                             frequency = 1.0;
-                            if match['mutation_data'].has_key('frequency'): frequency = match['mutation_data']['frequency'];
+                            if 'frequency' in match['mutation_data']: frequency = match['mutation_data']['frequency'];
                             data_tmp['mutation_frequency'] = frequency
                             data_tmp['mutation_position'] = match['mutation_data']['position']
                             data_tmp['mutation_type'] = match['mutation_data']['type']
@@ -252,10 +252,10 @@ class stage01_resequencing_execute():
 
         #TODO: drive from analysis table
 
-        print 'Executing analyzeEndpointReplicates_population...'
+        print('Executing analyzeEndpointReplicates_population...')
         data_O = [];
-        for analysis_id,strains in end_points.iteritems():
-            print 'analyzing endpoint ' + analysis_id;
+        for analysis_id,strains in end_points.items():
+            print('analyzing endpoint ' + analysis_id);
             analyzed_strain1 = []; # strain1s that have been analyzed
             analyzed_mutation_pairs = []; # mutation pairs that have been analyzed
             matched_mutations = {};
@@ -269,19 +269,19 @@ class stage01_resequencing_execute():
                 strain2_cnt = 0;
                 for strain2 in strains:
                     if strain2 == strain1: continue; # do not compare the same strain to itself
-                    print 'comparing ' + strain1 + ' to ' + strain2;
+                    print('comparing ' + strain1 + ' to ' + strain2);
                     # query strain 1 data:
                     strain2_mutations = [];
                     strain2_mutations = self.stage01_resequencing_query.get_mutations_experimentIDAndSampleName_dataStage01ResequencingMutationsFiltered(experiment_id,strain2);
                     analyzed_strain2_mutations = []; # mutations from strain 2 that have been analyzed
                     for strain1_mutation_cnt,strain1_mutation in enumerate(strain1_mutations):
-                        print 'strain1 mutation type/position ' + strain1_mutation['mutation_data']['type'] + '/' + str(strain1_mutation['mutation_data']['position']);
+                        print('strain1 mutation type/position ' + strain1_mutation['mutation_data']['type'] + '/' + str(strain1_mutation['mutation_data']['position']));
                         if strain2_cnt == 0: # record strain 1 mutations only once for all strain 2 mutations
                             analyzed_strain1_mutations.append((strain1_mutation['mutation_data']['type'],strain1_mutation['mutation_data']['position']));
                         for strain2_mutation_cnt,strain2_mutation in enumerate(strain2_mutations):
-                            print 'strain2 mutation type/position ' + strain2_mutation['mutation_data']['type'] + '/' + str(strain2_mutation['mutation_data']['position']);
+                            print('strain2 mutation type/position ' + strain2_mutation['mutation_data']['type'] + '/' + str(strain2_mutation['mutation_data']['position']));
                             if strain2_mutation_cnt == 0 and \
-                                not matched_mutations.has_key((strain1,strain1_mutation['mutation_data']['type'],strain1_mutation['mutation_data']['position'])):
+                                (strain1,strain1_mutation['mutation_data']['type'],strain1_mutation['mutation_data']['position']) not in matched_mutations:
                                 matched_mutations[(strain1,strain1_mutation['mutation_data']['type'],strain1_mutation['mutation_data']['position'])] = 0;
                             # find the mutations that are common to strain1 and strain2
                             # filter by mutation type-specific criteria
@@ -332,7 +332,7 @@ class stage01_resequencing_execute():
                                     strain1_mutation['mutation_data']['size']==strain2_mutation['mutation_data']['size']:
                                     match = strain1_mutation;
                             else:
-                                print 'unknown mutation type';
+                                print('unknown mutation type');
                             if match and \
                                  matched_mutations[(strain1,strain1_mutation['mutation_data']['type'],strain1_mutation['mutation_data']['position'])] == 0:
                                 # check that the mutation combination and pairs of strains have not already been analyzed
@@ -340,7 +340,7 @@ class stage01_resequencing_execute():
                                 data_tmp['experiment_id'] = match['experiment_id'];
                                 data_tmp['sample_name'] = match['sample_name'];
                                 frequency = 1.0;
-                                if match['mutation_data'].has_key('frequency'): frequency = match['mutation_data']['frequency'];
+                                if 'frequency' in match['mutation_data']: frequency = match['mutation_data']['frequency'];
                                 data_tmp['mutation_frequency'] = frequency
                                 data_tmp['mutation_position'] = match['mutation_data']['position']
                                 data_tmp['mutation_type'] = match['mutation_data']['type']
@@ -369,7 +369,7 @@ class stage01_resequencing_execute():
                                 data_tmp['experiment_id'] = strain1_mutation['experiment_id'];
                                 data_tmp['sample_name'] = strain1_mutation['sample_name'];
                                 frequency = 1.0;
-                                if strain1_mutation['mutation_data'].has_key('frequency'): frequency = strain1_mutation['mutation_data']['frequency'];
+                                if 'frequency' in strain1_mutation['mutation_data']: frequency = strain1_mutation['mutation_data']['frequency'];
                                 data_tmp['mutation_frequency'] = frequency
                                 data_tmp['mutation_position'] = strain1_mutation['mutation_data']['position']
                                 data_tmp['mutation_type'] = strain1_mutation['mutation_data']['type']
@@ -401,7 +401,7 @@ class stage01_resequencing_execute():
         from Bio import Entrez
         record = SeqIO.read(ref_genome_I,'genbank')
 
-        print 'Executing annotateMutations_lineage...'
+        print('Executing annotateMutations_lineage...')
         data_O = [];
         # query sample names from the experiment
         if sample_names_I:
@@ -410,7 +410,7 @@ class stage01_resequencing_execute():
             sample_names = [];
             sample_names = self.stage01_resequencing_query.get_sampleNames_experimentID_dataStage01ResequencingLineage(experiment_id);
         for sn in sample_names:
-            print 'annotating mutation for sample_name ' + sn;
+            print('annotating mutation for sample_name ' + sn);
             # query rows that match the sample name
             rows = [];
             rows = self.stage01_resequencing_query.get_row_experimentIDAndSampleName_dataStage01ResequencingLineage(experiment_id,sn);
@@ -431,7 +431,7 @@ class stage01_resequencing_execute():
                             ecogene = ecogenes[0];
                             ecogene_link = self.generate_httplink2gene_ecogene(ecogene['ecogene_accession_number']);
                             row['mutation_links'].append(ecogene_link)
-                        else: print 'no ecogene_accession_number found for ordered_locus_location ' + bnumber;
+                        else: print('no ecogene_accession_number found for ordered_locus_location ' + bnumber);
                 data_O.append(row);
         # update rows in the database
         io = stage01_resequencing_io();
@@ -444,7 +444,7 @@ class stage01_resequencing_execute():
         from Bio import Entrez
         record = SeqIO.read(ref_genome_I,'genbank')
 
-        print 'Executing annotateMutations_endpoints...'
+        print('Executing annotateMutations_endpoints...')
         data_O = [];
         # query sample names from the experiment
         if sample_names_I:
@@ -453,7 +453,7 @@ class stage01_resequencing_execute():
             sample_names = [];
             sample_names = self.stage01_resequencing_query.get_sampleNames_experimentID_dataStage01ResequencingEndpoints(experiment_id);
         for sn in sample_names:
-            print 'annotating mutation for sample_name ' + sn;
+            print('annotating mutation for sample_name ' + sn);
             # query rows that match the sample name
             rows = [];
             rows = self.stage01_resequencing_query.get_row_experimentIDAndSampleName_dataStage01ResequencingEndpoints(experiment_id,sn);
@@ -474,7 +474,7 @@ class stage01_resequencing_execute():
                             ecogene = ecogenes[0];
                             ecogene_link = self.generate_httplink2gene_ecogene(ecogene['ecogene_accession_number']);
                             row['mutation_links'].append(ecogene_link)
-                        else: print 'no ecogene_accession_number found for ordered_locus_location ' + bnumber;
+                        else: print('no ecogene_accession_number found for ordered_locus_location ' + bnumber);
                 data_O.append(row);
         # update rows in the database
         io = stage01_resequencing_io();
@@ -549,7 +549,7 @@ class stage01_resequencing_execute():
                 else:snp_records['product'] = [None];
                 snp_records['location'] = ['coding'];
             elif mutation_position_I in feature and feature.type != 'source':
-                print feature
+                print(feature)
         if not snp_records['location']:
             # no features in the coding region were found that bracket the mutation
             # find features before and after the mutation position
@@ -709,7 +709,7 @@ class stage01_resequencing_execute():
                                                  mutation_id_exclusion_list = []):
         '''Execute hierarchical cluster on row and column data'''
 
-        print 'executing heatmap...';
+        print('executing heatmap...');
         # get the analysis information
         experiment_ids,lineage_names = [],[];
         experiment_ids,lineage_names = self.stage01_resequencing_query.get_experimentIDAndLineageName_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);
@@ -813,7 +813,7 @@ class stage01_resequencing_execute():
                 col_pdist_metric_I='euclidean',col_linkage_method_I='complete'):
         '''Execute hierarchical cluster on row and column data'''
 
-        print 'executing heatmap...';
+        print('executing heatmap...');
         # get the analysis information
         experiment_ids,sample_names = [],[];
         experiment_ids,sample_names = self.stage01_resequencing_query.get_experimentIDAndSampleName_analysisID_dataStage01ResequencingAnalysis(analysis_id_I);

@@ -47,7 +47,7 @@ ddt_svg_pcaplot2d_scores_01.prototype.make_svg = function(data_I,parameters_I){
         this.add_pointsdata1();
         this.add_pointsdata1tooltipandfill();
         this.add_pointsdata1featurefilter();
-        this.add_data1featureslabels();
+        //this.add_data1featureslabels();
         this.set_pointsdata1featurestyle();
         this.set_pointsstyle();
         this.add_legenddata1();

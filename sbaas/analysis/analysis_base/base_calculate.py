@@ -1,4 +1,4 @@
-from base_analysis import *
+from .base_analysis import *
 from scipy.stats import linregress
 import scipy.stats
 from scipy.sparse.linalg import svds
@@ -348,7 +348,7 @@ class base_calculate():
                 else:
                     y2[i] = y2s;
         else:
-            print "fit function not recongnized";
+            print("fit function not recongnized");
         if plot_fit_I:
             ##QC plot using MatPlotLib
             # Create a Figure object.
@@ -574,7 +574,7 @@ class base_calculate():
         try:
             kde_scipy=scipy.stats.gaussian_kde(data_I, bw_method=bandwidth_I);
         except RuntimeError as e:
-            print e
+            print(e)
             return [0],[0];
         pdf = kde_scipy(x_grid);
 

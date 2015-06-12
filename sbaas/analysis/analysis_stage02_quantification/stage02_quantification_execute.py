@@ -1,8 +1,8 @@
 '''quantitative metabolomics analysis class'''
 
 from analysis.analysis_base import *
-from stage02_quantification_query import *
-from stage02_quantification_io import *
+from .stage02_quantification_query import *
+from .stage02_quantification_io import *
 from resources.r import r_calculate
 from resources.matplot import matplot
 import matplotlib.pyplot as plt
@@ -23,7 +23,7 @@ class stage02_quantification_execute():
                                   ):
         '''glog normalize concentration values using R'''
 
-        print 'execute_glogNormalization...'
+        print('execute_glogNormalization...')
         
         # get the analysis information
 
@@ -72,7 +72,7 @@ class stage02_quantification_execute():
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage01ReplicatesMI(experiment_id_I);
         for tp in time_points:
-            print 'calculating glogNormalization for time_point ' + tp;
+            print('calculating glogNormalization for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             if concentration_units_I:
@@ -81,7 +81,7 @@ class stage02_quantification_execute():
                 concentration_units = [];
                 concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,tp);
             for cu in concentration_units:
-                print 'calculating glogNormalization for concentration_units ' + cu;
+                print('calculating glogNormalization for concentration_units ' + cu);
                 data = [];
                 data = self.stage02_quantification_query.get_RExpressionData_experimentIDAndTimePointAndUnits_dataStage01ReplicatesMI(experiment_id_I, tp, cu);
                 # call R
@@ -107,7 +107,7 @@ class stage02_quantification_execute():
     def execute_componentNameSpecificNormalization(self,experiment_id_I,sample_name_abbreviations_I=[],cn_normalize_I='glu-L.glu_L_1.Light'):
         '''normalize concentration values to a specific component'''
 
-        print 'execute_componentGroupNameSpecificNormalization...'
+        print('execute_componentGroupNameSpecificNormalization...')
         
         # query metabolomics data from the experiment
         # get sample name abbreviations
@@ -121,7 +121,7 @@ class stage02_quantification_execute():
             time_points = [];
             time_points = self.stage02_quantification_query.get_timePoint_experimentIDAndSampleNameAbbreviation_dataStage01ReplicatesMI(experiment_id_I,sna);
             for tp in time_points:
-                print 'calculating componentGroupNameSpecificNormalization for time_point ' + tp;
+                print('calculating componentGroupNameSpecificNormalization for time_point ' + tp);
                 # get sample_name_shorts
                 sample_name_shorts = [];
                 sample_name_shorts = self.stage02_quantification_query.get_sampleNameShort_experimentIDAndSampleNameAbbreviationAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,sna,tp);
@@ -135,7 +135,7 @@ class stage02_quantification_execute():
                     concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePointAndSampleNameShort_dataStage01ReplicatesMI(experiment_id_I,tp,sns)
                     for cu in concentration_units:
                         normalize_units = cu + '*' + cn_conc_units + '_' + cn_normalize_I + '-1';
-                        print 'calculating componentGroupNameSpecificNormalization for concentration_units ' + cu;
+                        print('calculating componentGroupNameSpecificNormalization for concentration_units ' + cu);
                         data = [];
                         data = self.stage02_quantification_query.get_data_experimentIDAndTimePointAndSampleNameShortAndUnits_dataStage01ReplicatesMI(experiment_id_I, tp, sns, cu);
                         # normalize the data
@@ -163,20 +163,20 @@ class stage02_quantification_execute():
     def execute_glogNormalization_update_v1(self,experiment_id_I):
         '''glog normalize concentration values using R'''
 
-        print 'execute_glogNormalization...'
+        print('execute_glogNormalization...')
         
         # query metabolomics data from the experiment
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage02GlogNormalized(experiment_id_I);
         for tp in time_points:
-            print 'calculating glogNormalization for time_point ' + tp;
+            print('calculating glogNormalization for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage02GlogNormalized(experiment_id_I,tp);
             for cu in concentration_units:
-                print 'calculating glogNormalization for concentration_units ' + cu;
+                print('calculating glogNormalization for concentration_units ' + cu);
                 data = [];
                 data = self.stage02_quantification_query.get_RExpressionData_experimentIDAndTimePointAndUnits_dataStage02GlogNormalized(experiment_id_I, tp, cu);
                 # call R
@@ -195,25 +195,25 @@ class stage02_quantification_execute():
     def execute_anova_v1(self,experiment_id_I):
         '''execute anova using R'''
 
-        print 'execute_anova...'
+        print('execute_anova...')
 
         # query metabolomics data from glogNormalization
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage02GlogNormalized(experiment_id_I);
         for tp in time_points:
-            print 'calculating anova for time_point ' + tp;
+            print('calculating anova for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage02GlogNormalized(experiment_id_I,tp);
             for cu in concentration_units:
-                print 'calculating anova for concentration_units ' + cu;
+                print('calculating anova for concentration_units ' + cu);
                 # get component_names:
                 component_names, component_group_names = [],[];
                 component_names, component_group_names = self.stage02_quantification_query.get_componentNames_experimentIDAndTimePointAndUnits_dataStage02GlogNormalized(experiment_id_I, tp, cu);
                 for cnt_cn,cn in enumerate(component_names):
-                    print 'calculating anova for component_names ' + cn;
+                    print('calculating anova for component_names ' + cn);
                     # get data:
                     data = [];
                     data = self.stage02_quantification_query.get_RDataFrame_experimentIDAndTimePointAndUnitsAndComponentNames_dataStage02GlogNormalized(experiment_id_I,tp,cu,cn);
@@ -259,14 +259,14 @@ class stage02_quantification_execute():
     def execute_pairwiseTTest_v1(self,experiment_id_I):
         '''execute pairwiseTTest using R'''
 
-        print 'execute_pairwiseTTest...'
+        print('execute_pairwiseTTest...')
 
         # query metabolomics data from glogNormalization
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage02GlogNormalized(experiment_id_I);
         for tp in time_points:
-            print 'calculating pairwiseTTest for time_point ' + tp;
+            print('calculating pairwiseTTest for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             concentration_units = [];
@@ -276,18 +276,18 @@ class stage02_quantification_execute():
             #concentration_units_original = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,tp);
             concentration_units_original = [x.split('_glog_normalized')[0] for x in concentration_units];
             for cu_cnt, cu in enumerate(concentration_units):
-                print 'calculating pairwiseTTest for concentration_units ' + cu;
+                print('calculating pairwiseTTest for concentration_units ' + cu);
                 # get component_names:
                 component_names, component_group_names = [],[];
                 component_names, component_group_names = self.stage02_quantification_query.get_componentNames_experimentIDAndTimePointAndUnits_dataStage02GlogNormalized(experiment_id_I, tp, cu);
                 for cnt_cn,cn in enumerate(component_names):
-                    print 'calculating pairwiseTTest for component_names ' + cn;
+                    print('calculating pairwiseTTest for component_names ' + cn);
                     # get sample_name_abbreviations:
                     sample_name_abbreviations = [];
                     sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndUnitsAndComponentNames_dataStage02GlogNormalized(experiment_id_I, tp, cu, cn)
                     for sna_1 in sample_name_abbreviations:
                         for sna_2 in sample_name_abbreviations:
-                            print 'calculating pairwiseTTest for sample_name_abbreviations ' + sna_1 + ' vs. ' + sna_2;
+                            print('calculating pairwiseTTest for sample_name_abbreviations ' + sna_1 + ' vs. ' + sna_2);
                             if sna_1 != sna_2:
                             # get data:
                                 all_1,all_2 = [],[];
@@ -325,25 +325,25 @@ class stage02_quantification_execute():
     def execute_descriptiveStats_v1(self,experiment_id_I):
         '''execute descriptiveStats using R'''
 
-        print 'execute_descriptiveStats...'
+        print('execute_descriptiveStats...')
 
         # query metabolomics data from glogNormalization
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage02GlogNormalized(experiment_id_I);
         for tp in time_points:
-            print 'calculating descriptiveStats for time_point ' + tp;
+            print('calculating descriptiveStats for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage02GlogNormalized(experiment_id_I,tp);
             for cu in concentration_units:
-                print 'calculating descriptiveStats for concentration_units ' + cu;
+                print('calculating descriptiveStats for concentration_units ' + cu);
                 # get component_names:
                 component_names, component_group_names = [],[];
                 component_names, component_group_names = self.stage02_quantification_query.get_componentNames_experimentIDAndTimePointAndUnits_dataStage02GlogNormalized(experiment_id_I, tp, cu);
                 for cnt_cn,cn in enumerate(component_names):
-                    print 'calculating descriptiveStats for component_names ' + cn;
+                    print('calculating descriptiveStats for component_names ' + cn);
                     data_plot_mean = [];
                     data_plot_var = [];
                     data_plot_ci = [];
@@ -355,7 +355,7 @@ class stage02_quantification_execute():
                     sample_name_abbreviations = [];
                     sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndUnitsAndComponentNames_dataStage02GlogNormalized(experiment_id_I, tp, cu, cn)
                     for sna in sample_name_abbreviations:
-                        print 'calculating descriptiveStats for sample_name_abbreviations ' + sna;
+                        print('calculating descriptiveStats for sample_name_abbreviations ' + sna);
                         # get data:
                         all_1,all_2 = [],[];
                         all_1,data_1 = self.stage02_quantification_query.get_RDataList_experimentIDAndTimePointAndUnitsAndComponentNamesAndSampleNameAbbreviation_dataStage02GlogNormalized(experiment_id_I,tp,cu,cn,sna);
@@ -397,20 +397,20 @@ class stage02_quantification_execute():
     def execute_pca_v1(self,experiment_id_I):
         '''execute pca using R'''
 
-        print 'execute_pca...'
+        print('execute_pca...')
 
         # query metabolomics data from glogNormalization
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage02GlogNormalized(experiment_id_I);
         for tp in time_points:
-            print 'calculating pca for time_point ' + tp;
+            print('calculating pca for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage02GlogNormalized(experiment_id_I,tp);
             for cu in concentration_units:
-                print 'calculating pca for concentration_units ' + cu;
+                print('calculating pca for concentration_units ' + cu);
                 # get data:
                 data = [];
                 data = self.stage02_quantification_query.get_RExpressionData_experimentIDAndTimePointAndUnits_dataStage02GlogNormalized(experiment_id_I,tp,cu);
@@ -450,26 +450,26 @@ class stage02_quantification_execute():
     def execute_volcanoPlot_v1(self,experiment_id_I):
         '''generate a volcano plot from pairwiseTest table'''
 
-        print 'execute_volcanoPlot...'
+        print('execute_volcanoPlot...')
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage02pairWiseTest(experiment_id_I);
         for tp in time_points:
-            print 'generating a volcano plot for time_point ' + tp;
+            print('generating a volcano plot for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage02pairWiseTest(experiment_id_I,tp);
             #concentration_units = ['mM_glog_normalized']
             for cu in concentration_units:
-                print 'generating a volcano plot for concentration_units ' + cu;
+                print('generating a volcano plot for concentration_units ' + cu);
                 # get sample_name_abbreviations:
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndUnits_dataStage02pairWiseTest(experiment_id_I, tp, cu)
                 for sna_1 in sample_name_abbreviations:
                     for sna_2 in sample_name_abbreviations:
                         if sna_1 != sna_2:
-                            print 'generating a volcano plot for sample_name_abbreviation ' + sna_1 + ' vs. ' + sna_2;
+                            print('generating a volcano plot for sample_name_abbreviation ' + sna_1 + ' vs. ' + sna_2);
                             # get data:
                             data_1 = [];
                             data_1 = self.stage02_quantification_query.get_RDataList_experimentIDAndTimePointAndUnitsAndSampleNameAbbreviations_dataStage02pairWiseTest(experiment_id_I,tp,cu,sna_1,sna_2);
@@ -484,20 +484,20 @@ class stage02_quantification_execute():
     def execute_pcaPlot_v1(self,experiment_id_I):
         '''generate a pca plot'''
 
-        print 'execute_pcaPlot...'
+        print('execute_pcaPlot...')
         # query metabolomics data from pca_scores and pca_loadings
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage02Scores(experiment_id_I);
         for tp in time_points:
-            print 'plotting pca for time_point ' + tp;
+            print('plotting pca for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage02Scores(experiment_id_I,tp);
             for cu in concentration_units:
                 if cu=='height_ratio_glog_normalized': continue; # skip for now...
-                print 'plotting pca for concentration_units ' + cu;
+                print('plotting pca for concentration_units ' + cu);
                 # get data:
                 data_scores,data_loadings = [],[];
                 data_scores,data_loadings = self.stage02_quantification_query.get_RExpressionData_experimentIDAndTimePointAndUnits_dataStage02ScoresLoadings(experiment_id_I,tp,cu);
@@ -513,19 +513,19 @@ class stage02_quantification_execute():
     def execute_boxAndWhiskersPlot_v1(self,experiment_id_I,component_names_I=[]):
         '''generate a boxAndWhiskers plot from descriptiveStats table'''
 
-        print 'execute_boxAndWhiskersPlot...'
+        print('execute_boxAndWhiskersPlot...')
         # query metabolomics data from glogNormalization
         # get time points
         time_points = [];
         time_points = self.stage02_quantification_query.get_timePoint_experimentID_dataStage02GlogNormalized(experiment_id_I);
         for tp in time_points:
-            print 'calculating descriptiveStats for time_point ' + tp;
+            print('calculating descriptiveStats for time_point ' + tp);
             data_transformed = [];
             # get concentration units...
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage02GlogNormalized(experiment_id_I,tp);
             for cu in concentration_units:
-                print 'calculating descriptiveStats for concentration_units ' + cu;
+                print('calculating descriptiveStats for concentration_units ' + cu);
                 # get component_names:
                 component_names, component_group_names = [],[];
                 component_names, component_group_names = self.stage02_quantification_query.get_componentNames_experimentIDAndTimePointAndUnits_dataStage02GlogNormalized(experiment_id_I, tp, cu);
@@ -536,7 +536,7 @@ class stage02_quantification_execute():
                     component_names = [x for i,x in enumerate(component_names) if i in component_names_ind]
                     component_group_names = [x for i,x in enumerate(component_group_names) if i in component_names_ind]
                 for cnt_cn,cn in enumerate(component_names):
-                    print 'calculating descriptiveStats for component_names ' + cn;
+                    print('calculating descriptiveStats for component_names ' + cn);
                     data_plot_mean = [];
                     data_plot_var = [];
                     data_plot_ci = [];
@@ -548,7 +548,7 @@ class stage02_quantification_execute():
                     sample_name_abbreviations = [];
                     sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_experimentIDAndTimePointAndUnitsAndComponentNames_dataStage02GlogNormalized(experiment_id_I, tp, cu, cn)
                     for sna in sample_name_abbreviations:
-                        print 'calculating descriptiveStats for sample_name_abbreviations ' + sna;
+                        print('calculating descriptiveStats for sample_name_abbreviations ' + sna);
                         # get data:
                         all_1,data_1 = [],[];
                         all_1,data_1 = self.stage02_quantification_query.get_RDataList_experimentIDAndTimePointAndUnitsAndComponentNamesAndSampleNameAbbreviation_dataStage02GlogNormalized(experiment_id_I,tp,cu,cn,sna);
@@ -698,12 +698,12 @@ class stage02_quantification_execute():
     def execute_svm(self,experiment_id_I):
         '''execute svm using R'''
 
-        print 'execute_svm...'
+        print('execute_svm...')
 
     def execute_glogNormalization(self,analysis_id_I,concentration_units_I=[]):
         '''glog normalize concentration values using R'''
 
-        print 'execute_glogNormalization...'
+        print('execute_glogNormalization...')
         
         # get the analysis information
         analysis_info = [];
@@ -720,7 +720,7 @@ class stage02_quantification_execute():
                 concentration_units.extend(concentration_units_tmp)
             concentration_units = list(set(concentration_units));
         for cu in concentration_units:
-            print 'calculating glogNormalization for concentration_units ' + cu;
+            print('calculating glogNormalization for concentration_units ' + cu);
             data = [];
             # get all of the samples in the simulation
             for row in analysis_info:
@@ -752,7 +752,7 @@ class stage02_quantification_execute():
     def execute_pca(self,analysis_id_I,experiment_ids_I=[],time_points_I=[],concentration_units_I=[]):
         '''execute pca using R'''
 
-        print 'execute_pca...'
+        print('execute_pca...')
         
         # get the analysis information
         analysis_info = [];
@@ -765,7 +765,7 @@ class stage02_quantification_execute():
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
         for cu in concentration_units:
-            print 'calculating pca for concentration_units ' + cu;
+            print('calculating pca for concentration_units ' + cu);
             data = [];
             # get data:
             data = self.stage02_quantification_query.get_RExpressionData_analysisIDAndUnits_dataStage02GlogNormalized(analysis_id_I,cu);
@@ -807,14 +807,14 @@ class stage02_quantification_execute():
     def execute_pcaPlot(self,analysis_id_I,experiment_ids_I=[],time_points_I=[],concentration_units_I=[]):
         '''generate a pca plot'''
 
-        print 'execute_pcaPlot...'
+        print('execute_pcaPlot...')
         # query metabolomics data from pca_scores and pca_loadings
         # get concentration units...
         concentration_units = [];
         concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02Scores(analysis_id_I);
         for cu in concentration_units:
             if cu=='height_ratio_glog_normalized' or cu=='height_ratio': continue; # skip for now...
-            print 'plotting pca for concentration_units ' + cu;
+            print('plotting pca for concentration_units ' + cu);
             # get data:
             data_scores,data_loadings = [],[];
             data_scores,data_loadings = self.stage02_quantification_query.get_RExpressionData_analysisIDAndUnits_dataStage02ScoresLoadings(analysis_id_I,cu);
@@ -846,7 +846,7 @@ class stage02_quantification_execute():
                 time_points = [];
                 time_points = self.stage02_quantification_query.get_timePoint_analysisIDAndExperimentID_dataStage02GlogNormalized(analysis_id_I,experiment_id);
             for tp in time_points:
-                print 'calculating descriptiveStats for time_point ' + tp;
+                print('calculating descriptiveStats for time_point ' + tp);
                 data_transformed = [];
                 # get concentration units...
                 if concentration_units_I:
@@ -855,7 +855,7 @@ class stage02_quantification_execute():
                     concentration_units = [];
                     concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisIDAndExperimentIDAndTimePoint_dataStage02GlogNormalized(analysis_id_I,experiment_id,tp);
                 for cu in concentration_units:
-                    print 'calculating descriptiveStats for concentration_units ' + cu;
+                    print('calculating descriptiveStats for concentration_units ' + cu);
                     # get component_names:
                     component_names, component_group_names = [],[];
                     component_names, component_group_names = self.stage02_quantification_query.get_componentNames_analysisIDAndExperimentIDAndTimePointAndUnits_dataStage02GlogNormalized(analysis_id_I,experiment_id, tp, cu);
@@ -866,7 +866,7 @@ class stage02_quantification_execute():
                         component_names = [x for i,x in enumerate(component_names) if i in component_names_ind]
                         component_group_names = [x for i,x in enumerate(component_group_names) if i in component_names_ind]
                     for cnt_cn,cn in enumerate(component_names):
-                        print 'calculating descriptiveStats for component_names ' + cn;
+                        print('calculating descriptiveStats for component_names ' + cn);
                         data_plot_mean = [];
                         data_plot_var = [];
                         data_plot_ci = [];
@@ -878,7 +878,7 @@ class stage02_quantification_execute():
                         sample_name_abbreviations = [];
                         sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_analysisIDAndExperimentIDAndTimePointAndUnitsAndComponentNames_dataStage02GlogNormalized(analysis_id_I,experiment_id, tp, cu, cn)
                         for sna in sample_name_abbreviations:
-                            print 'calculating descriptiveStats for sample_name_abbreviations ' + sna;
+                            print('calculating descriptiveStats for sample_name_abbreviations ' + sna);
                             # get data:
                             all_1,data_1 = [],[];
                             all_1,data_1 = self.stage02_quantification_query.get_RDataList_analysisIDAndExperimentIDAndTimePointAndUnitsAndComponentNamesAndSampleNameAbbreviation_dataStage02GlogNormalized(analysis_id_I,experiment_id,tp,cu,cn,sna);
@@ -923,7 +923,7 @@ class stage02_quantification_execute():
     def execute_anova(self,analysis_id_I,concentration_units_I=[],component_names_I=[]):
         '''execute anova using R'''
 
-        print 'execute_anova...'
+        print('execute_anova...')
         
         # query metabolomics data from glogNormalization
         # get concentration units
@@ -933,7 +933,7 @@ class stage02_quantification_execute():
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
         for cu in concentration_units:
-            print 'calculating anova for concentration_units ' + cu;
+            print('calculating anova for concentration_units ' + cu);
             ## get the experiment_ids
             #if experiment_ids_I:
             #    experiment_ids = experiment_ids_I;
@@ -974,7 +974,7 @@ class stage02_quantification_execute():
                 component_names = [x for i,x in enumerate(component_names) if i in component_names_ind]
                 component_group_names = [x for i,x in enumerate(component_group_names) if i in component_names_ind]
             for cnt_cn,cn in enumerate(component_names):
-                print 'calculating anova for component_names ' + cn;
+                print('calculating anova for component_names ' + cn);
                 # get data:
                 data = [];
                 data = self.stage02_quantification_query.get_RDataFrame_analysisIDAndUnitsAndComponentNames_dataStage02GlogNormalized(analysis_id_I,cu,cn);
@@ -1018,7 +1018,7 @@ class stage02_quantification_execute():
     def execute_pairwiseTTest(self,analysis_id_I,concentration_units_I=[],component_names_I=[]):
         '''execute pairwiseTTest using R'''
 
-        print 'execute_pairwiseTTest...'
+        print('execute_pairwiseTTest...')
 
         # query metabolomics data from glogNormalization
         # get concentration units
@@ -1033,7 +1033,7 @@ class stage02_quantification_execute():
             #concentration_units_original = self.stage02_quantification_query.get_concentrationUnits_experimentIDAndTimePoint_dataStage01ReplicatesMI(experiment_id_I,tp);
             concentration_units_original = [x.split('_glog_normalized')[0] for x in concentration_units];
         for cu_cnt,cu in enumerate(concentration_units):
-            print 'calculating pairwiseTTest for concentration_units ' + cu;
+            print('calculating pairwiseTTest for concentration_units ' + cu);
             data = [];
             # get component_names:
             component_names, component_group_names = [],[];
@@ -1045,7 +1045,7 @@ class stage02_quantification_execute():
                 component_names = [x for i,x in enumerate(component_names) if i in component_names_ind]
                 component_group_names = [x for i,x in enumerate(component_group_names) if i in component_names_ind]
             for cnt_cn,cn in enumerate(component_names):
-                print 'calculating pairwiseTTest for component_names ' + cn;
+                print('calculating pairwiseTTest for component_names ' + cn);
                 # get sample_name_abbreviations:
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_analysisIDAndUnitsAndComponentNames_dataStage02GlogNormalized(analysis_id_I,cu, cn)
@@ -1053,7 +1053,7 @@ class stage02_quantification_execute():
                     for sna_2_cnt,sna_2 in enumerate(sample_name_abbreviations):
                     #for sna_2_cnt,sna_2 in enumerate(sample_name_abbreviations[sna_1_cnt:]): #prevents redundancy
                         if sna_1 != sna_2:
-                            print 'calculating pairwiseTTest for sample_name_abbreviations ' + sna_1 + ' vs. ' + sna_2;
+                            print('calculating pairwiseTTest for sample_name_abbreviations ' + sna_1 + ' vs. ' + sna_2);
                             # get data:
                             all_1,all_2 = [],[];
                             data_1,data_2 = [],[];
@@ -1092,7 +1092,7 @@ class stage02_quantification_execute():
     def execute_volcanoPlot(self,analysis_id_I,concentration_units_I=[]):
         '''generate a volcano plot from pairwiseTest table'''
 
-        print 'execute_volcanoPlot...'
+        print('execute_volcanoPlot...')
         # query metabolomics data from glogNormalization
         # get concentration units
         if concentration_units_I:
@@ -1101,7 +1101,7 @@ class stage02_quantification_execute():
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02pairWiseTest(analysis_id_I);
         for cu in concentration_units:
-            print 'generating a volcano plot for concentration_units ' + cu;
+            print('generating a volcano plot for concentration_units ' + cu);
             data = [];
             # get sample_name_abbreviations:
             sample_name_abbreviations = [];
@@ -1109,7 +1109,7 @@ class stage02_quantification_execute():
             for sna_1_cnt,sna_1 in enumerate(sample_name_abbreviations):
                 for sna_2_cnt,sna_2 in enumerate(sample_name_abbreviations[sna_1_cnt:]):
                     if sna_1 != sna_2:
-                        print 'generating a volcano plot for sample_name_abbreviation ' + sna_1 + ' vs. ' + sna_2;
+                        print('generating a volcano plot for sample_name_abbreviation ' + sna_1 + ' vs. ' + sna_2);
                         # get data:
                         data_1 = [];
                         data_1 = self.stage02_quantification_query.get_RDataList_analysisIDAndUnitsAndSampleNameAbbreviations_dataStage02pairWiseTest(analysis_id_I,cu,sna_1,sna_2);
@@ -1131,7 +1131,7 @@ class stage02_quantification_execute():
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
         for cu in concentration_units:
-            print 'calculating descriptiveStats for concentration_units ' + cu;
+            print('calculating descriptiveStats for concentration_units ' + cu);
             # get component_names:
             component_names, component_group_names = [],[];
             component_names, component_group_names = self.stage02_quantification_query.get_componentNames_analysisIDAndUnits_dataStage02GlogNormalized(analysis_id_I, cu);
@@ -1142,7 +1142,7 @@ class stage02_quantification_execute():
                 component_names = [x for i,x in enumerate(component_names) if i in component_names_ind]
                 component_group_names = [x for i,x in enumerate(component_group_names) if i in component_names_ind]
             for cnt_cn,cn in enumerate(component_names):
-                print 'calculating descriptiveStats for component_names ' + cn;
+                print('calculating descriptiveStats for component_names ' + cn);
                 data_plot_mean = [];
                 data_plot_var = [];
                 data_plot_ci = [];
@@ -1154,7 +1154,7 @@ class stage02_quantification_execute():
                 sample_name_abbreviations = [];
                 sample_name_abbreviations = self.stage02_quantification_query.get_sampleNameAbbreviations_analysisIDAndUnitsAndComponentNames_dataStage02GlogNormalized(analysis_id_I, cu, cn)
                 for sna in sample_name_abbreviations:
-                    print 'calculating descriptiveStats for sample_name_abbreviations ' + sna;
+                    print('calculating descriptiveStats for sample_name_abbreviations ' + sna);
                     # get data:
                     all_1,data_1 = [],[];
                     all_1,data_1 = self.stage02_quantification_query.get_RDataList_analysisIDAndUnitsAndComponentNamesAndSampleNameAbbreviation_dataStage02GlogNormalized(analysis_id_I,cu,cn,sna);
@@ -1177,7 +1177,7 @@ class stage02_quantification_execute():
                 col_pdist_metric_I='euclidean',col_linkage_method_I='complete'):
         '''Execute hierarchical cluster on row and column data'''
 
-        print 'executing heatmap...';
+        print('executing heatmap...');
         # get the analysis information
         analysis_info = [];
         analysis_info = self.stage02_quantification_query.get_rows_analysisID_dataStage02QuantificationAnalysis(analysis_id_I);
@@ -1189,7 +1189,7 @@ class stage02_quantification_execute():
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
         for cu in concentration_units:
-            print 'generating a heatmap for concentration_units ' + cu;
+            print('generating a heatmap for concentration_units ' + cu);
             # get the data
             data = [];
             data = self.stage02_quantification_query.get_RExpressionData_analysisIDAndUnits_dataStage02GlogNormalized(analysis_id_I,cu);
@@ -1265,7 +1265,7 @@ class stage02_quantification_execute():
     def execute_glogNormalization_update(self,analysis_id_I):
         '''glog normalize concentration values using R'''
 
-        print 'execute_glogNormalization...'
+        print('execute_glogNormalization...')
         
         
         # get the analysis information
@@ -1279,7 +1279,7 @@ class stage02_quantification_execute():
             concentration_units = [];
             concentration_units = self.stage02_quantification_query.get_concentrationUnits_analysisID_dataStage02GlogNormalized(analysis_id_I);
         for cu in concentration_units:
-            print 'calculating glogNormalization for concentration_units ' + cu;
+            print('calculating glogNormalization for concentration_units ' + cu);
             data = [];
             # get all of the samples in the analysis
             data = self.stage02_quantification_query.get_RExpressionData_analysisIDAndUnits_dataStage02GlogNormalized(analysis_id_I, cu);
@@ -1299,7 +1299,7 @@ class stage02_quantification_execute():
     def execute_getDataStage01ReplicatesMI(self,analysis_id_I,concentration_units_I=[]):
         '''glog normalize concentration values using R'''
 
-        print 'execute_getDataStage01ReplicatesMI...'
+        print('execute_getDataStage01ReplicatesMI...')
         
         # get the analysis information
         analysis_info = [];
@@ -1316,7 +1316,7 @@ class stage02_quantification_execute():
                 concentration_units.extend(concentration_units_tmp);
             concentration_units = list(set(concentration_units));
         for cu in concentration_units:
-            print 'calculating glogNormalization for concentration_units ' + cu;
+            print('calculating glogNormalization for concentration_units ' + cu);
             data = [];
             # get all of the samples in the simulation
             for row in analysis_info:
@@ -1336,7 +1336,7 @@ class stage02_quantification_execute():
     def execute_getDataStage01PhysiologicalRatios(self,analysis_id_I):
         '''glog normalize concentration values using R'''
 
-        print 'execute_getDataStage01ReplicatesMI...'
+        print('execute_getDataStage01ReplicatesMI...')
         
         # get the analysis information
         analysis_info = [];

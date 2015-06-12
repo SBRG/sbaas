@@ -45,7 +45,7 @@ def isotopomer_model_iteration1():
     with open('data\\iteration1_140407_ijo1366_reduced_modified_pfba.csv',mode='wb') as outfile:
         writer = csv.writer(outfile)
         writer.writerow(['Reaction','Flux'])
-        for k,v in cobra_model.solution.x_dict.iteritems():
+        for k,v in cobra_model.solution.x_dict.items():
             writer.writerow([k,v]);
     # Read in pfba solution 
     pfba_sol = {};
@@ -106,7 +106,7 @@ def isotopomer_model_iteration2(pfba_filename,fva_reduced_model_filename,netrxn_
     with open(pfba_filename,mode='wb') as outfile:
         writer = csv.writer(outfile)
         writer.writerow(['Reaction','Flux','Subsystem'])
-        for k,v in cobra_model.solution.x_dict.iteritems():
+        for k,v in cobra_model.solution.x_dict.items():
             writer.writerow([k,v,cobra_model.reactions.get_by_id(k).subsystem]);
     # Read in pfba solution 
     pfba_sol = {};
@@ -156,7 +156,7 @@ def isotopomer_model_iteration2(pfba_filename,fva_reduced_model_filename,netrxn_
     while r2 !=0:
         remove_noflux_reactions(cobra_model);
         r1,r2 = get_reactionsInfo(cobra_model);
-        print r1,r2;
+        print(r1,r2);
     # write model to sbml
     write_cobra_model_to_sbml_file(cobra_model,netrxn_irreversible_model_filename)
     with open(reduced_lbub_filename,mode='wb') as outfile:
@@ -194,7 +194,7 @@ def isotopomer_model_iteration3(model_filename,xml_filename,mat_filename,csv_fil
         cobra_model.reactions.get_by_id(ko).lower_bound = 0.0;
         cobra_model.reactions.get_by_id(ko).upper_bound = 0.0;
     # Apply flux constraints, if any:
-    for rxn,flux in flux_dict.iteritems():
+    for rxn,flux in flux_dict.items():
         cobra_model.reactions.get_by_id(rxn).lower_bound = flux['lb'];
         cobra_model.reactions.get_by_id(rxn).upper_bound = flux['ub'];
     # Change description, if any:
@@ -207,7 +207,7 @@ def isotopomer_model_iteration3(model_filename,xml_filename,mat_filename,csv_fil
     write_cobra_model_to_sbml_file(cobra_model,xml_filename)
     # Add isotopomer field to model
     for r in cobra_model.reactions:
-        if isotopomer_str.has_key(r.id):
+        if r.id in isotopomer_str:
             cobra_model.reactions.get_by_id(r.id).isotopomer = isotopomer_str[r.id];
         else:
             cobra_model.reactions.get_by_id(r.id).isotopomer = '';

@@ -1,6 +1,6 @@
 # Dependencies
 from analysis.analysis_base import *
-from stage02_isotopomer_query import stage02_isotopomer_query
+from .stage02_isotopomer_query import stage02_isotopomer_query
 from resources.molmass import Formula
 from copy import copy
 from math import isnan, isinf
@@ -1396,7 +1396,7 @@ class stage02_isotopomer_io(base_analysis):
         # combine model_data and isotopomer_mapping_data
         dataStage02IsotopomerModelRxns_data = [];
         for r in dataStage02IsotopomerModelRxns_data_tmp:
-            if isotopomer_mapping_data.has_key(r['rxn_id']):
+            if r['rxn_id'] in isotopomer_mapping_data:
                 r['reactants_stoichiometry_tracked'] = isotopomer_mapping_data[r['rxn_id']]['reactants_stoichiometry_tracked'];
                 r['products_stoichiometry_tracked'] = isotopomer_mapping_data[r['rxn_id']]['products_stoichiometry_tracked'];
                 r['reactants_ids_tracked'] = isotopomer_mapping_data[r['rxn_id']]['reactants_ids_tracked'];
@@ -1482,7 +1482,7 @@ class stage02_isotopomer_io(base_analysis):
             metabolite_data_tmp['met_name'] = met.name;
             metabolite_data_tmp['met_id'] = met.id;
             formula = {};
-            for k,v in met.formula.elements.iteritems():
+            for k,v in met.formula.elements.items():
                 formula[k] = {0:v};
             tmp = Formula()
             tmp._elements=formula
@@ -1823,7 +1823,7 @@ class stage02_isotopomer_io(base_analysis):
             cobra_model1 = None;
             cobra_model1 = load_json_model('data/cobra_model_tmp.json');
         else:
-            print 'file_type not supported'
+            print('file_type not supported')
         # delete exchange reactions:
         cobra_model.remove_reactions([cobra_model.reactions.get_by_id('EX_h_LPAREN_e_RPAREN_'),
                                    cobra_model.reactions.get_by_id('EX_h2o_LPAREN_e_RPAREN_'),
@@ -1979,8 +1979,8 @@ class stage02_isotopomer_io(base_analysis):
                         tmp = Formula(met.formula)
                         metabolite_data_tmp['formula'] = tmp.formula;
                     except Exception as e:
-                        print e;
-                        print met.id
+                        print(e);
+                        print(met.id)
                         metabolite_data_tmp['formula']= met.formula
                 else: 
                     metabolite_data_tmp['formula'] = met.formula;
@@ -2078,7 +2078,7 @@ class stage02_isotopomer_io(base_analysis):
         atomMappingReactions_reverse = [];
         model_met_ids = [];
         #parse the rxn network into modelReactions and atomMappingReactions
-        for id,rxn_eqn in model_INCA.iteritems():
+        for id,rxn_eqn in model_INCA.items():
             #if id == 'HEX1':
             #    print 'check'
             #initialize the data structure for modelReactions:
@@ -2166,7 +2166,7 @@ class stage02_isotopomer_io(base_analysis):
                     modelReactions_row['lower_bound']=0;
                     modelReactions_row['upper_bound']=1000;
             else:
-                print 'no valid forward/reverse reaction identifier found'
+                print('no valid forward/reverse reaction identifier found')
             #parse the reactants
             met_id_tmp = None;
             met_stoichiometry_tmp = None;
@@ -2450,7 +2450,7 @@ class stage02_isotopomer_io(base_analysis):
             self.update_data_stage02_isotopomer_atomMappingReactions(atomMappingReactions);
             self.update_data_stage02_isotopomer_atomMappingReactions(atomMappingReactions_reverse);
 
-        print 'model and mapping added';
+        print('model and mapping added');
     def create_modelFromReactionsAndMetabolitesTables(self,rxns_table_I,mets_table_I):
         '''generate a cobra model from isotopomer_modelReactions and isotopomer_modelMetabolites tables'''
         
@@ -2459,7 +2459,7 @@ class stage02_isotopomer_io(base_analysis):
             #if rxn_row['rxn_id'] == 'HEX1':
             #    print 'check'
             mets = {}
-            print rxn_row['rxn_id']
+            print(rxn_row['rxn_id'])
             # parse the reactants
             for rxn_met_cnt,rxn_met in enumerate(rxn_row['reactants_ids']):
                 for met_cnt,met_row in enumerate(mets_table_I):
@@ -2471,12 +2471,12 @@ class stage02_isotopomer_io(base_analysis):
                         met_tmp = Metabolite(met_row['met_id'],met_row['formula'],met_row['met_name'],compartment)
                         met_tmp.charge = met_row['charge']
                         # check for duplicate metabolites
-                        met_keys = mets.keys();
+                        met_keys = list(mets.keys());
                         met_keys_ids = {};
                         if met_keys: 
                             for cnt,met in enumerate(met_keys):
                                 met_keys_ids[met.id]=cnt;
-                        if met_tmp.id in met_keys_ids.keys():
+                        if met_tmp.id in list(met_keys_ids.keys()):
                             mets[met_keys[met_keys_ids[met_tmp.id]]]-=1
                         else:
                             mets[met_tmp] = rxn_row['reactants_stoichiometry'][rxn_met_cnt];
@@ -2492,12 +2492,12 @@ class stage02_isotopomer_io(base_analysis):
                         met_tmp = Metabolite(met_row['met_id'],met_row['formula'],met_row['met_name'],compartment)
                         met_tmp.charge = met_row['charge']
                         # check for duplicate metabolites
-                        met_keys = mets.keys();
+                        met_keys = list(mets.keys());
                         met_keys_ids = {};
                         if met_keys: 
                             for cnt,met in enumerate(met_keys):
                                 met_keys_ids[met.id]=cnt;
-                        if met_tmp.id in met_keys_ids.keys():
+                        if met_tmp.id in list(met_keys_ids.keys()):
                             mets[met_keys[met_keys_ids[met_tmp.id]]]+=1
                         else:
                             mets[met_tmp] = rxn_row['products_stoichiometry'][rxn_met_cnt];
@@ -2525,7 +2525,7 @@ class stage02_isotopomer_io(base_analysis):
         try:
             st = os.stat(filename)
         except IOError:
-            print "failed to get information about", filename
+            print("failed to get information about", filename)
             return;
         else:
             file_size = st[ST_SIZE]
@@ -2663,7 +2663,7 @@ class stage02_isotopomer_io(base_analysis):
                     'used_':True,
                     'comment_':None})
             else:
-                print 'type not recognized';
+                print('type not recognized');
         # extract out the residuals of the fitted measurements
         f_mnt_res_val = [];
         f_mnt_res_fit = [];
@@ -2796,7 +2796,7 @@ class stage02_isotopomer_io(base_analysis):
                     'used_':True,
                     'comment_':None})
             else:
-                print 'type not recognized';
+                print('type not recognized');
         # extract out the fitted parameters
         f_par_id = [];
         f_par_val = [];
@@ -2953,7 +2953,7 @@ class stage02_isotopomer_io(base_analysis):
                     'used_':True,
                     'comment_':None})
             else:
-                print 'type not recognized';
+                print('type not recognized');
         # add data to the database
         self.add_data_stage02_isotopomer_fittedData(fittedData);
         self.add_data_stage02_isotopomer_fittedFluxes(fittedFluxes);
@@ -3013,7 +3013,7 @@ class stage02_isotopomer_io(base_analysis):
         #   fluxes_O_dict = dict, rxn_id:flux
         
 
-        from stage02_isotopomer_dependencies import isotopomer_netRxns
+        from .stage02_isotopomer_dependencies import isotopomer_netRxns
         netRxns = isotopomer_netRxns();
 
         rxns_O = [];
@@ -3023,7 +3023,7 @@ class stage02_isotopomer_io(base_analysis):
         if not flux_I:
             #print 'reaction has no flux';
             return fluxes_O_dict;
-        elif net_rxn_I in netRxns.isotopomer_rxns_net.keys():
+        elif net_rxn_I in list(netRxns.isotopomer_rxns_net.keys()):
             rxns_O = netRxns.isotopomer_rxns_net[net_rxn_I]['reactions'];
             stoichiometry = netRxns.isotopomer_rxns_net[net_rxn_I]['stoichiometry'];
             # change the direction of the fluxes according to the stoichiometry of the reactions
@@ -3034,7 +3034,7 @@ class stage02_isotopomer_io(base_analysis):
 
         #return rxns_O,fluxes_O;
         # wrap into a dictionary
-        fluxes_O_dict = dict(zip(rxns_O,fluxes_O));
+        fluxes_O_dict = dict(list(zip(rxns_O,fluxes_O)));
         return fluxes_O_dict;
 
     # Visualization
@@ -3060,7 +3060,7 @@ class stage02_isotopomer_io(base_analysis):
         for model_id in model_ids:
             filter_mi_str = 'model_id/'+ model_id.replace('_','');
             filter_O['model_id'].append(filter_mi_str);
-            print 'exporting fluxomics analysis for model_id ' + model_id;
+            print('exporting fluxomics analysis for model_id ' + model_id);
             # get the cobra model
             if model_ids_dict_I:
                 cobra_model = model_ids_dict_I[model_id];
@@ -3082,7 +3082,7 @@ class stage02_isotopomer_io(base_analysis):
                     cobra_model = None;
                     cobra_model = load_json_model(settings.workspace_data + '/cobra_model_tmp.json');
                 else:
-                    print 'file_type not supported'
+                    print('file_type not supported')
             # get the time-points
             if mapping_ids_I:
                 mapping_ids = mapping_ids_I;
@@ -3092,7 +3092,7 @@ class stage02_isotopomer_io(base_analysis):
             for mapping in mapping_ids:
                 filter_mapping_str = 'model_id/'+ model_id.replace('_','') +'/mapping_id/'+mapping.replace('_','');
                 filter_O['mapping_id'].append(filter_mapping_str);
-                print 'exporting fluxomic analysis for mapping_id ' + mapping;
+                print('exporting fluxomic analysis for mapping_id ' + mapping);
                 # get sample_name_abbreviations
                 if sample_name_abbreviations_I:
                     sample_name_abbreviations = sample_name_abbreviations_I;
@@ -3102,12 +3102,12 @@ class stage02_isotopomer_io(base_analysis):
                 for sna in sample_name_abbreviations:
                     filter_sna_str = 'model_id/'+ model_id.replace('_','') +'/mapping_id/'+mapping.replace('_','')+'/sample/'+sna.replace('_','');
                     filter_O['sample'].append(filter_sna_str);
-                    print 'exporting fluxomic analysis for sample_name_abbreviation ' + sna;
+                    print('exporting fluxomic analysis for sample_name_abbreviation ' + sna);
                     # get the simulation_id
                     simulation_ids = [];
                     simulation_ids = self.stage02_isotopomer_query.get_simulationID_experimentIDAndSampleNameAbbreviationsAndModelIDAndMappingID_dataStage02IsotopomerSimulation(experiment_id_I,sna,model_id,mapping);
                     if len(simulation_ids)>1:
-                        print 'more than 1 simulation found'
+                        print('more than 1 simulation found')
                         return;
                     else: simulation_id = simulation_ids[0];
                     # calculated fluxes
@@ -3117,7 +3117,7 @@ class stage02_isotopomer_io(base_analysis):
                     flux = self.stage02_isotopomer_query.get_rowsEscherFlux_simulationID_dataStage02IsotopomerfittedNetFluxes(simulation_id);
                     # break lumped reactions into individual reactions
                     fluxes = {};
-                    for k,v in flux.iteritems():
+                    for k,v in flux.items():
                         fluxes_O = {};
                         fluxes_O = self.convert_netRxn2IndividualRxns(k,v);
                         if fluxes_O:
@@ -3139,7 +3139,7 @@ class stage02_isotopomer_io(base_analysis):
                     for map_id in map_ids:
                         filter_map_str = 'model_id/'+ model_id.replace('_','') +'/mapping_id/'+mapping.replace('_','')+'/sample/'+sna.replace('_','')+'/map_id/'+map_id.replace('_','');
                         filter_O['map_id'].append(filter_map_str);
-                        print 'exporting fluxomics analysis for map_id ' + map_id;
+                        print('exporting fluxomics analysis for map_id ' + map_id);
                         # generate the map html using escher
                         map_json = json.load(open(settings.sbaas + '/data/escher_maps/' + map_id + '.json','rb'));
                         map = Builder(map_json=json.dumps(map_json), reaction_data=fluxes);

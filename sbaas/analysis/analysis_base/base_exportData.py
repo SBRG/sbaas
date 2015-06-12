@@ -12,9 +12,9 @@ class base_exportData():
 
     def write_dict2csv(self,filename,headers=None):
         # write dict to csv
-        with open(filename, 'wb') as f:
+        with open(filename, 'w') as f:
             if headers: fieldname = headers;
-            else: fieldname = self.data[0].keys()
+            else: fieldname = list(self.data[0].keys())
             writer = csv.DictWriter(f, fieldnames = fieldname)
             try:
                 writer.writeheader();
@@ -29,8 +29,8 @@ class base_exportData():
 
     def write_dict2tsv(self,filename):
         # write dict to tsv
-        with open(filename, 'wb') as f:
-            writer = csv.DictWriter(f,fieldnames = self.data[0].keys(),dialect = 'excel-tab')
+        with open(filename, 'w') as f:
+            writer = csv.DictWriter(f,fieldnames = list(self.data[0].keys()),dialect = 'excel-tab')
             try:
                 writer.writeheader();
                 writer.writerows(self.data);
@@ -46,7 +46,7 @@ class base_exportData():
         for i in range(len(columns_I)):
             rows[i].insert(0,columns_I[i]);
 
-        with open(filename, 'wb') as f:
+        with open(filename, 'w') as f:
             writer = csv.writer(f);
             try:
                 writer.writerow(header);

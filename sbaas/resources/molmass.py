@@ -81,7 +81,7 @@ Relative mass    Fraction %      Intensity
 
 """
 
-from __future__ import division, print_function
+
 
 import sys
 import re
@@ -89,7 +89,7 @@ import math
 import copy
 from functools import reduce
 
-from elements import ELEMENTS, Isotope
+from .elements import ELEMENTS, Isotope
 
 __version__ = '2013.03.18'
 __docformat__ = 'restructuredtext en'
@@ -237,11 +237,11 @@ class Formula(object):
         if not isinstance(other, Formula):
             raise TypeError('can only subtract Formula instance')
         _elements = copy.deepcopy(self._elements)
-        for symbol, isotopes in other._elements.items():
+        for symbol, isotopes in list(other._elements.items()):
             if symbol not in _elements:
                 raise ValueError("element %s not in %s" % (symbol, str(self)))
             element = _elements[symbol]
-            for massnumber, count in isotopes.items():
+            for massnumber, count in list(isotopes.items()):
                 if massnumber not in element:
                     raise ValueError("element %i%s not in %s" % (
                         massnumber, symbol, str(self)))
@@ -408,7 +408,7 @@ class Formula(object):
         8
 
         """
-        return sum(sum(i.values()) for i in self._elements.values())
+        return sum(sum(i.values()) for i in list(self._elements.values()))
 
     @lazyattr
     def gcd(self):
@@ -425,7 +425,7 @@ class Formula(object):
 
         """
         return gcd(set(list(i)[0] for i in (
-            j.values() for j in self._elements.values())))
+            list(j.values()) for j in list(self._elements.values()))))
 
     @lazyattr
     def mass(self):
@@ -447,7 +447,7 @@ class Formula(object):
         result = 0.0
         for symbol in self._elements:
             ele = ELEMENTS[symbol]
-            for massnumber, count in self._elements[symbol].items():
+            for massnumber, count in list(self._elements[symbol].items()):
                 if massnumber:
                     result += ele.isotopes[massnumber].mass * count
                 else:
@@ -471,7 +471,7 @@ class Formula(object):
         result = Isotope()
         for symbol in self._elements:
             ele = ELEMENTS[symbol]
-            for massnumber, count in self._elements[symbol].items():
+            for massnumber, count in list(self._elements[symbol].items()):
                 if massnumber:
                     isotope = ele.isotopes[massnumber]
                 else:
@@ -517,7 +517,7 @@ class Formula(object):
                 ele = ELEMENTS[symbol]
                 mass = 0.0
                 counter = 0
-                for massnumber, count in elements[symbol].items():
+                for massnumber, count in list(elements[symbol].items()):
                     counter += count
                     if massnumber:
                         mass += ele.isotopes[massnumber].mass * count
@@ -564,7 +564,7 @@ class Formula(object):
 
         for symbol in elements:
             ele = ELEMENTS[symbol]
-            for massnumber, count in elements[symbol].items():
+            for massnumber, count in list(elements[symbol].items()):
                 if massnumber:
                     # specific isotope
                     iso = ele.isotopes[massnumber]
@@ -584,7 +584,7 @@ class Formula(object):
                             spectrum[k] = [m, f]
                 else:
                     # mixture of isotopes
-                    isotopes = ele.isotopes.values()
+                    isotopes = list(ele.isotopes.values())
                     for _ in range(count):
                         for key in reversed(sorted(spectrum)):
                             t = spectrum[key]
@@ -662,7 +662,7 @@ class Spectrum(dict):
         result = ["Relative mass    Fraction %      Intensity"]
         prec = precision_digits(self.peak[0], 9)
         norm = 100.0 / self.peak[1]
-        for mass, fraction in self.values():
+        for mass, fraction in list(self.values()):
             result.append("%-13.*f   %11.6f   %12.6f" % (
                 prec, mass, fraction*100.0, fraction*norm))
         return "\n".join(result)
@@ -787,7 +787,7 @@ def from_string(formula, groups=None):
         elif fset <= set(AMINOACIDS.keys()) and fset & set('AEGMLQRT'):
             return from_peptide(formula)
         else:
-            for dtype, func in PREPROCESSORS.items():
+            for dtype, func in list(PREPROCESSORS.items()):
                 for match in re.findall(dtype + '\((.*?)\)', formula):
                     formula = formula.replace('%s(%s)' % (dtype, match),
                                               func(match))
@@ -861,7 +861,7 @@ def from_fractions(fractions, maxcount=10, precision=1e-4):
     # divide normalized fractions by element/isotope mass
     numbers = {}
     sumfractions = sum(fractions.values())
-    for symbol, fraction in fractions.items():
+    for symbol, fraction in list(fractions.items()):
         if symbol == 'D':  # Deuterium
             symbol = '2H'
         if symbol[0].isupper():
@@ -895,7 +895,7 @@ def from_fractions(fractions, maxcount=10, precision=1e-4):
     best = 1e6
     factor = 1
     for i in range(1, maxcount):
-        x = sum(abs((i*n) - round(i*n)) for n in numbers.values())
+        x = sum(abs((i*n) - round(i*n)) for n in list(numbers.values()))
         if x < best:
             best = x
             factor = i
@@ -903,7 +903,7 @@ def from_fractions(fractions, maxcount=10, precision=1e-4):
                 break
 
     formula = []
-    for symbol, number in numbers.items():
+    for symbol, number in list(numbers.items()):
         count = int(round(factor * number))
         if count > 1:
             formula.append("%s%i" % (symbol, count))

@@ -99,7 +99,7 @@ def find_loops(data_fva):
 
     data_loops = json.load(open(data_fva))
     rxn_loops = [];
-    for k,v in data_loops.iteritems():
+    for k,v in data_loops.items():
         if abs(v['minimum'])>1.0 or abs(v['maximum'])>1.0:
             rxn_loops.append(k);
     return rxn_loops
@@ -109,7 +109,7 @@ def remove_loopsFromPoints(rxn_loops, points_dict):
 
     points_loopless = {};
     points_loopless_mean = {};
-    for k,v in points_dict.iteritems():
+    for k,v in points_dict.items():
         if k in rxn_loops: continue
         else: 
             points_loopless[k] = v;
@@ -144,7 +144,7 @@ def export_points(ijo1366_sbml, points_loopless_mean, data_srd, data_pfba, data_
              'dtdpglu_c', 'adpglc_c', 'gthox_c', 'nad_c', 'nadh_c', 'nadp_c',
              'nadph_c', 'coa_c', 'fad_c', 'accoa_c', 'succoa_c'];
     # combine analyses into a final data structure
-    for k,v in points_loopless_mean.iteritems():
+    for k,v in points_loopless_mean.items():
         ngenes = len(cobra_model.reactions.get_by_id(k).genes)
         genes = ', '.join(i.id for i in cobra_model.reactions.get_by_id(k).genes);
         nmets_down = len([i.id for i in cobra_model.reactions.get_by_id(k).products if i.compartment == 'c' and i.id in assay]);
@@ -161,7 +161,7 @@ def export_points(ijo1366_sbml, points_loopless_mean, data_srd, data_pfba, data_
         csvwriter = csv.writer(outfile);
         #csvwriter.writerow(['rxn_id','mean','mean_abs','std','gr_ratio','pfba']);
         csvwriter.writerow(['rxn_id','mean','mean_abs','std','gr_ratio','ngenes','genes','nmets_up','mets_up','nmets_down','mets_down']);
-        for k,v in points.iteritems():
+        for k,v in points.items():
             csvwriter.writerow([k,v['mean'],abs(v['mean']),v['std'],v['gr_ratio'],
                                 v['ngenes'],v['genes'],v['nmets_up'],v['mets_up'],
                                 v['nmets_down'],v['mets_down']]);

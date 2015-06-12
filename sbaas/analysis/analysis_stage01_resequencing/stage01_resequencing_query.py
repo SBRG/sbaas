@@ -45,10 +45,10 @@ class stage01_resequencing_query(base_analysis):
             # filter:
             data_filtered = [];
             for d in data_O:
-                if d['mutation_data'].has_key('frequency') and d['mutation_data']['frequency'] >= frequency_criteria:
+                if 'frequency' in d['mutation_data'] and d['mutation_data']['frequency'] >= frequency_criteria:
                     data_filtered.append(d);
                 #note: frequency is only provided for population resequences
-                elif not d['mutation_data'].has_key('frequency'):
+                elif 'frequency' not in d['mutation_data']:
                     data_filtered.append(d);
             return data_filtered;
         except SQLAlchemyError as e:
@@ -82,10 +82,10 @@ class stage01_resequencing_query(base_analysis):
             for d in data_O:
                 if d['evidence_data']['type'] == 'RA':
                     #population only
-                    if d['evidence_data'].has_key('quality') and \
-                        d['evidence_data'].has_key('bias_p_value') and \
-                        d['evidence_data'].has_key('fisher_strand_p_value') and \
-                        d['evidence_data'].has_key('frequency') and \
+                    if 'quality' in d['evidence_data'] and \
+                        'bias_p_value' in d['evidence_data'] and \
+                        'fisher_strand_p_value' in d['evidence_data'] and \
+                        'frequency' in d['evidence_data'] and \
                         d['evidence_data']['frequency'] >= frequency_criteria and \
                         d['evidence_data']['quality'] >= quality_criteria and \
                         d['evidence_data']['bias_p_value'] <= p_value_criteria and \
@@ -93,8 +93,8 @@ class stage01_resequencing_query(base_analysis):
                         data_filtered_dict = d;
                         data_filtered.append(d);
                     #population and isolate
-                    elif d['evidence_data'].has_key('quality') and \
-                        d['evidence_data'].has_key('frequency') and \
+                    elif 'quality' in d['evidence_data'] and \
+                        'frequency' in d['evidence_data'] and \
                         d['evidence_data']['frequency'] >= frequency_criteria and \
                         d['evidence_data']['quality'] >= quality_criteria:
                         data_filtered_dict = d;
@@ -109,8 +109,8 @@ class stage01_resequencing_query(base_analysis):
                     data_filtered_dict = d;
                     data_filtered.append(d);
                 else:
-                    print 'mutation evidence of type ' + d['evidence_data']['type'] +\
-                        ' has not yet been included in the filter criteria';
+                    print('mutation evidence of type ' + d['evidence_data']['type'] +\
+                        ' has not yet been included in the filter criteria');
             return data_filtered_dict;
         except SQLAlchemyError as e:
             print(e);
