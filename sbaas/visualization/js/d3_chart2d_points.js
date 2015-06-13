@@ -51,12 +51,16 @@ d3_chart2d.prototype.add_pointsdata1tooltipandfill = function () {
     // set the tooltip
     this.tooltip = d3.tip().attr('class', 'd3-tip')
         .html(function(d){
-            if (typeof(d[x_data]) === 'string' && typeof(feature_label) !== "undefined"){
+            if (typeof(d[x_data]) === 'string' && feature_label && typeof(feature_label) !== "undefined"){
                 return(d[feature_label] + '\nx: ' + d[x_data] + '; y: ' + d[y_data].toFixed(2));
+            } else if (typeof(d[x_data]) !== 'string' && feature_label && typeof(feature_label) !== "undefined"){
+                return(d[feature_label] + '\nx: ' + d[x_data].toFixed(2) + '; y: ' + d[y_data].toFixed(2));
+            } else if (typeof(d[x_data]) === 'string' && series_label && typeof(series_label) !== "undefined"){
+                return(d[series_label] + '\nx: ' + d[x_data] + '; y: ' + d[y_data].toFixed(2));
+            } else if (typeof(d[x_data]) !== 'string' && series_label && typeof(series_label) !== "undefined"){
+                return(d[series_label] + '\nx: ' + d[x_data].toFixed(2) + '; y: ' + d[y_data].toFixed(2));
             } else if (typeof(d[x_data]) === 'string'){
                 return('x: ' + d[x_data] + '; y: ' + d[y_data].toFixed(2));
-            } else if (typeof(d[x_data]) !== 'string' && typeof(feature_label) !== "undefined"){
-                return(d[feature_label] + '\nx: ' + d[x_data].toFixed(2) + '; y: ' + d[y_data].toFixed(2));
             } else {
                 return ('x: ' + d[x_data].toFixed(2) + '; y: ' + d[y_data].toFixed(2));
                     };

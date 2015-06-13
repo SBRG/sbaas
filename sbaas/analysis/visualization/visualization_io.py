@@ -149,49 +149,51 @@ class visualization_io(base_analysis):
         tile2datamap_O = {};
         tile_cnt = 0;
         # project_description:
-        for i,d in enumerate(data2_O):
-            tileid = "tile" + str(tile_cnt);
-            colid = "col" + str(i);
-            tileheader = d['project_section'];
-            htmlid = "html" + str(tile_cnt);
-            tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row1",'colid':colid,
-            'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-            htmlparameters={"htmlkeymap":[data2_keymap],
-                        'htmltype':'media_01','htmlid':htmlid};
-            tileparameters.update(htmlparameters);
-            parametersobject_O.append(tileparameters);
-            dataobject_O.append({"data":[d],"datakeys":data2_keys,"datanestkeys":data2_nestkeys});
-            tile2datamap_O.update({tileid:[tile_cnt]});
-            tile_cnt+=1;
+        if data2_O:
+            for i,d in enumerate(data2_O):
+                tileid = "tile" + str(tile_cnt);
+                colid = "col" + str(i);
+                tileheader = d['project_section'];
+                htmlid = "html" + str(tile_cnt);
+                tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row1",'colid':colid,
+                'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+                htmlparameters={"htmlkeymap":[data2_keymap],
+                            'htmltype':'media_01','htmlid':htmlid};
+                tileparameters.update(htmlparameters);
+                parametersobject_O.append(tileparameters);
+                dataobject_O.append({"data":[d],"datakeys":data2_keys,"datanestkeys":data2_nestkeys});
+                tile2datamap_O.update({tileid:[tile_cnt]});
+                tile_cnt+=1;
         # project:
-        data1_dict = {};
-        for data_export_id in data1_project['data_export_id']:
-            data1_dict[data_export_id]=[];
-        for d in data1_O:
-            data1_dict[d['data_export_id']].append(d);
-        data1_keys = list(data1_dict.keys());
-        data1_keys.sort();
-        col_cnt = 0;
-        #for k,v in data1_dict.iteritems():
-        for k in data1_keys:
-            tileid = "tile" + str(tile_cnt);
-            colid = "col" + str(col_cnt);
-            tileheader = data1_dict[k][0]['pipeline_id'];
-            htmlid = "html" + str(tile_cnt);
-            #tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
-            #    'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
-            #hrefparameters = {"hrefurl":'project.html',"htmlkeymap":[data1_keymap],
-            #                'htmltype':'href_01','htmlid':htmlid};
-            tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
-                'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6","formsubmitbuttonidtext":{'id':'submit1','text':'submit'}};
-            hrefparameters = {"hrefurl":'project.html',"htmlkeymap":[data1_keymap],
-                            'htmltype':'href_02','htmlid':htmlid};
-            tileparameters.update(hrefparameters);
-            parametersobject_O.append(tileparameters);
-            dataobject_O.append({"data":data1_dict[k],"datakeys":data1_keys,"datanestkeys":data1_nestkeys});
-            tile2datamap_O.update({tileid:[tile_cnt]});
-            tile_cnt+=1;
-            col_cnt+=1;
+        if data1_project:
+            data1_dict = {};
+            for data_export_id in data1_project['data_export_id']:
+                data1_dict[data_export_id]=[];
+            for d in data1_O:
+                data1_dict[d['data_export_id']].append(d);
+            data1_keys = list(data1_dict.keys());
+            data1_keys.sort();
+            col_cnt = 0;
+            #for k,v in data1_dict.iteritems():
+            for k in data1_keys:
+                tileid = "tile" + str(tile_cnt);
+                colid = "col" + str(col_cnt);
+                tileheader = data1_dict[k][0]['pipeline_id'];
+                htmlid = "html" + str(tile_cnt);
+                #tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
+                #    'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
+                #hrefparameters = {"hrefurl":'project.html',"htmlkeymap":[data1_keymap],
+                #                'htmltype':'href_01','htmlid':htmlid};
+                tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row2",'colid':colid,
+                    'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6","formsubmitbuttonidtext":{'id':'submit1','text':'submit'}};
+                hrefparameters = {"hrefurl":'project.html',"htmlkeymap":[data1_keymap],
+                                'htmltype':'href_02','htmlid':htmlid};
+                tileparameters.update(hrefparameters);
+                parametersobject_O.append(tileparameters);
+                dataobject_O.append({"data":data1_dict[k],"datakeys":data1_keys,"datanestkeys":data1_nestkeys});
+                tile2datamap_O.update({tileid:[tile_cnt]});
+                tile_cnt+=1;
+                col_cnt+=1;
 
         # dump the data to a json file
         data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
