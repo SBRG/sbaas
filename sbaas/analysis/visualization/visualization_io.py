@@ -156,7 +156,7 @@ class visualization_io(base_analysis):
                 tileheader = d['project_section'];
                 htmlid = "html" + str(tile_cnt);
                 tileparameters = {'tileheader':tileheader,'tiletype':'html','tileid':tileid,'rowid':"row1",'colid':colid,
-                'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-12"};
+                'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-6"};
                 htmlparameters={"htmlkeymap":[data2_keymap],
                             'htmltype':'media_01','htmlid':htmlid};
                 tileparameters.update(htmlparameters);
