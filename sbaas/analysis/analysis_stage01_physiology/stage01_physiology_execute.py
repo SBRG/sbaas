@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage01_physiology_query import *
 from .stage01_physiology_io import *
 import datetime

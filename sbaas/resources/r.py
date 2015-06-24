@@ -2,7 +2,7 @@ from sys import exit
 from math import log, sqrt, exp
 import csv
 import numpy
-from analysis.analysis_base.base_analysis import base_analysis
+from sbaas.analysis.analysis_base.base_analysis import base_analysis
 
 from rpy2.robjects.packages import importr
 import rpy2.robjects as robjects

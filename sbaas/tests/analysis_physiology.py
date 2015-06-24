@@ -1,19 +1,23 @@
-from analysis import *
+from sbaas.analysis.analysis_stage00 import stage00_execute
+from sbaas.analysis.analysis_stage01_physiology import stage01_physiology_execute, stage01_physiology_io
+from sbaas.analysis.analysis_stage02_physiology import stage02_physiology_execute, stage02_physiology_io
+from sbaas.analysis.analysis_base.base_importData import base_importData
+from sbaas.models import *
 
-def data_stage00():
+def data_stage00(session):
     
     '''acqusition method import'''
-    execute00 = stage00_execute();
+    execute00 = stage00_execute(session);
     execute00.execute_makeExperimentFromSampleFile('data/tests/analysis_physiology/140905_Physiology_ALEsKOs01_sampleFile01.csv',0,[]);
     execute00.execute_makeExperimentFromSampleFile('data/tests/analysis_physiology/140905_Quantification_ALEsKOs01_biomass01.csv',0,[]);
 
-def data_stage01():
+def data_stage01(session):
 
-    execute01 = stage01_physiology_execute();
+    execute01 = stage01_physiology_execute(session);
     execute01.initialize_dataStage01();
 
     '''data import'''
-    io = stage01_physiology_io();
+    io = stage01_physiology_io(session);
     io.import_dataStage01PhysiologyData_add('data/tests/analysis_physiology/140905_Physiology_ALEsKOs01_samples01.csv');
     io.import_dataStage01PhysiologyData_update('data/tests/analysis_physiology/140905_Physiology_ALEsKOs01_update01.csv');
     io.import_dataStage01PhysiologyData_add('data/tests/analysis_physiology/140905_Quantification_ALEsKOs01_biomass01.csv');
@@ -269,12 +273,12 @@ def data_stage01():
                                                  #filename='visualization/data/ALEsKOs01/physiology/barchart/tpiA.csv');
                                                  filename='visualization/data/ALEsKOs01/physiology/barchart/tpiA.js');
 
-def data_stage02():
-    ex02 = stage02_physiology_execute();
+def data_stage02(session):
+    ex02 = stage02_physiology_execute(session);
     ex02.initialize_dataStage02();
 
     '''data import'''
-    qio02 = stage02_physiology_io();
+    qio02 = stage02_physiology_io(session);
     qio02.import_dataStage02PhysiologySimulation_add('data/tests/analysis_physiology/141020_data_stage02_physiology_simulation.csv');
     qio02.import_dataStage02PhysiologyModel_sbml('iJO1366','10/11/2011 0:00','data/models/iJO1366.xml')
 
@@ -300,9 +304,10 @@ def data_stage02():
                                          model_ids_dict_I=ex02.models);
     
 def run_all_tests():
+    session = Session();
     print('testing data_stage00_physiology...')
-    data_stage00();
+    data_stage00(session);
     print('testing data_stage01_physiology...')
-    data_stage01();
+    data_stage01(session);
     #print 'testing data_stage02_physiology...'
-    #data_stage02();
+    #data_stage02(session);

@@ -1,6 +1,6 @@
-from analysis.analysis_base import *
-from analysis.analysis_stage01_resequencing.stage01_resequencing_query import stage01_resequencing_query
-from analysis.analysis_stage01_physiology.stage01_physiology_query import stage01_physiology_query
+from sbaas.analysis.analysis_base import *
+from sbaas.analysis.analysis_stage01_resequencing.stage01_resequencing_query import stage01_resequencing_query
+from sbaas.analysis.analysis_stage01_physiology.stage01_physiology_query import stage01_physiology_query
 import json
 
 class stage02_resequencing_query(stage01_resequencing_query,stage01_physiology_query):

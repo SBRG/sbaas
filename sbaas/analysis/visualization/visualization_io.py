@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .visualization_query import visualization_query
 
 class visualization_io(base_analysis):

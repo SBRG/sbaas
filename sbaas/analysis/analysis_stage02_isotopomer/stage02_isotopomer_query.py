@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 
 # intialize the session
 query_session = Session();

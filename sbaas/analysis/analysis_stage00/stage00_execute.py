@@ -1,11 +1,11 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage00_query import *
 from .stage00_io import *
-from resources.molmass import Formula
+from sbaas.resources.molmass import Formula
 import re
 import io,os
-from resources.chemaxon import cxcalc_bin, RunCxcalc
-from resources.molmass import Formula
+from sbaas.resources.chemaxon import cxcalc_bin, RunCxcalc
+from sbaas.resources.molmass import Formula
 from copy import copy
 
 class stage00_execute():

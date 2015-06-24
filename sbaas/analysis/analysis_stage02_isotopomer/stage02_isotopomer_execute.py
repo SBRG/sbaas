@@ -1,7 +1,7 @@
 '''isotopomer metabolomics analysis class'''
 
-from analysis.analysis_base import *
-from analysis.analysis_base.base_exportData import base_exportData
+from sbaas.analysis.analysis_base import *
+from sbaas.analysis.analysis_base.base_exportData import base_exportData
 from .stage02_isotopomer_query import *
 from .stage02_isotopomer_io import *
 from .stage02_isotopomer_dependencies import *

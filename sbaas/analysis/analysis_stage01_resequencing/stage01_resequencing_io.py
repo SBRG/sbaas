@@ -1,7 +1,7 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage01_resequencing_query import stage01_resequencing_query
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from analysis.analysis_stage01_resequencing import gdparse
+from sbaas.analysis.analysis_stage01_resequencing import gdparse
 import json
 
 class stage01_resequencing_io(base_analysis):

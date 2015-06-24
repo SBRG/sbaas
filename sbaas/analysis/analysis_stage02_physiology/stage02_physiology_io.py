@@ -1,7 +1,7 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage02_physiology_query import stage02_physiology_query
-from resources.molmass import Formula
-from resources.sampling import cobra_sampling_n
+from sbaas.resources.molmass import Formula
+from sbaas.resources.sampling import cobra_sampling_n
 import scipy.stats
 import numpy
 # Dependencies from cobra

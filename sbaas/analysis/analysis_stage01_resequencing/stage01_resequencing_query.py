@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 import json
 
 class stage01_resequencing_query(base_analysis):

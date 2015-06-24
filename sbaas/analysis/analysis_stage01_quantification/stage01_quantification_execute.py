@@ -1,9 +1,9 @@
 '''quantitative metabolomics analysis class'''
 
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage01_quantification_query import *
 from .stage01_quantification_io import *
-from resources.matplot import matplot
+from sbaas.resources.matplot import matplot
 
 from time import mktime,strptime
 from datetime import datetime

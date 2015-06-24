@@ -1,6 +1,6 @@
 '''resequencing class'''
 
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage01_resequencing_query import *
 from .stage01_resequencing_io import *
 

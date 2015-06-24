@@ -1,7 +1,7 @@
 # Dependencies
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage02_isotopomer_query import stage02_isotopomer_query
-from resources.molmass import Formula
+from sbaas.resources.molmass import Formula
 from copy import copy
 from math import isnan, isinf
 import re
@@ -19,7 +19,7 @@ from cobra.core.Model import Model
 # Dependencies from escher
 from escher import Builder
 # Dependencies from models
-from analysis.models.models_query import models_query
+from sbaas.analysis.models.models_query import models_query
 
 class stage02_isotopomer_io(base_analysis):
     def __init__(self,session_I=None):

@@ -1,6 +1,6 @@
 '''quantitative metabolomics analysis class'''
 # Dependencies
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage03_quantification_query import *
 from .stage03_quantification_io import *
 from math import pow
@@ -21,7 +21,7 @@ from cobra.flux_analysis.parsimonious import optimize_minimal_flux
 from cobra.flux_analysis import flux_variability_analysis
 from cobra.manipulation.modify import convert_to_irreversible
 # Dependencies from resources
-from resources.sampling import cobra_sampling,cobra_sampling_n
+from sbaas.resources.sampling import cobra_sampling,cobra_sampling_n
 
 class stage03_quantification_execute():
     '''class for quantitative metabolomics analysis'''

@@ -1,4 +1,8 @@
-from analysis import *
+from sbaas.analysis.analysis_stage00 import stage00_execute
+from sbaas.analysis.analysis_stage01_resequencing import stage01_resequencing_execute, stage01_resequencing_io
+from sbaas.analysis.analysis_stage02_resequencing import stage02_resequencing_execute, stage02_resequencing_io
+from sbaas.analysis.analysis_base.base_importData import base_importData
+from sbaas.models import *
 
 def strain_lineages():
     strain_lineages_O = {"evo04tpiAevo01":{0:"140401_0_OxicEvo04tpiAEcoliGlcM9_Broth-1",1:"140702_1_OxicEvo04tpiAEvo01J01EcoliGlcM9_Broth-1",2:"140702_3_OxicEvo04tpiAEvo01J03EcoliGlcM9_Broth-1",3:"140807_11_OxicEvo04tpiAEvo01EPEcoliGlcM9_Broth-1"},
@@ -28,20 +32,20 @@ def reduce_groupNames():
                                         "140807_11_OxicEvo04tpiAEvo04EPEcoliGlcM9_Broth-1"]};
     return reduce_group_names_O;
 
-def data_stage00():
+def data_stage00(session):
     
     '''data import'''
-    execute00 = stage00_execute();
+    execute00 = stage00_execute(session);
     execute00.execute_makeExperimentFromSampleFile('data/tests/analysis_resequencing/140823_Resequencing_ALEsKOs01_sampleFile01.csv',0,[]);
 
-def data_stage01():
+def data_stage01(session):
 
-    execute01 = stage01_resequencing_execute();
+    execute01 = stage01_resequencing_execute(session);
     #execute01.drop_dataStage01();
     execute01.initialize_dataStage01();
 
     '''data import'''
-    io = stage01_resequencing_io();
+    io = stage01_resequencing_io(session);
     # import resequencing data from breseq
     iobase = base_importData();
     iobase.read_csv('data/tests/analysis_resequencing/140823_Resequencing_ALEsKOs01_fileList01.csv');
@@ -94,15 +98,15 @@ def data_stage01():
                         'pyrE-/-rph_DEL_3813882',
                         'wcaA_SNP_2130811']);
 
-def data_stage02():
+def data_stage02(session):
     '''Note: Requires analysis_physiology'''
 
-    ex02 = stage02_resequencing_execute();
+    ex02 = stage02_resequencing_execute(session);
     #ex02.drop_dataStage02();
     ex02.initialize_dataStage02();
 
     '''data import'''
-    io02 = stage02_resequencing_io();
+    io02 = stage02_resequencing_io(session);
 
     '''data analysis'''
     ex02.reset_dataStage02('ALEsKOs01');
@@ -113,9 +117,10 @@ def data_stage02():
     io02.export_dataStage02ResequencingLineage_d3('ALEsKOs01');
 
 def run_all_tests():
+    session = Session();
     print('testing data_stage00_resequencing...')
-    data_stage00();
+    data_stage00(session);
     print('testing data_stage01_resequencing...')
-    data_stage01();
+    data_stage01(session);
     print('testing data_stage02_resequencing...')
-    data_stage02();
+    data_stage02(session);

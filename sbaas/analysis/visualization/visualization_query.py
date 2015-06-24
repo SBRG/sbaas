@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 
 class visualization_query(base_analysis):
     # query data from visualization_project

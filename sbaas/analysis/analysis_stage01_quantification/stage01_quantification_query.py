@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 
 class stage01_quantification_query(base_analysis):
     # query sample names from data_stage01_quantification_mqresultstable

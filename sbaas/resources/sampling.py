@@ -1,7 +1,7 @@
 from sys import exit
 from math import log, sqrt, exp
 import operator, json, csv
-from analysis.analysis_base.base_calculate import base_calculate
+from sbaas.analysis.analysis_base.base_calculate import base_calculate
 from copy import copy
 # Dependencies from 3rd party
 import h5py
@@ -10,7 +10,7 @@ import numpy
 from numpy import histogram, mean, std, loadtxt, savetxt
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from resources.molmass import Formula
+from sbaas.resources.molmass import Formula
 # Dependencies from cobra
 from cobra.io.mat import load_matlab_model,save_matlab_model
 #from cobra.mlab import matlab_cobra_struct_to_python_cobra_object

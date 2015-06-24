@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage01_ale_query import *
 from .stage01_ale_io import *
 

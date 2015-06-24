@@ -1,7 +1,7 @@
 # Dependencies
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage03_quantification_query import stage03_quantification_query
-from resources.molmass import Formula
+from sbaas.resources.molmass import Formula
 # Dependencies from cobra
 from cobra.io.sbml import create_cobra_model_from_sbml_file, write_cobra_model_to_sbml_file
 from cobra.io import load_matlab_model

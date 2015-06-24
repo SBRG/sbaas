@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 
 class stage00_query(base_analysis):
     def get_structureFile_standards(self,met_id_I):

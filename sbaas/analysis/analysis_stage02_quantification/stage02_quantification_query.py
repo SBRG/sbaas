@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 
 class stage02_quantification_query(base_analysis):
     # data_stage01_quantification_replicatesMI

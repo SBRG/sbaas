@@ -1,7 +1,7 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage02_quantification_query import stage02_quantification_query
-from resources.matplot import matplot
-from resources.heatmap import heatmap
+from sbaas.resources.matplot import matplot
+from sbaas.resources.heatmap import heatmap
 
 class stage02_quantification_io(base_analysis):
     def __init__(self,session_I=None):

@@ -1,7 +1,7 @@
 from sys import exit
 from math import log, sqrt, exp
 import operator, json, csv
-from analysis.analysis_base.base_calculate import base_calculate
+from sbaas.analysis.analysis_base.base_calculate import base_calculate
 # Dependencies from 3rd party
 import scipy.io
 import numpy

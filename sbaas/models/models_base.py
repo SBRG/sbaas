@@ -15,7 +15,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 import json
 
-from data import sbaas_settings as settings
+from sbaas.data import sbaas_settings as settings
 
 Base = declarative_base()
 

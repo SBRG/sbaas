@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from collections import OrderedDict
 
 class stage01_isotopomer_query(base_analysis):

@@ -1,8 +1,8 @@
 '''Module for quantitation QC'''
 
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from sqlalchemy import func
-from resources.r import robjects,importr
+from sbaas.resources.r import robjects,importr
 
 class stage01_quantification_QMethod(base_analysis):
 

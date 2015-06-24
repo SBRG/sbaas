@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage01_isotopomer_query import stage01_isotopomer_query
 
 class stage01_isotopomer_io(base_analysis):

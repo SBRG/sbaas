@@ -6,11 +6,11 @@ from sys import exit
 import numpy
 import re
 #ORM
-from models import *
+from sbaas.models import *
 from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 #settings
-from data import sbaas_settings as settings
+from sbaas.data import sbaas_settings as settings
 
 class base_analysis():
     def __init__(self,session_I=None):

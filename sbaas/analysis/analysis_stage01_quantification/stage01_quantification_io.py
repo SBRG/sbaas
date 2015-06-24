@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage01_quantification_query import stage01_quantification_query
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 

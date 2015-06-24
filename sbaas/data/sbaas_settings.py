@@ -17,13 +17,6 @@ config.set("DATABASE", "password", "dmccloskey")
 config.set("DATABASE", "schema", "public")
 config.set("DATABASE", "user", "dmccloskey")
 
-## guest settings for the database
-#config.set("DATABASE", "host", "localhost:5432")
-#config.set("DATABASE", "database", "metabolomics")
-#config.set("DATABASE", "password", "guest")
-#config.set("DATABASE", "schema", "public")
-#config.set("DATABASE", "user", "guest")
-
 ## default settings for the database upon installation
 #config.add_section("DATABASE")
 #config.set("DATABASE", "host", "localhost:5432")
@@ -45,7 +38,7 @@ config.add_section("DATA_DIR")
 
 # user defined data directories
 # comment out to run the tests
-config.set("DATA_DIR", "sbaas", "C:/Users/dmccloskey-sbrg/Documents/GitHub/sbaas/sbaas")
+config.set("DATA_DIR", "sbaas", "C:/Users/dmccloskey-sbrg/Documents/GitHub/sbaas")
 config.set("DATA_DIR", "workspace", "C:/Users/dmccloskey-sbrg/Documents/GitHub/sbaas_workspace/sbaas_workspace/workspace")
 config.set("DATA_DIR", "workspace_data", "C:/Users/dmccloskey-sbrg/Documents/GitHub/sbaas_workspace/sbaas_workspace/workspace_data")
 config.set("DATA_DIR", "visualization_data", "C:/Users/dmccloskey-sbrg/Documents/GitHub/sbaas_workspace/sbaas_workspace/visualization_data")

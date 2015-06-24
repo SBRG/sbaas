@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 
 class models_query(base_analysis):
     # query data from models_eschermaps

@@ -1,10 +1,10 @@
 '''quantitative metabolomics analysis class'''
 
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage02_quantification_query import *
 from .stage02_quantification_io import *
-from resources.r import r_calculate
-from resources.matplot import matplot
+from sbaas.resources.r import r_calculate
+from sbaas.resources.matplot import matplot
 import matplotlib.pyplot as plt
 from math import sqrt
 import copy

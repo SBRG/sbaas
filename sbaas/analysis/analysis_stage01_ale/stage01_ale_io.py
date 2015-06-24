@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage01_ale_query import stage01_ale_query
 from scipy.io import loadmat
 

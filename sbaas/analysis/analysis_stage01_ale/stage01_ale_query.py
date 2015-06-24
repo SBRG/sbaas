@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 
 class stage01_ale_query(base_analysis):        
     # query sample name abbreviations from data_stage01_ale_trajectories

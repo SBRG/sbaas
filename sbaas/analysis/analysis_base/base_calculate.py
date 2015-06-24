@@ -16,8 +16,8 @@ from scipy.cluster.hierarchy import linkage, dendrogram
 
 import pandas as pd
 
-from resources.cookb_signalsmooth import smooth
-from resources.legendre_smooth import legendre_smooth
+from sbaas.resources.cookb_signalsmooth import smooth
+from sbaas.resources.legendre_smooth import legendre_smooth
 from Bio.Statistics import lowess
 
 class base_calculate():

@@ -1,8 +1,8 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 from .stage02_physiology_query import *
 from .stage02_physiology_io import *
 import datetime
-from resources.sampling import cobra_sampling,cobra_sampling_n
+from sbaas.resources.sampling import cobra_sampling,cobra_sampling_n
 # Dependencies from cobra
 from cobra.io.sbml import create_cobra_model_from_sbml_file, write_cobra_model_to_sbml_file
 from cobra.flux_analysis.variability import flux_variability_analysis

@@ -1,4 +1,4 @@
-from analysis.analysis_base import *
+from sbaas.analysis.analysis_base import *
 
 class stage01_physiology_query(base_analysis):
     # query conversion and conversion units from sample_masstovolumeconversion
